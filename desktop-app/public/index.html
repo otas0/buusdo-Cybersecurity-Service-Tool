@@ -4,8 +4,8 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Preventive Shield</title>
-    <link rel="stylesheet" href="/shared/tokens.css" />
-    <link rel="stylesheet" href="/css/dashboard.css" />
+    <link rel="stylesheet" href="/shared/tokens.css?v=0.2.0" />
+    <link rel="stylesheet" href="/css/dashboard.css?v=0.2.0" />
   </head>
   <body>
     <div id="toastHost" class="toast-host" aria-live="polite"></div>
@@ -27,6 +27,39 @@
 
       <main class="board">
         <section class="stage">
+          <section class="machine" id="machineScan" aria-labelledby="machineKicker">
+            <p class="kicker" id="machineKicker">This computer</p>
+            <p id="machineStatus" class="detail" role="status">Scanning this computer…</p>
+            <p id="machineScope" class="hint"></p>
+            <p id="machineCoverage" class="hint"></p>
+            <p id="machineTrusted" class="hint" hidden></p>
+            <div class="list-cols machine-cols">
+              <div>
+                <h3 id="machineOpenTitle">Still blockable</h3>
+                <ul id="machineOpen" class="mini-log"></ul>
+              </div>
+              <div>
+                <h3 id="machineSettledTitle">Blocked</h3>
+                <ul id="machineSettled" class="mini-log"></ul>
+              </div>
+            </div>
+            <h3 id="machineQuarantineTitle">Quarantine</h3>
+            <ul id="machineQuarantine" class="mini-log"></ul>
+            <div class="list-actions">
+              <button type="button" id="machineRescan" class="text-button" data-testid="machine-rescan">Scan again</button>
+              <p
+                id="machineRescanPrimaryHint"
+                class="visually-hidden"
+                hidden
+                data-testid="machine-rescan-primary-hint"
+                aria-live="polite"
+              ></p>
+              <button type="button" id="machineContinue" class="text-button" hidden>Continue remaining folders</button>
+              <button type="button" id="machineBlockAgain" class="text-button">Block all (maximum)</button>
+              <button type="button" id="machineRestore" class="text-button" hidden>Restore quarantine</button>
+            </div>
+          </section>
+
           <p class="kicker" id="statusKicker">Status</p>
           <p class="readout" id="readout" data-level="idle" role="status">
             <span class="mark" aria-hidden="true"></span>
@@ -101,19 +134,44 @@
           </div>
           <ul id="blockLog" class="block-log"></ul>
           <p id="proxyBody" class="proxy">Proxy 127.0.0.1:8080. HTTP is checked. HTTPS is not opened.</p>
+          <button type="button" id="proxyGuideShow" class="text-button" hidden data-testid="proxy-guide-show">
+            Show proxy guide
+          </button>
+          <details class="proxy-guide" id="proxyGuide" data-testid="proxy-guide">
+            <summary id="proxyGuideSummary">How to point traffic at 127.0.0.1:8080</summary>
+            <div class="proxy-guide-body">
+              <p id="proxyGuideLead" class="hint"></p>
+              <details class="proxy-guide-os" id="proxyGuideMacDetails" data-platform="darwin">
+                <summary id="proxyGuideMacSummary">macOS</summary>
+                <p id="proxyGuideMac" class="hint"></p>
+              </details>
+              <details class="proxy-guide-os" id="proxyGuideWinDetails" data-platform="win32">
+                <summary id="proxyGuideWinSummary">Windows</summary>
+                <p id="proxyGuideWin" class="hint"></p>
+              </details>
+              <details class="proxy-guide-os" id="proxyGuideLinuxDetails" data-platform="linux">
+                <summary id="proxyGuideLinuxSummary">Linux</summary>
+                <p id="proxyGuideLinux" class="hint"></p>
+              </details>
+              <p id="proxyGuideBrowser" class="hint"></p>
+              <p id="proxyGuideCurl" class="hint"></p>
+            </div>
+          </details>
 
           <section class="account" id="accountSection" aria-labelledby="accountTitle">
             <h2 id="accountTitle">Account</h2>
             <p id="accountHint" class="hint">Optional list sync via the website API. Offline file/Syncthing stays below.</p>
             <p id="accountStatus" class="hint" role="status" aria-live="polite"></p>
-            <form id="accountSignInForm" class="list-add">
+            <form id="accountSignInForm" class="list-add account-row">
               <label class="visually-hidden" for="accountEmail">Email</label>
-              <input id="accountEmail" type="email" autocomplete="email" placeholder="you@example.com" />
-              <button type="submit" id="accountSendBtn" class="text-button">Send link</button>
+              <input id="accountEmail" class="field-input" type="email" autocomplete="email" placeholder="you@example.com" />
+              <button type="submit" id="accountSendBtn">Send link</button>
             </form>
-            <label class="visually-hidden" for="accountDeviceCode">Device code</label>
-            <input id="accountDeviceCode" type="text" autocomplete="off" spellcheck="false" placeholder="Device code" />
-            <button type="button" id="accountExchangeBtn" class="text-button">Exchange code</button>
+            <div class="list-add account-row">
+              <label class="visually-hidden" for="accountDeviceCode">Device code</label>
+              <input id="accountDeviceCode" class="field-input" type="text" autocomplete="off" spellcheck="false" placeholder="Device code" />
+              <button type="button" id="accountExchangeBtn">Exchange code</button>
+            </div>
             <label class="history-filter">
               <input type="checkbox" id="accountSyncToggle" />
               <span id="accountSyncLabel">Sync lists</span>
@@ -131,7 +189,7 @@
             <p id="listsOperatorHint" class="hint lists-operator" hidden></p>
             <form id="listAddForm" class="list-add">
               <label class="visually-hidden" id="listDomainLabel" for="listDomain">Domain</label>
-              <input id="listDomain" type="text" inputmode="url" placeholder="example.com" autocomplete="off" spellcheck="false" />
+              <input id="listDomain" class="field-input" type="text" inputmode="url" placeholder="example.com" autocomplete="off" spellcheck="false" />
               <button type="submit" id="listBlockBtn">Block</button>
               <button type="button" id="listTrustBtn" class="text-button">Trust</button>
             </form>
@@ -177,12 +235,76 @@
             <option value="share">Diagnostics for support</option>
           </select>
         </label>
-        <p id="privacyHint" class="hint">Default: nothing is stored. Diagnostics only help fix technical problems — never the address, and never for public release.</p>
+        <label class="privacy" id="openAtLoginLabelWrap">
+          <input type="checkbox" id="openAtLogin" />
+          <span id="openAtLoginLabel">Open at login</span>
+        </label>
+        <button type="button" id="quitApp" class="text-button">Quit</button>
+        <p id="privacyHint" class="hint">Default: nothing is stored. Diagnostics only help fix technical problems — never the address, and never for public release. Open at login stays off until you turn it on.</p>
+        <p id="dataDirHint" class="hint" data-testid="data-dir"></p>
+        <div class="foot-actions">
+          <button type="button" id="dataDirCopy" class="text-button" hidden>Copy data folder</button>
+          <button type="button" id="diagnosticsExport" class="text-button" data-testid="diagnostics-export">
+            Export diagnostics
+          </button>
+          <button type="button" id="diagnosticsCopyPath" class="text-button" hidden data-testid="diagnostics-copy-path">
+            Copy path
+          </button>
+          <button type="button" id="diagnosticsReveal" class="text-button" hidden data-testid="diagnostics-reveal">
+            Reveal file
+          </button>
+          <button type="button" id="honestLimitsReset" class="text-button" hidden data-testid="honest-limits-reset">
+            Show honest limits again
+          </button>
+        </div>
+        <p id="diagnosticsExportStatus" class="hint" role="status" hidden></p>
+        <p id="trayHint" class="hint" hidden></p>
       </footer>
     </div>
 
-    <script src="/shared/qrcode-browser.js"></script>
-    <script src="/shared/qr-draw.classic.js"></script>
-    <script type="module" src="/js/dashboard.js"></script>
+    <div
+      id="honestLimitsGate"
+      class="ask"
+      hidden
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="honestLimitsTitle"
+      data-testid="honest-limits-gate"
+    >
+      <div class="ask-card">
+        <p class="kicker" id="honestLimitsKicker">Honest limits</p>
+        <h2 id="honestLimitsTitle">Before this computer is scanned</h2>
+        <p id="honestLimitsBody" class="detail"></p>
+        <ul id="honestLimitsList" class="mini-log machine-ask-list">
+          <li id="honestLimitsItemTls"></li>
+          <li id="honestLimitsItemKill"></li>
+          <li id="honestLimitsItemSystem"></li>
+          <li id="honestLimitsItemAv"></li>
+        </ul>
+        <div class="ask-actions">
+          <button type="button" id="honestLimitsAck" data-testid="honest-limits-ack">I understand — scan</button>
+          <button type="button" id="honestLimitsSkip" class="text-button" data-testid="honest-limits-skip">
+            Skip for now
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div id="machineAsk" class="ask" hidden role="dialog" aria-modal="true" aria-labelledby="machineAskTitle" data-testid="machine-ask">
+      <div class="ask-card">
+        <p class="kicker" id="machineAskKicker">This computer</p>
+        <h2 id="machineAskTitle">Block all of this?</h2>
+        <p id="machineAskBody" class="detail"></p>
+        <ul id="machineAskList" class="mini-log machine-ask-list"></ul>
+        <div class="ask-actions">
+          <button type="button" id="machineBlockMax" data-testid="machine-block-max">Block all (maximum)</button>
+          <button type="button" id="machineDecline" class="text-button" data-testid="machine-decline">Do not block</button>
+        </div>
+      </div>
+    </div>
+
+    <script src="/shared/qrcode-browser.js?v=0.2.0"></script>
+    <script src="/shared/qr-draw.classic.js?v=0.2.0"></script>
+    <script type="module" src="/js/dashboard.js?v=0.2.0"></script>
   </body>
 </html>
