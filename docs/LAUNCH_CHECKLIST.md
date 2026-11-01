@@ -29,6 +29,7 @@ Recorded via `npm run production:origin` → README + `shared/production-site.js
 
 | When (UTC) | Runner | Result | Notes |
 |------------|--------|--------|-------|
+| 2026-11-01 | github-actions/41341521608 | **OK** | `https://pcpd.mtsu.workers.dev` — health+check · softDownloadWarn=5 · notarized=http-404 · https://github.com/otas0/preventive-cybersecurity-prototype/actions/runs/41341521608 |
 | 2026-11-01 | github-actions/41319855407 | **OK** | `https://pcpd.mtsu.workers.dev` — health+check · softDownloadWarn=5 · notarized=http-404 · https://github.com/otas0/preventive-cybersecurity-prototype/actions/runs/41319855407 |
 | 2026-11-01 | github-actions/41318698412 | **OK** | `https://pcpd.mtsu.workers.dev` — health+check · softDownloadWarn=5 · notarized=http-404 · https://github.com/otas0/preventive-cybersecurity-prototype/actions/runs/41318698412 |
 | 2026-11-01 | github-actions/41318446546 | **OK** | `https://pcpd.mtsu.workers.dev` — health+check · softDownloadWarn=0 · notarized=missing · https://github.com/otas0/preventive-cybersecurity-prototype/actions/runs/41318446546 |
