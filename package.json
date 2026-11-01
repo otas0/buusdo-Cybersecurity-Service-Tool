@@ -12,6 +12,7 @@
     "health:prod": "node scripts/health-smoke.mjs",
     "check:prod": "node scripts/check-smoke.mjs",
     "production:origin": "node scripts/set-production-origin.mjs",
+    "hooks:install": "git config core.hooksPath .githooks && chmod +x .githooks/pre-commit && echo 'git hooks → .githooks (openapi:check on commit)'",
     "smoke:desktop-scan-resources": "node scripts/desktop-scan-resources-smoke.mjs",
     "build": "vinext build",
     "build:vercel": "next build",
@@ -30,8 +31,8 @@
     "qr:bundle": "browserify node_modules/qrcode/lib/browser.js -s QrLib -o shared/qrcode-browser.js",
     "test:playwright:settings": "playwright test playwright/settings-narrow.spec.ts",
     "test:playwright:account": "playwright test playwright/account-sync.spec.ts",
+    "test:playwright:privacy": "PLAYWRIGHT_SKIP_WEBSERVER=1 PLAYWRIGHT_BASE_URL=${PLAYWRIGHT_BASE_URL:-https://pcpd.mtsu.workers.dev} playwright test playwright/privacy-prod.spec.ts",
     "png:thumb": "node scripts/png-max-width.mjs",
-
     "check": "npm run test && npm run smoke:desktop-scan-resources && npm run typecheck && npm run lint && npm run threat:check && npm run build",
     "regression": "tsx scripts/regression-check.ts",
     "threat:validate": "tsx scripts/validate-curated-threats.ts",
