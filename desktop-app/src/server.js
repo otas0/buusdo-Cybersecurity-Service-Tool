@@ -14,36 +14,82 @@ const { appendAnonymous } = require("./log-store");
 const { classifyUrl, countThirdPartyTrackers, loadDetector } = require("./threats");
 const { startProxy, PROXY_PORT } = require("./proxy-server");
 const { validateCheckTiming } = require("./validate-timing");
+const { sharedRoot } = require("./shared-root");
 const listsStore = require("./lists-store");
 const accountTokens = require("./account-tokens");
+const machineScan = require("./machine-scan");
+const machineBlock = require("./machine-block");
+const autostart = require("./autostart");
+const { defaultDataDir, ensureDataDir } = require("./user-data");
+const { quitGraceMs } = require("./quit-grace");
+const diagnosticsExport = require("./diagnostics-export");
+const { revealPathInShell } = require("./reveal-path");
+
+function trayAvailable() {
+  if (typeof global.__shieldTrayAvailable === "boolean") return global.__shieldTrayAvailable;
+  try {
+    require.resolve("systray2");
+    return true;
+  } catch {
+    return false;
+  }
+}
 
 /** Default 3010 so vinext website can keep :3000. Override with UI_PORT. */
 const UI_PORT = Number(process.env.UI_PORT || 3010);
 /** First-party website check API (no third-party reputation). */
 /** Prefer env; else shared/production-site.json after deploy; else localhost vinext. */
-function defaultWebsiteCheckUrl() {
+function resolveWebsiteCheckUrl() {
+  if (process.env.WEBSITE_CHECK_URL) {
+    return {
+      url: String(process.env.WEBSITE_CHECK_URL).trim().replace(/\/$/, ""),
+      source: "env:WEBSITE_CHECK_URL"
+    };
+  }
   try {
-    const site = require(path.join(__dirname, "..", "..", "shared", "production-site.json"));
+    const sitePath = path.join(sharedRoot(), "production-site.json");
+    const site = require(sitePath);
     const origin = String(site?.productionOrigin || "")
       .trim()
       .replace(/\/$/, "");
-    if (origin) return origin;
+    if (origin) {
+      return { url: origin, source: `file:shared/production-site.json` };
+    }
   } catch {
     /* empty */
   }
-  return "http://localhost:3000";
+  return { url: "http://localhost:3000", source: "fallback:localhost:3000" };
 }
-const WEBSITE_CHECK_URL = String(process.env.WEBSITE_CHECK_URL || defaultWebsiteCheckUrl()).replace(
-  /\/$/,
-  ""
-);
+const _websiteResolved = resolveWebsiteCheckUrl();
+const WEBSITE_CHECK_URL = _websiteResolved.url;
+const WEBSITE_CHECK_URL_SOURCE = _websiteResolved.source;
+
 /** Dashboard poll interval for GET /api/website-health (ms). Min 5s. */
 const WEBSITE_HEALTH_POLL_MS = Math.max(
   5000,
   Number(process.env.WEBSITE_HEALTH_POLL_MS || 15_000) || 15_000
 );
 const ROOT = path.join(__dirname, "..");
-const SHARED = path.join(__dirname, "..", "..", "shared");
+const SHARED = sharedRoot();
+
+let uiServer = null;
+let proxyServer = null;
+
+function shutdown() {
+  const servers = [uiServer, proxyServer].filter(Boolean);
+  uiServer = null;
+  proxyServer = null;
+  return Promise.all(
+    servers.map(
+      (server) =>
+        new Promise((resolve) => {
+          server.close(() => resolve());
+        })
+    )
+  );
+}
+
+module.exports = { shutdown };
 
 const app = express();
 app.use((req, res, next) => {
@@ -71,8 +117,134 @@ app.get("/api/state", async (_req, res) => {
     websiteCheckUrl: WEBSITE_CHECK_URL,
     listsPath: listsStore.listsPath(),
     listsMtimeMs: listsStore.listsMtimeMs(),
+    dataDir: defaultDataDir(),
+    settings: autostart.readSettings(),
+    honestLimitsPending: !autostart.honestLimitsResolved(),
+    platform: process.platform,
+    trayAvailable: trayAvailable(),
+    quitGraceMs: quitGraceMs(),
     lists
   });
+});
+
+app.get("/api/settings", (_req, res) => {
+  const settings = autostart.readSettings();
+  res.json({
+    ok: true,
+    settings,
+    honestLimitsPending: !autostart.honestLimitsResolved(settings),
+    dataDir: defaultDataDir()
+  });
+});
+
+app.put("/api/settings", (req, res) => {
+  if (typeof req.body?.openAtLogin !== "boolean") {
+    return res.status(400).json({ ok: false, error: "openAtLogin-required" });
+  }
+  const result = autostart.setOpenAtLogin(req.body.openAtLogin);
+  if (!result.applied.ok) {
+    return res.status(500).json({
+      ok: false,
+      error: result.applied.error || "autostart-failed",
+      settings: result.settings
+    });
+  }
+  res.json({ ok: true, settings: result.settings, applied: result.applied });
+});
+
+/** First-launch honest limits: ack → start scan; skip → no auto scan; reset → show gate again. */
+app.post("/api/honest-limits/ack", (_req, res) => {
+  const settings = autostart.setHonestLimitsAck();
+  let scan = null;
+  try {
+    scan = machineScan.requestRun();
+  } catch (err) {
+    return res.status(500).json({
+      ok: false,
+      error: err instanceof Error ? err.message : "scan-failed",
+      settings
+    });
+  }
+  res.json({ ok: true, settings, scan, honestLimitsPending: false });
+});
+
+app.post("/api/honest-limits/skip", (_req, res) => {
+  const settings = autostart.setHonestLimitsSkip();
+  // Leave machine idle so Scan again is Halt primary (polite live region).
+  const scan = machineScan.resetToIdle();
+  res.json({
+    ok: true,
+    settings,
+    scan,
+    honestLimitsPending: false
+  });
+});
+
+app.post("/api/honest-limits/reset", (_req, res) => {
+  const settings = autostart.clearHonestLimits();
+  res.json({
+    ok: true,
+    settings,
+    honestLimitsPending: !autostart.honestLimitsResolved(settings)
+  });
+});
+
+/** Diagnostics JSON under user data dir — counts/status only, never URLs or list hosts. */
+app.post("/api/diagnostics/export", async (_req, res) => {
+  try {
+    const lists = await listsStore.getLists();
+    const scan = machineScan.publicView();
+    let quarantineCount = 0;
+    try {
+      const fs = require("fs");
+      const qRoot = process.env.SHIELD_QUARANTINE_PATH
+        ? path.resolve(process.env.SHIELD_QUARANTINE_PATH)
+        : path.join(ensureDataDir(), "quarantine");
+      const qPath = path.join(qRoot, "manifest.json");
+      if (fs.existsSync(qPath)) {
+        const man = JSON.parse(fs.readFileSync(qPath, "utf8"));
+        quarantineCount = Array.isArray(man?.items) ? man.items.length : 0;
+      }
+    } catch {
+      /* ignore */
+    }
+    const result = diagnosticsExport.writeDiagnosticsExport({
+      settings: autostart.readSettings(),
+      ports: { ui: UI_PORT, proxy: PROXY_PORT },
+      machineStatus: scan?.status || "unknown",
+      listsCounts: {
+        blocked: Array.isArray(lists?.blocked) ? lists.blocked.length : 0,
+        trusted: Array.isArray(lists?.trusted) ? lists.trusted.length : 0
+      },
+      quarantineCount,
+      privacyMode: state.snapshot()?.privacyMode || "off",
+      trayAvailable: trayAvailable(),
+      quitGraceMs: quitGraceMs()
+    });
+    res.json({
+      ok: true,
+      path: result.path,
+      fileName: result.fileName,
+      payload: result.payload
+    });
+  } catch (err) {
+    res.status(500).json({
+      ok: false,
+      error: err instanceof Error ? err.message : "diagnostics-export-failed"
+    });
+  }
+});
+
+app.post("/api/quit", (_req, res) => {
+  state.publish("bye", { reason: "quit" });
+  res.json({ ok: true, bye: true, graceMs: quitGraceMs() });
+  setTimeout(() => {
+    if (typeof global.__shieldQuit === "function") {
+      global.__shieldQuit();
+      return;
+    }
+    void shutdown().finally(() => process.exit(0));
+  }, quitGraceMs());
 });
 
 app.get("/api/lists", async (_req, res) => {
@@ -141,41 +313,40 @@ app.post("/api/lists/import", async (req, res) => {
   }
 });
 
-/**
- * Reveal shield-backup.json in Finder/Explorer when Electron shell is present
- * (`npm run electron` → global.__shieldElectronShell or require("electron").shell).
- */
 app.post("/api/lists/reveal", async (_req, res) => {
-  const file = listsStore.listsPath();
-  /** @type {{ openPath?: (p: string) => Promise<string> } | null} */
-  let shellApi = global.__shieldElectronShell || null;
-  if (!shellApi && typeof process.versions?.electron === "string") {
+  const result = await revealPathInShell(listsStore.listsPath());
+  if (result.status) return res.status(result.status).json(result);
+  res.json(result);
+});
+
+/** Reveal latest diagnostics-*.json (or body.path) — same shell path as lists reveal. */
+app.post("/api/diagnostics/reveal", async (req, res) => {
+  const fs = require("fs");
+  let file = typeof req.body?.path === "string" ? req.body.path.trim() : "";
+  if (!file) {
     try {
-      // eslint-disable-next-line import/no-unresolved -- optional Electron runtime
-      shellApi = require("electron").shell;
+      const dir = ensureDataDir();
+      const names = fs
+        .readdirSync(dir)
+        .filter((n) => /^diagnostics-.*\.json$/i.test(n))
+        .sort();
+      if (names.length) file = path.join(dir, names[names.length - 1]);
     } catch {
-      shellApi = null;
+      /* ignore */
     }
   }
-  if (shellApi?.openPath) {
-    try {
-      const err = await shellApi.openPath(file);
-      if (!err) return res.json({ ok: true, path: file, via: "electron" });
-      return res.status(500).json({ ok: false, error: err, path: file });
-    } catch (err) {
-      return res.status(500).json({
-        ok: false,
-        error: err instanceof Error ? err.message : "reveal-failed",
-        path: file
-      });
-    }
+  if (!file) {
+    return res.status(404).json({ ok: false, error: "diagnostics-not-found" });
   }
-  res.json({
-    ok: false,
-    deferred: true,
-    path: file,
-    hint: "Run desktop-app with npm run electron (after npm i -D electron) for shell.openPath."
-  });
+  // Only allow files under the user data directory.
+  const root = path.resolve(ensureDataDir());
+  const resolved = path.resolve(file);
+  if (resolved !== root && !resolved.startsWith(root + path.sep)) {
+    return res.status(400).json({ ok: false, error: "path-outside-data-dir" });
+  }
+  const result = await revealPathInShell(resolved);
+  if (result.status) return res.status(result.status).json(result);
+  res.json(result);
 });
 
 app.get("/api/lists/export", async (_req, res) => {
@@ -501,6 +672,80 @@ app.post("/api/website-check", async (req, res) => {
   }
 });
 
+app.get("/api/machine-scan", (_req, res) => {
+  res.json({ ok: true, scan: machineScan.publicView() });
+});
+
+app.post("/api/machine-scan/run", (_req, res) => {
+  try {
+    const scan = machineScan.requestRun();
+    res.json({ ok: true, scan });
+  } catch (err) {
+    res.status(500).json({ ok: false, error: err instanceof Error ? err.message : "scan-failed" });
+  }
+});
+
+app.post("/api/machine-scan/continue", (_req, res) => {
+  try {
+    const scan = machineScan.requestContinue();
+    res.json({ ok: true, scan });
+  } catch (err) {
+    const code = err && err.code ? err.code : "continue-failed";
+    res.status(code === "nothing-to-continue" ? 409 : 500).json({
+      ok: false,
+      error: err instanceof Error ? err.message : "continue-failed"
+    });
+  }
+});
+
+app.post("/api/machine-scan/decide", async (req, res) => {
+  const choice = req.body?.choice;
+  const scanNow = machineScan.publicView();
+  if (scanNow.status !== "ready") {
+    return res.status(409).json({ ok: false, error: "scan-not-ready", scan: scanNow });
+  }
+  if (choice !== "block-maximum" && choice !== "decline") {
+    return res.status(400).json({ ok: false, error: "choice-required" });
+  }
+  if (choice === "decline") {
+    machineBlock.saveDecision({
+      choice,
+      findingSetId: scanNow.findingSetId,
+      at: new Date().toISOString()
+    });
+    const scan = machineScan.publicView();
+    state.publish("machine", scan);
+    return res.json({ ok: true, scan });
+  }
+  const result = await machineBlock.applyMaximum(machineScan.findingsForBlock());
+  if (!result.ok) {
+    return res.status(500).json({
+      ok: false,
+      error: result.errors[0]?.error || result.skipped[0]?.reason || "block-failed",
+      result,
+      scan: machineScan.publicView()
+    });
+  }
+  machineBlock.saveDecision({
+    choice,
+    findingSetId: scanNow.findingSetId,
+    at: new Date().toISOString(),
+    hosts: result.hostsAdded
+  });
+  if (result.lists) emitListsUpdate(result.lists);
+  const scan = machineScan.publicView();
+  state.publish("machine", scan);
+  return res.json({ ok: true, scan, lists: result.lists, result });
+});
+
+app.post("/api/machine-scan/restore", async (_req, res) => {
+  const result = await machineBlock.restoreAll();
+  if (result.lists) emitListsUpdate(result.lists);
+  const scan = machineScan.publicView();
+  state.publish("machine", scan);
+  res.status(result.ok ? 200 : 500).json({ ok: result.ok, scan, lists: result.lists, result });
+});
+
 /** Server-Sent Events — live block feed for the dashboard. */
 app.get("/api/events", (req, res) => {
   res.setHeader("Content-Type", "text/event-stream");
@@ -520,12 +765,28 @@ app.get("/api/events", (req, res) => {
     })}\n\n`
   );
 
+  let keepAlive = null;
   const unsubscribe = state.subscribe((evt) => {
-    res.write(`event: ${evt.type}\ndata: ${JSON.stringify(evt)}\n\n`);
+    try {
+      res.write(`event: ${evt.type}\ndata: ${JSON.stringify(evt)}\n\n`);
+      if (evt.type === "bye") {
+        if (keepAlive) clearInterval(keepAlive);
+        unsubscribe();
+        res.end();
+      }
+    } catch {
+      if (keepAlive) clearInterval(keepAlive);
+      unsubscribe();
+    }
   });
 
-  const keepAlive = setInterval(() => {
-    res.write(`: ping ${Date.now()}\n\n`);
+  keepAlive = setInterval(() => {
+    try {
+      res.write(`: ping ${Date.now()}\n\n`);
+    } catch {
+      clearInterval(keepAlive);
+      unsubscribe();
+    }
   }, 15000);
 
   req.on("close", () => {
@@ -535,7 +796,7 @@ app.get("/api/events", (req, res) => {
 });
 
 loadDetector()
-  .then(() => {
+  .then(async () => {
     listsStore.startListsWatch();
     listsStore.onListsChange((lists, meta) => {
       state.emitLists(
@@ -579,12 +840,59 @@ loadDetector()
           });
       }
     });
-    app.listen(UI_PORT, "localhost", () => {
+    const listsMod = await listsStore.loadMod();
+    const scanDeps = {
+      classify: classifyUrl,
+      isTrusted(host) {
+        const lists = listsStore.peekCache();
+        if (!lists) return false;
+        try {
+          return listsMod.isDomainTrustedInLists(lists, host);
+        } catch {
+          return false;
+        }
+      },
+      onUpdate: (scan) => state.publish("machine", scan)
+    };
+    // First-launch honest-limits gate — ack/skip (or SHIELD_HONEST_LIMITS=0 for smokes) before auto-scan.
+    if (autostart.honestLimitsResolved()) {
+      machineScan.startAuto(scanDeps);
+    } else {
+      machineScan.bind(scanDeps);
+      console.log("[desktop] Honest limits pending — machine scan waits for ack or skip");
+    }
+
+    uiServer = app.listen(UI_PORT, "localhost");
+    uiServer.on("error", (err) => {
+      if (err && err.code === "EADDRINUSE") {
+        console.error(
+          `[desktop] localhost:${UI_PORT} is already in use. Close the other Preventive Shield window.`
+        );
+        process.exit(1);
+      }
+      console.error("[desktop] dashboard failed", err);
+      process.exit(1);
+    });
+    uiServer.on("listening", () => {
       console.log(`[desktop] Dashboard UI     → http://localhost:${UI_PORT}`);
-      console.log(`[desktop] Website check   → ${WEBSITE_CHECK_URL}  (WEBSITE_CHECK_URL)`);
-      console.log(`[desktop] Prefer website on http://localhost:3000 (vinext npm run dev)`);
+      console.log(`[desktop] Website check   → ${WEBSITE_CHECK_URL}`);
+      console.log(`[desktop] Website origin  ← ${WEBSITE_CHECK_URL_SOURCE}`);
+      if (WEBSITE_CHECK_URL_SOURCE.startsWith("fallback")) {
+        console.log(`[desktop] Prefer website on http://localhost:3000 (vinext npm run dev)`);
+      }
+
       console.log(`[desktop] Personal lists  → ${listsStore.listsPath()}  (shield-lists-v1; Syncthing-friendly)`);
-      startProxy();
+      proxyServer = startProxy();
+      proxyServer.on("error", (err) => {
+        if (err && err.code === "EADDRINUSE") {
+          console.error(
+            `[desktop] 127.0.0.1:${PROXY_PORT} is already in use. Close the other Preventive Shield window.`
+          );
+          void shutdown().finally(() => process.exit(1));
+          return;
+        }
+        console.error("[desktop] proxy failed", err);
+      });
     });
   })
   .catch((err) => {
