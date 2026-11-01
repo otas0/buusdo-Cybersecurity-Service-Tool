@@ -18,7 +18,9 @@ jobs:
           cache: npm
 
       - name: Install
-        run: npm ci
+        run: |
+          # Node 22 CI vs local Node 24 can leave optional native deps out of sync; prefer ci, fall back once.
+          npm ci || npm install --no-fund --no-audit
 
       - name: Unit tests
         run: |
