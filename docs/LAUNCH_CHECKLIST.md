@@ -2,49 +2,72 @@
 
 Use this for the first public website launch on **Cloudflare Workers**. Default: **account sync off**.
 
+**Current live origin (workers.dev):** `https://pcpd.mtsu.workers.dev`  
+Recorded via `npm run production:origin` → README + `shared/production-site.json` + extension `DEFAULT_API_BASE`.
+
 ## A. Pre-flight (local)
 
-- [ ] Node ≥ 22.13; `npm ci`
-- [ ] `npm run check` (or `npm test` + `npm run threat:check` + `npm run build`)
-- [ ] `npm run openapi:check`
-- [ ] Manual: `/en`, `/pt-PT`, Settings privacy, one check via `npm run dev`
+- [x] Node ≥ 22.13; `npm ci`
+- [x] `npm run check` (2026-11-01 — tests + typecheck + lint + threat:check + build)
+- [ ] `npm run openapi:check` (run before OpenAPI-touching commits)
+- [ ] Manual: `/en`, `/pt-PT`, Settings, privacy, one check via `npm run dev`
 
 ## B. Cloudflare hosting
 
-- [ ] `npx wrangler login` (or CI token) + `CLOUDFLARE_ACCOUNT_ID` set
-- [ ] `npm run deploy:cloudflare` succeeds
-- [ ] `*.workers.dev` health: `npm run health:prod -- --url https://…workers.dev` → `curatedListPresent: true`
-- [ ] `npm run check:prod -- --url https://…workers.dev` exits 0 (Workers outbound fetch + probe)
-- [ ] `npm run production:origin -- https://…` updates README + client defaults; commit
-- [ ] Custom domain attached on the Worker + TLS green
-- [ ] One canonical host only ([CANONICAL_HOST.md](CANONICAL_HOST.md))
-- [ ] `NEXT_PUBLIC_SITE_URL=https://YOUR_DOMAIN` set for the deploy build
+- [x] `npx wrangler login` + account available
+- [x] `npm run deploy:cloudflare` succeeds → `https://pcpd.mtsu.workers.dev`
+- [x] Health (remote): `ok`, **`curatedListPresent: true`**, `accountSyncEnabled: false` (2026-11-01)
+- [x] **`check:prod`** against the origin — **OK** via GitHub ubuntu ([41285063357](https://github.com/otas0/preventive-cybersecurity-prototype/actions/runs/41285063357)) + CF-reachable browser. Local laptop still TCP-timeouts `*.workers.dev` ([LOCAL_CF_CONNECTIVITY.md](LOCAL_CF_CONNECTIVITY.md)). Log below.
+- [x] `npm run production:origin -- https://pcpd.mtsu.workers.dev` committed
+- [ ] Custom domain attached on the Worker + TLS green ([CUSTOM_DOMAIN_REDEPLOY.md](CUSTOM_DOMAIN_REDEPLOY.md))
+- [ ] One canonical host only ([CANONICAL_HOST.md](CANONICAL_HOST.md)) — when custom domain exists
+- [ ] `NEXT_PUBLIC_SITE_URL=https://YOUR_DOMAIN` set for the **second** deploy build
 - [ ] Redeploy after setting the public URL
 - [ ] `npm run health:prod` + `npm run check:prod` against the canonical domain exit 0
 
+### check:prod log
+
+| When (UTC) | Runner | Result | Notes |
+|------------|--------|--------|-------|
+| 2026-11-01 | Operator laptop (Asia) | **timeout** | Local TCP to previous `preventive-shield.mtsu.workers.dev` timed out; not a Worker crash — see [LOCAL_CF_CONNECTIVITY.md](LOCAL_CF_CONNECTIVITY.md) |
+| 2026-11-01 | Deploy rename | **live** | Worker name `pcpd` → `https://pcpd.mtsu.workers.dev` (privacy page verified remotely) |
+| 2026-11-01 | Cursor remote fetch | health **OK** | `curatedListPresent: true`; GET `/api/check` → 405 (POST-only, route present) |
+| 2026-11-01T07:23Z | Cursor IDE browser (CF-reachable) | **OK** | `POST /api/check` `https://example.com` → `ok`, `timingValid`, `probeMs≈23`, `totalMs≈23`, DNS+HTTP 200, `ambiguousProbeStatus=false`. UI Run on `/en` also Clear / proceed-with-care with timing strip. |
+| 2026-11-01T07:30Z | github-actions (Production health) | **OK** | [run 41285063357](https://github.com/otas0/preventive-cybersecurity-prototype/actions/runs/41285063357) ubuntu · `PRODUCTION_HEALTH_URL=https://pcpd.mtsu.workers.dev` · health `ok`+`curatedListPresent` · check `ok`+`timingValid` · `probeMs=13` `totalMs=13` |
+
+
 ## C. Monitoring
 
-- [ ] Repo variable `PRODUCTION_HEALTH_URL=https://YOUR_DOMAIN`
-- [ ] Actions → **Production health** run is green
-- [ ] Cloudflare Workers error + CPU alert emails ([CLOUDFLARE_ALERTS.md](CLOUDFLARE_ALERTS.md))
-- [ ] Optional: Actions → **Deploy Cloudflare** secrets (`CLOUDFLARE_API_TOKEN`, `CLOUDFLARE_ACCOUNT_ID`)
+- [x] Repo variable `PRODUCTION_HEALTH_URL=https://pcpd.mtsu.workers.dev` (otas0/preventive-cybersecurity-prototype)
+- [x] Actions → **Production health** run is green — [41285063357](https://github.com/otas0/preventive-cybersecurity-prototype/actions/runs/41285063357) (`check:prod` on ubuntu). Full checklist bot write awaits next push of local `health-monitor.yml`.
+- [ ] Watch repo / enable Actions failure email; optional secret `SLACK_WEBHOOK_URL`
+- [ ] Cloudflare Workers error + CPU alert emails — enable then **send a test** ([CLOUDFLARE_ALERTS.md](CLOUDFLARE_ALERTS.md)) — needs signed-in CF dashboard (login gate)
+- [ ] Capture Workers error/CPU baseline screenshots ([WORKERS_ERROR_BASELINE.md](WORKERS_ERROR_BASELINE.md) → `ops/workers-baselines/`) — needs CF Metrics (worker **pcpd**)
+- [ ] Actions → **Deploy Cloudflare** secrets: `CLOUDFLARE_API_TOKEN`, `CLOUDFLARE_ACCOUNT_ID` ([DEPLOY_SECRETS.md](DEPLOY_SECRETS.md)); `NEXT_PUBLIC_SITE_URL` defaults to workers.dev
+
 
 ## D. Product defaults (first launch)
 
-- [ ] `ACCOUNT_SYNC_ENABLED` off; `ACCOUNT_SYNC_REQUIRE_TURSO=1` stays on in `wrangler.jsonc`
-- [ ] No mailer / Turso secrets required yet
-- [ ] Privacy pages live: `/en/privacy`, `/pt-PT/privacy` — **before** public promotion
-- [ ] Extension / desktop defaults follow `production:origin` (or env override)
+- [x] `ACCOUNT_SYNC_ENABLED=0`; `ACCOUNT_SYNC_REQUIRE_TURSO=1` in `wrangler.jsonc` — **keep sync off** until Turso + mailer ([ACCOUNT_SYNC_GATE.md](ACCOUNT_SYNC_GATE.md))
+- [x] No mailer / Turso secrets required yet — do **not** enable Account sync / Turso / Resend until gate checklist is complete
+- [x] Privacy pages live: `/en/privacy`, `/pt-PT/privacy` — redeploy after copy edits, then `npm run test:playwright:privacy` on a CF-reachable machine
+- [x] Extension / desktop defaults follow `production:origin` (`DEFAULT_API_BASE=https://pcpd.mtsu.workers.dev`)
+- [ ] Extension: load unpacked → confirm Website API base is production → one **Run** (CF timeout shows dedicated copy) — operator Chrome step; same API proven on website
+- [x] Desktop: unset `WEBSITE_CHECK_URL` → reads `shared/production-site.json`; startup logs `Website origin ← …`
+- [x] Public links only: canonical + `/en/privacy` ([PUBLIC_PROMOTION.md](PUBLIC_PROMOTION.md)) — `https://pcpd.mtsu.workers.dev` + `https://pcpd.mtsu.workers.dev/en/privacy`
+- [ ] `npm run hooks:install` once so pre-commit runs `openapi:check`
+
 
 ## E. Go / no-go
 
 | Signal | Go |
 |--------|-----|
 | Health | `ok`, `curatedListPresent: true`, own threat intel |
-| Check API | `POST /api/check` returns timing-valid analysis |
+| Check API | `POST /api/check` returns timing-valid analysis (**log in table above**) |
 | Locales | `/en`, `/pt-PT`, privacy pages load |
 | Secrets | Only in Wrangler secrets / CI — not in git |
 | Canonical | Single public origin |
+| Sync | Off until Turso + production mailer |
 
 ## F. After go-live (first 48h)
 
@@ -52,3 +75,10 @@ Use this for the first public website launch on **Cloudflare Workers**. Default:
 - [ ] Watch health-monitor + Workers metrics (errors, CPU)
 - [ ] Spot-check rate limits under light load
 - [ ] Do **not** enable account sync until Turso (`DATABASE_URL`) + mailer are ready
+
+## G. Optional / later
+
+- [ ] After 48h: `git checkout -b chore/vinext-1-4-eval` ([VINEXT_UPGRADE_1_4.md](VINEXT_UPGRADE_1_4.md))
+- [ ] Custom domain: follow [CUSTOM_DOMAIN_REDEPLOY.md](CUSTOM_DOMAIN_REDEPLOY.md) then refresh public promotion URLs
+- [ ] Playwright prod privacy after privacy redeploy: `npm run test:playwright:privacy` (skips if origin unreachable)
+
