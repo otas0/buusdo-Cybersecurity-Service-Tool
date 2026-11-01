@@ -1,0 +1,401 @@
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  width: 320px;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font);
+}
+
+body { padding: 16px 16px 14px; }
+
+button, select { font: inherit; color: inherit; }
+
+.top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--line);
+}
+
+h1 {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.lang select {
+  background: transparent;
+  border: 0;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  cursor: pointer;
+}
+
+.api-base {
+  display: block;
+  width: 100%;
+  margin: 6px 0 0;
+  padding: 6px 8px;
+  background: transparent;
+  border: 1px solid var(--line);
+  color: var(--text);
+  font-family: var(--mono);
+  font-size: 11px;
+}
+
+.api-toggle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 12px 0 4px;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.api-toggle input {
+  margin: 0;
+}
+
+.toast-dismiss-toggle {
+  margin-top: 10px;
+}
+
+.api-toggle + .hint {
+  margin: 0 0 12px;
+  font-size: 11px;
+  color: var(--muted);
+  line-height: 1.35;
+}
+
+.api-fallback {
+  margin: 0 0 8px;
+  padding: 8px 10px;
+  border: 1px solid var(--halt, #e85d04);
+  background: color-mix(in srgb, var(--halt, #e85d04) 14%, transparent);
+  color: var(--text);
+  font-size: 11px;
+  line-height: 1.4;
+}
+
+.api-status {
+  margin: 0 0 12px;
+}
+
+.readout {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+  margin: 18px 0 0;
+}
+
+.mark {
+  width: 8px;
+  height: 8px;
+  border: 1px solid var(--text);
+}
+
+.readout[data-level="safe"] .mark,
+.readout[data-level="caution"] .mark { background: var(--text); }
+
+.readout[data-level="danger"] .mark {
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+#statusWord {
+  font-size: 40px;
+  line-height: 0.95;
+  font-weight: 450;
+  letter-spacing: -0.04em;
+}
+
+.readout[data-level="danger"] #statusWord { color: var(--accent); }
+
+.detail {
+  margin: 8px 0 0;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.4;
+  min-height: 2.6em;
+}
+
+#scanBtn {
+  width: 100%;
+  margin-top: 14px;
+  height: 40px;
+  border: 0;
+  background: var(--text);
+  color: var(--bg);
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+#scanBtn:hover,
+#scanBtn.is-scanning { background: var(--accent); }
+
+.counts {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  margin: 16px 0 0;
+  padding-top: 12px;
+  border-top: 1px solid var(--line);
+}
+
+.counts dt, .last, .hint {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.counts dd {
+  margin: 4px 0 0;
+  font-size: 18px;
+}
+
+/* Share-mode mute-window chip (support blob trackersApiAnnounceActive). */
+.mute-window-chip {
+  margin: 0.35rem 0 0;
+  padding: 0.2rem 0.45rem;
+  font-size: 0.75rem;
+  line-height: 1.3;
+  color: var(--halt, #f97316);
+  border: 1px solid var(--halt, #f97316);
+  background: transparent;
+}
+.mute-window-chip[hidden] {
+  display: none;
+}
+
+/* Website API level is from /api/check — mute local tracker digit entirely. */
+.counts .count-cell.is-api-muted {
+  opacity: 0.45;
+}
+
+.counts .count-cell.is-api-muted dd {
+  color: var(--muted);
+  font-size: 14px;
+  letter-spacing: 0.08em;
+}
+
+.last { margin: 12px 0 0; }
+
+.last time {
+  display: block;
+  margin-top: 4px;
+  color: var(--text);
+  font-family: var(--font);
+  font-size: 12px;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+.foot {
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px solid var(--line);
+}
+
+.privacy {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 12px;
+}
+
+.privacy select {
+  width: 100%;
+  background: transparent;
+  border: 1px solid var(--line);
+  padding: 6px 8px;
+  cursor: pointer;
+}
+
+.hint {
+  margin: 6px 0 0;
+  color: var(--muted);
+  text-transform: none;
+  letter-spacing: 0;
+  font-family: var(--font);
+  font-size: 11px;
+  line-height: 1.4;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+button:focus-visible, select:focus-visible, input:focus-visible {
+  outline: 1px solid var(--accent);
+  outline-offset: 3px;
+}
+
+.lists {
+  margin-top: 16px;
+  padding-top: 12px;
+  border-top: 1px solid var(--line);
+}
+
+.lists h2 {
+  margin: 0 0 4px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.lists h3 {
+  margin: 8px 0 4px;
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--muted);
+}
+
+.list-add {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 8px;
+}
+
+.list-add input {
+  flex: 1 1 100%;
+  min-width: 0;
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid var(--text);
+  padding: 6px 0;
+  font-size: 13px;
+  color: inherit;
+}
+
+.list-add button[type="submit"] {
+  border: 1px solid var(--text);
+  background: transparent;
+  padding: 4px 10px;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.list-cols {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.mini-log {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  max-height: 88px;
+  overflow: auto;
+  font-size: 11px;
+}
+
+.mini-log li {
+  display: flex;
+  justify-content: space-between;
+  gap: 4px;
+  padding: 2px 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.mini-log .empty {
+  color: var(--muted);
+}
+
+.list-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.lists-qr {
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+}
+
+.lists-qr canvas {
+  image-rendering: pixelated;
+  border: 1px solid var(--line);
+}
+
+.lists-undo {
+  margin-top: 8px;
+}
+
+.lists-paste-fallback {
+  margin-top: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+/*
+ * Safari-friendly disabled contrast: muted + Halt outline ONLY (shared/tokens.css + dashboard.css).
+ * Gate every future Diagnostics-only action with class diag-gated (+ aria-disabled when needed).
+ */
+#listsSupportBlobBtn[aria-disabled="true"],
+button.text-button[aria-disabled="true"],
+button.diag-gated[aria-disabled="true"] {
+  /* Keep keyboard focus; block pointer only. */
+  pointer-events: none;
+  opacity: 0.5;
+  cursor: not-allowed;
+  color: var(--muted);
+  outline: 1px solid var(--halt);
+  outline-offset: 1px;
+  border-color: var(--line);
+}
+
+.lists-paste-fallback textarea {
+  width: 100%;
+  box-sizing: border-box;
+  background: transparent;
+  border: 1px solid var(--line);
+  color: inherit;
+  font: inherit;
+  font-size: 11px;
+  padding: 6px;
+  resize: vertical;
+}
+
+.list-cols.is-flash {
+  outline: 2px solid var(--accent, #e85d04);
+  outline-offset: 2px;
+  animation: shield-flash 1.2s ease-out;
+}
+
+@keyframes shield-flash {
+  from { outline-color: var(--accent, #e85d04); }
+  to { outline-color: transparent; }
+}
+
+.text-button {
+  background: transparent;
+  border: 0;
+  padding: 0;
+  color: var(--muted);
+  font-size: 11px;
+  text-decoration: underline;
+  cursor: pointer;
+}

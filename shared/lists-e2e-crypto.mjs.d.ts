@@ -1,0 +1,1 @@
+export function isE2EEnvelope(raw: unknown): boolean;

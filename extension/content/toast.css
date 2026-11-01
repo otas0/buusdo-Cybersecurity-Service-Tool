@@ -1,0 +1,75 @@
+#portugal-cp-shield-toast-host {
+  position: fixed;
+  z-index: 2147483646;
+  top: 16px;
+  right: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  pointer-events: none;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+.portugal-cp-shield-toast {
+  /* Allow future dismiss/Leave clicks; host stays pointer-events: none. */
+  pointer-events: auto;
+  min-width: 140px;
+  max-width: 240px;
+  padding: 10px 12px;
+  border-radius: 0;
+  color: #0e0e0e;
+  background: #f3f1ea;
+  border: 0;
+  box-shadow: none;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  opacity: 0;
+  transform: none;
+  transition: opacity 0.2s ease;
+}
+
+.portugal-cp-shield-toast.is-visible { opacity: 1; }
+
+.portugal-cp-shield-toast--caution { background: #f3f1ea; color: #0e0e0e; }
+
+/* Halt / phishing: solid #ff4d00 field, dark type — no translucent Halt mixes. */
+.portugal-cp-shield-toast--danger {
+  background: #ff4d00;
+  color: #0e0e0e;
+}
+
+.portugal-cp-shield-toast__label {
+  display: block;
+  color: inherit;
+}
+
+/* Dismiss/Leave via appendToastAction — inherit toast ink (dark on Halt). */
+.portugal-cp-shield-toast__action {
+  display: inline-block;
+  margin-top: 8px;
+  margin-right: 8px;
+  padding: 4px 8px;
+  pointer-events: auto;
+  cursor: pointer;
+  font: inherit;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: inherit;
+  background: transparent;
+  border: 1px solid currentColor;
+  border-radius: 0;
+}
+
+.portugal-cp-shield-toast--danger .portugal-cp-shield-toast__action {
+  color: #0e0e0e;
+  border-color: #0e0e0e;
+  background: transparent;
+}
+
+.portugal-cp-shield-toast__action:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
+}

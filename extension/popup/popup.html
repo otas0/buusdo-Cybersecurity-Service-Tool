@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Preventive Shield</title>
+    <link rel="stylesheet" href="../shared/tokens.css" />
+    <link rel="stylesheet" href="popup.css" />
+  </head>
+  <body>
+    <header class="top">
+      <h1 id="appTitle">Preventive Shield</h1>
+      <label class="lang">
+        <span class="visually-hidden" id="langLabel">Language</span>
+        <select id="langSelect" aria-label="Language">
+          <option value="en">EN</option>
+          <option value="pt-PT">PT</option>
+        </select>
+      </label>
+    </header>
+
+    <main>
+      <p class="readout" id="readout" data-level="idle" role="status">
+        <span class="mark" aria-hidden="true"></span>
+        <span id="statusWord">Standby</span>
+      </p>
+      <p id="statusDetail" class="detail">Open a page, then run.</p>
+
+      <button type="button" id="scanBtn" aria-describedby="statusDetail">
+        <span id="scanLabel">Run</span>
+      </button>
+
+      <label class="api-toggle">
+        <input type="checkbox" id="websiteApiToggle" />
+        <span id="websiteApiLabel">Website check API</span>
+      </label>
+      <input
+        type="url"
+        id="websiteApiBase"
+        class="api-base"
+        value="http://localhost:3000"
+        autocomplete="off"
+        spellcheck="false"
+        aria-label="Website API base URL"
+      />
+      <p id="websiteApiHint" class="hint">Off — local signals only. On: POST /api/check to this base (first-party only, no third-party reputation).</p>
+      <p id="websiteApiFallback" class="api-fallback" hidden role="status"></p>
+      <div class="api-check-actions" data-testid="result-action-row">
+        <p id="websiteApiStatus" class="hint api-status" hidden></p>
+      </div>
+
+      <dl class="counts">
+        <div id="trackersCount" class="count-cell">
+          <dt id="trackersLabel">Trackers</dt>
+          <dd id="trackersValue">0</dd>
+        </div>
+        <div>
+          <dt id="phishingLabel">Signals</dt>
+          <dd id="phishingValue">0</dd>
+        </div>
+      </dl>
+      <p id="trackersApiAnnounce" class="visually-hidden" role="status" aria-live="polite" aria-atomic="true"></p>
+      <p id="trackersMuteWindowChip" class="mute-window-chip" data-testid="trackers-mute-window-chip" hidden></p>
+
+      <p class="last">
+        <span id="lastScanLabel">Last</span>
+        <time id="lastScanValue">—</time>
+      </p>
+
+      <section class="account" id="accountSection" aria-labelledby="accountTitle">
+        <h2 id="accountTitle">Account</h2>
+        <p id="accountHint" class="hint">Optional list sync (block/trust only). Offline backup stays below.</p>
+        <p id="accountStatus" class="hint" role="status" aria-live="polite"></p>
+        <form id="accountSignInForm" class="list-add">
+          <label class="visually-hidden" id="accountEmailLabel" for="accountEmail">Email</label>
+          <input id="accountEmail" type="email" autocomplete="email" placeholder="you@example.com" />
+          <button type="submit" id="accountSendBtn" class="text-button">Send link</button>
+        </form>
+        <label class="visually-hidden" id="accountDeviceLabel" for="accountDeviceCode">Device code</label>
+        <input id="accountDeviceCode" type="text" autocomplete="off" spellcheck="false" placeholder="Device code" />
+        <button type="button" id="accountExchangeBtn" class="text-button">Exchange code</button>
+        <label class="api-toggle">
+          <input type="checkbox" id="accountSyncToggle" />
+          <span id="accountSyncLabel">Sync lists</span>
+        </label>
+        <div class="list-actions">
+          <button type="button" id="accountSyncNowBtn" class="text-button">Sync now</button>
+          <button type="button" id="accountSignOutBtn" class="text-button">Sign out</button>
+        </div>
+      </section>
+
+      <section class="lists" id="listsSection" aria-labelledby="listsTitle">
+        <h2 id="listsTitle">Personal lists</h2>
+        <p id="listsHint" class="hint">Block/trust on this device. Export JSON to move lists for free.</p>
+        <form id="listAddForm" class="list-add">
+          <label class="visually-hidden" id="listDomainLabel" for="listDomain">Domain</label>
+          <input id="listDomain" type="text" inputmode="url" placeholder="example.com" autocomplete="off" spellcheck="false" />
+          <button type="submit" id="listBlockBtn">Block</button>
+          <button type="button" id="listTrustBtn" class="text-button">Trust</button>
+          <button type="button" id="listBlockTabBtn" class="text-button">Block this tab</button>
+        </form>
+        <p id="listsStatus" class="hint" role="status" aria-live="polite" aria-atomic="true" hidden></p>
+        <p id="listsPasteDiag" class="hint lists-paste-diag" hidden></p>
+        <div class="list-cols">
+          <div>
+            <h3 id="blockedTitle">Blocked</h3>
+            <ul id="blockedList" class="mini-log"></ul>
+          </div>
+          <div>
+            <h3 id="trustedTitle">Trusted</h3>
+            <ul id="trustedList" class="mini-log"></ul>
+          </div>
+        </div>
+        <div class="list-actions">
+          <button type="button" id="listsExportBtn" class="text-button">Export JSON</button>
+          <button type="button" id="listsSupportBlobBtn" class="text-button diag-gated">Support diagnostics JSON</button>
+          <button type="button" id="listsImportBtn" class="text-button">Import JSON</button>
+          <button type="button" id="listsPasteQrBtn" class="text-button">Paste QR / dense JSON</button>
+          <button type="button" id="listsQrBtn" class="text-button">Show QR</button>
+          <input type="file" id="listsImportFile" accept="application/json,.json" hidden />
+        </div>
+        <p id="listsOfflineBackup" class="hint">Offline backup: export JSON or QR (no account required).</p>
+        <div id="listsPasteFallback" class="lists-paste-fallback" hidden>
+          <label class="visually-hidden" id="listsPasteFallbackLabel" for="listsPasteFallbackArea">Paste dense JSON</label>
+          <textarea id="listsPasteFallbackArea" rows="3" spellcheck="false" placeholder='{"b":["bad.example"],"t":[]}'></textarea>
+          <button type="button" id="listsPasteFallbackApply" class="text-button">Import pasted text</button>
+        </div>
+        <div id="listsQrWrap" class="lists-qr" hidden>
+          <canvas id="listsQrCanvas" width="160" height="160" aria-label="QR of compact list backup"></canvas>
+          <p id="listsQrHint" class="hint"></p>
+          <button type="button" id="listsQrCopyBtn" class="text-button">Copy QR payload</button>
+        </div>
+        <p id="listsUndo" class="hint lists-undo" role="status" hidden></p>
+      </section>
+    </main>
+
+    <footer class="foot">
+      <label class="privacy">
+        <span id="privacyLabel">Data</span>
+        <select id="privacySelect" aria-describedby="privacyHint">
+          <option value="off">Never store</option>
+          <option value="local">This device only</option>
+          <option value="share">Diagnostics for support</option>
+        </select>
+      </label>
+      <p id="privacyHint" class="hint">Default: nothing is stored. Diagnostics only help fix technical problems — never the address, and never for public release.</p>
+      <label class="api-toggle toast-dismiss-toggle">
+        <input type="checkbox" id="toastDismissToggle" aria-describedby="toastDismissHint toastDismissStatus" />
+        <span id="toastDismissLabel">Toast dismiss button</span>
+      </label>
+      <p id="toastDismissHint" class="hint">Off by default. When on, block toasts show Dismiss (stored as shieldToastDismiss).</p>
+      <p id="toastDismissStatus" class="hint" role="status" aria-live="polite" aria-atomic="true" hidden></p>
+    </footer>
+
+    <script src="../shared/qrcode-browser.js"></script>
+    <script src="../shared/qr-draw.classic.js"></script>
+    <script type="module" src="popup.js"></script>
+  </body>
+</html>

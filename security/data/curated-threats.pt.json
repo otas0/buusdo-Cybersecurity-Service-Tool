@@ -1,0 +1,95 @@
+{
+  "updatedAt": "2026-10-25",
+  "source": "Portugal-oriented first-party seeds (.example only). Merged when OWN_THREAT_MERGE_PT=1 (default) or always via threat-intel merge.",
+  "hosts": {
+    "actividade-financas.example": "KNOWN_PHISHING",
+    "activobank-secure.example": "KNOWN_PHISHING",
+    "ageas-sinistro.example": "KNOWN_PHISHING",
+    "at-e-fatura.example": "KNOWN_PHISHING",
+    "ativar-mbway.example": "KNOWN_PHISHING",
+    "autenticacao-gov.example": "KNOWN_PHISHING",
+    "bancobpi-login.example": "KNOWN_PHISHING",
+    "bancoctt-login.example": "KNOWN_PHISHING",
+    "caixa-secure-login.example": "KNOWN_PHISHING",
+    "cgd-caixadirecta.example": "KNOWN_PHISHING",
+    "cgd-login.example": "KNOWN_PHISHING",
+    "chaves-moveis-digitais.example": "KNOWN_PHISHING",
+    "ctt-entrega.example": "KNOWN_PHISHING",
+    "ctt-tracking-pt.example": "KNOWN_PHISHING",
+    "ctt-tracking.example": "KNOWN_PHISHING",
+    "fidelidade-apolice.example": "KNOWN_PHISHING",
+    "gov-pt-login.example": "KNOWN_PHISHING",
+    "id-gov-pt.example": "KNOWN_PHISHING",
+    "impostos-irs-login.example": "KNOWN_PHISHING",
+    "irs-reembolso.example": "KNOWN_PHISHING",
+    "mbway-login.example": "KNOWN_PHISHING",
+    "mbway-secure.example": "KNOWN_PHISHING",
+    "millenium-secure.example": "KNOWN_PHISHING",
+    "millenniumbcp-secure.example": "KNOWN_PHISHING",
+    "montepio-acesso.example": "KNOWN_PHISHING",
+    "multibanco-secure.example": "KNOWN_PHISHING",
+    "novobanco-acesso.example": "KNOWN_PHISHING",
+    "novobanco-verify.example": "KNOWN_PHISHING",
+    "portal-financas.example": "KNOWN_PHISHING",
+    "santander-pt-login.example": "KNOWN_PHISHING",
+    "santander-verify.example": "KNOWN_PHISHING",
+    "segurancasocial-login.example": "KNOWN_PHISHING",
+    "seguro-directo-acesso.example": "KNOWN_PHISHING",
+    "seguro-social-direto.example": "KNOWN_PHISHING",
+    "viactt-rastreio.example": "KNOWN_PHISHING"
+  },
+  "changelog": [
+    {
+      "at": "2026-10-25",
+      "batchId": "pending-pt-insurance-irs",
+      "added": [
+        "fidelidade-apolice.example",
+        "ageas-sinistro.example",
+        "impostos-irs-login.example",
+        "seguro-directo-acesso.example"
+      ],
+      "removed": [],
+      "notes": "Portugal insurance / IRS lookalikes (.example only) for EVAL-057–064 MERGE on/off pairs. Apply with: npm run threat:apply -- security/data/batches/pending-pt-insurance-irs.json --target=pt."
+    },
+    {
+      "at": "2026-10-25",
+      "batchId": "2026-10-25-pt-banks-next",
+      "added": [
+        "activobank-secure.example",
+        "bancobpi-login.example",
+        "montepio-acesso.example",
+        "bancoctt-login.example"
+      ],
+      "removed": [],
+      "notes": "Next Portugal bank lookalikes (.example only) after 2026-10-25-pt-lookalikes. Apply with: npm run threat:apply -- security/data/batches/2026-10-25-pt-banks-next.json --target=pt. Keep EVAL-029–032 green; adds EVAL-049–056 MERGE on/off pairs."
+    },
+    {
+      "at": "2026-10-25",
+      "batchId": "2026-10-25-pt-lookalikes",
+      "added": [
+        "mbway-login.example",
+        "millenniumbcp-secure.example",
+        "novobanco-acesso.example",
+        "santander-pt-login.example",
+        "cgd-caixadirecta.example",
+        "ctt-tracking-pt.example"
+      ],
+      "removed": [],
+      "notes": "High-signal Portugal .pt-brand lookalikes (.example only). Apply with: npm run threat:apply -- security/data/batches/2026-10-25-pt-lookalikes.json --target=pt. Keep EVAL-029–032 green after apply."
+    },
+    {
+      "at": "2026-10-21",
+      "batchId": "2026-10-21-pt-high-signal",
+      "added": [
+        "autenticacao-gov.example",
+        "portal-financas.example",
+        "id-gov-pt.example",
+        "chaves-moveis-digitais.example",
+        "seguro-social-direto.example",
+        "at-e-fatura.example"
+      ],
+      "removed": [],
+      "notes": "High-signal Portugal-oriented .example hosts for curated-threats.pt.json. Apply with: npm run threat:apply -- security/data/batches/2026-10-21-pt-high-signal.json --target=pt. Exercise Settings MERGE_PT write on a local draft PR after apply."
+    }
+  ]
+}

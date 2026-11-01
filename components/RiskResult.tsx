@@ -2,45 +2,48 @@
 
 import { useEffect, useState } from "react";
 import type { Analysis } from "../security/analyse";
-import { BLOCK_KEY, TRUST_KEY, isStored, removeEntry, saveEntry } from "../security/storage";
-import { Icon } from "./icons";
+import { probeBlockedPair } from "../security/probe-blocked-copy";
+import { canPersistLists } from "./privacy-storage";
+import { listFeedbackDrafts, saveFeedbackDraft, type FeedbackMark } from "./feedback-drafts";
+import { CopyEnvLine } from "./CopyEnvLine";
+import { formatTimingFlagChips, formatTimingSummaryLine, timingLabels } from "./timing-copy";
+import { levelToLight, TrafficLights } from "./TrafficLights";
+import type { Locale } from "../i18n/messages";
+import { riskWhyItems, whyEvidenceDisplay } from "./risk-why-items";
 
 export function RiskResult({ analysis, t, onReset }: { analysis: Analysis; t: Record<string, string>; onReset: () => void }) {
-  const { parsed, risk, identity, threat, sensitive } = analysis;
-  const [notice, setNotice] = useState("");
-  const [blocked, setBlocked] = useState(false);
+  const { parsed, risk, identity, threat, sensitive, live } = analysis;
+  const [feedbackNote, setFeedbackNote] = useState("");
+  const [showDetails, setShowDetails] = useState(false);
+  const [draftMarks, setDraftMarks] = useState<FeedbackMark[]>([]);
   const pt = t.navCheck === "Verificar";
+  const feedbackHost = parsed.hostname.toLowerCase().replace(/\.$/, "");
 
   useEffect(() => {
-    const timer = setTimeout(() => setBlocked(isStored(BLOCK_KEY, parsed.registrableDomain, localStorage)), 0);
+    const timer = setTimeout(() => {
+      const marks = listFeedbackDrafts()
+        .filter((item) => item.domain === feedbackHost)
+        .map((item) => item.mark);
+      setDraftMarks(marks);
+    }, 0);
     return () => clearTimeout(timer);
-  }, [parsed.registrableDomain]);
+  }, [feedbackHost]);
 
-  function save(kind: "block" | "trust") {
-    if (kind === "block") {
-      saveEntry(BLOCK_KEY, { domain: parsed.registrableDomain, reason: risk.level, createdAt: new Date().toISOString() }, localStorage);
-      setBlocked(true);
-    } else {
-      saveEntry(TRUST_KEY, { domain: parsed.registrableDomain, createdAt: new Date().toISOString() }, localStorage);
-      setNotice(`${t.protection} ${parsed.registrableDomain}`);
+  function saveFeedback(mark: FeedbackMark) {
+    const result = saveFeedbackDraft({ domain: feedbackHost, level: risk.level, mark });
+    if (!result.persisted) {
+      setFeedbackNote(t.feedbackNeedLocal);
+      return;
     }
+    setDraftMarks(result.drafts.filter((item) => item.domain === feedbackHost).map((item) => item.mark));
+    setFeedbackNote(t.feedbackSaved);
   }
 
-  if (blocked) {
-    return (
-      <section className="interstitial" aria-live="assertive">
-        <div className="status-icon"><Icon name="shield" size={34} /></div>
-        <div className="kicker">{t.protection}</div>
-        <h1>{t.blockedTitle}</h1>
-        <p>{t.blockedCopy}</p>
-        <div className="verification"><Icon name="check" /><span><strong>{t.blockedInPrototype}</strong> {parsed.registrableDomain}</span></div>
-        <div className="action-row">
-          <a className="primary-button" href={`/${pt ? "pt-PT" : "en"}/settings`}>{t.navSettings}</a>
-          <button className="secondary-button" onClick={() => { removeEntry(BLOCK_KEY, parsed.registrableDomain, localStorage); setBlocked(false); }}>{t.remove}</button>
-          <button className="text-button deliberate" onClick={onReset}>{t.leave}</button>
-        </div>
-      </section>
-    );
+  function openSettingsData() {
+    const locale = pt ? "pt-PT" : "en";
+    if (typeof window !== "undefined") {
+      window.location.assign(`/${locale}/settings#settings-privacy`);
+    }
   }
 
   const levelCopy: Record<string, { label: string; note: string }> = pt ? {
@@ -58,23 +61,51 @@ export function RiskResult({ analysis, t, onReset }: { analysis: Analysis; t: Re
   };
 
   const evidencePt: Record<string, [string, string]> = {
-    "known-threat": ["Sinal de phishing conhecido detetado", "Este endereço consta do conjunto local e fictício de ameaças."],
-    "no-match": ["Nenhuma ameaça conhecida encontrada", "Não foi encontrada nenhuma ameaça conhecida nas fontes verificadas. Isto não prova que o site seja seguro."],
-    "unknown-reputation": ["Reputação desconhecida", "A fonte verificada não fornece um resultado positivo nem negativo."],
-    "identity-match": ["O registo de identidade de demonstração corresponde", `O domínio registável corresponde ao registo fictício de ${identity.claimedOrganisation?.name}. Isto não significa que o site seja seguro.`],
-    "identity-mismatch": ["Não foi possível verificar a identidade alegada", `O domínio registável não está listado para ${identity.claimedOrganisation?.name}. A incompatibilidade é um sinal de risco, não prova de atividade criminosa.`],
-    "misleading-subdomain": ["Sinal de subdomínio enganador", `O domínio da organização aparece à esquerda, mas ${parsed.registrableDomain} é o domínio que controla este endereço na implementação atual.`],
-    lookalike: ["Sinal de semelhança do domínio", "Este domínio parece-se com o domínio de demonstração selecionado. A semelhança é um sinal, não prova de phishing."],
+    "known-threat": ["Sinal de ameaça conhecido", "Este endereço correspondeu à lista própria do Escudo Preventivo."],
+    "no-match": ["Nenhuma ameaça conhecida nas listas", "Não foi encontrada nenhuma ameaça conhecida na lista própria. Isto não prova que o site seja seguro."],
+    "unknown-reputation": ["Reputação desconhecida", "A lista própria não fornece um resultado positivo nem negativo."],
+    "provider-unavailable": ["Lista de ameaças indisponível", "A lista própria não pôde ser lida. As verificações estruturais e em direto continuaram."],
+    "identity-match": ["O domínio corresponde a uma organização conhecida", `O domínio registável corresponde a ${identity.claimedOrganisation?.name}. Isto não significa que o site seja seguro.`],
+    "identity-mismatch": ["Parece uma organização conhecida, mas o domínio não corresponde", `O endereço parece relacionado com ${identity.claimedOrganisation?.name}, mas o domínio de controlo é ${parsed.registrableDomain}.`],
+    "misleading-subdomain": ["Sinal de subdomínio enganador", `Um nome parecido com uma organização aparece antes do domínio de controlo ${parsed.registrableDomain}.`],
+    lookalike: ["Sinal de semelhança do domínio", "Este domínio parece-se com um domínio conhecido. A semelhança é um sinal, não prova de phishing."],
     punycode: ["Domínio internacionalizado codificado", "O endereço contém punycode. Pode ser legítimo, mas caracteres visualmente confusos exigem cuidado."],
     http: ["Ligação não encriptada", "A informação enviada por HTTP pode ficar exposta durante a transmissão."],
-    sensitive: ["Pedido de informação sensível", "Esta página controlada pede informação sensível. Nenhum valor é recolhido ou guardado."],
+    "sensitive-path": ["Caminho de página sensível", "O caminho sugere que a página pode pedir informação sensível. Confirme o domínio de forma independente."],
+    sensitive: ["Caminho de página sensível", "O caminho sugere que a página pode pedir informação sensível. Confirme o domínio de forma independente."],
+    "checked-address": ["Endereço analisado", `Verificado ${parsed.registrableDomain}.`],
+    "dns-ok": ["Anfitrião acessível", "A verificação em direto alcançou o anfitrião."],
+    "dns-fail": ["O anfitrião não foi alcançado", "O anfitrião não respondeu. O site pode estar mal escrito ou inacessível."],
+    "http-status": ["O site respondeu", "Foi recebida uma resposta HTTP."],
+    "redirect-chain": ["Cadeia de redirecionamentos", "O pedido seguiu um ou mais redirecionamentos."],
+    "cross-redirect": ["Redirecionamento para outro domínio", "O endereço redirecionou para outro domínio registável."],
+    redirect: ["O endereço redireciona", "O pedido seguiu um redirecionamento."],
+    unreachable: ["O site não respondeu", "O pedido em direto falhou."],
+    "tls-fail": ["Problema de TLS / certificado", "O HTTPS não pôde ser validado. Não introduza informação sensível."],
+    "ip-host": ["Endereço numérico", "O site é acedido por IP em vez de um nome de domínio normal."],
+    "risky-tld": ["Terminação de domínio pouco comum", "Esta terminação é mais usada em campanhas de phishing. Por si só não prova dano."],
+    "deep-subdomain": ["Cadeia de subdomínios invulgar", "Subdomínios longos às vezes são usados para parecer oficiais."],
+    "secret-query": ["Segredo no link", "O endereço coloca um segredo na query. O valor não foi guardado."],
+    "probe-timeout": ["A verificação em direto expirou", "O site não respondeu a tempo."],
     "https-limit": ["HTTPS não prova identidade ou confiança", "HTTPS protege a ligação, mas não prova a identidade ou a fiabilidade do site."],
+    "scope-limit": ["Âmbito desta verificação", "Analisamos o endereço com a lista própria, marcas parecidas, DNS, acessibilidade e redirecionamentos. Não enviamos o URL a serviços de terceiros."],
+    "user-block": [
+      "Lista pessoal de bloqueio",
+      "Este anfitrião está na sua lista pessoal (extensão ou app). O site não guardou a lista."
+    ],
   };
+  const locale = pt ? "pt-PT" : "en";
+  function probeBlockedTranslated(item: { id: string; detail: string }): [string, string] | undefined {
+    return probeBlockedPair(item, {
+      liveStatusCode: live?.statusCode,
+      locale
+    });
+  }
   const limitationsPt = [
     "Os sinais podem produzir falsos positivos ou falsos negativos.",
-    "Este protótipo não analisa o conteúdo do site nem prova quem controla um domínio.",
+    "Esta verificação não analisa o conteúdo do site nem prova quem controla um domínio.",
     "Uma correspondência de identidade não garante que todas as ações de um site sejam seguras.",
-    "A utilização em produção exigiria uma Lista de Sufixos Públicos completa e mantida, ou uma biblioteca de confiança equivalente.",
+    "URLs não são enviados a Google Safe Browsing nem a outros serviços de reputação de terceiros.",
   ];
   const copy = levelCopy[risk.level];
   const official = identity.claimedOrganisation?.domains[0];
@@ -84,48 +115,264 @@ export function RiskResult({ analysis, t, onReset }: { analysis: Analysis; t: Re
     KNOWN_PHISHING: "PHISHING CONHECIDO",
     NO_KNOWN_MATCH: "NENHUMA CORRESPONDÊNCIA CONHECIDA",
     UNKNOWN: "DESCONHECIDA",
-    PROVIDER_UNAVAILABLE: "FONTE INDISPONÍVEL",
+    PROVIDER_UNAVAILABLE: "LISTA INDISPONÍVEL",
   }[threat.state] ?? threat.state.replaceAll("_", " ")) : threat.state.replaceAll("_", " ");
   const sensitiveLabel = pt && sensitive ? ({ password: "palavra-passe", payment: "dados de pagamento", personal: "informação pessoal", permission: "permissão" }[sensitive] ?? sensitive) : sensitive ?? (pt ? "Nenhum" : "None");
-  const providerLabel = pt && threat.providerName === "Local deterministic demonstration dataset"
-    ? "Conjunto local determinístico de dados de demonstração"
-    : threat.providerName;
   const recommendation = pt
-    ? risk.recommendation === "LEAVE_AND_BLOCK" ? "Saia e bloqueie este domínio no protótipo" : risk.recommendation === "LEAVE" ? "Saia deste site" : risk.recommendation === "VERIFY_INDEPENDENTLY" ? "Verifique de forma independente" : "Prossiga com cuidado"
-    : risk.recommendation === "LEAVE_AND_BLOCK" ? "Leave and block this domain in the prototype" : risk.recommendation === "LEAVE" ? "Leave this website" : risk.recommendation === "VERIFY_INDEPENDENTLY" ? "Verify independently" : "Proceed with care";
+    ? risk.recommendation === "LEAVE_AND_BLOCK" ? "Saia e bloqueie este domínio (na extensão ou app)" : risk.recommendation === "LEAVE" ? "Saia deste site" : risk.recommendation === "VERIFY_INDEPENDENTLY" ? "Verifique de forma independente" : "Prossiga com cuidado"
+    : risk.recommendation === "LEAVE_AND_BLOCK" ? "Leave and block this domain (in the extension or desktop app)" : risk.recommendation === "LEAVE" ? "Leave this website" : risk.recommendation === "VERIFY_INDEPENDENTLY" ? "Verify independently" : "Proceed with care";
+
+  const kindLabel = (kind: string) => pt
+    ? ({ known: "conhecido", likely: "provável", signal: "sinal", unknown: "desconhecido", limitation: "limitação" }[kind] ?? kind)
+    : kind;
+
+  const userBlockEv = risk.evidence.find((item) => item.id === "user-block");
+  const userBlockTitle = userBlockEv
+    ? pt
+      ? evidencePt["user-block"]?.[0] ?? userBlockEv.title
+      : userBlockEv.title
+    : null;
+  const whyItems = riskWhyItems(risk.evidence, { bannerShowsUserBlock: Boolean(userBlockTitle) });
+  const detailRows: Array<{ kind: string; display: string; meta?: string }> = [
+    { kind: pt ? "Domínio" : "Domain", display: parsed.registrableDomain },
+    { kind: pt ? "Reputação (lista própria)" : "Reputation (own list)", display: reputationLabel },
+    { kind: pt ? "Pedido" : "Request", display: sensitiveLabel },
+    { kind: pt ? "Provas" : "Evidence", display: confidenceLabel },
+    { kind: pt ? "Fonte" : "Source", display: threat.providerName },
+    ...risk.evidence.map((item) => {
+      const translated =
+        item.id === "probe-blocked" ? probeBlockedTranslated(item) : pt ? evidencePt[item.id] : undefined;
+      return { kind: kindLabel(item.kind), display: translated?.[0] ?? item.title, meta: translated?.[1] ?? item.detail };
+    }),
+    { kind: "URL", display: parsed.fullUrl },
+    { kind: pt ? "Protocolo" : "Protocol", display: `${parsed.protocol.toUpperCase()} ${parsed.usesHttps ? (pt ? "· ligação encriptada" : "· encrypted connection") : (pt ? "· não encriptada" : "· not encrypted")}` },
+    { kind: "Hostname", display: parsed.hostname },
+    ...(parsed.subdomain ? [{ kind: pt ? "Subdomínio" : "Subdomain", display: parsed.subdomain }] : []),
+    ...(parsed.hasPunycode ? [{ kind: "Punycode", display: parsed.hostname }] : []),
+    ...(live?.redirectChain?.length ? [{ kind: pt ? "Redirecionamentos" : "Redirects", display: live.redirectChain.join(" → ") }] : []),
+    ...(analysis.timing
+      ? [
+          {
+            kind: pt ? "Tempo" : "Timing",
+            display: formatTimingSummaryLine(analysis.timing, timingLabels(t))
+          }
+        ]
+      : []),
+    ...(pt ? limitationsPt : [...risk.limitations, "URLs are not sent to Google Safe Browsing or other third-party reputation services."]).map((item) => ({ kind: pt ? "Limite" : "Limit", display: item })),
+  ];
 
   return (
     <div className="result-layout" aria-live="polite">
-      <section className={`risk-hero risk-${risk.level.toLowerCase().replace("_", "-")}`}>
-        <div className="risk-top"><span className="risk-symbol"><Icon name={risk.level === "LOW_EVIDENCE" ? "check" : "alert"} size={27} /></span><div><div className="kicker">{t.result} · {pt ? "QUALIDADE DAS PROVAS" : "EVIDENCE QUALITY"}: {confidenceLabel}</div><h1>{copy.label}</h1><p>{copy.note}</p></div></div>
-        <div className="signal-summary">
-          <span><small>{pt ? "DOMÍNIO REAL" : "ACTUAL DOMAIN"}</small><strong>{parsed.registrableDomain}</strong></span>
-          <span><small>{pt ? "IDENTIDADE ALEGADA" : "CLAIMED IDENTITY"}</small><strong>{identity.claimedOrganisation?.name ?? (pt ? "Nenhuma" : "None")}</strong></span>
-          <span><small>{pt ? "REPUTAÇÃO" : "REPUTATION"}</small><strong>{reputationLabel}</strong></span>
-          <span><small>{pt ? "PEDIDO SENSÍVEL" : "SENSITIVE REQUEST"}</small><strong>{sensitiveLabel}</strong></span>
-        </div>
-        <div className="checked-line"><Icon name="info" size={16} />{t.checked} · {providerLabel}</div>
+      <TrafficLights level={levelToLight(risk.level)} standby={t.lightStandby} safe={t.lightSafe} caution={t.lightCaution} danger={t.lightDanger} />
+      <p className="result-verdict">{copy.label}</p>
+      <p className="light-note">{levelToLight(risk.level) === "safe" ? t.lightLimited : copy.note}</p>
+
+      <section className="result-why">
+        <p className="kicker">{t.whyTitle}</p>
+        {userBlockTitle && (
+          <p className="scope-note halt-accent" data-testid="user-block-evidence">
+            <strong>{userBlockTitle}</strong>
+            {" — "}
+            {pt
+              ? evidencePt["user-block"]?.[1] ?? userBlockEv?.detail
+              : userBlockEv?.detail}
+          </p>
+        )}
+        <ul className="why-list">
+          {whyItems.length === 0 ? (
+            <li>{pt ? "Nenhum sinal forte além das limitações habituais." : "No strong signals beyond the usual limitations."}</li>
+          ) : (
+            whyItems.map((item) => {
+              const full = risk.evidence.find((e) => e.id === item.id);
+              if (!full) {
+                return (
+                  <li key={item.id}>
+                    <strong>{item.id}</strong>
+                    <span />
+                  </li>
+                );
+              }
+              // probe-blocked: same probeBlockedPair path as detail rows (via whyEvidenceDisplay).
+              if (full.id === "probe-blocked") {
+                const display = whyEvidenceDisplay(full, {
+                  liveStatusCode: live?.statusCode,
+                  locale
+                });
+                return (
+                  <li key={item.id}>
+                    <strong>{display.title}</strong>
+                    <span>{display.detail}</span>
+                  </li>
+                );
+              }
+              const translated = pt ? evidencePt[full.id] : undefined;
+              return (
+                <li key={item.id}>
+                  <strong>{translated?.[0] ?? full.title ?? item.id}</strong>
+                  <span>{translated?.[1] ?? full.detail ?? ""}</span>
+                </li>
+              );
+            })
+          )}
+        </ul>
       </section>
 
-      <div className="result-main">
-        <aside className="action-panel">
-          <div className="kicker">{t.actions}</div>
-          <h2>{recommendation}</h2>
-          <p>{pt ? "Não introduza informação sensível sem confirmar o endereço através de uma fonte independente." : "Do not enter sensitive information unless you can confirm the address through an independent source."}</p>
-          <button className="primary-button full" onClick={() => save("block")}><Icon name="shield" />{t.block}</button>
-          <button className="secondary-button full" onClick={onReset}><Icon name="arrow" />{t.leave}</button>
-          {official && <a className="secondary-button full" href={`https://${official}`} target="_blank" rel="noreferrer"><Icon name="globe" />{t.verified}</a>}
-          <button className="text-button deliberate" onClick={() => save("trust")}>{t.trust}</button>
-          <p className="scope-note"><Icon name="info" size={14} />{pt ? "O bloqueio aplica-se apenas a este protótipo, neste navegador." : "Blocking applies only inside this prototype, in this browser."}</p>
-          {notice && <div className="save-notice" role="status"><Icon name="check" />{notice}</div>}
-        </aside>
-
-        <div className="result-content">
-          <section className="panel"><div className="panel-title"><span>01</span><h2>{t.why}</h2></div><div className="evidence-list">{risk.evidence.map((item) => { const translated = pt ? evidencePt[item.id] : undefined; return <article key={item.id} className={`evidence evidence-${item.kind}`}><span><Icon name={item.kind === "known" ? "check" : item.kind === "limitation" ? "info" : "alert"} /></span><div><div className="evidence-kind">{pt ? ({ known: "conhecido", likely: "provável", signal: "sinal", unknown: "desconhecido", limitation: "limitação" }[item.kind]) : item.kind}</div><h3>{translated?.[0] ?? item.title}</h3><p>{translated?.[1] ?? item.detail}</p></div></article>; })}</div></section>
-          <section className="panel"><div className="panel-title"><span>02</span><h2>{t.details}</h2></div><dl className="domain-grid"><div><dt>URL</dt><dd>{parsed.fullUrl}</dd></div><div><dt>{pt ? "Protocolo" : "Protocol"}</dt><dd>{parsed.protocol.toUpperCase()} {parsed.usesHttps ? (pt ? "· ligação encriptada" : "· encrypted connection") : (pt ? "· não encriptada" : "· not encrypted")}</dd></div><div><dt>Hostname</dt><dd>{parsed.hostname}</dd></div><div><dt>{pt ? "Domínio registável" : "Registrable domain"}</dt><dd className="domain-emphasis">{parsed.registrableDomain}</dd></div><div><dt>{pt ? "Subdomínio" : "Subdomain"}</dt><dd>{parsed.subdomain || "—"}</dd></div><div><dt>{pt ? "Caminho" : "Path"}</dt><dd>{parsed.path || "/"}</dd></div>{parsed.hasPunycode && <div><dt>IDN / punycode</dt><dd>{parsed.hostname}</dd></div>}</dl><div className="https-note"><Icon name="info" />{pt ? "HTTPS protege a ligação, mas não prova a identidade ou a fiabilidade do site." : "HTTPS protects the connection but does not prove the identity or trustworthiness of the website."}</div></section>
-          <section className="panel limitation-panel"><div className="panel-title"><span>03</span><h2>{t.limits}</h2></div><ul>{(pt ? limitationsPt : risk.limitations).map((item) => <li key={item}>{item}</li>)}</ul></section>
+      <section className="log-action">
+        <p className="kicker">{t.actions}</p>
+        <h2>{recommendation}</h2>
+        <p>{pt ? "Não introduza informação sensível sem confirmar o endereço através de uma fonte independente." : "Do not enter sensitive information unless you can confirm the address through an independent source."}</p>
+        {risk.recommendation === "LEAVE" &&
+          risk.level === "LOW_EVIDENCE" &&
+          Boolean(userBlockEv) && (
+            <p
+              id="personal-list-leave-note"
+              className="scope-note personal-list-leave-note halt-accent"
+              data-testid="personal-list-leave-note"
+            >
+              {t.personalListLeaveNote}
+            </p>
+          )}
+        {/* Reading order: describe Leave before the action row (aria-describedby). */}
+        {analysis.timing?.ambiguousProbeStatus ? (
+          <p
+            className="scope-note"
+            data-testid="ambiguous-probe-not-phishing"
+            id="ambiguous-probe-not-phishing"
+          >
+            {t.ambiguousProbeNotPhishing}
+          </p>
+        ) : null}
+        {/* Leave must stay a direct child of result-action-row (Playwright locator). */}
+        <div className="action-row" data-testid="result-action-row">
+          <button
+            className="primary-button"
+            type="button"
+            onClick={onReset}
+            {...(() => {
+              const ids: string[] = [];
+              if (
+                risk.recommendation === "LEAVE" &&
+                risk.level === "LOW_EVIDENCE" &&
+                Boolean(userBlockEv)
+              ) {
+                ids.push("personal-list-leave-note");
+              }
+              if (analysis.timing?.ambiguousProbeStatus) {
+                ids.push("ambiguous-probe-not-phishing");
+              }
+              return ids.length ? { "aria-describedby": ids.join(" ") } : {};
+            })()}
+          >
+            {t.leave}
+          </button>
+          {/* Hold (CAUTION) or Clear with 403/429/503: surface ambiguousProbeStatus next to Leave. */}
+          {analysis.timing?.ambiguousProbeStatus ? (
+            <span
+              className="timing-flag-chip is-on"
+              data-testid="leave-ambiguous-probe-chip"
+              data-flag="ambiguousProbeStatus"
+              data-on="1"
+              title={timingLabels(t).timingAmbiguousProbe}
+            >
+              {timingLabels(t).timingAmbiguousProbe}
+            </span>
+          ) : null}
+          {official && <a className="text-button" href={`https://${official}`} target="_blank" rel="noreferrer">{t.verified}</a>}
+          {risk.recommendation === "LEAVE_AND_BLOCK" && (
+            <a
+              className="text-button"
+              data-testid="leave-and-block-settings"
+              href={`/${pt ? "pt-PT" : "en"}/settings#settings-block-lists`}
+            >
+              {t.leaveAndBlockSettingsCta}
+            </a>
+          )}
         </div>
-      </div>
+        <p className="scope-note">
+          {t.blockOnSurfaces}{" "}
+          <a
+            className="text-button"
+            data-testid="result-block-lists-settings"
+            href={`/${pt ? "pt-PT" : "en"}/settings#settings-block-lists`}
+          >
+            {t.blockListsSettingsLink}
+          </a>
+        </p>
+      </section>
+
+      <section className="result-details">
+        <button type="button" className="text-button details-toggle" onClick={() => setShowDetails((v) => !v)} aria-expanded={showDetails}>
+          {showDetails ? t.hideDetails : t.showDetails}
+        </button>
+        {showDetails && (
+          <>
+            {analysis.timing && (
+              <>
+                <CopyEnvLine
+                  locale={(pt ? "pt-PT" : "en") as Locale}
+                  envLine={formatTimingSummaryLine(analysis.timing, timingLabels(t))}
+                  label={t.timingCopySummary}
+                  copiedLabel={t.timingCopied}
+                />
+                <p className="check-timing-flags" data-testid="timing-flag-chips" aria-label={t.timingFlagsLabel || "Timing flags"}>
+                  {formatTimingFlagChips(analysis.timing, timingLabels(t)).map((chip) => (
+                    <span
+                      key={chip.id}
+                      className={`timing-flag-chip${chip.on ? " is-on" : ""}`}
+                      data-flag={chip.id}
+                      data-on={chip.on ? "1" : "0"}
+                    >
+                      {chip.text}
+                    </span>
+                  ))}
+                </p>
+              </>
+            )}
+            <ul className="block-log">
+              {detailRows.map((row) => (
+                <li key={`${row.kind}-${row.display}`}>
+                  <span className="kind">{row.kind}</span>
+                  <span className="display">{row.display}</span>
+                  {row.meta && <span className="meta">{row.meta}</span>}
+                </li>
+              ))}
+            </ul>
+          </>
+        )}
+      </section>
+
+      <section className="feedback-panel" aria-label={t.feedbackPrompt}>
+        <p className="kicker">{t.feedbackPrompt}</p>
+        <p className="hint">{t.feedbackHint}</p>
+        <div className="action-row">
+          <button
+            type="button"
+            className="text-button"
+            disabled={draftMarks.includes("report")}
+            onClick={() => saveFeedback("report")}
+          >
+            {draftMarks.includes("report") ? t.feedbackAlready : t.feedbackReport}
+          </button>
+          <button
+            type="button"
+            className="text-button"
+            disabled={draftMarks.includes("false-positive")}
+            onClick={() => saveFeedback("false-positive")}
+          >
+            {draftMarks.includes("false-positive") ? t.feedbackAlready : t.feedbackFalsePositive}
+          </button>
+        </div>
+        {feedbackNote && (
+          <p className="scope-note" role="status">
+            {feedbackNote}{" "}
+            {!canPersistLists() && (
+              <button type="button" className="text-button" onClick={openSettingsData}>
+                {t.feedbackOpenSettings}
+              </button>
+            )}
+          </p>
+        )}
+      </section>
     </div>
   );
 }

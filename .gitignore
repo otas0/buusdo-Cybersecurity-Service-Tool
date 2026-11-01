@@ -26,9 +26,26 @@ yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
 
-# local environment
+# local environment (.env.local from probe-env / Settings — never commit)
 .env*
 !.env.example
+
+# runtime server caches (head-skip, env-overrides.env fallback when .env.local denied)
+/security/data/runtime/*
+!/security/data/runtime/.gitkeep
+
+# optional account sync file store (users / sessions / encrypted list blobs)
+/data/account-sync/
+
+# evaluation diff markdown (CI / local)
+/evaluation/diff.md
+
+# Playwright optional screenshots (keep folder via .gitkeep)
+/playwright/output/*
+!/playwright/output/.gitkeep
+/playwright/report/
+/test-results/
+/playwright-report/
 
 # TypeScript incremental cache
 *.tsbuildinfo
@@ -38,5 +55,8 @@ yarn-error.log*
 next-env.d.ts
 /dist/
 /.wrangler/
+# Cloudflare / vinext local state
+.mf/
+.dev.vars
 /outputs/
 /work/

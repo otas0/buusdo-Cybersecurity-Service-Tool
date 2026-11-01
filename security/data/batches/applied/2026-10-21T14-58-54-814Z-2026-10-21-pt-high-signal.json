@@ -1,0 +1,45 @@
+{
+  "id": "2026-10-21-pt-high-signal",
+  "kind": "report",
+  "target": "curated-threats.pt.json",
+  "reviewedBy": "local-operator",
+  "notes": "High-signal Portugal-oriented .example hosts for curated-threats.pt.json. Apply with: npm run threat:apply -- security/data/batches/2026-10-21-pt-high-signal.json --target=pt. Exercise Settings MERGE_PT write on a local draft PR after apply.",
+  "reviewChecklist": {
+    "hostsReviewed": true,
+    "falsePositivesConfirmed": true,
+    "readyToApply": true
+  },
+  "add": [
+    {
+      "host": "autenticacao-gov.example",
+      "state": "KNOWN_PHISHING",
+      "reason": "High-signal lookalike for Autenticação.gov / eID login"
+    },
+    {
+      "host": "portal-financas.example",
+      "state": "KNOWN_PHISHING",
+      "reason": "High-signal lookalike for Portal das Finanças"
+    },
+    {
+      "host": "id-gov-pt.example",
+      "state": "KNOWN_PHISHING",
+      "reason": "High-signal lookalike for id.gov.pt / digital identity"
+    },
+    {
+      "host": "chaves-moveis-digitais.example",
+      "state": "KNOWN_PHISHING",
+      "reason": "High-signal lookalike for Chave Móvel Digital"
+    },
+    {
+      "host": "seguro-social-direto.example",
+      "state": "KNOWN_PHISHING",
+      "reason": "High-signal lookalike for Segurança Social Direta"
+    },
+    {
+      "host": "at-e-fatura.example",
+      "state": "KNOWN_PHISHING",
+      "reason": "High-signal lookalike for AT e-Fatura"
+    }
+  ],
+  "remove": []
+}

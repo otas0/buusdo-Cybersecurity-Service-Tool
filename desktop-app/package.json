@@ -1,0 +1,27 @@
+{
+  "name": "portugal-cp-desktop-app",
+  "version": "0.2.0",
+  "private": true,
+  "description": "Part 2 — local Preventive Shield dashboard (Express :3010) + educational HTTP proxy (:8080). Electron remains unpinned until a version is chosen — then pin the SAME exact version in optionalDependencies.electron and peerDependencies.electron (must be identical).",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "node --watch src/server.js",
+    "electron": "electron electron-main.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "express": "^4.21.2"
+  },
+  "optionalDependencies": {},
+  "peerDependencies": {
+    "electron": "*"
+  },
+  "peerDependenciesMeta": {
+    "electron": {
+      "optional": true
+    }
+  }
+}

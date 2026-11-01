@@ -1,0 +1,7 @@
+{
+  "description": "Curated KNOWN_PHISHING host that must yield CRITICAL / LEAVE_AND_BLOCK on the website check. If this drifts, restore paypal.secure-login.example in security/data/curated-threats.json.",
+  "url": "https://paypal.secure-login.example/",
+  "host": "paypal.secure-login.example",
+  "expectedRecommendation": "LEAVE_AND_BLOCK",
+  "expectedLevel": "CRITICAL"
+}

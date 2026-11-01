@@ -1,0 +1,45 @@
+{
+  "id": "2026-10-25-pt-lookalikes",
+  "kind": "report",
+  "target": "curated-threats.pt.json",
+  "reviewedBy": "local-operator",
+  "notes": "High-signal Portugal .pt-brand lookalikes (.example only). Apply with: npm run threat:apply -- security/data/batches/2026-10-25-pt-lookalikes.json --target=pt. Keep EVAL-029–032 green after apply.",
+  "reviewChecklist": {
+    "hostsReviewed": true,
+    "falsePositivesConfirmed": true,
+    "readyToApply": true
+  },
+  "add": [
+    {
+      "host": "mbway-login.example",
+      "state": "KNOWN_PHISHING",
+      "reason": "High-signal lookalike for MB WAY payment login"
+    },
+    {
+      "host": "millenniumbcp-secure.example",
+      "state": "KNOWN_PHISHING",
+      "reason": "High-signal lookalike for Millennium BCP online banking"
+    },
+    {
+      "host": "novobanco-acesso.example",
+      "state": "KNOWN_PHISHING",
+      "reason": "High-signal lookalike for Novo Banco acesso"
+    },
+    {
+      "host": "santander-pt-login.example",
+      "state": "KNOWN_PHISHING",
+      "reason": "High-signal lookalike for Santander Portugal login"
+    },
+    {
+      "host": "cgd-caixadirecta.example",
+      "state": "KNOWN_PHISHING",
+      "reason": "High-signal lookalike for CGD CaixaDirecta"
+    },
+    {
+      "host": "ctt-tracking-pt.example",
+      "state": "KNOWN_PHISHING",
+      "reason": "High-signal lookalike for CTT parcel tracking"
+    }
+  ],
+  "remove": []
+}

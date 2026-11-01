@@ -4,11 +4,48 @@ import { fileURLToPath } from "node:url";
 import { messages } from "../i18n/messages";
 import { verifyIdentity } from "../security/identity";
 import { assessRisk } from "../security/risk";
+import type { LiveProbe } from "../security/site-signals";
 import { BLOCK_KEY, TRUST_KEY, isStored, readEntries, removeEntry, saveEntry } from "../security/storage";
 import { LocalThreatIntelProvider, OnlineThreatIntelProviderPlaceholder } from "../security/threat-intel";
 import type { ThreatResult } from "../security/types";
 import { parseUrl } from "../security/url";
+import { evidenceIncludesAll } from "../security/evidence-ids";
+import { setRuntimeOwnThreatMergePt } from "../security/env-local";
 import { evaluationScenarios, type EvaluationScenario } from "./scenarios";
+
+function timedOutLiveProbe(): LiveProbe {
+  return {
+    resolved: false,
+    addresses: [],
+    reachable: false,
+    statusCode: null,
+    finalUrl: null,
+    redirectChain: [],
+    redirected: false,
+    crossDomainRedirect: false,
+    tlsOk: null,
+    error: "timeout",
+    timedOut: true,
+    probeHeadFailed: false
+  };
+}
+
+function statusLiveProbe(url: string, statusCode: number): LiveProbe {
+  return {
+    resolved: true,
+    addresses: ["127.0.0.1"],
+    reachable: true,
+    statusCode,
+    finalUrl: url,
+    redirectChain: [url],
+    redirected: false,
+    crossDomainRedirect: false,
+    tlsOk: true,
+    error: null,
+    timedOut: false,
+    probeHeadFailed: false
+  };
+}
 
 const evaluationDir = dirname(fileURLToPath(import.meta.url));
 const projectRoot = resolve(evaluationDir, "..");
@@ -24,7 +61,22 @@ function controlledThreat(scenario: EvaluationScenario): ThreatResult {
 }
 
 async function threatFor(scenario: EvaluationScenario, hostname: string): Promise<ThreatResult> {
-  if (scenario.providerMode === "local") return new LocalThreatIntelProvider().checkDomain(hostname);
+  if (scenario.providerMode === "local") {
+    const prev = process.env.OWN_THREAT_MERGE_PT;
+    if (scenario.ownThreatMergePt != null) {
+      process.env.OWN_THREAT_MERGE_PT = scenario.ownThreatMergePt;
+      setRuntimeOwnThreatMergePt(scenario.ownThreatMergePt);
+    }
+    try {
+      return await new LocalThreatIntelProvider().checkDomain(hostname);
+    } finally {
+      if (scenario.ownThreatMergePt != null) {
+        setRuntimeOwnThreatMergePt(null);
+        if (prev === undefined) delete process.env.OWN_THREAT_MERGE_PT;
+        else process.env.OWN_THREAT_MERGE_PT = prev;
+      }
+    }
+  }
   if (scenario.providerMode === "unavailable") return new OnlineThreatIntelProviderPlaceholder().checkDomain(hostname);
   return controlledThreat(scenario);
 }
@@ -81,7 +133,7 @@ function evaluateLanguages() {
   const keys = ["sensitiveTitle","block","leave","protection","blockedInPrototype","removed","limits","checked","currentlyBlocked","invalid"] as const;
   const checks = keys.map((key)=>({ key, passed:Boolean(messages.en[key] && messages["pt-PT"][key]), english:messages.en[key], portuguese:messages["pt-PT"][key] }));
   const resultSource = readFileSync(resolve(projectRoot,"components/RiskResult.tsx"),"utf8");
-  const requiredPortugueseEvidence = ["Risco crítico","PHISHING CONHECIDO","Reputação desconhecida","Não foi possível verificar a identidade alegada","Saia e bloqueie este domínio no protótipo","HTTPS não prova identidade ou confiança"];
+  const requiredPortugueseEvidence = ["Risco crítico","PHISHING CONHECIDO","Reputação desconhecida","Parece uma organização conhecida, mas o domínio não corresponde","Saia e bloqueie este domínio","HTTPS não prova identidade ou confiança"];
   const evidenceChecks = requiredPortugueseEvidence.map((phrase)=>({ phrase, passed:resultSource.includes(phrase) }));
   return { passed:checks.every((check)=>check.passed)&&evidenceChecks.every((check)=>check.passed),pairChecks:checks,evidenceChecks,meaningReview:"Human-reviewed for equivalent security direction; literal word-for-word translation was not required." };
 }
@@ -91,14 +143,19 @@ for (const scenario of evaluationScenarios) {
   const parsed = parseUrl(scenario.url);
   const threat = await threatFor(scenario,parsed.hostname);
   const identity = verifyIdentity(parsed,scenario.organisationId);
-  const risk = assessRisk(parsed,threat,identity,scenario.sensitive);
+  const live = scenario.liveTimedOut
+    ? timedOutLiveProbe()
+    : typeof scenario.liveStatusCode === "number"
+      ? statusLiveProbe(scenario.url, scenario.liveStatusCode)
+      : null;
+  const risk = assessRisk(parsed,threat,identity,scenario.sensitive,live);
   const evidenceIds = risk.evidence.map((item)=>item.id);
   const outputText = [...risk.evidence.flatMap((item)=>[item.title,item.detail]),...risk.limitations,risk.level,risk.recommendation,identity.state,threat.providerName].join(". ");
   const violations = claimViolations(outputText);
   const checks = {
     providerState: threat.state === scenario.threatState,
     risk: scenario.expectedRisk.includes(risk.level),
-    evidence: scenario.expectedEvidence.every((id)=>evidenceIds.includes(id)),
+    evidence: evidenceIncludesAll(evidenceIds, scenario.expectedEvidence),
     action: scenario.expectedAction.includes(risk.recommendation),
     prohibitedClaims: violations.length === 0,
     limitations: risk.limitations.length > 0 && evidenceIds.includes("https-limit"),
@@ -129,6 +186,8 @@ const claimDisciplineChecks = [
   {name:"No hacked-user claim",passed:scenarioResults.every((r)=>!r.actual.claimViolations.includes("you have been hacked"))},
   {name:"No system-wide blocking claim",passed:scenarioResults.every((r)=>!r.actual.claimViolations.includes("system-wide blocking"))},
   {name:"No live-provider claim",passed:scenarioResults.every((r)=>!r.actual.claimViolations.includes("live provider claim"))},
+  // user-block only via analyseWebsite({ personalListBlocked: true }) — see tests/analyse-personal-list-hint.test.ts
+  {name:"Website check never emits user-block evidence (personal lists are extension/desktop)",passed:scenarioResults.every((r)=>!r.actual.evidence.includes("user-block"))},
 ];
 
 const report = {

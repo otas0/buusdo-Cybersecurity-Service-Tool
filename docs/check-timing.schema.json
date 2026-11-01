@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://preventiveshield.local/schemas/check-timing.json",
+  "title": "Preventive Shield analysis.timing",
+  "description": "Stage timings from POST /api/check. First-party only — no third-party reputation fields. Aligned with OpenAPI Preventive Shield check API version 1.5 (ambiguousProbeStatus required).",
+  "$comment": "openapi-align: 1.5",
+  "version": "1.5",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["parseMs", "threatMs", "probeMs", "riskMs", "totalMs", "probeTimeoutMs", "probeHeadFailed", "headSkipped", "ambiguousProbeStatus"],
+  "properties": {
+    "parseMs": { "type": "integer", "minimum": 0 },
+    "threatMs": { "type": "integer", "minimum": 0 },
+    "probeMs": { "type": ["integer", "null"], "minimum": 0 },
+    "riskMs": { "type": "integer", "minimum": 0 },
+    "totalMs": { "type": "integer", "minimum": 0 },
+    "probeTimeoutMs": { "type": "integer", "minimum": 1 },
+    "probeHeadFailed": {
+      "type": "boolean",
+      "description": "True when the first hop HEAD failed or was rejected and GET was used (or probe skipped)."
+    },
+    "headSkipped": {
+      "type": "boolean",
+      "description": "True when HEAD was skipped intentionally (server head-skip cache or client skipHeadHosts)."
+    },
+    "ambiguousProbeStatus": {
+      "type": "boolean",
+      "description": "True when live HTTP status was 403, 429, or 503 (bot block / throttle). Does not escalate risk level."
+    }
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "scenarios": [
+    { "id": "EVAL-001", "passed": false },
+    { "id": "EVAL-002", "passed": false }
+  ]
+}

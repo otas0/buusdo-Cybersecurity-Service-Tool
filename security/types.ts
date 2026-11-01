@@ -1,5 +1,6 @@
 export type ThreatState = "KNOWN_MALICIOUS" | "KNOWN_PHISHING" | "NO_KNOWN_MATCH" | "UNKNOWN" | "PROVIDER_UNAVAILABLE";
 export type IdentityState = "VERIFIED_MATCH" | "DOMAIN_MISMATCH" | "UNVERIFIED" | "NO_CLAIM";
+/** When this union grows, extend tests/assess-risk-personal-hint.test.ts matrix (fails until a new row is added). */
 export type RiskLevel = "CRITICAL" | "HIGH" | "CAUTION" | "LOW_EVIDENCE" | "UNKNOWN";
 export type SensitiveRequest = "password" | "payment" | "personal" | "permission" | null;
 
@@ -26,7 +27,7 @@ export type Organisation = {
   id: string;
   name: string;
   domains: string[];
-  fictional: true;
+  fictional: boolean;
 };
 
 export type IdentityResult = {

@@ -1,0 +1,14 @@
+{
+  "id": "2026-10-21-example-ops",
+  "kind": "mixed",
+  "reviewedBy": "ops",
+  "notes": "Example operator batch: add one reviewed phishing host; no removals. Safe to apply locally then inspect changelog.",
+  "add": [
+    {
+      "host": "caixa-secure-login.example",
+      "state": "KNOWN_PHISHING",
+      "reason": "Operator-reviewed lookalike report (example TLD)"
+    }
+  ],
+  "remove": []
+}

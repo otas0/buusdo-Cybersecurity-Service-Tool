@@ -1,0 +1,25 @@
+{
+  "id": "YYYY-MM-DD-pt-short-slug",
+  "kind": "report",
+  "target": "curated-threats.pt.json",
+  "reviewedBy": "",
+  "notes": "Portugal seeds only (.example). Apply with: npm run threat:apply -- security/data/batches/this-file.json --target=pt (or rely on target field). Preview: --dry-run. Prefill risk-level summary when exporting from Settings. EVAL on/off MERGE_PT scenario rows for new hosts must land in the same PR as threat:apply (evaluation/scenarios.ts + fixtures README + CI min bump).",
+  "reviewChecklist": {
+    "hostsReviewed": false,
+    "falsePositivesConfirmed": false,
+    "readyToApply": false
+  },
+  "add": [
+    {
+      "host": "pt-phishing-host.example",
+      "state": "KNOWN_PHISHING",
+      "reason": "Confirmed report / operator review (PT seeds)"
+    }
+  ],
+  "remove": [
+    {
+      "host": "pt-false-positive.example",
+      "reason": "Confirmed false positive — remove from curated-threats.pt.json"
+    }
+  ]
+}

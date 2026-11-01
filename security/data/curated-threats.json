@@ -1,0 +1,20 @@
+{
+  "updatedAt": "2026-10-21",
+  "source": "Preventive Shield curated list (first-party). PT seeds live in curated-threats.pt.json and merge by default. Operate via security/data/batches + npm run threat:apply.",
+  "hosts": {
+    "appleid-verify.example": "KNOWN_PHISHING",
+    "login-microsoft-online.example": "KNOWN_PHISHING",
+    "nofity-paypal.example": "KNOWN_PHISHING",
+    "paypal.secure-login.example": "KNOWN_PHISHING",
+    "secure-update-account.example": "KNOWN_PHISHING"
+  },
+  "changelog": [
+    {
+      "at": "2026-10-21",
+      "batchId": "2026-10-21-split-pt",
+      "added": [],
+      "removed": [],
+      "notes": "Moved Portugal-oriented .example seeds to curated-threats.pt.json (merged unless OWN_THREAT_MERGE_PT=0)."
+    }
+  ]
+}

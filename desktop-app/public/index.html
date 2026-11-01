@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Preventive Shield</title>
+    <link rel="stylesheet" href="/shared/tokens.css" />
+    <link rel="stylesheet" href="/css/dashboard.css" />
+  </head>
+  <body>
+    <div id="toastHost" class="toast-host" aria-live="polite"></div>
+
+    <div class="shell">
+      <header class="top">
+        <div class="brand">
+          <span class="index">01</span>
+          <h1 id="appTitle">Preventive Shield</h1>
+        </div>
+        <label class="lang">
+          <span class="visually-hidden" id="langLabel">Language</span>
+          <select id="langSelect" aria-label="Language">
+            <option value="en">EN</option>
+            <option value="pt-PT">PT</option>
+          </select>
+        </label>
+      </header>
+
+      <main class="board">
+        <section class="stage">
+          <p class="kicker" id="statusKicker">Status</p>
+          <p class="readout" id="readout" data-level="idle" role="status">
+            <span class="mark" aria-hidden="true"></span>
+            <span id="statusWord">Standby</span>
+            <span id="statusHost" class="status-host" hidden></span>
+          </p>
+          <p id="statusDetail" class="detail">Type an address.</p>
+
+          <form id="checkForm" class="check">
+            <label class="visually-hidden" id="checkLabel" for="checkUrl">Address</label>
+            <input id="checkUrl" name="url" type="text" inputmode="url" placeholder="example.com" autocomplete="off" spellcheck="false" />
+            <button type="submit" id="scanBtn">
+              <span id="scanLabel">Run</span>
+            </button>
+            <label class="visually-hidden" id="scanResourcesLabel" for="scanResources">Optional resource URLs</label>
+            <textarea
+              id="scanResources"
+              name="resources"
+              rows="2"
+              spellcheck="false"
+              placeholder="Optional resource URLs (one per line) for third-party tracker count"
+            ></textarea>
+            <p id="scanResourcesHint" class="hint">Optional — one resource URL per line. Same-brand trackers (e.g. YouTube + DoubleClick) are ignored.</p>
+          </form>
+          <div class="website-check-actions" data-testid="result-action-row">
+            <button type="button" id="websiteHealthBtn" class="text-button website-check">
+              <span id="websiteHealthLabel">Probe website health</span>
+            </button>
+            <button type="button" id="websiteCheckBtn" class="text-button website-check" disabled>
+              <span id="websiteCheckLabel">Website API check</span>
+            </button>
+            <p id="websiteCheckStatus" class="detail" hidden></p>
+          </div>
+        </section>
+
+        <section class="sheet">
+          <dl class="counts">
+            <div>
+              <dt id="trackersLabel">Trackers</dt>
+              <dd id="trackersValue">0</dd>
+            </div>
+            <div>
+              <dt id="phishingLabel">Signals</dt>
+              <dd id="phishingValue">0</dd>
+            </div>
+            <div>
+              <dt id="lastScanLabel">Last</dt>
+              <dd id="lastScanValue" class="when">—</dd>
+            </div>
+          </dl>
+
+          <div class="log-head">
+            <h2 id="logTitle">Log</h2>
+            <p id="logHint" class="visually-hidden">Latest blocks.</p>
+          </div>
+          <div class="log-filters" id="logFilters" role="group" aria-label="Log filters">
+            <button type="button" class="log-filter is-active" data-filter="all" id="logFilterAll">All</button>
+            <button type="button" class="log-filter" data-filter="tracker" id="logFilterTracker">
+              Trackers <span class="log-filter-count" id="logFilterTrackerCount" hidden>0</span>
+              <span class="log-filter-life" id="logFilterTrackerLife" hidden></span>
+            </button>
+            <button type="button" class="log-filter" data-filter="phishing" id="logFilterPhishing">
+              Signals <span class="log-filter-count" id="logFilterPhishingCount" hidden>0</span>
+              <span class="log-filter-life" id="logFilterPhishingLife" hidden></span>
+            </button>
+            <button type="button" class="log-filter" data-filter="user-block" id="logFilterPersonal">
+              Personal <span class="log-filter-count" id="logFilterPersonalCount" hidden>0</span>
+            </button>
+            <button type="button" class="log-filter-reset text-button" id="logFilterReset" title="Clear ring badges only">
+              Clear ring
+            </button>
+          </div>
+          <ul id="blockLog" class="block-log"></ul>
+          <p id="proxyBody" class="proxy">Proxy 127.0.0.1:8080. HTTP is checked. HTTPS is not opened.</p>
+
+          <section class="account" id="accountSection" aria-labelledby="accountTitle">
+            <h2 id="accountTitle">Account</h2>
+            <p id="accountHint" class="hint">Optional list sync via the website API. Offline file/Syncthing stays below.</p>
+            <p id="accountStatus" class="hint" role="status" aria-live="polite"></p>
+            <form id="accountSignInForm" class="list-add">
+              <label class="visually-hidden" for="accountEmail">Email</label>
+              <input id="accountEmail" type="email" autocomplete="email" placeholder="you@example.com" />
+              <button type="submit" id="accountSendBtn" class="text-button">Send link</button>
+            </form>
+            <label class="visually-hidden" for="accountDeviceCode">Device code</label>
+            <input id="accountDeviceCode" type="text" autocomplete="off" spellcheck="false" placeholder="Device code" />
+            <button type="button" id="accountExchangeBtn" class="text-button">Exchange code</button>
+            <label class="history-filter">
+              <input type="checkbox" id="accountSyncToggle" />
+              <span id="accountSyncLabel">Sync lists</span>
+            </label>
+            <div class="list-actions">
+              <button type="button" id="accountSyncNowBtn" class="text-button">Sync now</button>
+              <button type="button" id="accountSignOutBtn" class="text-button">Sign out</button>
+            </div>
+          </section>
+
+          <section class="lists" id="listsSection" aria-labelledby="listsTitle">
+            <h2 id="listsTitle">Personal lists</h2>
+            <p id="listsHint" class="hint">Block/trust on this device. Export JSON (shield-lists-v1) to sync for free — USB, Drive, or Syncthing on shield-backup.json.</p>
+            <p id="listsOfflineBackup" class="hint">Offline backup: file path / Syncthing / QR (no account required).</p>
+            <p id="listsOperatorHint" class="hint lists-operator" hidden></p>
+            <form id="listAddForm" class="list-add">
+              <label class="visually-hidden" id="listDomainLabel" for="listDomain">Domain</label>
+              <input id="listDomain" type="text" inputmode="url" placeholder="example.com" autocomplete="off" spellcheck="false" />
+              <button type="submit" id="listBlockBtn">Block</button>
+              <button type="button" id="listTrustBtn" class="text-button">Trust</button>
+            </form>
+            <p id="listsStatus" class="hint" role="status" hidden></p>
+            <p id="listsPath" class="hint lists-path" hidden></p>
+            <div class="list-cols">
+              <div>
+                <h3 id="blockedTitle">Blocked</h3>
+                <ul id="blockedList" class="mini-log"></ul>
+              </div>
+              <div>
+                <h3 id="trustedTitle">Trusted</h3>
+                <ul id="trustedList" class="mini-log"></ul>
+              </div>
+            </div>
+            <div class="list-actions">
+              <button type="button" id="listsExportBtn" class="text-button">Export JSON</button>
+              <button type="button" id="listsCopyPathBtn" class="text-button">Copy file path</button>
+              <button type="button" id="listsRevealBtn" class="text-button">Reveal file</button>
+              <button type="button" id="listsImportBtn" class="text-button">Import JSON</button>
+              <button type="button" id="listsQrBtn" class="text-button">Show QR</button>
+              <input type="file" id="listsImportFile" accept="application/json,.json" hidden />
+            </div>
+            <div id="listsQrWrap" class="lists-qr" hidden>
+              <label class="history-filter lists-qr-mode">
+                <input type="checkbox" id="listsQrZlib" />
+                <span id="listsQrZlibLabel">Zlib QR (denser)</span>
+              </label>
+              <canvas id="listsQrCanvas" width="180" height="180" aria-label="QR of compact list backup"></canvas>
+              <p id="listsQrHint" class="hint"></p>
+              <button type="button" id="listsQrCopyBtn" class="text-button">Copy QR payload</button>
+            </div>
+          </section>
+        </section>
+      </main>
+
+      <footer class="foot">
+        <label class="privacy">
+          <span id="privacyLabel">Data</span>
+          <select id="privacySelect" aria-describedby="privacyHint">
+            <option value="off">Never store</option>
+            <option value="local">This device only</option>
+            <option value="share">Diagnostics for support</option>
+          </select>
+        </label>
+        <p id="privacyHint" class="hint">Default: nothing is stored. Diagnostics only help fix technical problems — never the address, and never for public release.</p>
+      </footer>
+    </div>
+
+    <script src="/shared/qrcode-browser.js"></script>
+    <script src="/shared/qr-draw.classic.js"></script>
+    <script type="module" src="/js/dashboard.js"></script>
+  </body>
+</html>

@@ -1,0 +1,411 @@
+# Preventive Shield first-party check API (timing + health + head-skip)
+openapi: 3.0.3
+info:
+  title: Preventive Shield check API
+  version: "1.5.2"
+  description: >
+    Never calls third-party reputation APIs.
+
+    Client guidance (429): parse Retry-After (delta-seconds or HTTP-date) and JSON
+    retryAfterSec. When |headerSec − jsonSec| > 2, prefer the header
+    (website AppShell uses resolveRetryAfterSec / retryAfterHeaderPreferred).
+
+    Request-only: personalListBlocked is an optional CheckRequest flag (extension/desktop
+    read-only hint). It is outside CheckTiming / check-timing.schema.json and is never
+    persisted by the website.
+
+    Health 1.5.2: GET /api/health echoes accountSyncEnabled + accountSyncEnabledEnv
+    (ACCOUNT_SYNC_ENABLED). Also personalHintLogEnabled + personalHintLogEnv
+    (CHECK_PERSONAL_HINT_LOG). Optional ops fields (when CHECK_TIMING_SCHEMA_FAIL_HEALTH=1):
+    timingSchemaFailCounts + timingSchemaFailCountsEnv (no URL).
+    CheckTiming schema remains 1.5 (ambiguousProbeStatus).
+    Edit docs/API_CHECK_CONTRACT.md only — never hand-edit extension/shared/ copies.
+    Run openapi:sync after this bump.
+paths:
+  /api/check:
+    post:
+      summary: First-party website check
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CheckRequest"
+      responses:
+        "200":
+          description: Analysis with validated timing
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [ok, analysis]
+                properties:
+                  ok:
+                    type: boolean
+                  timingValid:
+                    type: boolean
+                  analysis:
+                    type: object
+                    properties:
+                      timing:
+                        $ref: "#/components/schemas/CheckTiming"
+              examples:
+                personalListBlockedLeave:
+                  summary: LOW_EVIDENCE + LEAVE from personalListBlocked hint (no website list storage)
+                  value:
+                    ok: true
+                    timingValid: true
+                    analysis:
+                      personalListBlocked: true
+                      risk:
+                        level: LOW_EVIDENCE
+                        recommendation: LEAVE
+                        evidence:
+                          - id: user-block
+                            kind: known
+                            title: Personal block list
+                            detail: >
+                              This host is on your personal block list (extension or desktop).
+                              The website did not store the list.
+                          - id: https-limit
+                            kind: limitation
+                            title: HTTPS limit
+                            detail: HTTPS does not prove identity.
+                      timing:
+                        parseMs: 1
+                        threatMs: 1
+                        probeMs: null
+                        riskMs: 1
+                        totalMs: 3
+                        probeTimeoutMs: 5000
+                        probeHeadFailed: false
+                        headSkipped: false
+                        ambiguousProbeStatus: false
+        "400":
+          description: Bad request (e.g. url-required, personalListBlocked-must-be-boolean)
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok:
+                    type: boolean
+                    example: false
+                  error:
+                    type: string
+                    example: personalListBlocked-must-be-boolean
+        "429":
+          description: >
+            Rate limited. Body includes retryAfterSec; response also sends
+            Retry-After (delta-seconds or HTTP-date) and Access-Control-Expose-Headers:
+            Retry-After so browser clients can read the header when JSON is ignored or empty.
+            Client rule: when Retry-After (parsed to seconds) and retryAfterSec disagree by more
+            than 2 seconds, prefer the header value (website AppShell uses resolveRetryAfterSec).
+          headers:
+            Retry-After:
+              description: >
+                Delta-seconds (integer) or HTTP-date. Past dates (clock skew) should fall back
+                to a default wait. Wins over JSON retryAfterSec when |header − json| > 2.
+              schema:
+                oneOf:
+                  - type: integer
+                    minimum: 1
+                  - type: string
+                    description: IMF-fixdate HTTP-date
+
+            Access-Control-Expose-Headers:
+              description: Must include Retry-After for cross-origin clients
+              schema:
+                type: string
+                example: Retry-After
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [ok, error, retryAfterSec]
+                properties:
+                  ok:
+                    type: boolean
+                    example: false
+                  error:
+                    type: string
+                    example: rate-limited
+                  retryAfterSec:
+                    type: integer
+                    minimum: 1
+              examples:
+                deltaSeconds:
+                  summary: Retry-After as delta-seconds
+                  value:
+                    ok: false
+                    error: rate-limited
+                    retryAfterSec: 12
+                  # Matching header: Retry-After: 12
+                httpDate:
+                  summary: Retry-After as HTTP-date (IMF-fixdate)
+                  value:
+                    ok: false
+                    error: rate-limited
+                    retryAfterSec: 45
+                  # Matching header example:
+                  # Retry-After: Wed, 21 Oct 2026 15:00:00 GMT
+                headerPreferred:
+                  summary: Header wins when |header − JSON| > 2 (client rule)
+                  value:
+                    ok: false
+                    error: rate-limited
+                    retryAfterSec: 10
+                  # Matching header: Retry-After: 40
+                  # Client must countdown from 40, not 10; may log rate-limited-header-preferred.
+  /api/health:
+    get:
+      summary: Service health and probe budget
+      parameters:
+        - name: pollMs
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+          description: Desktop WEBSITE_HEALTH_POLL_MS — echoed as pollMs when positive
+      responses:
+        "200":
+          description: Health payload
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HealthResponse"
+              examples:
+                default:
+                  summary: Health without poll echo
+                  value:
+                    ok: true
+                    service: preventive-shield
+                    threatIntel: own
+                    thirdPartyReputation: false
+                    ownThreatMergePt: true
+                    probeTimeoutMs: 5000
+                    headSkipDomains: []
+                    headSkipEntries: []
+                    personalHintLogEnabled: true
+                    personalHintLogEnv: CHECK_PERSONAL_HINT_LOG
+                    accountSyncEnabled: false
+                    accountSyncEnabledEnv: ACCOUNT_SYNC_ENABLED
+                    checkedAt: "2026-10-21T12:00:00.000Z"
+                withPollEcho:
+                  summary: Desktop probe with ?pollMs= echoed
+                  value:
+                    ok: true
+                    service: preventive-shield
+                    threatIntel: own
+                    thirdPartyReputation: false
+                    ownThreatMergePt: true
+                    probeTimeoutMs: 5000
+                    headSkipDomains: []
+                    headSkipEntries: []
+                    personalHintLogEnabled: true
+                    personalHintLogEnv: CHECK_PERSONAL_HINT_LOG
+                    accountSyncEnabled: false
+                    accountSyncEnabledEnv: ACCOUNT_SYNC_ENABLED
+                    checkedAt: "2026-10-21T12:00:00.000Z"
+                    pollMs: 15000
+                    listenHint: localhost:3000
+                withTimingSchemaFailCounts:
+                  summary: Ops flag CHECK_TIMING_SCHEMA_FAIL_HEALTH=1
+                  value:
+                    ok: true
+                    service: preventive-shield
+                    threatIntel: own
+                    thirdPartyReputation: false
+                    personalHintLogEnabled: true
+                    personalHintLogEnv: CHECK_PERSONAL_HINT_LOG
+                    timingSchemaFailCounts:
+                      ambiguousAbsent: 0
+                      ambiguousBoolean: 0
+                    timingSchemaFailCountsEnv: CHECK_TIMING_SCHEMA_FAIL_HEALTH
+                    checkedAt: "2026-10-21T12:00:00.000Z"
+                    listenHint: localhost:3000
+  /api/head-skip/clear:
+    post:
+      summary: Clear server HEAD-skip domain cache
+      responses:
+        "200":
+          description: Cache cleared
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [ok]
+                properties:
+                  ok:
+                    type: boolean
+                  headSkipDomains:
+                    type: array
+                    items:
+                      type: string
+                  headSkipEntries:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/HeadSkipEntry"
+components:
+  schemas:
+    CheckRequest:
+      type: object
+      additionalProperties: false
+      required: [url]
+      properties:
+        url:
+          type: string
+          description: HTTP(S) address to check
+        skipHeadHosts:
+          type: array
+          maxItems: 50
+          items:
+            type: string
+          description: >
+            Registrable domains that should skip HEAD on the first hop
+            (from local history of repeated HEAD failures). Domains only — never full URLs.
+        personalListBlocked:
+          type: boolean
+          description: >
+            Optional read-only hint from extension/desktop that the host is on the caller's
+            personal block list. Request-only — outside CheckTiming schema; website never
+            stores or enforces personal lists. Does not affect rate-limit keys.
+    CheckTiming:
+      type: object
+      additionalProperties: false
+      required:
+        - parseMs
+        - threatMs
+        - probeMs
+        - riskMs
+        - totalMs
+        - probeTimeoutMs
+        - probeHeadFailed
+        - headSkipped
+        - ambiguousProbeStatus
+      properties:
+        parseMs:
+          type: integer
+          minimum: 0
+        threatMs:
+          type: integer
+          minimum: 0
+        probeMs:
+          type: integer
+          nullable: true
+          minimum: 0
+        riskMs:
+          type: integer
+          minimum: 0
+        totalMs:
+          type: integer
+          minimum: 0
+        probeTimeoutMs:
+          type: integer
+          minimum: 1
+        probeHeadFailed:
+          type: boolean
+        headSkipped:
+          type: boolean
+        ambiguousProbeStatus:
+          type: boolean
+          description: >
+            True when live HTTP status was 403, 429, or 503 (bot block / throttle).
+            Does not escalate risk; see evidence id probe-blocked.
+    HeadSkipEntry:
+      type: object
+      required: [domain, until]
+      properties:
+        domain:
+          type: string
+        fails:
+          type: integer
+        until:
+          type: string
+          format: date-time
+          description: ISO timestamp when the skip entry expires
+    HealthResponse:
+      type: object
+      required: [ok, service, threatIntel, thirdPartyReputation, probeTimeoutMs, ownThreatMergePt]
+      properties:
+        ok:
+          type: boolean
+        service:
+          type: string
+        threatIntel:
+          type: string
+          enum: [own]
+        thirdPartyReputation:
+          type: boolean
+        curatedListPresent:
+          type: boolean
+        ownThreatMergePt:
+          type: boolean
+        ownThreatMergePtEnv:
+          type: string
+        probeTimeoutMs:
+          type: integer
+        probeTimeoutEnv:
+          type: string
+        probeTimeoutFormula:
+          type: string
+        probeTimeoutHint:
+          type: string
+        probeTimeoutSuggestion:
+          type: object
+        headSkipDomains:
+          type: array
+          items:
+            type: string
+        headSkipEntries:
+          type: array
+          items:
+            $ref: "#/components/schemas/HeadSkipEntry"
+        personalHintLogEnabled:
+          type: boolean
+          description: >
+            True unless CHECK_PERSONAL_HINT_LOG is "0". Controls the fixed
+            [api/check] personalListBlocked hint accepted soft notice (no URL).
+        personalHintLogEnv:
+          type: string
+          description: Env var name — CHECK_PERSONAL_HINT_LOG
+        accountSyncEnabled:
+          type: boolean
+          description: >
+            True only when ACCOUNT_SYNC_ENABLED is exactly "1". Gates magic-link
+            auth and /api/sync/lists (personal shield-lists-v1 only).
+        accountSyncEnabledEnv:
+          type: string
+          description: Env var name — ACCOUNT_SYNC_ENABLED
+        timingSchemaFailCounts:
+          type: object
+          description: >
+            Present only when CHECK_TIMING_SCHEMA_FAIL_HEALTH=1. Process counters for
+            POST /api/check timing-schema-invalid (no URL). See .env.example.
+          required: [ambiguousAbsent, ambiguousBoolean]
+          properties:
+            ambiguousAbsent:
+              type: integer
+              minimum: 0
+            ambiguousBoolean:
+              type: integer
+              minimum: 0
+        timingSchemaFailCountsEnv:
+          type: string
+          description: Env var name — CHECK_TIMING_SCHEMA_FAIL_HEALTH (ops opt-in exact "1")
+        checkedAt:
+          type: string
+          format: date-time
+        pollMs:
+          type: integer
+          minimum: 1
+          description: >
+            Echo of ?pollMs= from the caller (desktop WEBSITE_HEALTH_POLL_MS).
+            Present only when the query param is a positive number — operators can
+            confirm poll interval without the UI.
+        listenHint:
+          type: string
+          description: >
+            Operator hint for the website listen address (e.g. localhost:3000).
+            Prefer localhost over 127.0.0.1 when vinext binds hostname localhost.

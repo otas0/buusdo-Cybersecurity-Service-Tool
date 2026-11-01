@@ -1,0 +1,463 @@
+name: CI
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+
+# evaluation-diff is a separate required-capable check on PRs (exit 1 on newly failed scenarios).
+jobs:
+  quality:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+
+      - name: Install
+        run: npm ci
+
+      - name: Unit tests
+        run: |
+          npm run test
+          echo "::notice::shield-lists classic fixture covered in tests/shield-lists.test.ts (mjs + shield-lists.classic.js parity)"
+
+      - name: QR browser bundle soft-check
+        run: |
+          if [ ! -f shared/qrcode-browser.js ]; then
+            echo "::warning::shared/qrcode-browser.js missing — run npm run qr:bundle (needs browserify + qrcode)"
+            exit 0
+          fi
+          if ! grep -q 'toCanvas' shared/qrcode-browser.js; then
+            echo "::warning::shared/qrcode-browser.js present but toCanvas export not found — regenerate with npm run qr:bundle"
+            exit 0
+          fi
+          echo "::notice::shared/qrcode-browser.js OK (toCanvas present; regenerate via npm run qr:bundle)"
+
+      - name: Playwright LEAVE_AND_BLOCK fixture host soft-check
+        env:
+          STRICT_LEAVE_AND_BLOCK: "1"
+        run: |
+          host=$(node -e "const f=require('./playwright/fixtures/leave-and-block.json'); console.log(f.host||'')")
+          if [ -z "$host" ]; then
+            echo "::error::playwright/fixtures/leave-and-block.json missing host"
+            exit 1
+          fi
+          if ! node -e "const c=require('./security/data/curated-threats.json'); if(!c.hosts['$host']) process.exit(2)"; then
+            echo "::error::Playwright fixture host '$host' missing from security/data/curated-threats.json (STRICT_LEAVE_AND_BLOCK=1)"
+            exit 1
+          fi
+          echo "::notice::Playwright LEAVE_AND_BLOCK fixture host present in curated-threats.json ($host)"
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Threat check (curated list + regression)
+        id: threat_check
+        run: |
+          npm run threat:check:help
+          if ! npm run threat:check; then
+            echo "::notice::threat:check failed — exit 1 = invalid curated list or regression; exit 2 = cannot read curated file. Run: npm run threat:check:help"
+            exit 1
+          fi
+
+      - name: Controlled evaluation
+        run: npm run evaluate
+
+      - name: Confirm evaluate scenario count (EVAL suite)
+        run: |
+          node --input-type=module -e '
+            import { readFileSync } from "node:fs";
+            const r = JSON.parse(readFileSync("evaluation/results/evaluation-results.json", "utf8"));
+            const n = r.summary?.totalScenarios ?? r.scenarios?.length ?? 0;
+            // Bump min again when the suite exceeds 64 (EVAL-057–064 = PT insurance/IRS batch).
+            const min = 64;
+            if (n < min) {
+              console.error(`::error::evaluate totalScenarios=${n} < ${min} (expected full suite incl. EVAL-057–064)`);
+              process.exit(1);
+            }
+            console.log(`::notice::evaluate totalScenarios=${n} (min ${min})`);
+          '
+
+      - name: Upload evaluation results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: evaluation-results
+          path: evaluation/results/evaluation-results.json
+          if-no-files-found: warn
+
+      - name: Evaluation diff script smoke (push)
+        if: github.event_name != 'pull_request' && success()
+        run: npm run evaluate:diff -- evaluation/results/evaluation-results.json evaluation/results/evaluation-results.json
+
+      - name: evaluate:diff:smoke expects exit 1
+        run: |
+          set +e
+          npm run evaluate:diff:smoke
+          code=$?
+          set -e
+          if [ "$code" -ne 1 ]; then
+            echo "::error::evaluate:diff:smoke expected exit 1 (newly failed fixture), got $code"
+            exit 1
+          fi
+          echo "evaluate:diff:smoke OK (exit 1 as expected)"
+          if [ ! -f evaluation/diff.md ]; then
+            echo "::warning::evaluation/diff.md missing after smoke exit 1 — continuing (soft fail)"
+          fi
+
+      - name: OpenAPI / schema copy sync
+        run: npm run openapi:check
+
+      - name: API_CHECK_CONTRACT extension copy sync
+        run: |
+          if ! cmp -s docs/API_CHECK_CONTRACT.md extension/shared/API_CHECK_CONTRACT.md; then
+            echo "::error::extension/shared/API_CHECK_CONTRACT.md drifted from docs/ — copy docs/API_CHECK_CONTRACT.md to extension/shared/"
+            exit 1
+          fi
+
+      - name: Extension fallback notice key only via shared module
+        run: |
+          # Fail if popup redefines the storage key string instead of importing the shared export.
+          if grep -nE 'websiteApiBaseFallbackNotice' extension/popup/popup.js; then
+            echo "::error::extension/popup/popup.js must not hardcode API_BASE_FALLBACK_NOTICE_KEY — import from shared/api-base-fallback.mjs"
+            exit 1
+          fi
+          grep -q 'API_BASE_FALLBACK_NOTICE_KEY' extension/popup/popup.js
+          grep -q 'from "../shared/api-base-fallback.mjs"' extension/popup/popup.js
+
+      - name: Build
+        run: npm run build
+
+  evaluation-diff:
+    name: evaluation-diff
+    needs: quality
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      actions: read
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+
+      - name: Install
+        run: npm ci
+
+      - name: Download PR evaluation results
+        uses: actions/download-artifact@v4
+        with:
+          name: evaluation-results
+          path: evaluation/results
+
+      - name: Download main evaluation artifact
+        continue-on-error: true
+        uses: dawidd6/action-download-artifact@v6
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          workflow: ci.yml
+          branch: ${{ github.event.repository.default_branch || 'main' }}
+          name: evaluation-results
+          path: evaluation/baseline
+          search_artifacts: true
+          if_no_artifact_found: warn
+
+      - name: Diff evaluation vs main (required)
+        id: eval_diff
+        run: |
+          BASE="evaluation/baseline/evaluation-results.json"
+          CUR="evaluation/results/evaluation-results.json"
+          if [ ! -f "$CUR" ]; then
+            echo "::error::Missing PR evaluation-results.json"
+            exit 1
+          fi
+          if [ -f "$BASE" ]; then
+            npm run evaluate:diff -- "$BASE" "$CUR"
+          else
+            echo "::notice::No main evaluation-results artifact yet — self-smoke only (still required job)"
+            npm run evaluate:diff -- "$CUR" "$CUR"
+          fi
+
+      - name: Comment evaluate:diff Markdown on PR
+        if: always() && hashFiles('evaluation/diff.md') != ''
+        uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          header: evaluate-diff
+          path: evaluation/diff.md
+
+  playwright-settings-optional:
+    name: playwright-settings (optional)
+    if: ${{ vars.RUN_PLAYWRIGHT_SETTINGS == 'true' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+      - name: Install
+        run: npm ci
+      - name: Cache Playwright browsers
+        id: pw_cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
+          restore-keys: |
+            playwright-${{ runner.os }}-
+      - name: Log Playwright browser cache
+        run: |
+          HIT="${{ steps.pw_cache.outputs.cache-hit }}"
+          echo "Playwright browser cache-hit=${HIT}"
+          {
+            echo "## Playwright browser cache"
+            echo ""
+            echo "| Key | Value |"
+            echo "| --- | --- |"
+            echo "| cache-hit | \`${HIT:-false}\` |"
+            echo ""
+          } >> "$GITHUB_STEP_SUMMARY"
+          if [ "$HIT" = "true" ]; then
+            echo "::notice::Playwright browsers restored from cache (warm)"
+          else
+            echo "::notice::Playwright browser cache miss — install may download Chromium"
+          fi
+      - name: Install Playwright Chromium
+        id: pw_install
+        continue-on-error: true
+        run: npx playwright install --with-deps chromium
+
+      - name: Start short-lived vinext (Playwright base)
+        id: pw_server
+        if: steps.pw_install.outcome == 'success'
+        continue-on-error: true
+        run: |
+          BASE="${PLAYWRIGHT_BASE_URL:-http://localhost:3000}"
+          if echo "$BASE" | grep -qE ':(3001)(/|$)'; then
+            echo "::notice::PLAYWRIGHT_BASE_URL still points at :3001 — vinext default is :3000; prefer http://localhost:3000"
+            BASE="http://localhost:3000"
+          fi
+          echo "PLAYWRIGHT_BASE_URL=$BASE" >> "$GITHUB_ENV"
+          # If an external base is already up, skip starting vinext.
+          if curl -sf --max-time 3 "$BASE/api/health" >/dev/null 2>&1 || curl -sf --max-time 3 "$BASE/" >/dev/null 2>&1; then
+            echo "::notice::PLAYWRIGHT_BASE_URL already reachable — not starting vinext"
+            echo "started=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          npm run dev -- --port 3000 > /tmp/vinext-playwright.log 2>&1 &
+          echo $! > /tmp/vinext-playwright.pid
+          echo "started=true" >> "$GITHUB_OUTPUT"
+          for i in $(seq 1 60); do
+            if curl -sf --max-time 2 "http://localhost:3000/api/health" >/dev/null 2>&1 || curl -sf --max-time 2 "http://localhost:3000/" >/dev/null 2>&1; then
+              echo "::notice::vinext ready on :3000 after ${i}s"
+              exit 0
+            fi
+            sleep 1
+          done
+          echo "::notice::vinext did not become ready — Playwright may soft-skip"
+          exit 0
+        env:
+          PLAYWRIGHT_BASE_URL: ${{ vars.PLAYWRIGHT_BASE_URL || 'http://localhost:3000' }}
+          ACCOUNT_SYNC_ENABLED: "1"
+          ACCOUNT_SYNC_DEV_RETURN_LINK: "1"
+          AUTH_MAGIC_SECRET: "ci-playwright-magic"
+          LISTS_ENC_KEY: "ci-playwright-lists-enc"
+
+      - name: Narrow Settings screenshot
+        id: pw_shot
+        if: steps.pw_install.outcome == 'success'
+        continue-on-error: true
+        run: |
+          BASE="${PLAYWRIGHT_BASE_URL:-http://localhost:3000}"
+          export PLAYWRIGHT_BASE_URL="$BASE"
+          export STRICT_LEAVE_AND_BLOCK=1
+          npm run test:playwright:settings
+        env:
+          PLAYWRIGHT_BASE_URL: ${{ vars.PLAYWRIGHT_BASE_URL || 'http://localhost:3000' }}
+          STRICT_LEAVE_AND_BLOCK: "1"
+          RUN_PLAYWRIGHT_SETTINGS: "true"
+
+      - name: Account sync signed-in (hard assert when enabled)
+        id: pw_account
+        if: steps.pw_install.outcome == 'success'
+        run: |
+          BASE="${PLAYWRIGHT_BASE_URL:-http://localhost:3000}"
+          export PLAYWRIGHT_BASE_URL="$BASE"
+          npx playwright test playwright/account-sync.spec.ts
+        env:
+          PLAYWRIGHT_BASE_URL: ${{ vars.PLAYWRIGHT_BASE_URL || 'http://localhost:3000' }}
+          ACCOUNT_SYNC_ENABLED: "1"
+
+      - name: Strict deep-link + double-nav (hard fail)
+        id: pw_strict
+        if: steps.pw_install.outcome == 'success'
+        run: |
+          BASE="${PLAYWRIGHT_BASE_URL:-http://localhost:3000}"
+          if ! curl -sf --max-time 3 "$BASE/" >/dev/null 2>&1 && ! curl -sf --max-time 3 "$BASE/api/health" >/dev/null 2>&1; then
+            echo "::error::Playwright base unreachable after vinext step — cannot run STRICT Settings cases"
+            exit 1
+          fi
+          export PLAYWRIGHT_BASE_URL="$BASE"
+          export STRICT_LEAVE_AND_BLOCK=1
+          export CI=true
+          # Single source of title fragments — STRICT_G is joined from STRICT_TITLES (keep them identical).
+          # Never literal-edit STRICT_G=… — only append/rename entries in STRICT_TITLES below.
+          # Soft-asserts (legend bbox, intel More, probe-blocked filter labels, leave-chip i18n)
+          # stay inside existing titles — do not add a STRICT title for soft-only checks.
+          STRICT_TITLES=(
+            "block-lists note links"
+            "click Settings nav twice"
+            "result Settings link scrolls"
+            "result block-lists settings link href"
+            "user-block-evidence and personal-list-leave-note"
+            "AppShell check request body never includes personalListBlocked"
+            "nunca saem do dispositivo"
+            "Clear ring control"
+            "timing-flag-chips ambiguousProbeStatus after mocked 403"
+            "settings legend ambiguousProbeStatus label matches i18n"
+            "screenshot checklist + CSV filter"
+          )
+          STRICT_G=$(IFS='|'; echo "${STRICT_TITLES[*]}")
+          LIST_OUT=$(npx playwright test playwright/settings-narrow.spec.ts -g "$STRICT_G" --list 2>&1 || true)
+          echo "$LIST_OUT"
+          # Guard against title renames leaving the -g filter matching nothing.
+          MATCH_COUNT=$(echo "$LIST_OUT" | grep -cE 'settings-narrow\.spec\.ts:' || true)
+          if [ "${MATCH_COUNT:-0}" -lt 1 ]; then
+            echo "::error::Strict Playwright -g matched zero tests — update the filter after renaming specs"
+            {
+              echo "## Strict Playwright filter"
+              echo ""
+              echo "Matched **0** tests for \`-g\` — job failed as a rename guard."
+            } >> "$GITHUB_STEP_SUMMARY"
+            exit 1
+          fi
+          MISSING=""
+          for title in "${STRICT_TITLES[@]}"; do
+            if ! echo "$LIST_OUT" | grep -Fq "$title"; then
+              echo "::error::Strict Playwright --list missing expected title: $title"
+              MISSING="${MISSING}${MISSING:+, }$title"
+            fi
+          done
+          EXPECTED_COUNT=${#STRICT_TITLES[@]}
+          if [ -n "$MISSING" ]; then
+            {
+              echo "## Strict Playwright filter"
+              echo ""
+              echo "Matched **${MATCH_COUNT}** line(s) but missing expected title(s): \`${MISSING}\`"
+              echo ""
+              echo "### Titles"
+              echo ""
+              echo "$LIST_OUT" | grep -E 'settings-narrow\.spec\.ts:' | sed 's/^/- /' || true
+            } >> "$GITHUB_STEP_SUMMARY"
+            exit 1
+          fi
+          if [ "${MATCH_COUNT}" -ne "${EXPECTED_COUNT}" ]; then
+            echo "::error::Strict Playwright MATCH_COUNT (${MATCH_COUNT}) != STRICT_TITLES length (${EXPECTED_COUNT})"
+            {
+              echo "## Strict Playwright filter"
+              echo ""
+              echo "Matched **${MATCH_COUNT}** line(s) but expected **${EXPECTED_COUNT}** (STRICT_TITLES length)."
+              echo ""
+              echo "### Titles"
+              echo ""
+              echo "$LIST_OUT" | grep -E 'settings-narrow\.spec\.ts:' | sed 's/^/- /' || true
+            } >> "$GITHUB_STEP_SUMMARY"
+            exit 1
+          fi
+          echo "::notice::Strict Playwright matched ${MATCH_COUNT}/${EXPECTED_COUNT} (EXPECTED_COUNT=${EXPECTED_COUNT})"
+          {
+            echo "## Strict Playwright filter"
+            echo ""
+            echo "Matched **${MATCH_COUNT}** / **${EXPECTED_COUNT}** (EXPECTED_COUNT = STRICT_TITLES length); all expected titles present."
+            echo ""
+            echo "### Titles"
+            echo ""
+            echo "$LIST_OUT" | grep -E 'settings-narrow\.spec\.ts:' | sed 's/^/- /' || true
+          } >> "$GITHUB_STEP_SUMMARY"
+          npx playwright test playwright/settings-narrow.spec.ts -g "$STRICT_G"
+        env:
+          PLAYWRIGHT_BASE_URL: ${{ vars.PLAYWRIGHT_BASE_URL || 'http://localhost:3000' }}
+          STRICT_LEAVE_AND_BLOCK: "1"
+          CI: true
+
+      - name: Upload Playwright report on strict failure
+        if: failure() && steps.pw_strict.outcome == 'failure'
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-strict-report
+          path: |
+            playwright/report/**
+            playwright/output/**
+          if-no-files-found: ignore
+
+      - name: Stop short-lived vinext
+        if: always() && steps.pw_server.outputs.started == 'true'
+        continue-on-error: true
+        run: |
+          if [ -f /tmp/vinext-playwright.pid ]; then
+            kill "$(cat /tmp/vinext-playwright.pid)" 2>/dev/null || true
+          fi
+      - name: Notice if Chromium install failed
+        if: steps.pw_install.outcome != 'success'
+        run: echo "::notice::Playwright Chromium install failed — optional Settings screenshot skipped (job still green)"
+      - name: Soft-fail if thumb missing but full PNG exists
+        if: steps.pw_install.outcome == 'success'
+        run: |
+          FULL=playwright/output/settings-narrow-pt.png
+          THUMB=playwright/output/settings-narrow-pt-thumb.png
+          if [ -f "$FULL" ] && [ ! -f "$THUMB" ]; then
+            echo "::notice::png-max-width thumb helper failed or skipped — full PNG kept; job stays green (no ImageMagick)"
+          fi
+          if [ "${{ steps.pw_shot.outcome }}" != "success" ] && [ -f "$FULL" ]; then
+            echo "::notice::Playwright settings screenshot soft-failed but full PNG exists"
+          elif [ "${{ steps.pw_shot.outcome }}" != "success" ]; then
+            echo "::notice::Playwright settings screenshot soft-failed (strict nav step is separate)"
+          fi
+      - name: Upload screenshot (full PNG even on soft-fail)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: settings-narrow-pt
+          path: playwright/output/**
+          if-no-files-found: ignore
+      - name: Job summary screenshot thumbnail
+        if: steps.pw_install.outcome == 'success' && hashFiles('playwright/output/settings-narrow-pt.png') != ''
+        run: |
+          {
+            echo "## Narrow Settings screenshot (pt-PT)"
+            echo ""
+            echo "Full PNG is in artifact \`settings-narrow-pt\` (thumb from scripts/png-max-width.mjs — no ImageMagick)."
+            echo "Also includes \`settings-block-lists-live.png\` when Leave-and-block nav ran."
+            echo ""
+            THUMB=playwright/output/settings-narrow-pt-thumb.png
+            SRC=playwright/output/settings-narrow-pt.png
+            if [ -f "$THUMB" ]; then SRC="$THUMB"; fi
+            SIZE=$(wc -c < "$SRC" | tr -d ' ')
+            if [ "$SIZE" -lt 200000 ]; then
+              echo "![settings-narrow-pt](data:image/png;base64,$(base64 -w0 "$SRC"))"
+            else
+              echo "_Screenshot ${SIZE} bytes — open the artifact (too large to inline)._"
+            fi
+            if [ -f playwright/output/settings-block-lists-live.png ]; then
+              echo ""
+              echo "### settings-block-lists-live"
+              echo ""
+              LIVE_SIZE=$(wc -c < playwright/output/settings-block-lists-live.png | tr -d ' ')
+              if [ "$LIVE_SIZE" -lt 200000 ]; then
+                echo "![settings-block-lists-live](data:image/png;base64,$(base64 -w0 playwright/output/settings-block-lists-live.png))"
+              else
+                echo "_Live deep-link PNG ${LIVE_SIZE} bytes — open the artifact._"
+              fi
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"

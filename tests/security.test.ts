@@ -2,7 +2,13 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { parseUrl, getRegistrableDomain, analyseSimilarity } from "../security/url";
 import { verifyIdentity } from "../security/identity";
-import { LocalThreatIntelProvider, OnlineThreatIntelProviderPlaceholder } from "../security/threat-intel";
+import {
+  checkThreat,
+  curatedPtHosts,
+  LocalThreatIntelProvider,
+  OnlineThreatIntelProviderPlaceholder
+} from "../security/threat-intel";
+import { setRuntimeOwnThreatMergePt } from "../security/env-local";
 import { assessRisk } from "../security/risk";
 import { analyseUrl } from "../security/analyse";
 import { scenarios } from "../security/scenarios";
@@ -18,7 +24,41 @@ test("detects an identity mismatch",()=>assert.equal(verifyIdentity(parseUrl("ht
 test("detects lookalike similarity without calling it proof",()=>{const result=analyseSimilarity(parseUrl("https://lusitaniabarnk.test"),["lusitaniabank.test"]);assert.equal(result.similar,true);assert.ok(result.distance<=2)});
 test("detects punycode as an IDN signal",()=>assert.equal(parseUrl("https://xn--80ak6aa92e.test").hasPunycode,true));
 test("local provider returns a known phishing state",async()=>assert.equal((await new LocalThreatIntelProvider().checkDomain("lusitania-bank-login.test")).state,"KNOWN_PHISHING"));
+test("PT merge off drops caixa-secure-login.example from own list",async()=>{
+  const prev=process.env.OWN_THREAT_MERGE_PT;
+  process.env.OWN_THREAT_MERGE_PT="0";
+  setRuntimeOwnThreatMergePt("0");
+  try{
+    assert.equal(Object.keys(curatedPtHosts()).length,0);
+    assert.equal((await new LocalThreatIntelProvider().checkDomain("caixa-secure-login.example")).state,"NO_KNOWN_MATCH");
+  }finally{
+    setRuntimeOwnThreatMergePt(null);
+    if(prev===undefined) delete process.env.OWN_THREAT_MERGE_PT;
+    else process.env.OWN_THREAT_MERGE_PT=prev;
+  }
+});
+test("PT merge on lists caixa-secure-login.example",async()=>{
+  const prev=process.env.OWN_THREAT_MERGE_PT;
+  delete process.env.OWN_THREAT_MERGE_PT;
+  setRuntimeOwnThreatMergePt("1");
+  try{
+    assert.equal(curatedPtHosts()["caixa-secure-login.example"],"KNOWN_PHISHING");
+    assert.equal((await new LocalThreatIntelProvider().checkDomain("caixa-secure-login.example")).state,"KNOWN_PHISHING");
+  }finally{
+    setRuntimeOwnThreatMergePt(null);
+    if(prev===undefined) delete process.env.OWN_THREAT_MERGE_PT;
+    else process.env.OWN_THREAT_MERGE_PT=prev;
+  }
+});
 test("unconfigured online provider is explicitly unavailable",async()=>assert.equal((await new OnlineThreatIntelProviderPlaceholder().checkDomain("example.test")).state,"PROVIDER_UNAVAILABLE"));
+test("a lookalike host is flagged by live address signals",async()=>assert.equal((await checkThreat(parseUrl("https://paypal.secure-login.example/signin"))).state,"KNOWN_PHISHING"));
+test("the real PayPal host is not flagged as phishing",async()=>assert.equal((await checkThreat(parseUrl("https://www.paypal.com/signin"))).state,"NO_KNOWN_MATCH"));
+test("auto-infers brand impersonation into an identity mismatch",async()=>{const result=await analyseUrl("https://paypal.secure-login.example/signin");assert.equal(result.inferredOrganisationId,"paypal");assert.equal(result.identity.state,"DOMAIN_MISMATCH")});
+test("auto-infers an official brand domain as a verified match",async()=>{const result=await analyseUrl("https://www.paypal.com/signin");assert.equal(result.inferredOrganisationId,"paypal");assert.equal(result.identity.state,"VERIFIED_MATCH")});
+test("any website gets structural evidence without a brand claim",async()=>{const result=await analyseUrl("https://example.com/");assert.ok(result.risk.evidence.some((item)=>item.id==="checked-address"));assert.ok(result.risk.evidence.some((item)=>item.id==="no-match"||item.id==="scope-limit"));assert.equal(result.identity.state,"NO_CLAIM")});
+test("analyseWebsite reports stage timings for probe tuning",async()=>{const result=await analyseUrl("https://example.com/");assert.ok(result.timing);assert.ok(result.timing.parseMs>=0);assert.ok(result.timing.threatMs>=0);assert.equal(result.timing.probeMs,null);assert.ok(result.timing.totalMs>=0);assert.ok(result.timing.probeTimeoutMs>0);assert.equal(result.timing.probeHeadFailed,false);assert.equal(result.timing.headSkipped,false)});
+test("timed-out live probe surfaces probe-timeout evidence",async()=>{const {analyseWebsite}=await import("../security/analyse");const live={resolved:false,addresses:[],reachable:false,statusCode:null,finalUrl:null,redirectChain:[],redirected:false,crossDomainRedirect:false,tlsOk:null,error:"timeout",timedOut:true};const result=await analyseWebsite("https://slow-probe.test/",{live});assert.ok(result.risk.evidence.some((item)=>item.id==="probe-timeout"))});
+test("plain HTTP on an ordinary host raises caution",async()=>{const result=await analyseUrl("http://example.com/");assert.equal(result.risk.level,"CAUTION");assert.ok(result.risk.evidence.some((item)=>item.id==="http"))});
 test("no-match risk wording is not a safety claim",()=>{const p=parseUrl("https://example.test");const risk=assessRisk(p,{state:"NO_KNOWN_MATCH",providerName:"test",checkedAt:"now",evidence:[]},{state:"NO_CLAIM"},null);assert.equal(risk.level,"LOW_EVIDENCE");assert.match(risk.evidence[0].detail,/not proof.*safe/i)});
 test("HTTPS alone does not produce verified identity or a safety claim",()=>{const p=parseUrl("https://ordinary.test");const identity=verifyIdentity(p);const risk=assessRisk(p,{state:"NO_KNOWN_MATCH",providerName:"test",checkedAt:"now",evidence:[]},identity,null);assert.equal(identity.state,"NO_CLAIM");assert.equal(risk.level,"LOW_EVIDENCE");assert.ok(risk.evidence.some(e=>e.id==="https-limit"))});
 test("identity match remains limited evidence rather than a safe verdict",()=>{const p=parseUrl("https://lusitaniabank.test");const risk=assessRisk(p,{state:"NO_KNOWN_MATCH",providerName:"test",checkedAt:"now",evidence:[]},verifyIdentity(p,"lusitania-bank"),null);assert.equal(risk.level,"LOW_EVIDENCE");assert.match(risk.limitations.join(" "),/does not guarantee/i)});

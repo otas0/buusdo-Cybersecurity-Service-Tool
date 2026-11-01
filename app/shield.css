@@ -1,0 +1,745 @@
+/**
+ * Preventive Shield — website product UI.
+ * Single instrument language from shared/tokens.css.
+ */
+
+.shell {
+  max-width: 920px;
+  margin: 0 auto;
+  padding: 28px 28px 48px;
+}
+
+.shell .top {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 0 0 18px;
+  border-bottom: 1px solid var(--line);
+}
+
+.shell .brand {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+}
+
+.shell .index,
+.shell .kicker,
+.shell .lang,
+.shell .nav-link {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.shell h1 {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+}
+
+.shell .top-nav {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.shell .nav-link {
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+}
+
+.shell .nav-link.is-active {
+  color: var(--text);
+}
+
+.shell .stage {
+  padding: 36px 0 0;
+}
+
+.shell .kicker {
+  margin: 0 0 14px;
+}
+
+.shell .readout {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 16px;
+  margin: 0;
+}
+
+.shell .readout .mark {
+  width: 8px;
+  height: 8px;
+  border: 1px solid var(--text);
+}
+
+.shell .readout[data-level="safe"] .mark,
+.shell .readout[data-level="caution"] .mark {
+  background: var(--text);
+}
+
+.shell .readout[data-level="danger"] .mark {
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+.shell .readout .word {
+  font-size: 64px;
+  line-height: 0.95;
+  font-weight: 450;
+  letter-spacing: -0.04em;
+}
+
+.shell .readout[data-level="danger"] .word {
+  color: var(--accent);
+}
+
+.shell .light-note,
+.shell .detail {
+  margin: 16px 0 0;
+  max-width: 42ch;
+  color: var(--muted);
+  font-size: 15px;
+  line-height: 1.45;
+}
+
+.shell .instrument-check,
+.shell .check-card {
+  width: 100%;
+  margin: 32px 0 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.shell .instrument-check .form-grid {
+  display: flex;
+  align-items: stretch;
+  gap: 0;
+  border-bottom: 1px solid var(--text);
+}
+
+.shell .instrument-check .field {
+  flex: 1;
+  min-width: 0;
+}
+
+.shell .url-input {
+  display: flex;
+  align-items: center;
+  height: auto;
+  border: 0;
+  background: transparent;
+}
+
+.shell .url-input input {
+  width: 100%;
+  border: 0;
+  outline: 0;
+  padding: 12px 0;
+  font-size: 16px;
+  background: transparent;
+  color: var(--text);
+}
+
+.shell .url-input input::placeholder {
+  color: #5c5954;
+}
+
+.shell .privacy select {
+  width: 100%;
+  background: transparent;
+  border: 1px solid var(--line);
+  color: inherit;
+  font: inherit;
+  padding: 10px 12px;
+  cursor: pointer;
+  border-radius: 0;
+}
+
+.shell .primary-button {
+  min-height: 0;
+  border: 0;
+  border-radius: 0;
+  padding: 0 18px;
+  background: var(--text);
+  color: var(--bg);
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.shell .primary-button:hover {
+  background: var(--accent);
+  color: var(--bg);
+}
+
+.shell .primary-button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.shell .text-button {
+  background: transparent;
+  border: 0;
+  padding: 0;
+  color: var(--muted);
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.shell .loading {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 16px;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.shell .loading span {
+  width: 12px;
+  height: 12px;
+  border: 1px solid var(--line);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: shield-spin 0.8s linear infinite;
+}
+
+@keyframes shield-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.shell .block-log {
+  list-style: none;
+  margin: 28px 0 0;
+  padding: 0;
+}
+
+.shell .block-log li {
+  display: grid;
+  grid-template-columns: 88px 1fr;
+  gap: 8px 12px;
+  padding: 10px 0;
+  border-top: 1px solid var(--line);
+  font-size: 13px;
+}
+
+.shell .block-log .kind {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.shell .block-log .display {
+  overflow-wrap: anywhere;
+}
+
+.shell .block-log .meta {
+  grid-column: 2;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+.shell .log-action {
+  margin-top: 8px;
+  padding-top: 18px;
+  border-top: 1px solid var(--line);
+}
+
+.shell .log-action h2 {
+  margin: 8px 0 0;
+  font-size: 22px;
+  font-weight: 450;
+  letter-spacing: -0.03em;
+}
+
+.shell .log-action p {
+  max-width: 46ch;
+  color: var(--muted);
+}
+
+.shell .action-row,
+.shell .log-action .action-row,
+.shell .settings-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px 18px;
+  align-items: center;
+  margin-top: 16px;
+}
+
+.shell .scope-note,
+.shell .hint {
+  margin: 12px 0 0;
+  font-size: 12px;
+  color: var(--muted);
+  line-height: 1.4;
+}
+
+.shell .privacy-foot {
+  margin-top: 36px;
+  padding-top: 16px;
+  border-top: 1px solid var(--line);
+}
+
+.shell .privacy {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 12px;
+  max-width: 320px;
+}
+
+.shell .settings-stage h2 {
+  margin: 0 0 10px;
+  font-size: 15px;
+  font-weight: 500;
+}
+
+.shell .settings-subhead {
+  margin: 22px 0 8px;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.shell .block-log .kind.is-timeout {
+  color: var(--accent);
+}
+
+.shell .settings-block {
+  margin-top: 28px;
+}
+
+.shell .form-error {
+  margin: 12px 0 0;
+  color: var(--accent);
+  font-size: 12px;
+}
+
+.shell .check-progress {
+  margin: 18px 0 0;
+}
+
+.shell .check-progress-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px 16px;
+  margin-bottom: 10px;
+}
+
+.shell .check-progress-head .kicker {
+  margin: 0;
+}
+
+.shell .check-timing-total {
+  margin: 0;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text);
+}
+
+.shell .check-timing-budget {
+  color: var(--muted);
+  font-weight: 400;
+}
+
+.shell .check-progress ol {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 20px;
+}
+
+.shell .check-progress li {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+  opacity: 0.45;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 7.5rem;
+}
+
+.shell .check-progress li.is-active {
+  color: var(--text);
+  opacity: 1;
+}
+
+.shell .check-progress li.is-done {
+  color: var(--muted);
+  opacity: 0.85;
+}
+
+.shell .check-step-ms {
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  text-transform: none;
+  color: var(--text);
+  opacity: 0.9;
+}
+
+.shell .check-progress li:not(.is-done):not(.is-active) .check-step-ms {
+  color: var(--muted);
+}
+
+.shell .check-timing-timeout {
+  color: var(--accent);
+  margin: 0;
+}
+
+.shell .check-timing-timeout-row {
+  margin-top: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: flex-start;
+}
+
+.shell .check-timing-copy {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 14px;
+}
+
+.shell .check-timing-env {
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: 0.02em;
+  color: var(--text);
+  padding: 4px 0;
+}
+
+.shell .check-timing-flags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 8px;
+  margin: 8px 0 0;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.04em;
+}
+
+/* Settings: keep flag legend tight under the h2 for 390px first viewport. */
+.shell .settings-stage .settings-timing-legend {
+  margin: 6px 0 10px;
+}
+
+/* Wide: intelBody always visible; More toggle is narrow-only. */
+.shell .settings-stage .intel-body-more-toggle {
+  display: none;
+}
+
+.shell .settings-stage .intel-body {
+  margin: 0 0 12px;
+}
+
+.shell .timing-flag-chip {
+  padding: 2px 8px;
+  border: 1px solid var(--line);
+  color: var(--muted);
+  background: transparent;
+}
+
+.shell .timing-flag-chip.is-on {
+  border-color: var(--halt);
+  color: var(--text);
+  outline: 1px solid var(--halt);
+  outline-offset: 1px;
+}
+
+.shell .copy-toast {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.shell .rate-limit-bar {
+  margin: 10px 0 0;
+}
+
+.shell .rate-limit-bar-track {
+  height: 4px;
+  background: var(--line);
+  overflow: hidden;
+}
+
+.shell .rate-limit-bar-fill {
+  height: 100%;
+  background: var(--halt, var(--accent));
+  transition: width 0.9s linear;
+}
+
+.shell .rate-limit-bar-label {
+  margin: 6px 0 0;
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  color: var(--muted);
+}
+
+.shell .feedback-checklist {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 12px 0;
+}
+
+.shell .feedback-checklist label {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: start;
+  gap: 8px 10px;
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+.shell .feedback-checklist label span {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+.shell .history-csv-filter {
+  border: 0;
+  margin: 10px 0 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 14px;
+}
+
+.shell .history-csv-filter label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  padding: 2px 4px;
+  border: 1px solid transparent;
+  transition: border-color 0.2s ease, background-color 0.2s ease;
+}
+
+@keyframes csv-filter-flash {
+  0% {
+    border-color: var(--halt, #e85d04);
+    background: color-mix(in srgb, var(--halt, #e85d04) 18%, transparent);
+  }
+  100% {
+    border-color: transparent;
+    background: transparent;
+  }
+}
+
+.shell .history-csv-filter label.is-flash {
+  animation: csv-filter-flash 0.7s ease forwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .shell .history-csv-filter label {
+    transition: none;
+  }
+
+  .shell .history-csv-filter label.is-flash {
+    animation: none;
+    border-color: transparent;
+    background: transparent;
+  }
+}
+
+/* Narrow Settings (pt-PT checklist + CSV filter screenshot regression) */
+@media (max-width: 480px) {
+  .shell .settings-stage {
+    padding-inline: 12px;
+  }
+
+  .shell .settings-stage .intel-body-more-toggle {
+    display: inline-block;
+    margin: 0 0 8px;
+  }
+
+  .shell .settings-stage .intel-body:not(.is-open) {
+    display: none;
+  }
+
+  .shell .feedback-checklist {
+    gap: 12px;
+  }
+
+  .shell .feedback-checklist label {
+    font-size: 12px;
+    line-height: 1.45;
+  }
+
+  .shell .history-csv-filter {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .shell .action-row {
+    flex-wrap: wrap;
+  }
+}
+
+.shell .result-verdict {
+  margin: 12px 0 0;
+  font-size: 22px;
+  font-weight: 450;
+  letter-spacing: -0.03em;
+}
+
+.shell .result-why {
+  margin-top: 22px;
+}
+
+.shell .halt-accent {
+  border-left: 3px solid var(--halt);
+  padding-left: 10px;
+  color: var(--text);
+}
+
+.shell .halt-accent strong {
+  color: var(--halt);
+}
+
+.shell .why-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.shell .why-list li {
+  padding: 10px 0;
+  border-top: 1px solid var(--line);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 13px;
+}
+
+.shell .why-list strong {
+  font-weight: 500;
+}
+
+.shell .why-list span {
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+.shell .result-details {
+  margin-top: 20px;
+}
+
+.shell .details-toggle {
+  margin-bottom: 8px;
+}
+
+.shell .feedback-panel {
+  margin-top: 28px;
+  padding-top: 18px;
+  border-top: 1px solid var(--line);
+}
+
+.shell .feedback-panel .text-button:disabled {
+  opacity: 0.55;
+  cursor: default;
+  text-decoration: none;
+}
+
+.shell .feedback-export-plan {
+  margin: 12px 0 0;
+  font-size: 13px;
+  color: var(--text);
+  line-height: 1.45;
+  max-width: 48ch;
+}
+
+.shell .history-filter {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 12px;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.shell .feedback-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 14px;
+  font-size: 12px;
+  color: var(--muted);
+  max-width: 520px;
+}
+
+.shell .feedback-field input,
+.shell .feedback-field textarea {
+  font: inherit;
+  font-size: 13px;
+  color: var(--text);
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid var(--line);
+  padding: 8px 0;
+  resize: vertical;
+}
+
+.shell .check-history {
+  margin-top: 36px;
+  padding-top: 8px;
+}
+
+@media (max-width: 760px) {
+  .shell {
+    padding: 20px 18px 40px;
+  }
+
+  .shell .readout .word {
+    font-size: 56px;
+  }
+
+  .shell .instrument-check .form-grid {
+    flex-direction: column;
+    border-bottom: 0;
+  }
+
+  .shell .instrument-check .field {
+    border-bottom: 1px solid var(--text);
+  }
+
+  .shell .instrument-check .primary-button {
+    height: 44px;
+    margin-top: 8px;
+  }
+}

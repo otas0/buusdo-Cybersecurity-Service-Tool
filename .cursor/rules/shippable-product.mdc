@@ -1,0 +1,15 @@
+---
+description: No demos — every surface must be launch-ready product work
+alwaysApply: true
+---
+
+# Shippable product only
+
+This repo ships Preventive Shield as a real product, not a classroom or teacher demo.
+
+- Do **not** add demo, mock, fictional-only, teacher-demo, or “controlled demonstration” product UI.
+- Every user-facing feature must be something that can go live: real flows, real brands/signals where shown, reversible local choices, bilingual EN / pt-PT.
+- Test fixtures (e.g. `.test` hosts in `tests/` / evaluation) may stay for automated checks — never surface them as the product experience.
+- Prefer completing the **website** (`app/`, `components/`, `security/`) before polishing the extension or desktop app.
+- Visual language is the instrument system in `shared/tokens.css` (dark field, sharp corners, orange Halt). Do not reintroduce the cream / mint / Georgia legacy look.
+- If asked for a “demo”, implement the real product path instead (or a thin fixture behind tests only).

@@ -1,0 +1,100 @@
+# Manual Cloudflare Workers deploy (workflow_dispatch).
+# Secrets (Settings → Secrets and variables → Actions):
+#   CLOUDFLARE_API_TOKEN   — Edit Cloudflare Workers template (or custom Account.Workers Scripts:Edit)
+#   CLOUDFLARE_ACCOUNT_ID  — dash.cloudflare.com/<id>
+# Optional variable:
+#   NEXT_PUBLIC_SITE_URL   — https://YOUR_DOMAIN or https://….workers.dev (no trailing slash)
+#
+# After first success: locally run
+#   npm run production:origin -- https://…
+# then commit the updated origin files / README.
+
+name: Deploy Cloudflare
+
+on:
+  workflow_dispatch:
+    inputs:
+      site_url:
+        description: "NEXT_PUBLIC_SITE_URL override (https://…); empty = repo variable"
+        required: false
+        default: ""
+      run_check_smoke:
+        description: "Also POST /api/check smoke after deploy"
+        required: false
+        type: boolean
+        default: true
+
+jobs:
+  deploy:
+    name: deploy:cloudflare
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+
+      - name: Resolve site URL
+        id: site
+        run: |
+          OVERRIDE="${{ github.event.inputs.site_url }}"
+          VAR="${{ vars.NEXT_PUBLIC_SITE_URL }}"
+          if [ -n "$OVERRIDE" ]; then
+            URL="$OVERRIDE"
+          else
+            URL="$VAR"
+          fi
+          URL=$(echo "$URL" | tr -d '[:space:]' | sed 's:/*$::')
+          echo "url=$URL" >> "$GITHUB_OUTPUT"
+          if [ -n "$URL" ]; then
+            echo "NEXT_PUBLIC_SITE_URL=$URL" >> "$GITHUB_ENV"
+            echo "::notice::NEXT_PUBLIC_SITE_URL=$URL"
+          else
+            echo "::warning::NEXT_PUBLIC_SITE_URL unset — deploy may use relative URLs; set input or repo variable"
+          fi
+
+      - name: Install
+        run: npm ci
+
+      - name: Deploy
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          if [ -z "$CLOUDFLARE_API_TOKEN" ] || [ -z "$CLOUDFLARE_ACCOUNT_ID" ]; then
+            echo "::error::Set secrets CLOUDFLARE_API_TOKEN and CLOUDFLARE_ACCOUNT_ID"
+            exit 1
+          fi
+          npm run deploy:cloudflare
+
+      - name: Health smoke
+        if: steps.site.outputs.url != ''
+        env:
+          HEALTH_BASE_URL: ${{ steps.site.outputs.url }}
+        run: npm run health:prod -- --url "$HEALTH_BASE_URL"
+
+      - name: Check smoke
+        if: steps.site.outputs.url != '' && github.event.inputs.run_check_smoke == 'true'
+        env:
+          HEALTH_BASE_URL: ${{ steps.site.outputs.url }}
+        run: npm run check:prod -- --url "$HEALTH_BASE_URL"
+
+      - name: Summary
+        if: always()
+        run: |
+          {
+            echo "## Deploy Cloudflare"
+            echo ""
+            echo "| Field | Value |"
+            echo "| --- | --- |"
+            echo "| NEXT_PUBLIC_SITE_URL | \`${{ steps.site.outputs.url }}\` |"
+            echo "| command | \`npm run deploy:cloudflare\` |"
+            echo ""
+            echo "After first workers.dev URL is known, run locally:"
+            echo ""
+            echo '```bash'
+            echo "npm run production:origin -- https://YOUR.workers.dev"
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"

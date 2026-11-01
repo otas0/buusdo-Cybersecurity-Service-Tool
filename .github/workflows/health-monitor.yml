@@ -1,0 +1,82 @@
+# Production health monitor — polls GET /api/health on a schedule.
+# Target: Cloudflare Workers origin (custom domain or *.workers.dev).
+# Enable by setting repository variable PRODUCTION_HEALTH_URL=https://your.domain
+# (Settings → Secrets and variables → Actions → Variables).
+#
+# Manual run: Actions → Production health → Run workflow (optional URL override).
+
+name: Production health
+
+on:
+  schedule:
+    # Every 15 minutes
+    - cron: "*/15 * * * *"
+  workflow_dispatch:
+    inputs:
+      url:
+        description: "Override base URL (https://…); empty = PRODUCTION_HEALTH_URL"
+        required: false
+        default: ""
+
+jobs:
+  health:
+    name: GET /api/health
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+
+      - name: Resolve target URL
+        id: target
+        run: |
+          OVERRIDE="${{ github.event.inputs.url }}"
+          VAR="${{ vars.PRODUCTION_HEALTH_URL }}"
+          if [ -n "$OVERRIDE" ]; then
+            URL="$OVERRIDE"
+          else
+            URL="$VAR"
+          fi
+          URL=$(echo "$URL" | tr -d '[:space:]')
+          if [ -z "$URL" ]; then
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+            echo "::notice::PRODUCTION_HEALTH_URL unset — skipping monitor (set repo variable to enable)"
+            {
+              echo "## Production health"
+              echo ""
+              echo "Skipped: set repository variable \`PRODUCTION_HEALTH_URL\` to your HTTPS origin."
+            } >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+          echo "skip=false" >> "$GITHUB_OUTPUT"
+          echo "url=$URL" >> "$GITHUB_OUTPUT"
+          echo "HEALTH_BASE_URL=$URL" >> "$GITHUB_ENV"
+
+      - name: Install (scripts only need Node fetch)
+        if: steps.target.outputs.skip != 'true'
+        run: npm ci --ignore-scripts
+
+      - name: Health smoke
+        if: steps.target.outputs.skip != 'true'
+        run: node scripts/health-smoke.mjs --url "${{ steps.target.outputs.url }}"
+
+      - name: Check smoke
+        if: steps.target.outputs.skip != 'true'
+        run: node scripts/check-smoke.mjs --url "${{ steps.target.outputs.url }}"
+
+      - name: Summary
+        if: steps.target.outputs.skip != 'true' && success()
+        run: |
+          {
+            echo "## Production health"
+            echo ""
+            echo "| Field | Value |"
+            echo "| --- | --- |"
+            echo "| base | \`${{ steps.target.outputs.url }}\` |"
+            echo "| health | OK |"
+            echo "| check | OK |"
+            echo ""
+          } >> "$GITHUB_STEP_SUMMARY"

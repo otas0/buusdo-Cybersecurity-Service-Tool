@@ -1,0 +1,24 @@
+{
+  "id": "YYYY-MM-DD-short-slug",
+  "kind": "report",
+  "reviewedBy": "",
+  "notes": "What was reviewed and why (no full user URLs with secrets). Prefill risk-level summary when exporting from Settings. If EVAL scenarios cover new hosts, land those rows in the same PR as threat:apply (evaluation/scenarios.ts + CI min bump).",
+  "reviewChecklist": {
+    "hostsReviewed": false,
+    "falsePositivesConfirmed": false,
+    "readyToApply": false
+  },
+  "add": [
+    {
+      "host": "phishing-host.example",
+      "state": "KNOWN_PHISHING",
+      "reason": "Confirmed report / operator review"
+    }
+  ],
+  "remove": [
+    {
+      "host": "false-positive.example",
+      "reason": "Confirmed false positive — remove from curated list"
+    }
+  ]
+}

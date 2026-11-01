@@ -1,0 +1,19 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  // Preventive Shield — Cloudflare Workers (vinext).
+  // Set CLOUDFLARE_ACCOUNT_ID in the environment, or uncomment account_id below.
+  // "account_id": "YOUR_ACCOUNT_ID",
+  "name": "preventive-shield",
+  "compatibility_date": "2025-10-01",
+  // nodejs_compat comes from vite.config.ts cloudflare plugin (do not duplicate here — API 10021).
+  // Main entry is provided by @cloudflare/vite-plugin + vinext at build/deploy time.
+  // Do not set "main" here when deploying via: npx @vinext/cloudflare deploy
+  "workers_dev": true,
+  "preview_urls": true,
+  "vars": {
+    // Non-secret defaults only. Secrets → `wrangler secret put NAME`
+    "ACCOUNT_SYNC_ENABLED": "0",
+    // When enabling sync, also set DATABASE_URL (+ AUTH_TOKEN) secrets — never file store on Workers.
+    "ACCOUNT_SYNC_REQUIRE_TURSO": "1"
+  }
+}

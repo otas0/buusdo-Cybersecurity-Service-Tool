@@ -1,0 +1,9 @@
+{
+  "updatedAt": "2026-10-21",
+  "note": "Fixtures for automated tests only (.test hosts). Not used as the public product pitch.",
+  "hosts": {
+    "lusitania-bank-login.test": "KNOWN_PHISHING",
+    "lusitaniabarnk.test": "KNOWN_MALICIOUS",
+    "malicious-demo.test": "KNOWN_MALICIOUS"
+  }
+}

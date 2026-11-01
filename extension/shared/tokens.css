@@ -1,0 +1,23 @@
+/**
+ * Preventive Shield — instrument palette.
+ * Black field, warm type, one orange mark. Sharp corners.
+ * Copy of ../../shared/tokens.css (the extension cannot load files outside its folder).
+ */
+:root {
+  --bg: #0e0e0e;
+  --bg-elev: #161616;
+  --bg-soft: #1c1c1c;
+  --text: #f3f1ea;
+  --muted: #8d897f;
+  --line: rgba(243, 241, 234, 0.16);
+  --ring: #ff4d00;
+  --safe: #f3f1ea;
+  --caution: #f3f1ea;
+  --danger: #ff4d00;
+  --idle: #3a3a3a;
+  --accent: #ff4d00;
+  --border: rgba(243, 241, 234, 0.16);
+  --radius: 0px;
+  --font: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+}

@@ -1,70 +1,220 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { analyseUrl, type Analysis } from "../security/analyse";
-import { scenarios } from "../security/scenarios";
-import type { SensitiveRequest } from "../security/types";
-import {
-  BLOCK_KEY,
-  TRUST_KEY,
-  readEntries,
-  removeEntry,
-  type LocalEntry,
-} from "../security/storage";
+import { useEffect, useRef, useState } from "react";
+import type { Analysis, CheckTiming } from "../security/analyse";
 import { getMessages, type Locale } from "../i18n/messages";
-import { Icon } from "./icons";
 import { UrlCheckForm } from "./UrlCheckForm";
 import { RiskResult } from "./RiskResult";
+import { TrafficLights } from "./TrafficLights";
+import { SettingsPanel } from "./SettingsPanel";
+import { PrivacyPanel } from "./PrivacyPanel";
+import { reportAnalysis } from "./report-analysis";
+import {
+  listCheckHistory,
+  pushCheckHistory,
+  summarizeHeadFails,
+  summarizeProbeTimeouts,
+  type CheckHistoryEntry
+} from "./check-history";
+// Client-safe suggest helpers only — never import env-local or probe-budget (node:fs).
+import { maxProbeAmongTimeouts, suggestProbeTimeoutMs } from "../security/probe-budget-suggest";
+import { CopyEnvLine } from "./CopyEnvLine";
+import { RateLimitBar } from "./RateLimitBar";
+import {
+  cancelAnnounceClear,
+  scheduleAnnounceClear,
+  type AnnounceClearTimerRef
+} from "./rate-limit-announce";
+import { formatTimingFlagChips, formatTimingSummaryLine, timingLabels } from "./timing-copy";
+import { pushDiagnosticError } from "./diagnostic-log";
+import {
+  parseRetryAfterSec,
+  resolveRetryAfterSec,
+  retryAfterHeaderPreferred,
+  retryAfterPreferenceDeltaSec
+} from "../security/retry-after";
+import { PROBE_TIMEOUT_ENV_KEY } from "../shared/probe-budget-copy.mjs";
 
-function Header({ locale }: { locale: Locale }) {
+type ShellView = "check" | "settings" | "privacy";
+
+function viewFromSlug(slug: string[]): ShellView {
+  if (slug[0] === "settings") return "settings";
+  if (slug[0] === "privacy") return "privacy";
+  return "check";
+}
+
+function pathForView(locale: Locale, next: ShellView, hash = ""): string {
+  if (next === "settings") return `/${locale}/settings${hash}`;
+  if (next === "privacy") return `/${locale}/privacy`;
+  return `/${locale}`;
+}
+
+const PROGRESS_STEPS = ["parse", "threat", "probe", "risk"] as const;
+
+function formatMs(ms: number | null | undefined, unit: string): string {
+  if (ms == null) return "—";
+  return `${ms}${unit}`;
+}
+
+function resolveTimeoutSuggestion(timing: CheckTiming) {
+  const historyMax = maxProbeAmongTimeouts(summarizeProbeTimeouts(listCheckHistory()));
+  const thisProbe = typeof timing.probeMs === "number" ? timing.probeMs : null;
+  const observed =
+    historyMax == null
+      ? thisProbe
+      : thisProbe == null
+        ? historyMax
+        : Math.max(historyMax, thisProbe);
+  const suggestion = suggestProbeTimeoutMs(timing.probeTimeoutMs, observed);
+  return {
+    suggestion,
+    observed,
+    envLine: `${PROBE_TIMEOUT_ENV_KEY}=${suggestion.suggestedMs}`
+  };
+}
+
+function timeoutSuggestionMessage(template: string, timing: CheckTiming, unit: string): string {
+  const { suggestion, observed } = resolveTimeoutSuggestion(timing);
+  return template
+    .replace("{suggested}", formatMs(suggestion.suggestedMs, unit))
+    .replace("{current}", formatMs(suggestion.currentMs, unit))
+    .replace("{observed}", observed != null ? formatMs(observed, unit) : "—");
+}
+
+function Header({
+  locale,
+  view,
+  onNavigate
+}: {
+  locale: Locale;
+  view: ShellView;
+  onNavigate: (next: ShellView) => void;
+}) {
   const t = getMessages(locale);
-  const base = `/${locale}`;
   const other = locale === "en" ? "pt-PT" : "en";
+  const otherPath =
+    view === "settings" ? `/${other}/settings` : view === "privacy" ? `/${other}/privacy` : `/${other}`;
   return (
-    <>
-      <header className="site-header">
-        <a className="prototype-identity" href={base} aria-label={`${t.prototype} — ${t.navCheck}`}>
-          <span className="neutral-mark"><Icon name="shield" size={18} /></span>
-          <span>{t.prototype}</span>
-        </a>
-        <nav aria-label={locale === "en" ? "Primary navigation" : "Navegação principal"}>
-          <a href={base}>{t.navCheck}</a>
-          <a href={`${base}/teacher-demo`}>{t.navTeacher}</a>
-          <a href={`${base}/demo`}>{t.navDemo}</a>
-          <a href={`${base}/methodology`}>{t.navMethod}</a>
-          <a href={`${base}/project`}>{t.navProject}</a>
-          <a href={`${base}/settings`}>{t.navSettings}</a>
-          <a className="language" href={`/${other}`} aria-label={other === "pt-PT" ? "Mudar para português europeu" : "Switch to English"}>
-            {locale === "en" ? "PT" : "EN"}
-          </a>
-        </nav>
-      </header>
-      <div className="demo-ribbon" role="note">
-        <span>{locale === "en" ? "CONTROLLED DEMO" : "DEMONSTRAÇÃO CONTROLADA"}</span>
-        {locale === "en"
-          ? "Fictional organisations · Test threat data · No real credentials"
-          : "Organizações fictícias · Dados de ameaça de teste · Sem credenciais reais"}
+    <header className="top">
+      <div className="brand">
+        <span className="index">01</span>
+        <h1>{t.prototype}</h1>
       </div>
-    </>
+      <nav className="top-nav" aria-label={locale === "pt-PT" ? "Navegação" : "Navigation"}>
+        <button
+          type="button"
+          className={`nav-link ${view === "check" ? "is-active" : ""}`}
+          onClick={() => onNavigate("check")}
+        >
+          {t.navCheck}
+        </button>
+        <button
+          type="button"
+          className={`nav-link ${view === "settings" ? "is-active" : ""}`}
+          onClick={() => onNavigate("settings")}
+        >
+          {t.navSettings}
+        </button>
+        <button
+          type="button"
+          className={`nav-link ${view === "privacy" ? "is-active" : ""}`}
+          onClick={() => onNavigate("privacy")}
+          data-testid="nav-privacy"
+        >
+          {t.navPrivacy}
+        </button>
+        <a
+          className="lang"
+          href={otherPath}
+          aria-label={other === "pt-PT" ? "Mudar para português europeu" : "Switch to English"}
+        >
+          {locale === "en" ? "PT" : "EN"}
+        </a>
+      </nav>
+    </header>
   );
 }
 
-function Footer({ locale }: { locale: Locale }) {
+function CheckProgress({
+  locale,
+  step,
+  timing,
+  timedOut,
+  clientElapsedMs
+}: {
+  locale: Locale;
+  step: number;
+  timing?: CheckTiming | null;
+  timedOut?: boolean;
+  /** Wall-clock while the request is in flight; replaced by server timing when done. */
+  clientElapsedMs?: number | null;
+}) {
   const t = getMessages(locale);
+  const labels = [t.progressParse, t.progressThreat, t.progressProbe, t.progressRisk];
+  const msValues = timing
+    ? [timing.parseMs, timing.threatMs, timing.probeMs, timing.riskMs]
+    : [null, null, null, null];
+  const done = step >= PROGRESS_STEPS.length || Boolean(timing);
+  const envLine = timing && timedOut ? resolveTimeoutSuggestion(timing).envLine : "";
+
   return (
-    <footer>
-      <p className="footer-title">{t.prototype}</p>
-      <p>
-        {locale === "en"
-          ? "An unnamed, Portugal-first IB Community Project prototype for non-expert internet users."
-          : "Um protótipo sem nome, desenvolvido no âmbito de um Projeto Comunitário IB, centrado inicialmente em Portugal e em utilizadores não especialistas."}
-      </p>
-      <div>
-        <a href={`/${locale}/about`}>{t.aboutTitle}</a>
-        <a href={`/${locale}/methodology`}>{t.navMethod}</a>
-        <a href={`/${locale}/project`}>{t.navProject}</a>
+    <div className="check-progress" role="status" aria-live="polite">
+      <div className="check-progress-head">
+        <p className="kicker">{timing ? t.timingTitle : t.checking}</p>
+        {timing ? (
+          <p className="check-timing-total">
+            <span className="check-timing-budget">
+              {formatTimingSummaryLine(timing, timingLabels(t))}
+            </span>
+          </p>
+        ) : (
+          <p className="check-timing-total">
+            {t.timingClientClock} {formatMs(clientElapsedMs ?? 0, t.timingMs)}
+          </p>
+        )}
       </div>
-    </footer>
+      {timing && (
+        <p
+          className="check-timing-flags"
+          data-testid="progress-timing-flag-chips"
+          aria-label={t.timingFlagsLabel || "Timing flags"}
+        >
+          {formatTimingFlagChips(timing, timingLabels(t)).map((chip) => (
+            <span
+              key={chip.id}
+              className={`timing-flag-chip${chip.on ? " is-on" : ""}`}
+              data-flag={chip.id}
+              data-on={chip.on ? "1" : "0"}
+            >
+              {chip.text}
+            </span>
+          ))}
+        </p>
+      )}
+      <ol>
+        {PROGRESS_STEPS.map((id, index) => (
+          <li
+            key={id}
+            className={
+              done || index < step ? "is-done" : index === step ? "is-active" : ""
+            }
+          >
+            <span className="check-step-label">{labels[index]}</span>
+            <span className="check-step-ms">
+              {timing ? formatMs(msValues[index], t.timingMs) : index === step ? "…" : "—"}
+            </span>
+          </li>
+        ))}
+      </ol>
+      {timedOut && timing && (
+        <div className="check-timing-timeout-row">
+          <p className="scope-note check-timing-timeout">
+            {timeoutSuggestionMessage(t.timingTimeout, timing, t.timingMs)}
+          </p>
+          <CopyEnvLine locale={locale} envLine={envLine} />
+        </div>
+      )}
+    </div>
   );
 }
 
@@ -72,374 +222,363 @@ function Home({ locale }: { locale: Locale }) {
   const t = getMessages(locale);
   const [analysis, setAnalysis] = useState<Analysis | null>(null);
   const [loading, setLoading] = useState(false);
+  const [progressStep, setProgressStep] = useState(0);
+  const [clientElapsedMs, setClientElapsedMs] = useState(0);
+  const [error, setError] = useState("");
+  const [rateLimitSec, setRateLimitSec] = useState<number | null>(null);
+  const [rateLimitTotal, setRateLimitTotal] = useState<number | null>(null);
+  const [history, setHistory] = useState<CheckHistoryEntry[]>([]);
+  const [probeBudgetMs, setProbeBudgetMs] = useState<number | null>(null);
+  const [rateLimitAnnounce, setRateLimitAnnounce] = useState("");
+  const wasRateLimited = useRef(false);
+  /** Clears header-preferred / cleared announce so late setState cannot stick over bar ticks. */
+  const rateLimitAnnounceClearTimer = useRef<AnnounceClearTimerRef["current"]>(null);
+  const checkDisabled = rateLimitSec != null && rateLimitSec > 0;
 
-  async function check(url: string, organisationId: string) {
+  /**
+   * Shared helper — keep title in sync with
+   * tests/rate-limit-announce.test.ts → "scheduleAnnounceClear clears prior timer on a second 429".
+   */
+  function clearRateLimitAnnounceSoon(ms = 4000) {
+    scheduleAnnounceClear(
+      rateLimitAnnounceClearTimer,
+      () => setRateLimitAnnounce(""),
+      ms
+    );
+  }
+
+  useEffect(() => {
+    return () => {
+      cancelAnnounceClear(rateLimitAnnounceClearTimer);
+    };
+  }, []);
+  const rateLimitLabel =
+    rateLimitSec != null
+      ? rateLimitTotal != null && rateLimitTotal !== rateLimitSec
+        ? t.errorRateLimit
+            .replace("{sec}", String(rateLimitSec))
+            .replace("{total}", String(rateLimitTotal))
+        : t.errorRateLimitShort.replace("{sec}", String(rateLimitSec))
+      : "";
+
+  useEffect(() => {
+    const timer = window.setTimeout(() => setHistory(listCheckHistory()), 0);
+    return () => window.clearTimeout(timer);
+  }, []);
+
+  useEffect(() => {
+    if (checkDisabled) {
+      wasRateLimited.current = true;
+      return;
+    }
+    if (wasRateLimited.current) {
+      wasRateLimited.current = false;
+      setRateLimitAnnounce(t.rateLimitCleared);
+      clearRateLimitAnnounceSoon(4000);
+    }
+  }, [checkDisabled, t.rateLimitCleared]);
+
+  useEffect(() => {
+    let cancelled = false;
+    const timer = window.setTimeout(() => {
+      fetch("/api/health")
+        .then(async (response) => {
+          const data = (await response.json()) as { ok?: boolean; probeTimeoutMs?: number };
+          if (cancelled || !response.ok || !data.ok || typeof data.probeTimeoutMs !== "number") return;
+          setProbeBudgetMs(data.probeTimeoutMs);
+        })
+        .catch(() => {
+          /* idle budget is optional */
+        });
+    }, 0);
+    return () => {
+      cancelled = true;
+      window.clearTimeout(timer);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!loading) return;
+    const started = performance.now();
+    const id = window.setInterval(() => {
+      setClientElapsedMs(Math.round(performance.now() - started));
+    }, 100);
+    return () => window.clearInterval(id);
+  }, [loading]);
+
+  useEffect(() => {
+    if (rateLimitSec == null || rateLimitSec <= 0) return;
+    const id = window.setTimeout(() => {
+      setRateLimitSec((prev) => (prev == null || prev <= 1 ? null : prev - 1));
+    }, 1000);
+    return () => window.clearTimeout(id);
+  }, [rateLimitSec]);
+
+  const displayError =
+    rateLimitSec != null && rateLimitSec > 0 ? rateLimitLabel : error;
+
+  async function check(url: string) {
+    setClientElapsedMs(0);
     setLoading(true);
+    setError("");
+    setRateLimitSec(null);
+    setRateLimitTotal(null);
+    setProgressStep(0);
+    const timers = [
+      window.setTimeout(() => setProgressStep(1), 180),
+      window.setTimeout(() => setProgressStep(2), 420),
+      window.setTimeout(() => setProgressStep(3), 900)
+    ];
     try {
-      setAnalysis(await analyseUrl(url, organisationId || undefined));
-      setTimeout(() => document.getElementById("result")?.scrollIntoView({ behavior: "smooth" }), 20);
+      const skipHeadHosts = summarizeHeadFails(listCheckHistory()).map((row) => row.domain);
+      // Website UI never sends personalListBlocked — that hint is extension/desktop only.
+      const response = await fetch("/api/check", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ url, skipHeadHosts })
+      });
+      let data: {
+        ok?: boolean;
+        analysis?: Analysis;
+        error?: string;
+        retryAfterSec?: number;
+      } = {};
+      try {
+        data = (await response.json()) as typeof data;
+      } catch {
+        /* JSON may be empty; 429 still uses Retry-After header below */
+      }
+      if (response.status === 429) {
+        const headerSec = parseRetryAfterSec(response.headers.get("Retry-After"), -1);
+        const headerPreferred = retryAfterHeaderPreferred(headerSec, data.retryAfterSec);
+        if (headerPreferred) {
+          const deltaSec = retryAfterPreferenceDeltaSec(headerSec, data.retryAfterSec);
+          pushDiagnosticError(
+            "rate-limited-header-preferred",
+            deltaSec != null ? { deltaSec } : undefined
+          );
+        }
+        const sec = resolveRetryAfterSec(headerSec, data.retryAfterSec, 60);
+        setRateLimitSec(sec);
+        setRateLimitTotal(sec);
+        // When Retry-After header wins, announce remaining seconds via the live region
+        // (RateLimitBar also ticks through rate-limit-announce on 5s boundaries).
+        // Clear after ~4s so the one-shot does not stick over bar ticks.
+        if (headerPreferred) {
+          setRateLimitAnnounce(
+            sec === 1
+              ? t.rateLimitTickOne
+              : t.rateLimitTick.replace("{sec}", String(sec))
+          );
+          clearRateLimitAnnounceSoon(4000);
+        }
+        pushDiagnosticError("rate-limited");
+        return;
+      }
+      if (!response.ok || !data.ok || !data.analysis) {
+        const code = data.error || "check-failed";
+        pushDiagnosticError(code);
+        if (code === "url-required" || /invalid/i.test(code)) {
+          setError(t.errorInvalidUrl);
+        } else if (/timeout|ETIMEDOUT|aborted/i.test(code)) {
+          setError(t.errorTimeout);
+        } else {
+          setError(t.errorGeneric);
+        }
+        return;
+      }
+      setProgressStep(4);
+      setAnalysis(data.analysis);
+      pushCheckHistory({
+        domain: data.analysis.parsed.registrableDomain,
+        level: data.analysis.risk.level,
+        probeMs: data.analysis.timing?.probeMs ?? null,
+        timedOut: Boolean(data.analysis.live?.timedOut),
+        probeTimeoutMs: data.analysis.timing?.probeTimeoutMs,
+        probeHeadFailed: Boolean(data.analysis.timing?.probeHeadFailed),
+        headSkipped: Boolean(data.analysis.timing?.headSkipped),
+        probeBlocked:
+          Boolean(data.analysis.timing?.ambiguousProbeStatus) ||
+          data.analysis.risk.evidence.some((e) => e.id === "probe-blocked")
+      });
+      setHistory(listCheckHistory());
+      void reportAnalysis(data.analysis);
+    } catch (err) {
+      console.debug("[shield] check failed", err);
+      const message = err instanceof Error ? err.message : "";
+      pushDiagnosticError(/timeout|ETIMEDOUT|aborted/i.test(message) ? "timeout" : "check-failed");
+      if (/timeout|ETIMEDOUT|aborted/i.test(message)) setError(t.errorTimeout);
+      else setError(t.errorGeneric);
     } finally {
+      timers.forEach((id) => window.clearTimeout(id));
       setLoading(false);
     }
   }
 
   if (analysis) {
     return (
-      <main id="result">
-        <div className="result-search">
-          <UrlCheckForm t={t} compact initialUrl={analysis.parsed.fullUrl} initialOrg={analysis.identity.claimedOrganisation?.id} onCheck={check} />
-        </div>
-        <RiskResult analysis={analysis} t={t} onReset={() => setAnalysis(null)} />
+      <main id="result" className="stage">
+        <UrlCheckForm
+          t={t}
+          bare
+          initialUrl={analysis.parsed.fullUrl}
+          disabled={checkDisabled}
+          onCheck={check}
+        />
+        {checkDisabled && rateLimitSec != null && rateLimitTotal != null && (
+          <RateLimitBar
+            sec={rateLimitSec}
+            total={rateLimitTotal}
+            label={rateLimitLabel}
+            tickTemplate={t.rateLimitTick}
+            tickTemplateOne={t.rateLimitTickOne}
+          />
+        )}
+        <p className="visually-hidden" role="status" aria-live="polite">
+          {rateLimitAnnounce}
+        </p>
+        {(loading || analysis.timing) && (
+          <CheckProgress
+            locale={locale}
+            step={loading ? progressStep : 4}
+            timing={loading ? null : analysis.timing}
+            timedOut={Boolean(analysis.live?.timedOut)}
+            clientElapsedMs={loading ? clientElapsedMs : null}
+          />
+        )}
+        {displayError && (
+          <p className="form-error" role="alert">
+            {displayError}
+          </p>
+        )}
+        <RiskResult
+          key={analysis.parsed.registrableDomain}
+          analysis={analysis}
+          t={t}
+          onReset={() => setAnalysis(null)}
+        />
       </main>
     );
   }
 
   return (
-    <main>
-      <section className="hero">
-        <div className="eyebrow"><Icon name="shield" size={14} />{t.heroTag}</div>
-        <h1>{t.heroTitle}</h1>
-        <p className="hero-copy">{t.heroCopy}</p>
-        <p className="supporting-copy">{t.designedFor}</p>
-        <UrlCheckForm t={t} onCheck={check} />
-        {loading && <div className="loading" role="status"><span />{t.checking}</div>}
-        <div className="hero-actions">
-          <a className="demo-link" href={`/${locale}/teacher-demo`}>{t.startTeacher}<Icon name="arrow" /></a>
-          <a className="quiet-link" href={`/${locale}/demo`}>{t.tryDemo}</a>
-        </div>
-      </section>
-
-      <section className="trust-strip" aria-label={locale === "en" ? "Prototype principles" : "Princípios do protótipo"}>
-        <div><Icon name="check" /><strong>{t.local}</strong><small>{t.localCopy}</small></div>
-        <div><Icon name="info" /><strong>{t.explainable}</strong><small>{t.explainableCopy}</small></div>
-        <div><Icon name="shield" /><strong>{t.private}</strong><small>{t.privateCopy}</small></div>
-      </section>
-
-      <section className="how">
-        <div>
-          <div className="section-label">{t.process}</div>
-          <h2>{t.processTitle}</h2>
-          <p>{t.processCopy}</p>
-        </div>
-        <ol>
-          <li><span>01</span><div><strong>{t.detect}</strong><p>{t.detectCopy}</p></div></li>
-          <li><span>02</span><div><strong>{t.explain}</strong><p>{t.explainCopy}</p></div></li>
-          <li><span>03</span><div><strong>{t.act}</strong><p>{t.actCopy}</p></div></li>
-        </ol>
-      </section>
-
-      <section className="demo-teaser">
-        <span className="orb"><Icon name="shield" size={34} /></span>
-        <div><div className="section-label">{t.fictional}</div><h2>{t.demoTitle}</h2><p>{t.demoCopy}</p></div>
-        <a className="light-button" href={`/${locale}/teacher-demo`}>{t.startTeacher}<Icon name="arrow" /></a>
-      </section>
+    <main className="stage">
+      <p className="kicker">{locale === "en" ? "Status" : "Estado"}</p>
+      <TrafficLights
+        level="idle"
+        standby={t.lightStandby}
+        safe={t.lightSafe}
+        caution={t.lightCaution}
+        danger={t.lightDanger}
+      />
+      <p className="light-note">{t.lightIdle}</p>
+      {probeBudgetMs != null && (
+        <p className="scope-note" role="status">
+          {t.idleProbeBudget} {probeBudgetMs}
+          {t.timingMs}
+        </p>
+      )}
+      <UrlCheckForm t={t} bare disabled={checkDisabled} onCheck={check} />
+      {checkDisabled && rateLimitSec != null && rateLimitTotal != null && (
+        <RateLimitBar
+          sec={rateLimitSec}
+          total={rateLimitTotal}
+          label={rateLimitLabel}
+          tickTemplate={t.rateLimitTick}
+          tickTemplateOne={t.rateLimitTickOne}
+        />
+      )}
+      <p className="visually-hidden" role="status" aria-live="polite">
+        {rateLimitAnnounce}
+      </p>
+      {loading && (
+        <CheckProgress locale={locale} step={progressStep} clientElapsedMs={clientElapsedMs} />
+      )}
+      {displayError && !checkDisabled && (
+        <p className="form-error" role="alert">
+          {displayError}
+        </p>
+      )}
+      {history.length > 0 && (
+        <section className="check-history" aria-label={t.historyTitle}>
+          <p className="kicker">{t.historyTitle}</p>
+          <ul className="block-log">
+            {history.slice(0, 8).map((entry) => (
+              <li key={`${entry.domain}-${entry.at}`}>
+                <span className="kind">{entry.level}</span>
+                <span className="display">{entry.domain}</span>
+                <span className="meta">
+                  {entry.probeMs != null ? `${entry.probeMs}${t.timingMs}` : "—"}
+                  {entry.timedOut ? ` · ${t.historyTimedOut}` : ""}
+                  {entry.headSkipped ? ` · ${t.historyHeadSkipped}` : ""}
+                  {" · "}
+                  {new Date(entry.at).toLocaleString(locale === "pt-PT" ? "pt-PT" : "en-GB")}
+                </span>
+              </li>
+            ))}
+          </ul>
+          <p className="scope-note">{t.historyNote}</p>
+        </section>
+      )}
     </main>
   );
-}
-
-function TeacherDemo({ locale }: { locale: Locale }) {
-  const t = getMessages(locale);
-  const scenario = scenarios[0];
-  const [analysis, setAnalysis] = useState<Analysis | null>(null);
-  const [loading, setLoading] = useState(false);
-
-  async function begin() {
-    setLoading(true);
-    try {
-      setAnalysis(await analyseUrl(scenario.url, scenario.organisationId, scenario.sensitive));
-      setTimeout(() => document.getElementById("teacher-result")?.scrollIntoView({ behavior: "smooth" }), 20);
-    } finally {
-      setLoading(false);
-    }
-  }
-
-  return (
-    <main className="teacher-demo-page">
-      <section className="teacher-guide" aria-label={t.navTeacher}>
-        <div>
-          <div className="section-label">{locale === "en" ? "CANONICAL TEACHER PATH" : "PERCURSO PARA O PROFESSOR"}</div>
-          <h1>{t.navTeacher}</h1>
-          <p>{t.controlledNotice}</p>
-        </div>
-        <ol>
-          <li className={!analysis ? "current" : "complete"}><span>1</span>{locale === "en" ? "Run controlled phishing analysis" : "Executar a análise de phishing controlada"}</li>
-          <li className={analysis ? "current" : ""}><span>2</span>{locale === "en" ? "Explain evidence and limitations" : "Explicar as provas e limitações"}</li>
-          <li><span>3</span>{locale === "en" ? "Block and verify" : "Bloquear e verificar"}</li>
-          <li><span>4</span>{locale === "en" ? "Remove in Settings" : "Remover nas Definições"}</li>
-          <li><span>5</span>{locale === "en" ? "Switch language and finish on Methodology" : "Mudar de idioma e terminar na Metodologia"}</li>
-        </ol>
-        <div className="teacher-controls">
-          <button className="primary-button" onClick={begin} disabled={loading}>{loading ? t.checking : t.run}<Icon name="arrow" /></button>
-          <a className="secondary-button" href={`/${locale}/settings`}>{t.navSettings}</a>
-          <a className="secondary-button" href={`/${locale === "en" ? "pt-PT" : "en"}/teacher-demo`}>{locale === "en" ? "Português" : "English"}</a>
-          <a className="secondary-button" href={`/${locale}/methodology`}>{t.navMethod}</a>
-        </div>
-      </section>
-      {analysis && <div id="teacher-result"><RiskResult analysis={analysis} t={t} onReset={() => setAnalysis(null)} /></div>}
-    </main>
-  );
-}
-
-const scenarioTitles: Record<Locale, Record<string, string>> = {
-  en: {
-    "clear-phishing": "Known fictional phishing domain",
-    "identity-mismatch": "Claimed identity mismatch",
-    "unknown-new": "Unknown domain requesting credentials",
-    verified: "Verified fictional domain",
-    "misleading-subdomain": "Subdomain confusion",
-    "legitimate-https": "Legitimate HTTPS website",
-    "benign-unfamiliar": "Benign unfamiliar domain",
-    "similar-word": "Legitimate domain with a similar word",
-    "verified-sensitive": "Verified fictional domain requesting credentials",
-  },
-  "pt-PT": {
-    "clear-phishing": "Domínio de phishing fictício conhecido",
-    "identity-mismatch": "Identidade alegada incompatível",
-    "unknown-new": "Domínio desconhecido que pede credenciais",
-    verified: "Domínio fictício verificado",
-    "misleading-subdomain": "Confusão de subdomínio",
-    "legitimate-https": "Site HTTPS legítimo",
-    "benign-unfamiliar": "Domínio desconhecido benigno",
-    "similar-word": "Domínio legítimo com palavra semelhante",
-    "verified-sensitive": "Domínio fictício verificado que pede credenciais",
-  },
-};
-
-function scenarioDescription(id: string, locale: Locale) {
-  const pt = locale === "pt-PT";
-  const descriptions: Record<string, string> = {
-    "clear-phishing": pt ? "Correspondência na lista fictícia, domínio semelhante, identidade incompatível e pedido de palavra-passe." : "Fictional threat-list match, similar domain, identity mismatch and password request.",
-    "identity-mismatch": pt ? "Sem ameaça conhecida, mas o domínio não corresponde à identidade alegada." : "No known threat, but the domain does not match the claimed identity.",
-    "unknown-new": pt ? "Reputação desconhecida, sem identidade verificada e pedido de credenciais." : "Unknown reputation, no verified identity and a credential request.",
-    verified: pt ? "O domínio corresponde ao registo fictício; isto não significa que o site seja seguro." : "The domain matches the fictional identity record; this does not mean the site is safe.",
-    "misleading-subdomain": pt ? "O nome do banco aparece à esquerda, mas outro domínio controla o endereço." : "The bank name appears on the left, but another domain controls the address.",
-    "legitimate-https": pt ? "HTTPS e nenhuma ameaça conhecida, sem alegação de identidade. Resultado com provas limitadas." : "HTTPS and no known threat, with no identity claim. The result remains limited evidence.",
-    "benign-unfamiliar": pt ? "Domínio desconhecido sem pedido sensível. A incerteza não é automaticamente perigo." : "An unfamiliar domain with no sensitive request. Uncertainty is not automatically danger.",
-    "similar-word": pt ? "Uma palavra semelhante isolada não deve produzir uma acusação de phishing." : "A similar word alone should not produce a phishing accusation.",
-    "verified-sensitive": pt ? "A identidade corresponde, mas o pedido de credenciais continua a exigir cuidado." : "Identity matches, but a credential request still requires care.",
-  };
-  return descriptions[id] ?? "";
-}
-
-function Demo({ locale }: { locale: Locale }) {
-  const t = getMessages(locale);
-  const [analysis, setAnalysis] = useState<Analysis | null>(null);
-  const [loading, setLoading] = useState("");
-
-  async function run(scenario: typeof scenarios[number]) {
-    setLoading(scenario.id);
-    setAnalysis(await analyseUrl(scenario.url, scenario.organisationId, scenario.sensitive));
-    setLoading("");
-    setTimeout(() => document.getElementById("scenario-result")?.scrollIntoView({ behavior: "smooth" }), 20);
-  }
-
-  return (
-    <main className="page">
-      <div className="page-heading">
-        <div className="eyebrow"><Icon name="shield" size={14} />{t.demoMode}</div>
-        <h1>{t.demoHeading}</h1>
-        <p>{t.demoIntro}</p>
-      </div>
-      <div className="controlled-notice"><Icon name="info" /><span>{t.controlledNotice}</span></div>
-      <div className="scenario-grid">
-        {scenarios.map((scenario, index) => (
-          <article className="scenario-card" key={scenario.id}>
-            <div className="scenario-top"><span>{String(index + 1).padStart(2, "0")}</span><strong className={`risk-pill pill-${scenario.expected.toLowerCase().replace("_", "-")}`}>{t.expected}: {scenario.expected.replace("_", " ")}</strong></div>
-            <h2>{scenarioTitles[locale][scenario.id]}</h2>
-            <code>{scenario.url}</code>
-            <p>{scenarioDescription(scenario.id, locale)}</p>
-            <button className="secondary-button full" onClick={() => run(scenario)} disabled={Boolean(loading)}>{loading === scenario.id ? t.checking : t.run}<Icon name="arrow" /></button>
-          </article>
-        ))}
-      </div>
-      {analysis && <div id="scenario-result"><RiskResult analysis={analysis} t={t} onReset={() => setAnalysis(null)} /></div>}
-    </main>
-  );
-}
-
-function Methodology({ locale }: { locale: Locale }) {
-  const t = getMessages(locale);
-  const pt = locale === "pt-PT";
-  const sections = pt ? [
-    ["Análise determinística", "O nível de risco resulta de regras documentadas e sinais explícitos, não de IA nem de uma decisão oculta."],
-    ["Reputação local de teste", "A V0.1 usa um fornecedor local, determinístico e fictício. Sem correspondência significa apenas que não foi encontrada uma ameaça conhecida nas fontes verificadas."],
-    ["Endereço e domínio", "O protótipo separa protocolo, hostname, domínio registável, subdomínio e caminho. A implementação atual usa um subconjunto controlado de sufixos públicos."],
-    ["Identidade e semelhança", "A identidade alegada é comparada com registos fictícios. Distância de edição, palavras acrescentadas, punycode e subdomínios são sinais de semelhança, não prova de crime."],
-    ["Contexto sensível", "Pedidos controlados de palavra-passe, pagamento, dados pessoais ou permissões aumentam a cautela. Os valores nunca são enviados nem guardados."],
-    ["Categorias de provas", "Cada observação é apresentada como conhecida, sinal, desconhecida ou limitação, permitindo distinguir factos de inferências."],
-    ["Limitações", "São possíveis falsos positivos e falsos negativos. HTTPS protege a ligação, mas não prova identidade ou confiança. Uma identidade correspondente não torna todo o conteúdo seguro."],
-    ["Por que não usar IA?", "A V0.1 privilegia sinais determinísticos e explicáveis, para que o utilizador e o avaliador compreendam por que foi produzido o resultado. A IA não é necessária para o veredito atual."],
-  ] : [
-    ["Deterministic analysis", "Risk levels come from documented rules and explicit signals, not AI or a hidden decision."],
-    ["Local test reputation", "V0.1 uses a local, deterministic and fictional provider. No match means only that no known threat was found in the sources checked."],
-    ["Address and domain parsing", "The prototype separates protocol, hostname, registrable domain, subdomain and path. The current implementation uses a controlled public-suffix subset."],
-    ["Identity and similarity", "A claimed identity is compared with fictional records. Edit distance, added words, punycode and subdomains are similarity signals—not proof of criminality."],
-    ["Sensitive context", "Controlled requests for passwords, payment details, personal information or permissions increase caution. Values are never submitted or stored."],
-    ["Evidence categories", "Each observation is presented as known evidence, a signal, an unknown or a limitation, keeping facts distinct from inference."],
-    ["Limitations", "False positives and false negatives are possible. HTTPS protects a connection but proves neither identity nor trust. An identity match does not make all content safe."],
-    ["Why not use AI?", "V0.1 prioritises deterministic, explainable signals so users and evaluators can understand why a result was produced. AI is not required for the current security verdict."],
-  ];
-
-  return (
-    <main className="page prose-page">
-      <div className="page-heading"><div className="section-label">{pt ? "TRANSPARENTE POR CONCEÇÃO" : "TRANSPARENT BY DESIGN"}</div><h1>{t.methodTitle}</h1><p>{t.methodIntro}</p></div>
-      <div className="method-grid">{sections.map((section, index) => <article key={section[0]}><span>{String(index + 1).padStart(2, "0")}</span><h2>{section[0]}</h2><p>{section[1]}</p></article>)}</div>
-      <Architecture locale={locale} />
-      <section className="formula"><div>{pt ? "DETETAR" : "DETECT"}</div><span>→</span><div>{pt ? "EXPLICAR" : "EXPLAIN"}</div><span>→</span><div>{pt ? "PREVENIR / BLOQUEAR" : "PREVENT / BLOCK"}</div><span>→</span><div>{pt ? "AGIR" : "ACT"}</div><span>→</span><div>{pt ? "VERIFICAR" : "VERIFY"}</div></section>
-    </main>
-  );
-}
-
-function Architecture({ locale }: { locale: Locale }) {
-  const pt = locale === "pt-PT";
-  return (
-    <section className="architecture-section">
-      <div className="section-label">{pt ? "ARQUITETURA INDEPENDENTE DO FORNECEDOR" : "PROVIDER-INDEPENDENT ARCHITECTURE"}</div>
-      <h2>{pt ? "O mesmo motor, fontes diferentes." : "The same engine, different sources."}</h2>
-      <p>{pt ? "O fornecedor local permite uma demonstração segura e repetível. A mesma interface foi concebida para aceitar serviços externos verificados no futuro, sem alterar o motor de risco." : "The local provider enables a safe, repeatable demonstration. The same normalized interface is designed to support verified external services later without replacing the risk engine."}</p>
-      <div className="architecture-grid">
-        <Flow title={pt ? "DEMONSTRAÇÃO ATUAL" : "CURRENT DEMO"} items={pt ? ["URL", "Fornecedor local determinístico", "Interface normalizada", "Sinais de segurança", "Motor de risco", "Explicação + ação"] : ["URL", "Local deterministic provider", "Normalized interface", "Security signals", "Risk engine", "Explanation + action"]} />
-        <Flow title={pt ? "VERSÃO ONLINE FUTURA" : "FUTURE ONLINE VERSION"} items={pt ? ["URL", "Fornecedor externo verificado", "A mesma interface normalizada", "Os mesmos sinais", "O mesmo motor", "Explicação + ação"] : ["URL", "Verified external provider", "Same normalized interface", "Same signals", "Same engine", "Explanation + action"]} />
-      </div>
-    </section>
-  );
-}
-
-function Flow({ title, items }: { title: string; items: string[] }) {
-  return <div className="flow-card"><strong>{title}</strong>{items.map((item, index) => <div key={item}><span>{item}</span>{index < items.length - 1 && <i>↓</i>}</div>)}</div>;
-}
-
-function Project({ locale }: { locale: Locale }) {
-  const t = getMessages(locale);
-  const pt = locale === "pt-PT";
-  const sections = pt ? [
-    ["PROBLEMA", "Utilizadores não especialistas podem encontrar interações digitais enganosas que tentam obter credenciais ou informação pessoal."],
-    ["COMUNIDADE", "O Projeto Comunitário IB está inicialmente centrado em Portugal e em utilizadores comuns não especialistas."],
-    ["RESPOSTA", "Um protótipo preventivo que identifica sinais selecionados e os converte em ações de proteção compreensíveis."],
-    ["CAPACIDADES ATUAIS", "Análise de URL e domínio, reputação local fictícia, comparação de identidade, semelhança, risco determinístico e bloqueio local reversível."],
-    ["DEMONSTRAÇÃO CONTROLADA", "As organizações, ameaças e formulários são fictícios. A lógica, a interface, a persistência local e os testes são reais."],
-    ["O QUE NÃO É ALEGADO", "Não é antivírus, não usa bases de dados globais em direto, não bloqueia o dispositivo inteiro e não foi validado no mundo real."],
-    ["AVALIAÇÃO", "Testes determinísticos verificam resultados esperados, domínio registável, estados desconhecidos, traduções e o fluxo bloquear–verificar–remover."],
-    ["LIGAÇÃO FUTURA", "Fornecedores externos verificados poderão usar a interface normalizada existente; nenhum está integrado na V0.1."],
-  ] : [
-    ["PROBLEM", "Non-expert internet users can encounter deceptive digital interactions that attempt to obtain credentials or personal information."],
-    ["COMMUNITY", "The IB Community Project is initially focused on Portugal and ordinary non-expert internet users."],
-    ["RESPONSE", "A focused preventive prototype that identifies selected risk signals and converts them into understandable protective actions."],
-    ["CURRENT CAPABILITIES", "URL and domain analysis, fictional local reputation, identity comparison, similarity, deterministic risk and reversible local blocking."],
-    ["CONTROLLED DEMONSTRATION", "Organisations, threats and forms are fictional. The logic, interface, local persistence and tests are real."],
-    ["WHAT IS NOT CLAIMED", "It is not antivirus, does not use live global databases, does not block across a device and is not real-world validated."],
-    ["EVALUATION", "Deterministic tests verify expected outcomes, registrable domains, unknown states, translations and the block–verify–remove workflow."],
-    ["FUTURE CONNECTION", "Verified external providers could use the existing normalized interface; none is integrated in V0.1."],
-  ];
-
-  return (
-    <main className="page prose-page">
-      <div className="page-heading"><div className="section-label">IB COMMUNITY PROJECT · PORTUGAL FIRST</div><h1>{t.projectTitle}</h1><p>{pt ? "Uma ajuda visual concisa para explicar o problema, a resposta e os limites do protótipo." : "A concise visual aid for explaining the problem, response and boundaries of the prototype."}</p></div>
-      <section className="model-band"><span>{pt ? "DETETAR" : "DETECT"}</span><i>→</i><span>{pt ? "EXPLICAR" : "EXPLAIN"}</span><i>→</i><span>{pt ? "PREVENIR / BLOQUEAR" : "PREVENT / BLOCK"}</span><i>→</i><span>{pt ? "AGIR" : "ACT"}</span><i>→</i><span>{pt ? "VERIFICAR" : "VERIFY"}</span></section>
-      <div className="project-grid">{sections.map(([title, copy]) => <article key={title}><div className="section-label">{title}</div><p>{copy}</p></article>)}</div>
-      <section className="evidence-summary"><div><strong>{pt ? "REAL NA V0.1" : "REAL IN V0.1"}</strong><p>{pt ? "Análise, regras, ações locais, interface bilingue e testes." : "Parsing, rules, local actions, bilingual interface and tests."}</p></div><div><strong>{pt ? "FICTÍCIO / SIMULADO" : "FICTIONAL / SIMULATED"}</strong><p>{pt ? "Reputação, organizações, cenários e formulários sensíveis." : "Reputation data, organisations, scenarios and sensitive forms."}</p></div><div><strong>{pt ? "FUTURO" : "FUTURE"}</strong><p>{pt ? "Inteligência externa, lista real de organizações, extensão e bloqueio real." : "External intelligence, real organisation registry, extension and real-world blocking."}</p></div></section>
-      <Architecture locale={locale} />
-    </main>
-  );
-}
-
-function Settings({ locale }: { locale: Locale }) {
-  const t = getMessages(locale);
-  const [blocked, setBlocked] = useState<LocalEntry[]>([]);
-  const [trusted, setTrusted] = useState<LocalEntry[]>([]);
-  const [notice, setNotice] = useState("");
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setBlocked(readEntries(BLOCK_KEY, localStorage));
-      setTrusted(readEntries(TRUST_KEY, localStorage));
-    }, 0);
-    return () => clearTimeout(timer);
-  }, []);
-
-  function remove(key: string, domain: string) {
-    const next = removeEntry(key, domain, localStorage);
-    if (key === BLOCK_KEY) {
-      setBlocked(next);
-      setNotice(`${t.removed} ${domain}`);
-    } else {
-      setTrusted(next);
-      setNotice(`${t.remove}: ${domain}`);
-    }
-  }
-
-  function reset() {
-    localStorage.removeItem(BLOCK_KEY);
-    localStorage.removeItem(TRUST_KEY);
-    setBlocked([]);
-    setTrusted([]);
-    setNotice(t.resetDone);
-  }
-
-  return (
-    <main className="page settings-page">
-      <div className="page-heading"><div className="section-label">{locale === "en" ? "LOCAL PROTECTION" : "PROTEÇÃO LOCAL"}</div><h1>{t.navSettings}</h1><p>{t.settingsIntro}</p></div>
-      <div className="settings-grid"><StorageList title={t.blocked} entries={blocked} t={t} onRemove={(domain) => remove(BLOCK_KEY, domain)} /><StorageList title={t.trusted} entries={trusted} t={t} onRemove={(domain) => remove(TRUST_KEY, domain)} /></div>
-      <div className="settings-actions"><button className="secondary-button" onClick={reset}><Icon name="trash" />{t.reset}</button></div>
-      {notice && <div className="settings-notice" role="status"><Icon name="check" />{notice}</div>}
-      <div className="privacy-box"><Icon name="lock" /><div><strong>{t.private}</strong><p>{locale === "en" ? "Only the two prototype-specific lists above are changed. Unrelated browser data is never cleared." : "Apenas as duas listas específicas do protótipo acima são alteradas. Outros dados do navegador nunca são eliminados."}</p></div></div>
-    </main>
-  );
-}
-
-function StorageList({ title, entries, t, onRemove }: { title: string; entries: LocalEntry[]; t: Record<string, string>; onRemove: (domain: string) => void }) {
-  return (
-    <section className="storage-card">
-      <div className="storage-heading"><Icon name="shield" /><h2>{title}</h2><span>{entries.length}</span></div>
-      {entries.length === 0 ? <p className="empty">{t.none}</p> : <ul>{entries.map((entry) => <li key={entry.domain}><div><strong>{entry.domain}</strong><small>{new Date(entry.createdAt).toLocaleString()}</small></div><button onClick={() => onRemove(entry.domain)} aria-label={`${t.remove} ${entry.domain}`}><Icon name="trash" />{t.remove}</button></li>)}</ul>}
-    </section>
-  );
-}
-
-function About({ locale }: { locale: Locale }) {
-  const t = getMessages(locale);
-  const pt = locale === "pt-PT";
-  return (
-    <main className="page prose-page">
-      <div className="page-heading"><div className="section-label">{pt ? "OBJETIVO E LIMITES" : "PURPOSE & BOUNDARIES"}</div><h1>{t.aboutTitle}</h1><p>{pt ? "O protótipo ajuda uma pessoa a parar, analisar provas e escolher uma ação de proteção antes de uma interação enganosa expor dados pessoais." : "The prototype helps someone pause, inspect evidence and choose a protective action before a deceptive interaction exposes personal data."}</p></div>
-      <div className="split-cards"><article><Icon name="check" /><h2>{pt ? "O que é" : "What it is"}</h2><p>{pt ? "Um protótipo educativo local, determinístico, explicável, bilingue e centrado na prevenção." : "A local-first educational prototype: deterministic, explainable, bilingual and focused on prevention."}</p></article><article><Icon name="alert" /><h2>{pt ? "O que não é" : "What it is not"}</h2><p>{pt ? "Não é antivírus, vigilância, ferramenta de intrusão, garantia de segurança ou substituto de resposta profissional a incidentes." : "Not antivirus, surveillance, an intrusion tool, a security guarantee or a replacement for professional incident response."}</p></article></div>
-    </main>
-  );
-}
-
-function DemoSite({ locale, type }: { locale: Locale; type: string }) {
-  const t = getMessages(locale);
-  const pt = locale === "pt-PT";
-  const [analysis, setAnalysis] = useState<Analysis | null>(null);
-  const [continued, setContinued] = useState(false);
-  const config = type.includes("bank-login")
-    ? { url: "https://lusitaniabank.test/account", org: "lusitania-bank", sensitive: "password" as SensitiveRequest }
-    : type.includes("suspicious")
-      ? { url: "https://lusitania-bank-login.test/secure", org: "lusitania-bank", sensitive: "password" as SensitiveRequest }
-      : type.includes("profile")
-        ? { url: "https://unknown-new-domain.test/profile", org: "", sensitive: "personal" as SensitiveRequest }
-        : { url: "https://unknown-new-domain.test/permissions", org: "", sensitive: "permission" as SensitiveRequest };
-
-  useEffect(() => { analyseUrl(config.url, config.org, config.sensitive).then(setAnalysis); }, [config.url, config.org, config.sensitive]);
-  if (!analysis) return <main className="demo-site-shell"><div className="loading" role="status"><span />{t.checking}</div></main>;
-  if (!continued && analysis.risk.level !== "LOW_EVIDENCE") {
-    return <main className="demo-site-shell"><section className="sensitive-warning"><span className="status-icon"><Icon name="alert" size={33} /></span><div className="section-label">{t.demoMode}</div><h1>{t.sensitiveTitle}</h1><p>{t.sensitiveCopy}</p><div className="mini-domain"><small>{pt ? "Domínio registável real" : "Actual registrable domain"}</small><strong>{analysis.parsed.registrableDomain}</strong></div><div className="action-row"><a href={`/${locale}`} className="primary-button">{t.leave}</a><a href="https://lusitaniabank.test" className="secondary-button">{t.verified}</a><button className="text-button deliberate" onClick={() => setContinued(true)}>{t.continue}</button></div></section></main>;
-  }
-  return <main className="fake-site"><div className="fake-banner"><Icon name="info" />{t.demoMode} — {pt ? "Este não é um site real. Não é possível enviar valores." : "This is not a real website. Values cannot be submitted."}</div><section className="fake-form"><span className="fictional-entity">{pt ? "ORGANIZAÇÃO FICTÍCIA" : "FICTIONAL ORGANISATION"}</span><h1>{config.sensitive === "password" ? (pt ? "Início de sessão de demonstração" : "Demo account sign-in") : config.sensitive === "personal" ? (pt ? "Perfil de demonstração" : "Demo profile details") : (pt ? "Pedido de permissão de demonstração" : "Demo permission request")}</h1><p>{t.fakeOnly}</p><label>{pt ? "Campo fictício" : "Fictional field"}<input type={config.sensitive === "password" ? "password" : "text"} placeholder={pt ? "APENAS DEMONSTRAÇÃO" : "DEMO ONLY"} autoComplete="off" /></label><button type="button" disabled>{pt ? "Envio desativado por segurança" : "Submission disabled for safety"}</button><a href={`/${locale}/demo`}>{t.back}</a></section></main>;
 }
 
 export function AppShell({ locale, slug }: { locale: Locale; slug: string[] }) {
-  useEffect(() => { document.documentElement.lang = locale; }, [locale]);
-  const route = slug.join("/");
-  let page: React.ReactNode;
-  if (!route) page = <Home locale={locale} />;
-  else if (route === "teacher-demo") page = <TeacherDemo locale={locale} />;
-  else if (route === "demo") page = <Demo locale={locale} />;
-  else if (route === "methodology") page = <Methodology locale={locale} />;
-  else if (route === "project") page = <Project locale={locale} />;
-  else if (route === "settings") page = <Settings locale={locale} />;
-  else if (route === "about") page = <About locale={locale} />;
-  else if (route.startsWith("demo-sites/")) page = <DemoSite locale={locale} type={route} />;
-  else page = <Home locale={locale} />;
-  return <><Header locale={locale} />{page}{!route.startsWith("demo-sites/") && <Footer locale={locale} />}</>;
+  const [view, setView] = useState<ShellView>(() => viewFromSlug(slug));
+
+  useEffect(() => {
+    document.documentElement.lang = locale;
+  }, [locale]);
+
+  useEffect(() => {
+    const timer = window.setTimeout(() => {
+      setView(viewFromSlug(slug));
+      // Full navigation from Leave-and-block (`/settings#settings-block-lists`).
+      if (slug[0] === "settings" && window.location.hash === "#settings-block-lists") {
+        window.dispatchEvent(new Event("shield:settings-block-lists"));
+      }
+    }, 0);
+    return () => window.clearTimeout(timer);
+  }, [slug]);
+
+  function navigate(next: ShellView) {
+    const alreadySettings = view === "settings";
+    setView(next);
+    // Already on Settings → block-lists; first open → data section.
+    const hash =
+      next === "settings" ? (alreadySettings ? "#settings-block-lists" : "#settings-privacy") : "";
+    const path = pathForView(locale, next, hash);
+    if (typeof window !== "undefined") {
+      window.history.replaceState(null, "", path);
+      if (next === "settings") {
+        window.setTimeout(() => {
+          if (alreadySettings || hash === "#settings-block-lists") {
+            window.dispatchEvent(new Event("shield:settings-block-lists"));
+            const live = document.querySelector<HTMLElement>('[data-testid="settings-block-lists-live"]');
+            (live || document.getElementById("settings-block-lists"))?.scrollIntoView({
+              block: "start"
+            });
+          } else {
+            window.dispatchEvent(new Event("shield:settings-privacy"));
+            const select = document.getElementById("settings-data-select");
+            if (select instanceof HTMLSelectElement) select.focus();
+          }
+        }, 0);
+      }
+    }
+  }
+
+  return (
+    <div className="shell">
+      <Header locale={locale} view={view} onNavigate={navigate} />
+      {view === "settings" ? (
+        <SettingsPanel locale={locale} onBack={() => navigate("check")} />
+      ) : view === "privacy" ? (
+        <PrivacyPanel locale={locale} onBack={() => navigate("check")} />
+      ) : (
+        <Home locale={locale} />
+      )}
+    </div>
+  );
 }

@@ -1,0 +1,6 @@
+{
+  "scenarios": [
+    { "id": "EVAL-SMOKE-001", "name": "Fixture always pass", "passed": true },
+    { "id": "EVAL-SMOKE-002", "name": "Fixture already failing on main", "passed": false }
+  ]
+}

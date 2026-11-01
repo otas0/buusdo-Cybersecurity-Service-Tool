@@ -2,7 +2,9 @@
 
 ## Data practice
 
-No account, analytics, cookies for tracking, browsing-history store, email access, call/SMS access, file access, or server database is used. Checked URLs remain in current UI memory. Blocked and trusted domains are saved only in browser local storage with their creation time and, for blocks, the risk-level reason.
+No analytics, cookies for tracking, browsing-history store, call/SMS access, or credential capture. Checked URLs remain in current UI memory by default.
+
+**Optional account (lists sync):** when `ACCOUNT_SYNC_ENABLED=1`, users may sign in with an email magic link to sync **personal block/trust lists only** (`shield-lists-v1`) across website, extension, and desktop. No check history or full URLs are uploaded. See [`docs/ACCOUNT_SYNC_V1.md`](ACCOUNT_SYNC_V1.md). Account is opt-in; Never store / This device only / Diagnostics modes remain. Without account sync, blocked and trusted domains stay only in browser/desktop local storage (or free export/QR).
 
 Controlled sensitive forms prevent submission. Values are never read, transmitted, or stored. Users are told never to enter real information.
 

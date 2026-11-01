@@ -7,24 +7,51 @@
   },
   "scripts": {
     "dev": "vinext dev",
+    "dev:3001": "vinext dev --port 3001",
+    "health:smoke": "node scripts/health-smoke.mjs",
+    "health:prod": "node scripts/health-smoke.mjs",
+    "check:prod": "node scripts/check-smoke.mjs",
+    "production:origin": "node scripts/set-production-origin.mjs",
+    "smoke:desktop-scan-resources": "node scripts/desktop-scan-resources-smoke.mjs",
     "build": "vinext build",
     "build:vercel": "next build",
+    "deploy:cloudflare": "vinext build && wrangler deploy",
+    "deploy:cloudflare:dry": "vinext build",
     "start": "vinext start",
     "lint": "eslint . --ignore-pattern dist --ignore-pattern .next",
     "typecheck": "tsc --noEmit",
     "test": "tsx --test tests/*.test.ts",
     "evaluate": "tsx evaluation/evaluation-runner.ts",
-    "check": "npm run test && npm run typecheck && npm run lint && npm run build"
+    "evaluate:diff": "tsx scripts/diff-evaluation-results.ts",
+    "evaluate:diff:smoke": "tsx scripts/diff-evaluation-results.ts evaluation/fixtures/diff-baseline.json evaluation/fixtures/diff-current-newly-failed.json",
+    "openapi:sync": "cp docs/openapi-check-timing.yaml extension/shared/openapi-check-timing.yaml && cp docs/check-timing.schema.json extension/shared/check-timing.schema.json && cp docs/API_CHECK_CONTRACT.md extension/shared/API_CHECK_CONTRACT.md",
+    "openapi:check": "cmp -s docs/openapi-check-timing.yaml extension/shared/openapi-check-timing.yaml && cmp -s docs/check-timing.schema.json extension/shared/check-timing.schema.json && cmp -s docs/API_CHECK_CONTRACT.md extension/shared/API_CHECK_CONTRACT.md",
+    "contract:sync": "cp docs/API_CHECK_CONTRACT.md extension/shared/API_CHECK_CONTRACT.md",
+    "qr:bundle": "browserify node_modules/qrcode/lib/browser.js -s QrLib -o shared/qrcode-browser.js",
+    "test:playwright:settings": "playwright test playwright/settings-narrow.spec.ts",
+    "test:playwright:account": "playwright test playwright/account-sync.spec.ts",
+    "png:thumb": "node scripts/png-max-width.mjs",
+
+    "check": "npm run test && npm run smoke:desktop-scan-resources && npm run typecheck && npm run lint && npm run threat:check && npm run build",
+    "regression": "tsx scripts/regression-check.ts",
+    "threat:validate": "tsx scripts/validate-curated-threats.ts",
+    "threat:check": "npm run threat:validate && npm run regression",
+    "threat:check:help": "node -e \"const lines=['threat:check exit: 0=ok, 1=invalid curated list or regression fail, 2=cannot read curated file','After PT list changes, npm run evaluate must keep EVAL-029–032 green (MERGE_PT on/off + benign lookalike).']; for (const m of lines) { console.log(m); if (process.env.GITHUB_ACTIONS==='true') console.log('::notice::'+m); }\"",
+    "threat:apply": "tsx scripts/apply-threat-batch.ts"
   },
   "dependencies": {
     "next": "16.3.4",
     "react": "19.2.6",
     "react-dom": "19.2.6"
   },
+  "optionalDependencies": {
+    "@libsql/client": "^0.15.15"
+  },
   "devDependencies": {
     "@cloudflare/vite-plugin": "1.37.1",
     "@cloudflare/workers-types": "4.20260515.1",
     "@openai/sites-vite-plugin": "^0.1.0 || ^0.2.0",
+    "@playwright/test": "^1.64.1",
     "@tailwindcss/postcss": "4.2.1",
     "@types/node": "22.19.19",
     "@types/react": "19.2.14",

@@ -1,0 +1,28 @@
+---
+description: End every reply with Next steps plus 10+ development tasks
+alwaysApply: true
+---
+
+# Next step on every prompt
+
+Close every user-facing reply with two closing blocks, in this order, after the answer (including plan-only or Q&A turns):
+
+## 1. Next
+
+Concrete near-term actions for this repo — website first (`app/`, `components/`, `security/`), then `extension/`, `desktop-app/`, `shared/`. No demo backlog.
+
+- Write 2–4 steps, in the order to do them.
+- Each step names the surface or file and the check that shows it worked.
+- One step is the immediate next action. Later steps stay short.
+- Skip steps that are already done. Do not repeat a generic backlog.
+
+## 2. 下一步开发建议
+
+At least **10** product/engineering tasks for what to build or harden next (beyond the immediate Next checklist).
+
+- Numbered or bulleted list of **10 or more** items — never fewer.
+- Each item is one concrete task: name the surface/file area and the outcome.
+- Prefer first-party work (own threat list, probe quality, result UX, privacy, website) over third-party services.
+- Mix near-term polish with slightly larger follow-ons; order by usefulness after what was just finished.
+- Do not paste the same 10 items every turn — rotate and advance with current gaps.
+- If the user asked for something else, answer that first. These sections do not replace the answer.
