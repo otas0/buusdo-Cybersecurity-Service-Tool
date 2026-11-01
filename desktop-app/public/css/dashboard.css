@@ -10,6 +10,122 @@ html, body {
 
 button, input, select { font: inherit; color: inherit; }
 
+/* Dark field: stop WebKit/Electron painting white control chrome over light type. */
+html {
+  color-scheme: dark;
+}
+
+/* Kill UA light/white button chrome on the dark field. */
+button {
+  background: transparent;
+  border: 0;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="url"],
+input[type="search"],
+input:not([type]) {
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  color: var(--text);
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+/* One notch above --muted so placeholders stay readable on --bg. */
+input[type="text"]::placeholder,
+input[type="email"]::placeholder,
+input[type="url"]::placeholder,
+input[type="search"]::placeholder,
+input:not([type])::placeholder {
+  color: #b8b3a6;
+  opacity: 1;
+}
+
+select {
+  background: var(--bg);
+  color: var(--text);
+  color-scheme: dark;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+select option {
+  background: var(--bg);
+  color: var(--text);
+}
+
+/* Shared dark underline field — Account + Personal lists domain. */
+.field-input {
+  flex: 1 1 12rem;
+  min-width: 0;
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid var(--text);
+  border-radius: 0;
+  padding: 6px 0;
+  font-size: 13px;
+  color: var(--text);
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.field-input::placeholder {
+  color: #b8b3a6;
+  opacity: 1;
+}
+
+.field-input:focus-visible,
+.account input.field-input:focus-visible,
+.lists input.field-input:focus-visible {
+  outline: 2px solid var(--halt);
+  outline-offset: 2px;
+}
+
+/* Visible checkbox chrome on black field. */
+input[type="checkbox"] {
+  width: 14px;
+  height: 14px;
+  margin: 0;
+  flex-shrink: 0;
+  accent-color: var(--halt);
+  border: 1px solid var(--text);
+  border-radius: 0;
+  background: var(--bg);
+  -webkit-appearance: none;
+  appearance: none;
+  cursor: pointer;
+}
+
+input[type="checkbox"]:checked {
+  background: var(--halt);
+  border-color: var(--halt);
+  box-shadow: inset 0 0 0 2px var(--bg);
+}
+
+input[type="checkbox"]:focus-visible {
+  outline: 2px solid var(--halt);
+  outline-offset: 2px;
+}
+
+.text-button {
+  background: transparent;
+  border: 0;
+  padding: 0;
+  color: var(--text);
+  cursor: pointer;
+  text-decoration: underline;
+  text-decoration-color: var(--line);
+  text-underline-offset: 3px;
+}
+
+.text-button:hover {
+  color: var(--halt);
+  text-decoration-color: var(--halt);
+}
+
 .shell {
   max-width: 920px;
   margin: 0 auto;
@@ -162,7 +278,7 @@ h1 {
 .check input::placeholder { color: #5c5954; }
 
 .check button {
-  background: var(--text);
+  background: var(--halt);
   color: var(--bg);
   border: 0;
   padding: 0 18px;
@@ -174,7 +290,7 @@ h1 {
 }
 
 .check button:hover,
-.check button.is-scanning { background: var(--accent); color: var(--bg); }
+.check button.is-scanning { background: var(--text); color: var(--bg); }
 
 .check textarea {
   flex: 1 1 100%;
@@ -321,27 +437,58 @@ h1 {
 .list-add {
   display: flex;
   flex-wrap: wrap;
-  gap: 6px;
+  align-items: center;
+  gap: 8px;
   margin-top: 8px;
 }
 
+.list-add input.field-input,
 .list-add input {
-  flex: 1 1 100%;
+  flex: 1 1 12rem;
   min-width: 0;
   background: transparent;
   border: 0;
   border-bottom: 1px solid var(--text);
   padding: 6px 0;
   font-size: 13px;
-  color: inherit;
+  color: var(--text);
 }
 
-.list-add button[type="submit"] {
+.list-add input::placeholder {
+  color: #b8b3a6;
+  opacity: 1;
+}
+
+.list-add button[type="submit"],
+.list-add button:not(.text-button) {
   border: 1px solid var(--text);
   background: transparent;
+  color: var(--text);
   padding: 4px 10px;
   font-size: 12px;
   cursor: pointer;
+}
+
+.list-add button[type="submit"]:hover,
+.list-add button:not(.text-button):hover {
+  border-color: var(--halt);
+  color: var(--halt);
+}
+
+.account {
+  margin-top: 22px;
+  padding-top: 16px;
+  border-top: 1px solid var(--line);
+}
+
+.account h2 {
+  margin: 0 0 4px;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.account-row {
+  margin-top: 10px;
 }
 
 .list-cols {
@@ -371,6 +518,14 @@ h1 {
   color: var(--muted);
 }
 
+/* Keyboard focus for quarantine restore-error rows — Halt outline (focus-visible only; no mouse outline).
+ * Audit 2026-11: no bare :focus rules remain in this file (mouse outline noise avoided). */
+.mini-log li[data-restore-error]:focus-visible {
+  color: var(--muted);
+  outline: 1px solid var(--halt);
+  outline-offset: 1px;
+}
+
 .list-actions {
   display: flex;
   flex-wrap: wrap;
@@ -382,6 +537,7 @@ h1 {
   word-break: break-all;
   font-family: var(--mono, ui-monospace, monospace);
   font-size: 10px;
+  color: #a39e93;
 }
 
 .lists-qr {
@@ -453,6 +609,10 @@ h1 {
   margin-top: 36px;
   padding-top: 16px;
   border-top: 1px solid var(--line);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 16px;
 }
 
 .privacy {
@@ -461,21 +621,53 @@ h1 {
   gap: 6px;
   font-size: 12px;
   max-width: 280px;
+  color: var(--text);
+}
+
+#openAtLoginLabelWrap.privacy {
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+  max-width: none;
 }
 
 .privacy select {
   width: 100%;
-  background: transparent;
+  background: var(--bg);
   border: 1px solid var(--line);
-  color: inherit;
+  color: var(--text);
   font: inherit;
   padding: 6px 8px;
   cursor: pointer;
 }
 
+.foot > .hint,
+.foot > #privacyHint,
+.foot > #dataDirHint {
+  flex: 1 1 100%;
+  margin: 0;
+}
+
+.foot-actions {
+  flex: 1 1 100%;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 18px;
+  margin-top: 12px;
+  padding-top: 10px;
+  border-top: 1px solid var(--line);
+}
+
+.foot-actions .text-button {
+  font-size: 13px;
+  text-decoration-color: var(--text);
+  text-underline-offset: 4px;
+}
+
 .hint {
   margin: 8px 0 0;
-  color: var(--muted);
+  /* #a39e93 on --bg ≈ AA for small UI copy (brighter than --muted). */
+  color: #a39e93;
   font-size: 11px;
   line-height: 1.4;
 }
@@ -519,6 +711,147 @@ h1 {
 
 button:focus-visible, input:focus-visible, select:focus-visible {
   outline: 1px solid var(--accent);
+  outline-offset: 3px;
+}
+
+.machine {
+  margin-bottom: 28px;
+  padding-bottom: 18px;
+  border-bottom: 1px solid var(--line);
+}
+
+.machine .detail {
+  margin-top: 8px;
+}
+
+.machine h3 {
+  margin: 10px 0 4px;
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--muted);
+}
+
+.machine-ask-list {
+  max-height: 180px;
+  margin: 12px 0;
+}
+
+.ask {
+  position: fixed;
+  inset: 0;
+  z-index: 20;
+  background: rgba(14, 14, 14, 0.82);
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+
+.ask[hidden] {
+  display: none;
+}
+
+.ask:not([hidden]) {
+  display: flex;
+}
+
+.ask-card {
+  width: min(520px, 100%);
+  background: var(--bg-elev);
+  color: var(--text);
+  border: 1px solid var(--line);
+  padding: 22px 22px 18px;
+}
+
+.ask-card h2 {
+  margin: 8px 0 0;
+  font-size: 22px;
+  font-weight: 500;
+}
+
+.ask-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+  margin-top: 16px;
+}
+
+.ask-actions button:not(.text-button) {
+  background: var(--halt);
+  color: var(--bg);
+  border: 0;
+  padding: 12px 16px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-family: var(--mono);
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.proxy-guide {
+  margin: 12px 0 0;
+  border: 1px solid var(--line);
+  padding: 8px 10px;
+}
+
+.proxy-guide summary {
+  cursor: pointer;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  color: var(--text);
+}
+
+.proxy-guide-body {
+  margin-top: 8px;
+}
+
+.proxy-guide-body .hint {
+  margin: 0 0 8px;
+}
+
+.proxy-guide-os {
+  margin: 0 0 8px;
+  border: 0;
+  padding: 0;
+}
+
+.proxy-guide-os summary {
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+/* Primary CTA when honest-limits was skipped — Halt fill (not underline). */
+#machineRescan.is-primary {
+  background: var(--halt);
+  color: var(--bg);
+  border: 0;
+  padding: 8px 14px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-family: var(--mono);
+  font-size: 12px;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+#machineRescan.is-primary:hover {
+  background: var(--text);
+  color: var(--bg);
+  text-decoration: none;
+}
+
+/* Privacy Never store — Export diagnostics still safe; Halt outline marks the privacy-safe path. */
+#diagnosticsExport.halt-outline {
+  outline: 1px solid var(--halt);
+  outline-offset: 2px;
+  text-decoration-color: var(--halt);
+}
+
+/* Keyboard focus under Never store — stronger Halt outline (focus-visible only). */
+#diagnosticsExport.halt-outline:focus-visible {
+  outline: 2px solid var(--halt);
   outline-offset: 3px;
 }
 
