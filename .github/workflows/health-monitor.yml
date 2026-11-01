@@ -278,23 +278,40 @@ jobs:
             exit 0
           fi
           git commit -m "chore: log check:prod from CI (${{ job.status }})"
-          # Retry rebase+push — concurrency group serializes jobs; this covers residual races.
+          # Retry rebase+push — concurrency group serializes jobs; this covers residual races
+          # and Contents-API tip advances that leave the runner tip non-fast-forward.
           ok=0
+          attempts=0
+          BRANCH="${{ github.ref_name }}"
           for i in 1 2 3 4 5; do
-            if git push; then
+            attempts=$i
+            if git push origin "HEAD:refs/heads/${BRANCH}"; then
               ok=1
               break
             fi
-            echo "::notice::checklist push attempt $i failed — pull --rebase and retry"
-            git pull --rebase origin "${{ github.ref_name }}" || true
+            echo "::notice::checklist push attempt $i failed — fetch + rebase onto origin/${BRANCH}"
+            git fetch origin "${BRANCH}" || true
+            if ! git rebase "origin/${BRANCH}"; then
+              echo "::warning::rebase conflict — prefer ours for docs/LAUNCH_CHECKLIST.md then continue"
+              git checkout --ours -- docs/LAUNCH_CHECKLIST.md 2>/dev/null || true
+              # Re-apply this run's staged row if rebase dropped it.
+              git add docs/LAUNCH_CHECKLIST.md 2>/dev/null || true
+              GIT_EDITOR=true git rebase --continue 2>/dev/null || git rebase --abort || true
+              # Fallback: rebuild tip from remote + our commit message file
+              git fetch origin "${BRANCH}" || true
+              git reset --soft "origin/${BRANCH}" || true
+              git add docs/LAUNCH_CHECKLIST.md
+              git diff --staged --quiet || git commit -m "chore: log check:prod from CI (${{ job.status }})"
+            fi
             sleep $((i * 2))
           done
+          echo "push_attempts=$attempts" >> "$GITHUB_OUTPUT"
           if [ "$ok" = "1" ]; then
             echo "pushed=true" >> "$GITHUB_OUTPUT"
-            echo "::notice::Checklist row committed to default branch"
+            echo "::notice::Checklist row committed to default branch (attempts=${attempts})"
           else
             echo "pushed=false" >> "$GITHUB_OUTPUT"
-            echo "::error::git push failed — enable Actions read/write or set CHECKLIST_CI_WRITE=0 (docs/CHECKLIST_CI_WRITE.md)"
+            echo "::error::git push failed after ${attempts} attempts — enable Actions read/write or set CHECKLIST_CI_WRITE=0 (docs/CHECKLIST_CI_WRITE.md)"
             exit 1
           fi
 
@@ -310,6 +327,7 @@ jobs:
             echo "| job | ${{ job.status }} |"
             echo "| run | ${{ steps.target.outputs.run_url }} |"
             echo "| checklist push | ${{ steps.push.outputs.pushed }} |"
+            echo "| checklist push attempts | ${{ steps.push.outputs.push_attempts }} |"
             echo "| download HEAD | soft warn \`${{ steps.downloads.outputs.soft_warn }}\` · notarized \`${{ steps.downloads.outputs.notarized_ok }}\` |"
             echo ""
           } >> "$GITHUB_STEP_SUMMARY"
