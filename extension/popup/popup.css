@@ -8,9 +8,64 @@ html, body {
   font-family: var(--font);
 }
 
+html { color-scheme: dark; }
+
 body { padding: 16px 16px 14px; }
 
-button, select { font: inherit; color: inherit; }
+button, input, select { font: inherit; color: inherit; }
+
+/* Match desktop dark fields — stop WebKit white chrome on Account inputs. */
+input[type="text"],
+input[type="email"],
+input[type="url"],
+input:not([type]) {
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  color: var(--text);
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+input[type="text"]::placeholder,
+input[type="email"]::placeholder,
+input[type="url"]::placeholder,
+input:not([type])::placeholder {
+  color: #b8b3a6;
+  opacity: 1;
+}
+
+.field-input {
+  flex: 1 1 12rem;
+  min-width: 0;
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid var(--text);
+  padding: 6px 0;
+  font-size: 13px;
+  color: var(--text);
+}
+
+.field-input:focus-visible {
+  outline: 2px solid var(--halt);
+  outline-offset: 2px;
+}
+
+.account-row {
+  margin-top: 8px;
+}
+
+.account-row .field-input {
+  flex: 1 1 10rem;
+  min-width: 8rem;
+  overflow-wrap: anywhere;
+}
+
+select {
+  background: var(--bg);
+  color: var(--text);
+  color-scheme: dark;
+}
 
 .top {
   display: flex;
@@ -129,7 +184,7 @@ h1 {
   margin-top: 14px;
   height: 40px;
   border: 0;
-  background: var(--text);
+  background: var(--halt, var(--accent));
   color: var(--bg);
   font-family: var(--mono);
   font-size: 12px;
@@ -139,7 +194,7 @@ h1 {
 }
 
 #scanBtn:hover,
-#scanBtn.is-scanning { background: var(--accent); }
+#scanBtn.is-scanning { background: var(--text); color: var(--bg); }
 
 .counts {
   display: grid;
@@ -269,24 +324,28 @@ button:focus-visible, select:focus-visible, input:focus-visible {
 .list-add {
   display: flex;
   flex-wrap: wrap;
+  align-items: center;
   gap: 6px;
   margin-top: 8px;
 }
 
+.list-add input.field-input,
 .list-add input {
-  flex: 1 1 100%;
+  flex: 1 1 12rem;
   min-width: 0;
   background: transparent;
   border: 0;
   border-bottom: 1px solid var(--text);
   padding: 6px 0;
   font-size: 13px;
-  color: inherit;
+  color: var(--text);
 }
 
-.list-add button[type="submit"] {
+.list-add button[type="submit"],
+.list-add button:not(.text-button) {
   border: 1px solid var(--text);
   background: transparent;
+  color: var(--text);
   padding: 4px 10px;
   font-size: 12px;
   cursor: pointer;
@@ -394,8 +453,15 @@ button.diag-gated[aria-disabled="true"] {
   background: transparent;
   border: 0;
   padding: 0;
-  color: var(--muted);
+  color: var(--text);
   font-size: 11px;
   text-decoration: underline;
+  text-decoration-color: var(--line);
+  text-underline-offset: 3px;
   cursor: pointer;
+}
+
+.text-button:hover {
+  color: var(--halt, var(--accent));
+  text-decoration-color: var(--halt, var(--accent));
 }
