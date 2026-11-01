@@ -1,0 +1,16 @@
+{
+  "windowsNsisUrl": "https://github.com/otas0/preventive-cybersecurity-prototype/releases/download/desktop-v0.2.0/PreventiveShield-Setup-User.exe",
+  "macosAppZipUrl": "https://github.com/otas0/preventive-cybersecurity-prototype/releases/download/desktop-v0.2.0/PreventiveShield-macos-app.zip",
+  "macosAppZipUrlNotarized": "https://github.com/otas0/preventive-cybersecurity-prototype/releases/download/desktop-v0.2.0/PreventiveShield-macos-app-notarized.zip",
+  "macosAppZipUrlUnsigned": "https://github.com/otas0/preventive-cybersecurity-prototype/releases/download/desktop-v0.2.0/PreventiveShield-macos-app.zip",
+  "linuxDebAmd64Url": "https://github.com/otas0/preventive-cybersecurity-prototype/releases/download/desktop-v0.2.0/preventive-shield_0.2.0_amd64.deb",
+  "packagingDocsUrl": "https://github.com/otas0/preventive-cybersecurity-prototype/blob/main/desktop-app/PACKAGING.md",
+  "releaseNotesUrl": "https://github.com/otas0/preventive-cybersecurity-prototype/blob/main/desktop-app/RELEASE.md",
+  "releaseTag": "desktop-v0.2.0",
+  "mirrors": {
+    "windowsNsisUrl": "",
+    "macosAppZipUrl": "",
+    "linuxDebAmd64Url": ""
+  },
+  "notes": "macosAppZipUrl is the Settings primary link (GitHub Release). Prefer the notarized asset only after HEAD 200 for macosAppZipUrlNotarized (Actions → desktop-promote-macos-url, or: node scripts/verify-desktop-download-urls.mjs --write-effective). Until then primary stays on the unsigned zip. Set mirrors.macosAppZipUrl only when a CDN (or other durable mirror) should be HEAD-checked and offered first; leave GitHub macosAppZipUrl as the fallback primary in this file — never clear the GitHub URL when adding a mirror. Leave other mirrors.* empty unless GitHub rate limits require a CDN."
+}
