@@ -1,5 +1,7 @@
 # Post-launch freeze (first 48 hours)
 
+**Active freeze (pcpd):** started **2026-11-01T07:30Z** (first green Production health + live check on `https://pcpd.mtsu.workers.dev`). Target end **2026-11-03T07:30Z**. During this window: health + Metrics only — no Turso/Account sync, no vinext 1.4, no custom-domain cutover unless Workers is down.
+
 After the first successful Cloudflare deploy that you treat as **live**:
 
 ## Do
