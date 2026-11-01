@@ -1,5 +1,17 @@
 # Evaluate vinext 1.4 + React 19.3 (official deploy CLI)
 
+## Status (2026-11-01)
+
+**Deferred** until after the 48h health/check freeze. Production deploys with `vinext build && wrangler deploy` — do not block launch on this upgrade.
+
+After 48h, open an evaluation branch (do not merge mid-incident):
+
+```bash
+git checkout -b chore/vinext-1-4-eval
+# follow Suggested trial steps below
+```
+
+
 ## Current (this repo)
 
 | Package | Version |
