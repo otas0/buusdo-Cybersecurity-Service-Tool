@@ -50,7 +50,13 @@ if (!tableHeaderMatch) {
 }
 const insertAt = idx + tableHeaderMatch.index + tableHeaderMatch[0].length;
 const nextLine = md.slice(insertAt).split("\n")[0] || "";
-if (nextLine.includes(url) && nextLine.includes(when) && nextLine.includes(result)) {
+// Skip only an identical same-day row for the same runner (allow multiple OK rows/day).
+if (
+  nextLine.includes(url) &&
+  nextLine.includes(when) &&
+  nextLine.includes(`**${result}**`) &&
+  nextLine.includes(runner)
+) {
   console.info("[append-check-prod-log] row already present — skip");
   process.exit(0);
 }
