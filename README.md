@@ -63,11 +63,16 @@ npm run production:origin -- https://YOUR_WORKER.workers.dev   # writes README +
 
 ### Live production origin
 
-- **Origin:** `https://preventive-shield.mtsu.workers.dev`
-- **Canonical host:** `preventive-shield.mtsu.workers.dev` (prefer apex; redirect `www` → apex)
-- Set after deploy: `npm run production:origin -- https://preventive-shield.mtsu.workers.dev`
-- Health: `npm run health:prod -- --url https://preventive-shield.mtsu.workers.dev`
-- Check smoke: `npm run check:prod -- --url https://preventive-shield.mtsu.workers.dev`
+- **Origin:** `https://pcpd.mtsu.workers.dev`
+- **Canonical host:** `pcpd.mtsu.workers.dev` (prefer apex; redirect `www` → apex)
+- Set after deploy: `npm run production:origin -- https://pcpd.mtsu.workers.dev`
+- Health: `npm run health:prod -- --url https://pcpd.mtsu.workers.dev`
+- Check smoke: `npm run check:prod -- --url https://pcpd.mtsu.workers.dev`
+
+Ops docs: [PRODUCTION_HOSTING](docs/PRODUCTION_HOSTING.md) · [LAUNCH_CHECKLIST](docs/LAUNCH_CHECKLIST.md) · [DEPLOY_SECRETS](docs/DEPLOY_SECRETS.md) · [CUSTOM_DOMAIN_REDEPLOY](docs/CUSTOM_DOMAIN_REDEPLOY.md) · [CANONICAL_HOST](docs/CANONICAL_HOST.md) · [CLOUDFLARE_ALERTS](docs/CLOUDFLARE_ALERTS.md) · [LOCAL_CF_CONNECTIVITY](docs/LOCAL_CF_CONNECTIVITY.md) · [POST_LAUNCH_48H](docs/POST_LAUNCH_48H.md) · [VINEXT_UPGRADE_1_4](docs/VINEXT_UPGRADE_1_4.md)
+
+Scheduled monitor: set GitHub Actions variable `PRODUCTION_HEALTH_URL` → workflow **Production health**.  
+Optional deploy: Actions → **Deploy Cloudflare** with secrets from [DEPLOY_SECRETS.md](docs/DEPLOY_SECRETS.md).
 
 
 ### Local ports
