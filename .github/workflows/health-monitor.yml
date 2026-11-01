@@ -47,7 +47,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: "22"
-          cache: npm
+          # No npm ci — lockfile on main can lag; health/check use curl; append script is dep-free.
 
       - name: Resolve target URL
         id: target
@@ -70,16 +70,29 @@ jobs:
           echo "run_url=$RUN_URL" >> "$GITHUB_OUTPUT"
           echo "HEALTH_BASE_URL=$URL" >> "$GITHUB_ENV"
 
-      - name: Install
-        run: npm ci --ignore-scripts
-
       - name: Health smoke
         id: health
-        run: node scripts/health-smoke.mjs --url "${{ steps.target.outputs.url }}"
+        run: |
+          set -euo pipefail
+          body=$(curl -fsS --max-time 30 "$HEALTH_BASE_URL/api/health")
+          echo "$body" | tee /tmp/health.json
+          echo "$body" | grep -q '"ok":true'
+          echo "$body" | grep -q '"curatedListPresent":true'
+          echo "$body" | grep -q '"accountSyncEnabled":false'
 
       - name: Check smoke
         id: check
-        run: node scripts/check-smoke.mjs --url "${{ steps.target.outputs.url }}"
+        run: |
+          set -euo pipefail
+          body=$(curl -fsS --max-time 45 -X POST "$HEALTH_BASE_URL/api/check" \
+            -H 'content-type: application/json' -H 'accept: application/json' \
+            -d '{"url":"https://example.com"}')
+          echo "$body" | tee /tmp/check.json
+          echo "$body" | grep -q '"ok":true'
+          echo "$body" | grep -q '"timingValid":true'
+          echo "$body" | grep -q '"totalMs"'
+          echo "$body" | grep -q '"probeMs"'
+          echo "$body" | grep -q '"ambiguousProbeStatus"'
 
       - name: Append checklist log (OK)
         if: success()
