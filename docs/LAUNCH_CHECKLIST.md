@@ -29,6 +29,7 @@ Recorded via `npm run production:origin` → README + `shared/production-site.js
 
 | When (UTC) | Runner | Result | Notes |
 |------------|--------|--------|-------|
+| 2026-11-01 | github-actions/41318446546 | **OK** | `https://pcpd.mtsu.workers.dev` — health+check · softDownloadWarn=0 · notarized=missing · https://github.com/otas0/preventive-cybersecurity-prototype/actions/runs/41318446546 |
 | 2026-11-01 | github-actions/41317940153 | **OK** | `https://pcpd.mtsu.workers.dev` — health+check · https://github.com/otas0/preventive-cybersecurity-prototype/actions/runs/41317940153 |
 | 2026-11-01 | github-actions/41288050274 | **OK** | `https://pcpd.mtsu.workers.dev` — health+check · https://github.com/otas0/preventive-cybersecurity-prototype/actions/runs/41288050274 |
 | 2026-11-01 | Operator laptop (Asia) | **timeout** | Local TCP to previous `preventive-shield.mtsu.workers.dev` timed out; not a Worker crash — see [LOCAL_CF_CONNECTIVITY.md](LOCAL_CF_CONNECTIVITY.md) |
