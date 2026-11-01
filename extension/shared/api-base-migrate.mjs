@@ -8,7 +8,7 @@ export const LOCAL_DEV_ORIGIN = "http://localhost:3000";
  *   npm run production:origin -- https://…
  * Empty → DEFAULT_API_BASE is localhost.
  */
-export const PRODUCTION_ORIGIN = "https://preventive-shield.mtsu.workers.dev";
+export const PRODUCTION_ORIGIN = "https://pcpd.mtsu.workers.dev";
 
 /** Prefer production origin after first deploy; otherwise local vinext. */
 export const DEFAULT_API_BASE = (PRODUCTION_ORIGIN || LOCAL_DEV_ORIGIN).replace(/\/$/, "");
