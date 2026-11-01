@@ -1,0 +1,36 @@
+# Send one Slack test message (does not fail health).
+# Secret: SLACK_WEBHOOK_URL (Incoming Webhook).
+
+name: Slack alert test
+
+on:
+  workflow_dispatch:
+    inputs:
+      message:
+        description: "Optional custom text"
+        required: false
+        default: "Preventive Shield Slack test — health alerts wired."
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Require webhook
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        run: |
+          if [ -z "$SLACK_WEBHOOK_URL" ]; then
+            echo "::error::Set secret SLACK_WEBHOOK_URL (docs/HEALTH_ALERTS.md)"
+            exit 1
+          fi
+
+      - name: Post test
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          MSG: ${{ github.event.inputs.message }}
+        run: |
+          BODY=$(node -e 'const m=process.env.MSG||"test"; process.stdout.write(JSON.stringify({text:":white_check_mark: "+m+"\\nRepo: "+process.env.GITHUB_REPOSITORY+"\\nRun: "+process.env.GITHUB_SERVER_URL+"/"+process.env.GITHUB_REPOSITORY+"/actions/runs/"+process.env.GITHUB_RUN_ID}))')
+          code=$(curl -sS -o /tmp/slack-out -w "%{http_code}" -X POST -H 'Content-type: application/json' --data "$BODY" "$SLACK_WEBHOOK_URL")
+          echo "HTTP $code"
+          cat /tmp/slack-out || true
+          test "$code" = "200"
