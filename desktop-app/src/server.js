@@ -103,9 +103,16 @@ app.use((req, res, next) => {
 });
 app.use(express.json({ limit: "32kb" }));
 
-// Shared tokens for both surfaces
-app.use("/shared", express.static(SHARED));
-app.use(express.static(path.join(ROOT, "public")));
+// Shared tokens for both surfaces — no-store so tray reopen does not keep stale CSS/JS.
+const staticHeaders = {
+  setHeaders(res, filePath) {
+    if (/\.(css|js|html)$/i.test(filePath)) {
+      res.setHeader("Cache-Control", "no-store");
+    }
+  }
+};
+app.use("/shared", express.static(SHARED, staticHeaders));
+app.use(express.static(path.join(ROOT, "public"), staticHeaders));
 
 app.get("/api/state", async (_req, res) => {
   const lists = await listsStore.getLists();
