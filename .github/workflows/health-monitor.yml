@@ -114,7 +114,8 @@ jobs:
 
       - name: Commit checklist log
         id: push
-        if: always() && vars.CHECKLIST_CI_WRITE != '0'
+        # Unset CHECKLIST_CI_WRITE must still run; only explicit "0" disables.
+        if: ${{ always() && vars.CHECKLIST_CI_WRITE != '0' }}
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
