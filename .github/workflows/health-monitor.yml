@@ -1,15 +1,15 @@
-# Production health monitor — polls GET /api/health on a schedule.
-# Target: Cloudflare Workers origin (custom domain or *.workers.dev).
-# Enable by setting repository variable PRODUCTION_HEALTH_URL=https://your.domain
-# (Settings → Secrets and variables → Actions → Variables).
+# Production health + check:prod on a schedule (ubuntu = CF-reachable).
+# Set repository variable PRODUCTION_HEALTH_URL=https://pcpd.mtsu.workers.dev
+# (or custom canonical). Optional alerts: secrets SLACK_WEBHOOK_URL; watch repo for email.
 #
-# Manual run: Actions → Production health → Run workflow (optional URL override).
+# On success/failure, appends a row to docs/LAUNCH_CHECKLIST.md § check:prod log and pushes
+# (contents: write). Disable push with repository variable CHECKLIST_CI_WRITE=0.
+# Bot write setup: docs/CHECKLIST_CI_WRITE.md · ops: docs/OPS_RUNBOOK.md
 
 name: Production health
 
 on:
   schedule:
-    # Every 15 minutes
     - cron: "*/15 * * * *"
   workflow_dispatch:
     inputs:
@@ -18,12 +18,31 @@ on:
         required: false
         default: ""
 
+permissions:
+  contents: write
+
 jobs:
   health:
-    name: GET /api/health
+    name: health + check:prod
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          # Default GITHUB_TOKEN; needs Workflow permissions = Read and write (CHECKLIST_CI_WRITE.md).
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+
+      - name: Show default branch write expectations
+        run: |
+          {
+            echo "## Checklist bot write"
+            echo ""
+            echo "- permissions.contents: write (this workflow)"
+            echo "- Repo → Settings → Actions → Workflow permissions → Read and write"
+            echo "- Kill switch: \`CHECKLIST_CI_WRITE=0\` ([OPS_RUNBOOK.md](docs/OPS_RUNBOOK.md))"
+            echo "- Verify: [CHECKLIST_CI_WRITE.md](docs/CHECKLIST_CI_WRITE.md)"
+            echo "- CHECKLIST_CI_WRITE var: \`${{ vars.CHECKLIST_CI_WRITE }}\`"
+          } >> "$GITHUB_STEP_SUMMARY"
 
       - uses: actions/setup-node@v4
         with:
@@ -35,48 +54,102 @@ jobs:
         run: |
           OVERRIDE="${{ github.event.inputs.url }}"
           VAR="${{ vars.PRODUCTION_HEALTH_URL }}"
+          DEFAULT="https://pcpd.mtsu.workers.dev"
           if [ -n "$OVERRIDE" ]; then
             URL="$OVERRIDE"
-          else
+          elif [ -n "$VAR" ]; then
             URL="$VAR"
+          else
+            URL="$DEFAULT"
+            echo "::notice::PRODUCTION_HEALTH_URL unset — using default workers.dev origin"
           fi
-          URL=$(echo "$URL" | tr -d '[:space:]')
-          if [ -z "$URL" ]; then
-            echo "skip=true" >> "$GITHUB_OUTPUT"
-            echo "::notice::PRODUCTION_HEALTH_URL unset — skipping monitor (set repo variable to enable)"
-            {
-              echo "## Production health"
-              echo ""
-              echo "Skipped: set repository variable \`PRODUCTION_HEALTH_URL\` to your HTTPS origin."
-            } >> "$GITHUB_STEP_SUMMARY"
-            exit 0
-          fi
+          URL=$(echo "$URL" | tr -d '[:space:]' | sed 's:/*$::')
+          RUN_URL="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
           echo "skip=false" >> "$GITHUB_OUTPUT"
           echo "url=$URL" >> "$GITHUB_OUTPUT"
+          echo "run_url=$RUN_URL" >> "$GITHUB_OUTPUT"
           echo "HEALTH_BASE_URL=$URL" >> "$GITHUB_ENV"
 
-      - name: Install (scripts only need Node fetch)
-        if: steps.target.outputs.skip != 'true'
+      - name: Install
         run: npm ci --ignore-scripts
 
       - name: Health smoke
-        if: steps.target.outputs.skip != 'true'
+        id: health
         run: node scripts/health-smoke.mjs --url "${{ steps.target.outputs.url }}"
 
       - name: Check smoke
-        if: steps.target.outputs.skip != 'true'
+        id: check
         run: node scripts/check-smoke.mjs --url "${{ steps.target.outputs.url }}"
 
+      - name: Append checklist log (OK)
+        if: success()
+        run: |
+          node scripts/append-check-prod-log.mjs \
+            --url "${{ steps.target.outputs.url }}" \
+            --result OK \
+            --runner "github-actions/${{ github.run_id }}" \
+            --notes "health+check · ${{ steps.target.outputs.run_url }}"
+
+      - name: Append checklist log (FAIL)
+        if: failure()
+        run: |
+          node scripts/append-check-prod-log.mjs \
+            --url "${{ steps.target.outputs.url }}" \
+            --result FAIL \
+            --runner "github-actions/${{ github.run_id }}" \
+            --notes "${{ steps.target.outputs.run_url }}" || true
+
+      - name: Commit checklist log
+        id: push
+        if: always() && vars.CHECKLIST_CI_WRITE != '0'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add docs/LAUNCH_CHECKLIST.md
+          if git diff --staged --quiet; then
+            echo "No checklist changes"
+            echo "pushed=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          git commit -m "chore: log check:prod from CI (${{ job.status }})"
+          if git push; then
+            echo "pushed=true" >> "$GITHUB_OUTPUT"
+            echo "::notice::Checklist row committed to default branch"
+          else
+            echo "pushed=false" >> "$GITHUB_OUTPUT"
+            echo "::error::git push failed — enable Actions read/write or set CHECKLIST_CI_WRITE=0 (docs/CHECKLIST_CI_WRITE.md)"
+            exit 1
+          fi
+
       - name: Summary
-        if: steps.target.outputs.skip != 'true' && success()
+        if: always()
         run: |
           {
-            echo "## Production health"
+            echo "## Production health + check:prod"
             echo ""
             echo "| Field | Value |"
             echo "| --- | --- |"
             echo "| base | \`${{ steps.target.outputs.url }}\` |"
-            echo "| health | OK |"
-            echo "| check | OK |"
+            echo "| job | ${{ job.status }} |"
+            echo "| run | ${{ steps.target.outputs.run_url }} |"
+            echo "| checklist push | ${{ steps.push.outputs.pushed }} |"
             echo ""
           } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Notify Slack on failure
+        if: failure()
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        run: |
+          if [ -z "$SLACK_WEBHOOK_URL" ]; then
+            echo "::notice::SLACK_WEBHOOK_URL unset — skip Slack (use Slack alert test workflow after setting secret)"
+            exit 0
+          fi
+          curl -sS -X POST -H 'Content-type: application/json' \
+            --data "{\"text\":\":x: Preventive Shield health/check failed\\nURL: ${{ steps.target.outputs.url }}\\nRun: ${{ steps.target.outputs.run_url }}\"}" \
+            "$SLACK_WEBHOOK_URL"
+
+      - name: Failure notice (email via GitHub)
+        if: failure()
+        run: |
+          echo "::error::Production health or check:prod failed. Watchers receive GitHub workflow-failure email. Slack: secret SLACK_WEBHOOK_URL + workflow Slack alert test (docs/HEALTH_ALERTS.md)."
