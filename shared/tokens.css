@@ -3,7 +3,8 @@
  * Black field, warm type, one orange mark. Sharp corners.
  *
  * Designers: --halt is the Halt accent (same hex as --danger / --accent). Prefer --halt
- * for user-block evidence borders and strong “leave” cues; keep --danger for generic danger.
+ * for user-block evidence borders, primary CTA fills, and strong “leave” cues; keep --danger
+ * for generic danger. Do not fill primary buttons with --text (reads as plain white on --bg).
  *
  * Safari disabled controls (shared by extension/popup + desktop-app dashboard):
  * ONLY pattern — `color: var(--muted)` + `outline: 1px solid var(--halt)` (+ outline-offset: 1px).
@@ -14,6 +15,7 @@
   --bg-elev: #161616;
   --bg-soft: #1c1c1c;
   --text: #f3f1ea;
+  /* --muted is secondary chrome; desktop .hint / .lists-path use #a39e93 (AA on --bg). */
   --muted: #8d897f;
   --line: rgba(243, 241, 234, 0.16);
   --ring: #ff4d00;
