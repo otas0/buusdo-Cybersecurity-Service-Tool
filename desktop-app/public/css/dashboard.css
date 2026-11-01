@@ -110,6 +110,17 @@ input[type="checkbox"]:focus-visible {
   outline-offset: 2px;
 }
 
+input[type="checkbox"]:disabled {
+  opacity: 0.45;
+  border-color: var(--muted);
+  cursor: not-allowed;
+}
+
+.history-filter:has(input[type="checkbox"]:disabled),
+label:has(#accountSyncToggle:disabled) {
+  color: var(--muted);
+}
+
 .text-button {
   background: transparent;
   border: 0;
@@ -491,6 +502,17 @@ h1 {
   margin-top: 10px;
 }
 
+/* pt-PT device-code placeholder is long — keep underline field wrapping cleanly. */
+.account-row .field-input {
+  flex: 1 1 14rem;
+  min-width: 10rem;
+  overflow-wrap: anywhere;
+}
+
+.account-row .field-input::placeholder {
+  white-space: normal;
+}
+
 .list-cols {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -636,6 +658,7 @@ h1 {
   background: var(--bg);
   border: 1px solid var(--line);
   color: var(--text);
+  color-scheme: dark; /* Electron / Chromium native menu follows dark field */
   font: inherit;
   padding: 6px 8px;
   cursor: pointer;
