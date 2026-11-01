@@ -4,6 +4,7 @@
 
 import { t } from "./i18n.js";
 import { afterRingClear, lifetimeChipTitles } from "./lifetime-chip.mjs";
+import { hashFocusOnlyScrolls, shouldFocusAskDecline } from "./machine-focus.mjs";
 import {
   clearPersistedScanResourcesStorage,
   readPersistedScanResources,
@@ -35,7 +36,13 @@ const els = {
   lastScanValue: document.getElementById("lastScanValue"),
   privacyLabel: document.getElementById("privacyLabel"),
   privacySelect: document.getElementById("privacySelect"),
+  openAtLogin: document.getElementById("openAtLogin"),
+  openAtLoginLabel: document.getElementById("openAtLoginLabel"),
+  quitApp: document.getElementById("quitApp"),
   privacyHint: document.getElementById("privacyHint"),
+  dataDirHint: document.getElementById("dataDirHint"),
+  dataDirCopy: document.getElementById("dataDirCopy"),
+  trayHint: document.getElementById("trayHint"),
   logTitle: document.getElementById("logTitle"),
   logHint: document.getElementById("logHint"),
   blockLog: document.getElementById("blockLog"),
@@ -50,6 +57,36 @@ const els = {
   websiteCheckLabel: document.getElementById("websiteCheckLabel"),
   websiteCheckStatus: document.getElementById("websiteCheckStatus"),
   proxyBody: document.getElementById("proxyBody"),
+  proxyGuide: document.getElementById("proxyGuide"),
+  proxyGuideShow: document.getElementById("proxyGuideShow"),
+  proxyGuideSummary: document.getElementById("proxyGuideSummary"),
+  proxyGuideLead: document.getElementById("proxyGuideLead"),
+  proxyGuideMacDetails: document.getElementById("proxyGuideMacDetails"),
+  proxyGuideWinDetails: document.getElementById("proxyGuideWinDetails"),
+  proxyGuideLinuxDetails: document.getElementById("proxyGuideLinuxDetails"),
+  proxyGuideMacSummary: document.getElementById("proxyGuideMacSummary"),
+  proxyGuideWinSummary: document.getElementById("proxyGuideWinSummary"),
+  proxyGuideLinuxSummary: document.getElementById("proxyGuideLinuxSummary"),
+  proxyGuideMac: document.getElementById("proxyGuideMac"),
+  proxyGuideWin: document.getElementById("proxyGuideWin"),
+  proxyGuideLinux: document.getElementById("proxyGuideLinux"),
+  proxyGuideBrowser: document.getElementById("proxyGuideBrowser"),
+  proxyGuideCurl: document.getElementById("proxyGuideCurl"),
+  honestLimitsGate: document.getElementById("honestLimitsGate"),
+  honestLimitsKicker: document.getElementById("honestLimitsKicker"),
+  honestLimitsTitle: document.getElementById("honestLimitsTitle"),
+  honestLimitsBody: document.getElementById("honestLimitsBody"),
+  honestLimitsItemTls: document.getElementById("honestLimitsItemTls"),
+  honestLimitsItemKill: document.getElementById("honestLimitsItemKill"),
+  honestLimitsItemSystem: document.getElementById("honestLimitsItemSystem"),
+  honestLimitsItemAv: document.getElementById("honestLimitsItemAv"),
+  honestLimitsAck: document.getElementById("honestLimitsAck"),
+  honestLimitsSkip: document.getElementById("honestLimitsSkip"),
+  honestLimitsReset: document.getElementById("honestLimitsReset"),
+  diagnosticsExport: document.getElementById("diagnosticsExport"),
+  diagnosticsCopyPath: document.getElementById("diagnosticsCopyPath"),
+  diagnosticsReveal: document.getElementById("diagnosticsReveal"),
+  diagnosticsExportStatus: document.getElementById("diagnosticsExportStatus"),
   toastHost: document.getElementById("toastHost"),
   accountTitle: document.getElementById("accountTitle"),
   accountHint: document.getElementById("accountHint"),
@@ -98,13 +135,54 @@ const els = {
   listsQrHint: document.getElementById("listsQrHint"),
   listsQrCopyBtn: document.getElementById("listsQrCopyBtn"),
   listsImportFile: document.getElementById("listsImportFile"),
-  listAddForm: document.getElementById("listAddForm")
+  listAddForm: document.getElementById("listAddForm"),
+  machineKicker: document.getElementById("machineKicker"),
+  machineStatus: document.getElementById("machineStatus"),
+  machineScope: document.getElementById("machineScope"),
+  machineCoverage: document.getElementById("machineCoverage"),
+  machineTrusted: document.getElementById("machineTrusted"),
+  machineOpenTitle: document.getElementById("machineOpenTitle"),
+  machineSettledTitle: document.getElementById("machineSettledTitle"),
+  machineOpen: document.getElementById("machineOpen"),
+  machineSettled: document.getElementById("machineSettled"),
+  machineQuarantineTitle: document.getElementById("machineQuarantineTitle"),
+  machineQuarantine: document.getElementById("machineQuarantine"),
+  machineRescan: document.getElementById("machineRescan"),
+  machineRescanPrimaryHint: document.getElementById("machineRescanPrimaryHint"),
+  machineContinue: document.getElementById("machineContinue"),
+  machineBlockAgain: document.getElementById("machineBlockAgain"),
+  machineRestore: document.getElementById("machineRestore"),
+  machineAsk: document.getElementById("machineAsk"),
+  machineAskKicker: document.getElementById("machineAskKicker"),
+  machineAskTitle: document.getElementById("machineAskTitle"),
+  machineAskBody: document.getElementById("machineAskBody"),
+  machineAskList: document.getElementById("machineAskList"),
+  machineBlockMax: document.getElementById("machineBlockMax"),
+  machineDecline: document.getElementById("machineDecline")
 };
 
 /** @type {string|null} */
 let listsFilePath = null;
 /** @type {string|null} */
+let dataDirPath = null;
+/** @type {string|null} */
 let lastQrCompact = null;
+/** @type {string|null} */
+let diagnosticsExportPath = null;
+/** @type {string} */
+let hostPlatform = "darwin";
+/** Honest-limits skip → promote Scan again as primary CTA (until scan leaves idle). */
+let honestLimitsSkipped = false;
+let proxyGuideOsOpened = false;
+const PROXY_GUIDE_CLOSED_KEY = "shieldProxyGuideUserClosed";
+/** User closed outer proxy guide — do not reopen on lang / state refresh / reload. */
+let proxyGuideUserClosed = (() => {
+  try {
+    return sessionStorage.getItem(PROXY_GUIDE_CLOSED_KEY) === "1";
+  } catch {
+    return false;
+  }
+})();
 const LOG_FILTER_KEY = "shieldDesktopLogFilter";
 
 /** @type {'all'|'tracker'|'phishing'|'user-block'} */
@@ -158,6 +236,12 @@ let websiteCheckHost = "localhost:3000";
 let lang = "en";
 /** @type {object|null} */
 let currentState = null;
+/** @type {object|null} */
+let lastMachine = null;
+/** @type {boolean} */
+let machineAskOpen = false;
+/** @type {ReturnType<typeof setInterval>|null} */
+let machinePollTimer = null;
 /** @type {{ debounceMs?: number, listsPathBasename?: string } | null} */
 let lastOperatorHint = null;
 
@@ -176,6 +260,18 @@ function applyI18n() {
     els.privacySelect.options[1].textContent = t(lang, "privacyLocal");
     els.privacySelect.options[2].textContent = t(lang, "privacyShare");
   }
+  if (els.openAtLoginLabel) els.openAtLoginLabel.textContent = t(lang, "openAtLogin");
+  if (els.quitApp) els.quitApp.textContent = t(lang, "quitApp");
+  if (els.dataDirHint && dataDirPath) {
+    els.dataDirHint.textContent = t(lang, "dataDirHint", { path: dataDirPath });
+  }
+  if (els.dataDirCopy) {
+    els.dataDirCopy.textContent = t(lang, "dataDirCopy");
+    els.dataDirCopy.hidden = !dataDirPath;
+  }
+  if (els.trayHint && !els.trayHint.hidden) {
+    els.trayHint.textContent = t(lang, "trayHintMissing");
+  }
   els.logTitle.textContent = t(lang, "logTitle");
   els.logHint.textContent = t(lang, "logHint");
   els.checkLabel.textContent = t(lang, "checkLabel");
@@ -187,6 +283,31 @@ function applyI18n() {
   if (els.websiteCheckLabel) els.websiteCheckLabel.textContent = t(lang, "websiteCheck");
   if (els.websiteCheckBtn) els.websiteCheckBtn.disabled = !websiteReachable;
   els.proxyBody.textContent = t(lang, "proxyBody");
+  if (els.proxyGuideSummary) els.proxyGuideSummary.textContent = t(lang, "proxyGuideSummary");
+  if (els.proxyGuideShow) els.proxyGuideShow.textContent = t(lang, "proxyGuideShow");
+  if (els.proxyGuideLead) els.proxyGuideLead.textContent = t(lang, "proxyGuideLead");
+  if (els.proxyGuideMacSummary) els.proxyGuideMacSummary.textContent = t(lang, "proxyGuideMacSummary");
+  if (els.proxyGuideWinSummary) els.proxyGuideWinSummary.textContent = t(lang, "proxyGuideWinSummary");
+  if (els.proxyGuideLinuxSummary) els.proxyGuideLinuxSummary.textContent = t(lang, "proxyGuideLinuxSummary");
+  if (els.proxyGuideMac) els.proxyGuideMac.textContent = t(lang, "proxyGuideMac");
+  if (els.proxyGuideWin) els.proxyGuideWin.textContent = t(lang, "proxyGuideWin");
+  if (els.proxyGuideLinux) els.proxyGuideLinux.textContent = t(lang, "proxyGuideLinux");
+  if (els.proxyGuideBrowser) els.proxyGuideBrowser.textContent = t(lang, "proxyGuideBrowser");
+  if (els.proxyGuideCurl) els.proxyGuideCurl.textContent = t(lang, "proxyGuideCurl");
+  if (els.honestLimitsKicker) els.honestLimitsKicker.textContent = t(lang, "honestLimitsKicker");
+  if (els.honestLimitsTitle) els.honestLimitsTitle.textContent = t(lang, "honestLimitsTitle");
+  if (els.honestLimitsBody) els.honestLimitsBody.textContent = t(lang, "honestLimitsBody");
+  if (els.honestLimitsItemTls) els.honestLimitsItemTls.textContent = t(lang, "honestLimitsItemTls");
+  if (els.honestLimitsItemKill) els.honestLimitsItemKill.textContent = t(lang, "honestLimitsItemKill");
+  if (els.honestLimitsItemSystem) els.honestLimitsItemSystem.textContent = t(lang, "honestLimitsItemSystem");
+  if (els.honestLimitsItemAv) els.honestLimitsItemAv.textContent = t(lang, "honestLimitsItemAv");
+  if (els.honestLimitsAck) els.honestLimitsAck.textContent = t(lang, "honestLimitsAck");
+  if (els.honestLimitsSkip) els.honestLimitsSkip.textContent = t(lang, "honestLimitsSkip");
+  if (els.honestLimitsReset) els.honestLimitsReset.textContent = t(lang, "honestLimitsReset");
+  if (els.diagnosticsExport) els.diagnosticsExport.textContent = t(lang, "diagnosticsExport");
+  if (els.diagnosticsCopyPath) els.diagnosticsCopyPath.textContent = t(lang, "diagnosticsCopyPath");
+  if (els.diagnosticsReveal) els.diagnosticsReveal.textContent = t(lang, "diagnosticsReveal");
+  syncDiagnosticsExportStyle();
   if (els.accountTitle) els.accountTitle.textContent = t(lang, "accountTitle");
   if (els.accountHint) els.accountHint.textContent = t(lang, "accountHint");
   if (els.accountEmail) els.accountEmail.placeholder = t(lang, "accountEmailPlaceholder");
@@ -218,6 +339,23 @@ function applyI18n() {
     els.logFilterReset.title = t(lang, "logFilterResetTitle");
   }
   if (els.listsQrZlibLabel) els.listsQrZlibLabel.textContent = t(lang, "listsQrZlib");
+  if (els.machineKicker) els.machineKicker.textContent = t(lang, "machineKicker");
+  if (els.machineAskKicker) els.machineAskKicker.textContent = t(lang, "machineKicker");
+  if (els.machineScope) els.machineScope.textContent = t(lang, "machineScope");
+  if (els.machineOpenTitle) els.machineOpenTitle.textContent = t(lang, "machineOpenTitle");
+  if (els.machineSettledTitle) els.machineSettledTitle.textContent = t(lang, "machineSettledTitle");
+  if (els.machineQuarantineTitle) els.machineQuarantineTitle.textContent = t(lang, "machineQuarantineTitle");
+  if (els.machineRescan) els.machineRescan.textContent = t(lang, "machineRescan");
+  if (els.machineRescanPrimaryHint) {
+    els.machineRescanPrimaryHint.textContent = t(lang, "machineRescanPrimaryHint");
+  }
+  if (els.machineContinue) els.machineContinue.textContent = t(lang, "machineContinue");
+  if (els.machineBlockAgain) els.machineBlockAgain.textContent = t(lang, "machineBlockMax");
+  if (els.machineRestore) els.machineRestore.textContent = t(lang, "machineRestore");
+  if (els.machineAskTitle) els.machineAskTitle.textContent = t(lang, "machineAskTitle");
+  if (els.machineBlockMax) els.machineBlockMax.textContent = t(lang, "machineBlockMax");
+  if (els.machineDecline) els.machineDecline.textContent = t(lang, "machineDecline");
+  if (lastMachine) renderMachine(lastMachine);
   if (els.listsOperatorHint && !els.listsOperatorHint.hidden && lastOperatorHint) {
     els.listsOperatorHint.textContent = formatOperatorHint(lastOperatorHint);
   }
@@ -443,13 +581,17 @@ function renderLog(blocks) {
   }
 }
 
-function renderState(snap) {
+function renderActivity(snap) {
   currentState = snap;
-  const level = snap.lastScan?.level || "idle";
-  setReadout(level);
-
   els.trackersValue.textContent = String(snap.totalTrackersBlocked ?? 0);
   els.phishingValue.textContent = String(snap.totalPhishingBlocked ?? 0);
+  renderLog(snap.recentBlocks);
+}
+
+function renderState(snap) {
+  renderActivity(snap);
+  const level = snap.lastScan?.level || "idle";
+  setReadout(level);
 
   if (!snap.lastScan || level === "idle") {
     els.statusDetail.textContent = t(lang, "statusIdle");
@@ -473,8 +615,6 @@ function renderState(snap) {
   } else {
     els.lastScanValue.textContent = t(lang, "never");
   }
-
-  renderLog(snap.recentBlocks);
 }
 
 function showToast(kind) {
@@ -502,6 +642,29 @@ async function fetchState() {
   els.langSelect.value = lang;
   if (els.privacySelect) {
     els.privacySelect.value = normalizePrivacyMode(data.state.privacyMode);
+  }
+  if (els.openAtLogin) {
+    els.openAtLogin.checked = data.settings?.openAtLogin === true;
+  }
+  if (typeof data.platform === "string" && data.platform) {
+    hostPlatform = data.platform;
+  }
+  honestLimitsSkipped = Boolean(data.settings?.honestLimitsSkippedAt);
+  syncHonestLimitsGate(Boolean(data.honestLimitsPending));
+  syncDiagnosticsExportStyle();
+  openProxyGuideForPlatform(hostPlatform);
+  if (data.dataDir) {
+    dataDirPath = data.dataDir;
+    if (els.dataDirHint) els.dataDirHint.textContent = t(lang, "dataDirHint", { path: dataDirPath });
+    if (els.dataDirCopy) {
+      els.dataDirCopy.hidden = false;
+      els.dataDirCopy.textContent = t(lang, "dataDirCopy");
+    }
+  }
+  if (els.trayHint) {
+    const missing = data.trayAvailable === false;
+    els.trayHint.hidden = !missing;
+    if (missing) els.trayHint.textContent = t(lang, "trayHintMissing");
   }
   if (typeof data.websiteHealthPollMs === "number" && data.websiteHealthPollMs >= 5000) {
     websiteHealthPollMs = data.websiteHealthPollMs;
@@ -674,8 +837,27 @@ async function runWebsiteCheck() {
   }
 }
 
+/** @type {EventSource|null} */
+let eventSource = null;
+let sseQuitting = false;
+
+function disconnectSSE() {
+  sseQuitting = true;
+  if (eventSource) {
+    try {
+      eventSource.close();
+    } catch {
+      /* ignore */
+    }
+    eventSource = null;
+  }
+}
+
 function connectSSE() {
+  disconnectSSE();
+  sseQuitting = false;
   const es = new EventSource("/api/events");
+  eventSource = es;
 
   es.addEventListener("hello", (ev) => {
     try {
@@ -715,7 +897,7 @@ function connectSSE() {
         updateLifetimeChip(els.logFilterPhishingLife, snap.totalPhishingBlocked);
       }
       if (entry?.kind) showToast(entry.kind);
-      if (snap) renderState(snap);
+      if (snap) renderActivity(snap);
     } catch {
       /* ignore */
     }
@@ -750,6 +932,16 @@ function connectSSE() {
     }
   });
 
+  es.addEventListener("machine", (ev) => {
+    try {
+      const data = JSON.parse(ev.data);
+      const view = data.payload || data;
+      if (view && view.status) renderMachine(view);
+    } catch {
+      /* ignore */
+    }
+  });
+
   es.addEventListener("lists", (ev) => {
     try {
       const data = JSON.parse(ev.data);
@@ -762,10 +954,36 @@ function connectSSE() {
     }
   });
 
+  es.addEventListener("bye", () => {
+    disconnectSSE();
+  });
+
   es.onerror = () => {
-    // Browser auto-reconnects; no UX block.
+    if (sseQuitting) {
+      try {
+        es.close();
+      } catch {
+        /* ignore */
+      }
+      eventSource = null;
+      return;
+    }
+    // Browser auto-reconnects while the process is still up.
   };
 }
+
+function focusMachineScanHash() {
+  document.getElementById("machineScan")?.scrollIntoView({ block: "start" });
+  const askVisible = Boolean(els.machineAsk && !els.machineAsk.hidden);
+  if (hashFocusOnlyScrolls({ askVisible, alreadyOpen: machineAskOpen })) return;
+}
+
+if (typeof location !== "undefined" && location.hash === "#machineScan") {
+  requestAnimationFrame(() => focusMachineScanHash());
+}
+window.addEventListener("hashchange", () => {
+  if (location.hash === "#machineScan") focusMachineScanHash();
+});
 
 document.getElementById("checkForm").addEventListener("submit", (event) => {
   event.preventDefault();
@@ -793,9 +1011,55 @@ els.langSelect.addEventListener("change", async () => {
   else if (currentState) renderState(currentState);
 });
 
+els.openAtLogin?.addEventListener("change", async () => {
+  const openAtLogin = Boolean(els.openAtLogin.checked);
+  try {
+    const res = await fetch("/api/settings", {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ openAtLogin })
+    });
+    const data = await res.json();
+    if (!data?.ok) {
+      els.openAtLogin.checked = false;
+      showToast("error");
+      return;
+    }
+    els.openAtLogin.checked = data.settings?.openAtLogin === true;
+  } catch {
+    els.openAtLogin.checked = false;
+    showToast("error");
+  }
+});
+
+els.dataDirCopy?.addEventListener("click", async () => {
+  if (!dataDirPath) return;
+  try {
+    if (navigator.clipboard?.writeText) {
+      await navigator.clipboard.writeText(dataDirPath);
+      setListsStatus(t(lang, "dataDirCopiedClipboard"));
+      return;
+    }
+    throw new Error("clipboard-unavailable");
+  } catch {
+    const manual = window.prompt(t(lang, "dataDirHint", { path: dataDirPath }), dataDirPath);
+    if (manual != null) setListsStatus(t(lang, "dataDirCopiedPrompt"));
+  }
+});
+
+els.quitApp?.addEventListener("click", () => {
+  disconnectSSE();
+  void fetch("/api/quit", { method: "POST" })
+    .catch(() => {})
+    .finally(() => {
+      disconnectSSE();
+    });
+});
+
 els.privacySelect?.addEventListener("change", async () => {
   const privacyMode = normalizePrivacyMode(els.privacySelect.value);
   els.privacySelect.value = privacyMode;
+  syncDiagnosticsExportStyle();
   let clearLists = false;
   if (privacyMode === "off") {
     clearLists = window.confirm(t(lang, "listsClearConfirm"));
@@ -1020,21 +1284,33 @@ function setAccountStatus(msg) {
   els.accountStatus.textContent = msg || "";
 }
 
+function syncAccountControlsSignedIn(signedIn) {
+  const on = Boolean(signedIn);
+  if (els.accountSyncToggle) {
+    els.accountSyncToggle.disabled = !on;
+    els.accountSyncToggle.title = on ? "" : t(lang, "accountSignedOut");
+  }
+  if (els.accountSyncNowBtn) els.accountSyncNowBtn.disabled = !on;
+  if (els.accountSignOutBtn) els.accountSignOutBtn.disabled = !on;
+}
+
 async function refreshAccountUi() {
   try {
     const data = await fetch("/api/account").then((r) => r.json());
     if (!data?.ok) return;
+    const signedIn = Boolean(data.signedIn && data.email);
     if (els.accountSyncToggle) els.accountSyncToggle.checked = data.syncEnabled === true;
     if (els.accountEmail && data.email) els.accountEmail.value = data.email;
-    let status =
-      data.signedIn && data.email
-        ? t(lang, "accountSignedIn", { email: data.email })
-        : t(lang, "accountSignedOut");
+    syncAccountControlsSignedIn(signedIn);
+    let status = signedIn
+      ? t(lang, "accountSignedIn", { email: data.email })
+      : t(lang, "accountSignedOut");
     if (data.lastSyncError) {
       status = `${status} · ${t(lang, "accountSyncFail", { error: data.lastSyncError })}`;
     }
     setAccountStatus(status);
   } catch {
+    syncAccountControlsSignedIn(false);
     setAccountStatus(t(lang, "accountSignedOut"));
   }
 }
@@ -1117,9 +1393,550 @@ els.accountSyncNowBtn?.addEventListener("click", async () => {
   }
 });
 
+function machineReason(reason) {
+  return t(lang, `machineReason_${reason}`);
+}
+
+function machineRows(findings, limit) {
+  const rows = (findings || []).slice(0, limit).map((item) => {
+    const label = machineReason(item.reason);
+    const text = item.display ? `${label} — ${item.display}` : label;
+    return item.path ? `${text} · ${item.path}` : text;
+  });
+  const extra = (findings || []).length > limit ? (findings || []).length - limit : 0;
+  if (extra > 0) rows.push(t(lang, "machineMore", { n: String(extra) }));
+  return rows;
+}
+
+function restoreReason(code, forLang = lang) {
+  if (code === "destination-exists") return t(forLang, "machineRestoreReason_destination_exists");
+  if (code === "missing-quarantine") return t(forLang, "machineRestoreReason_missing_quarantine");
+  return t(forLang, "machineRestoreReason_restore_failed");
+}
+
+/** Bilingual tooltip: current locale + the other (EN ↔ pt-PT). */
+function restoreReasonTooltip(code) {
+  const other = lang === "pt-PT" ? "en" : "pt-PT";
+  const a = restoreReason(code, lang);
+  const b = restoreReason(code, other);
+  return a === b ? a : `${a} · ${b}`;
+}
+
+function fillTextList(list, rows, emptyText) {
+  if (!list) return;
+  list.replaceChildren();
+  const items = rows.length ? rows : [emptyText];
+  for (const row of items) {
+    const li = document.createElement("li");
+    if (row && typeof row === "object") {
+      li.textContent = row.text;
+      if (row.title) li.title = row.title;
+      if (row.errorCode) li.dataset.restoreError = row.errorCode;
+      if (row.title && row.errorCode) {
+        const tipId = `restore-err-${row.errorCode}-${Math.random().toString(36).slice(2, 8)}`;
+        const tip = document.createElement("span");
+        tip.id = tipId;
+        tip.className = "visually-hidden";
+        tip.textContent = row.title;
+        li.appendChild(tip);
+        li.tabIndex = 0;
+        li.setAttribute("aria-describedby", tipId);
+      }
+    } else {
+      li.textContent = row;
+    }
+    list.appendChild(li);
+  }
+}
+
+function renderMachine(view) {
+  lastMachine = view;
+  if (!els.machineStatus) return;
+  const coverage = view?.coverage || {};
+  const files = String(coverage.files || 0);
+  const processes = String(coverage.processes || 0);
+  const apps = String(coverage.applications || 0);
+  const n = String(view?.actionableCount || view?.findingCount || 0);
+  const gatePending = Boolean(els.honestLimitsGate && !els.honestLimitsGate.hidden);
+  if (gatePending) {
+    els.machineStatus.textContent = t(lang, "honestLimitsWaiting");
+  } else if (view?.status === "scanning") {
+    els.machineStatus.textContent = coverage.currentDir
+      ? t(lang, "machineScanningDir", { dir: coverage.currentDir })
+      : t(lang, "machineScanning");
+  }
+  else if (view?.status === "error") els.machineStatus.textContent = t(lang, "machineError", { error: view.error || "scan-failed" });
+  else if (view?.status === "idle") els.machineStatus.textContent = t(lang, "machineIdle");
+  else if ((view?.actionableCount || 0) > 0) els.machineStatus.textContent = t(lang, "machineReady", { n, files, processes, apps });
+  else els.machineStatus.textContent = t(lang, "machineClear", { files, processes, apps });
+
+  const notes = [];
+  if (coverage.capped) notes.push(t(lang, "machineCapped"));
+  if ((coverage.denied || []).length) notes.push(t(lang, "machineDenied", { n: String(coverage.denied.length) }));
+  if (view?.decision?.choice === "block-maximum" && view.decision.findingSetId === view.findingSetId) {
+    notes.push(
+      t(lang, "machineBlocked", {
+        hosts: String(view.decision.hosts || 0),
+        files: String(view.quarantined || 0)
+      })
+    );
+  } else if (view?.decision?.choice === "decline" && view.decision.findingSetId === view.findingSetId) {
+    notes.push(t(lang, "machineDeclined"));
+  }
+  if (els.machineCoverage) els.machineCoverage.textContent = notes.join(" ");
+
+  const trusted = view?.trustedSkipped || [];
+  if (els.machineTrusted) {
+    els.machineTrusted.hidden = trusted.length === 0;
+    els.machineTrusted.textContent = trusted.length
+      ? t(lang, "machineTrustedSkip", { hosts: trusted.join(", ") })
+      : "";
+  }
+  fillTextList(els.machineOpen, machineRows(view?.openFindings, 8), t(lang, "machineEmptyList"));
+  fillTextList(els.machineSettled, machineRows(view?.settledFindings, 8), t(lang, "machineEmptyList"));
+  const quarantineRows = (view?.quarantineItems || []).map((item) => {
+    if (!item.error) return { text: item.from };
+    return {
+      text: `${item.from} — ${restoreReason(item.error)}`,
+      title: restoreReasonTooltip(item.error),
+      errorCode: item.error
+    };
+  });
+  fillTextList(els.machineQuarantine, quarantineRows, t(lang, "machineQuarantineEmpty"));
+  const sameDecision = view?.decision && view.decision.findingSetId === view.findingSetId;
+  const blockedAlready = sameDecision && view.decision.choice === "block-maximum";
+  if (els.machineBlockAgain) {
+    els.machineBlockAgain.hidden = !(view?.status === "ready" && (view.actionableCount || 0) > 0 && !blockedAlready);
+  }
+  if (els.machineRestore) els.machineRestore.hidden = !(view?.quarantined > 0);
+  syncMachineRescanPrimary(view?.status);
+  if (els.machineContinue) {
+    const showContinue = view?.status === "ready" && coverage.capped === true;
+    els.machineContinue.hidden = !showContinue;
+  }
+  syncMachineGateButtons(view?.status, {
+    continueWanted: view?.status === "ready" && coverage.capped === true,
+    blockWanted: view?.status === "ready" && (view.actionableCount || 0) > 0 && !blockedAlready
+  });
+
+  const asking = view?.ask === true;
+  if (els.machineAsk) {
+    els.machineAsk.hidden = !asking;
+    const trustedNote = trusted.length ? ` ${t(lang, "machineTrustedSkip", { hosts: trusted.join(", ") })}` : "";
+    if (els.machineAskBody) els.machineAskBody.textContent = `${t(lang, "machineAskBody", { n })}${trustedNote}`;
+    fillTextList(els.machineAskList, machineRows(view?.openFindings, 12), t(lang, "machineEmptyList"));
+    if (shouldFocusAskDecline({ askVisible: asking, alreadyOpen: machineAskOpen })) {
+      machineAskOpen = true;
+      els.machineDecline?.focus();
+    } else if (asking) {
+      machineAskOpen = true;
+    }
+    if (!asking) machineAskOpen = false;
+  }
+
+  if (view?.status === "scanning") {
+    if (!machinePollTimer) {
+      machinePollTimer = setInterval(() => {
+        void refreshMachine();
+      }, 1000);
+    }
+  } else if (machinePollTimer) {
+    clearInterval(machinePollTimer);
+    machinePollTimer = null;
+  }
+}
+
+function syncHonestLimitsGate(pending) {
+  if (els.honestLimitsGate) {
+    els.honestLimitsGate.hidden = !pending;
+  }
+  if (els.honestLimitsReset) {
+    els.honestLimitsReset.hidden = pending;
+  }
+  if (pending && els.machineStatus) {
+    els.machineStatus.textContent = t(lang, "honestLimitsWaiting");
+  }
+  syncMachineGateButtons(lastMachine?.status);
+  syncMachineRescanPrimary(lastMachine?.status);
+}
+
+/**
+ * While honest-limits gate is open: disable Scan again; hide Continue / Block again entirely.
+ * @param {string|undefined} status
+ * @param {{ continueWanted?: boolean, blockWanted?: boolean }} [vis]
+ */
+function syncMachineGateButtons(status, vis = {}) {
+  const gatePending = Boolean(els.honestLimitsGate && !els.honestLimitsGate.hidden);
+  if (els.machineRescan) {
+    els.machineRescan.disabled = gatePending || status === "scanning";
+  }
+  if (els.machineContinue) {
+    if (gatePending) els.machineContinue.hidden = true;
+    else if (vis.continueWanted !== undefined) els.machineContinue.hidden = !vis.continueWanted;
+    els.machineContinue.disabled = gatePending || status === "scanning";
+  }
+  if (els.machineBlockAgain) {
+    if (gatePending) els.machineBlockAgain.hidden = true;
+    else if (vis.blockWanted !== undefined) els.machineBlockAgain.hidden = !vis.blockWanted;
+    els.machineBlockAgain.disabled = gatePending || status === "scanning";
+  }
+}
+
+/** Privacy Never store → Halt outline on Export diagnostics (still a safe snapshot). */
+function syncDiagnosticsExportStyle() {
+  if (!els.diagnosticsExport) return;
+  els.diagnosticsExport.classList.toggle("halt-outline", currentPrivacyMode() === "off");
+}
+
+/** After skip, Scan again is Halt primary until status leaves idle. */
+function syncMachineRescanPrimary(status) {
+  if (!els.machineRescan) return;
+  const gatePending = Boolean(els.honestLimitsGate && !els.honestLimitsGate.hidden);
+  const leftIdle = Boolean(status && status !== "idle");
+  const usePrimary = honestLimitsSkipped && !gatePending && !leftIdle;
+  const wasPrimary = els.machineRescan.classList.contains("is-primary");
+  els.machineRescan.classList.toggle("is-primary", usePrimary);
+  els.machineRescan.classList.toggle("text-button", !usePrimary);
+  if (els.machineRescanPrimaryHint) {
+    const hint = t(lang, "machineRescanPrimaryHint");
+    els.machineRescanPrimaryHint.hidden = !usePrimary;
+    // Live region: clear then set so polite AT announces when primary turns on;
+    // clear text when primary drops after Scan again.
+    if (!usePrimary) {
+      els.machineRescanPrimaryHint.textContent = "";
+    } else if (usePrimary && !wasPrimary) {
+      els.machineRescanPrimaryHint.textContent = "";
+      requestAnimationFrame(() => {
+        if (els.machineRescanPrimaryHint) els.machineRescanPrimaryHint.textContent = hint;
+      });
+    } else {
+      els.machineRescanPrimaryHint.textContent = hint;
+    }
+  }
+  if (usePrimary) {
+    els.machineRescan.setAttribute("aria-describedby", "machineRescanPrimaryHint");
+  } else {
+    els.machineRescan.removeAttribute("aria-describedby");
+  }
+}
+
+function persistProxyGuideUserClosed(closed) {
+  proxyGuideUserClosed = closed;
+  try {
+    if (closed) sessionStorage.setItem(PROXY_GUIDE_CLOSED_KEY, "1");
+    else sessionStorage.removeItem(PROXY_GUIDE_CLOSED_KEY);
+  } catch {
+    /* ignore */
+  }
+  syncProxyGuideShowButton();
+}
+
+function syncProxyGuideShowButton() {
+  if (!els.proxyGuideShow) return;
+  const show = proxyGuideUserClosed || (els.proxyGuide && !els.proxyGuide.open);
+  els.proxyGuideShow.hidden = !show;
+  els.proxyGuideShow.textContent = t(lang, "proxyGuideShow");
+}
+
+/** Open proxy guide + only the current OS nested details (once per load). */
+function openProxyGuideForPlatform(platform) {
+  if (proxyGuideOsOpened) return;
+  proxyGuideOsOpened = true;
+  if (els.proxyGuide && !proxyGuideUserClosed) els.proxyGuide.open = true;
+  if (els.proxyGuide && proxyGuideUserClosed) els.proxyGuide.open = false;
+  const map = {
+    darwin: els.proxyGuideMacDetails,
+    win32: els.proxyGuideWinDetails,
+    linux: els.proxyGuideLinuxDetails
+  };
+  for (const el of Object.values(map)) {
+    if (el) el.open = false;
+  }
+  const match = map[platform] || els.proxyGuideLinuxDetails;
+  if (match) match.open = true;
+  syncProxyGuideShowButton();
+}
+
+els.proxyGuide?.addEventListener("toggle", (ev) => {
+  if (typeof ev.newState === "string") {
+    if (ev.newState === "closed") persistProxyGuideUserClosed(true);
+    else syncProxyGuideShowButton();
+    return;
+  }
+  // Older engines: .open may still be stale in the same turn — confirm next frame.
+  requestAnimationFrame(() => {
+    if (els.proxyGuide && !els.proxyGuide.open) persistProxyGuideUserClosed(true);
+    else syncProxyGuideShowButton();
+  });
+});
+
+/** Explicit control — only way to clear the sessionStorage closed flag. */
+els.proxyGuideShow?.addEventListener("click", () => {
+  persistProxyGuideUserClosed(false);
+  proxyGuideOsOpened = false;
+  openProxyGuideForPlatform(hostPlatform);
+  if (els.proxyGuide) {
+    els.proxyGuide.open = true;
+    els.proxyGuide.scrollIntoView({ block: "nearest" });
+  }
+  syncProxyGuideShowButton();
+});
+
+async function refreshMachine() {
+  try {
+    const data = await fetch("/api/machine-scan").then((res) => res.json());
+    if (data?.scan) renderMachine(data.scan);
+  } catch {
+    /* scan endpoint comes up with the dashboard */
+  }
+}
+
+els.honestLimitsAck?.addEventListener("click", async () => {
+  if (els.honestLimitsAck) els.honestLimitsAck.disabled = true;
+  try {
+    const res = await fetch("/api/honest-limits/ack", { method: "POST" });
+    const data = await res.json();
+    if (!res.ok || !data?.ok) {
+      if (els.machineStatus) {
+        els.machineStatus.textContent = t(lang, "machineDecideFail", {
+          error: data?.error || `HTTP ${res.status}`
+        });
+      }
+      return;
+    }
+    honestLimitsSkipped = false;
+    syncHonestLimitsGate(false);
+    if (data.scan) renderMachine(data.scan);
+  } finally {
+    if (els.honestLimitsAck) els.honestLimitsAck.disabled = false;
+  }
+});
+
+els.honestLimitsSkip?.addEventListener("click", async () => {
+  if (els.honestLimitsSkip) els.honestLimitsSkip.disabled = true;
+  try {
+    const res = await fetch("/api/honest-limits/skip", { method: "POST" });
+    const data = await res.json();
+    if (!res.ok || !data?.ok) return;
+    honestLimitsSkipped = true;
+    syncHonestLimitsGate(false);
+    if (data.scan) renderMachine(data.scan);
+    else if (els.machineStatus) els.machineStatus.textContent = t(lang, "machineIdle");
+  } finally {
+    if (els.honestLimitsSkip) els.honestLimitsSkip.disabled = false;
+  }
+});
+
+els.honestLimitsReset?.addEventListener("click", async () => {
+  const res = await fetch("/api/honest-limits/reset", { method: "POST" });
+  const data = await res.json();
+  if (!res.ok || !data?.ok) return;
+  honestLimitsSkipped = false;
+  syncHonestLimitsGate(Boolean(data.honestLimitsPending));
+});
+
+els.diagnosticsExport?.addEventListener("click", async () => {
+  if (els.diagnosticsExport) els.diagnosticsExport.disabled = true;
+  if (els.diagnosticsCopyPath) els.diagnosticsCopyPath.hidden = true;
+  if (els.diagnosticsReveal) els.diagnosticsReveal.hidden = true;
+  diagnosticsExportPath = null;
+  if (els.diagnosticsExportStatus) {
+    els.diagnosticsExportStatus.hidden = false;
+    els.diagnosticsExportStatus.textContent = "";
+  }
+  try {
+    const res = await fetch("/api/diagnostics/export", { method: "POST" });
+    const data = await res.json();
+    if (!res.ok || !data?.ok) {
+      if (els.diagnosticsExportStatus) {
+        els.diagnosticsExportStatus.textContent = t(lang, "diagnosticsExportFail", {
+          error: data?.error || `HTTP ${res.status}`
+        });
+      }
+      return;
+    }
+    diagnosticsExportPath = typeof data.path === "string" ? data.path : null;
+    if (els.diagnosticsExportStatus) {
+      els.diagnosticsExportStatus.textContent = t(lang, "diagnosticsExportOk", {
+        file: data.fileName || "diagnostics.json"
+      });
+    }
+    if (diagnosticsExportPath) {
+      if (els.diagnosticsCopyPath) {
+        els.diagnosticsCopyPath.hidden = false;
+        els.diagnosticsCopyPath.textContent = t(lang, "diagnosticsCopyPath");
+      }
+      if (els.diagnosticsReveal) {
+        els.diagnosticsReveal.hidden = false;
+        els.diagnosticsReveal.textContent = t(lang, "diagnosticsReveal");
+      }
+    }
+  } catch (err) {
+    if (els.diagnosticsExportStatus) {
+      els.diagnosticsExportStatus.textContent = t(lang, "diagnosticsExportFail", {
+        error: err instanceof Error ? err.message : "fail"
+      });
+    }
+  } finally {
+    if (els.diagnosticsExport) els.diagnosticsExport.disabled = false;
+  }
+});
+
+els.diagnosticsCopyPath?.addEventListener("click", async () => {
+  if (!diagnosticsExportPath) return;
+  try {
+    if (navigator.clipboard?.writeText) {
+      await navigator.clipboard.writeText(diagnosticsExportPath);
+      if (els.diagnosticsExportStatus) {
+        els.diagnosticsExportStatus.hidden = false;
+        els.diagnosticsExportStatus.textContent = t(lang, "diagnosticsPathCopiedClipboard");
+      }
+      return;
+    }
+    throw new Error("clipboard-unavailable");
+  } catch {
+    const manual = window.prompt(
+      t(lang, "diagnosticsExportOk", { file: diagnosticsExportPath }),
+      diagnosticsExportPath
+    );
+    if (manual != null && els.diagnosticsExportStatus) {
+      els.diagnosticsExportStatus.hidden = false;
+      els.diagnosticsExportStatus.textContent = t(lang, "diagnosticsPathCopiedPrompt");
+    }
+  }
+});
+
+els.diagnosticsReveal?.addEventListener("click", async () => {
+  if (!diagnosticsExportPath) return;
+  const res = await fetch("/api/diagnostics/reveal", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ path: diagnosticsExportPath })
+  }).then((r) => r.json());
+  if (res?.ok) {
+    if (els.diagnosticsExportStatus) {
+      els.diagnosticsExportStatus.hidden = false;
+      els.diagnosticsExportStatus.textContent = t(lang, "diagnosticsRevealOk");
+    }
+    return;
+  }
+  const path = res?.path || diagnosticsExportPath;
+  if (path) {
+    try {
+      await navigator.clipboard.writeText(path);
+    } catch {
+      /* ignore */
+    }
+  }
+  if (els.diagnosticsExportStatus) {
+    els.diagnosticsExportStatus.hidden = false;
+    els.diagnosticsExportStatus.textContent = t(lang, "diagnosticsRevealDeferred");
+  }
+});
+
+async function decideMachine(choice) {
+  if (els.machineBlockMax) els.machineBlockMax.disabled = true;
+  if (els.machineDecline) els.machineDecline.disabled = true;
+  if (els.machineBlockAgain) els.machineBlockAgain.disabled = true;
+  try {
+    const res = await fetch("/api/machine-scan/decide", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ choice })
+    });
+    const data = await res.json();
+    if (!res.ok || !data?.ok) {
+      if (els.machineStatus) {
+        els.machineStatus.textContent = t(lang, "machineDecideFail", { error: data?.error || `HTTP ${res.status}` });
+      }
+      return;
+    }
+    if (data.scan) renderMachine(data.scan);
+    if (data.lists) renderLists(data.lists);
+  } catch (err) {
+    if (els.machineStatus) {
+      els.machineStatus.textContent = t(lang, "machineDecideFail", {
+        error: err instanceof Error ? err.message : "fail"
+      });
+    }
+  } finally {
+    if (els.machineBlockMax) els.machineBlockMax.disabled = false;
+    if (els.machineDecline) els.machineDecline.disabled = false;
+    if (els.machineBlockAgain) els.machineBlockAgain.disabled = false;
+  }
+}
+
+els.machineRescan?.addEventListener("click", async () => {
+  if (els.honestLimitsGate && !els.honestLimitsGate.hidden) return;
+  if (els.machineRescan) els.machineRescan.disabled = true;
+  try {
+    const data = await fetch("/api/machine-scan/run", { method: "POST" }).then((res) => res.json());
+    if (data?.scan) renderMachine(data.scan);
+  } finally {
+    const gatePending = Boolean(els.honestLimitsGate && !els.honestLimitsGate.hidden);
+    if (els.machineRescan) {
+      els.machineRescan.disabled = gatePending || lastMachine?.status === "scanning";
+    }
+  }
+});
+
+els.machineContinue?.addEventListener("click", async () => {
+  if (els.machineContinue) els.machineContinue.disabled = true;
+  try {
+    const data = await fetch("/api/machine-scan/continue", { method: "POST" }).then((res) => res.json());
+    if (data?.scan) renderMachine(data.scan);
+    else if (els.machineStatus) {
+      els.machineStatus.textContent = t(lang, "machineDecideFail", { error: data?.error || "continue-failed" });
+    }
+  } catch (err) {
+    if (els.machineStatus) {
+      els.machineStatus.textContent = t(lang, "machineDecideFail", {
+        error: err instanceof Error ? err.message : "continue-failed"
+      });
+    }
+  }
+});
+
+els.machineBlockMax?.addEventListener("click", () => {
+  void decideMachine("block-maximum");
+});
+
+els.machineDecline?.addEventListener("click", () => {
+  void decideMachine("decline");
+});
+
+els.machineBlockAgain?.addEventListener("click", () => {
+  void decideMachine("block-maximum");
+});
+
+els.machineRestore?.addEventListener("click", async () => {
+  if (els.machineRestore) els.machineRestore.disabled = true;
+  try {
+    const res = await fetch("/api/machine-scan/restore", { method: "POST" });
+    const data = await res.json();
+    if (data?.scan) renderMachine(data.scan);
+    if (data?.lists) renderLists(data.lists);
+    if (data?.ok && els.machineStatus) els.machineStatus.textContent = t(lang, "machineRestored");
+    else if (!data?.ok && els.machineStatus) {
+      els.machineStatus.textContent = t(lang, "machineDecideFail", {
+        error: restoreReason(data?.result?.errors?.[0]?.error || "restore-failed")
+      });
+    }
+  } catch (err) {
+    if (els.machineStatus) {
+      els.machineStatus.textContent = t(lang, "machineDecideFail", {
+        error: err instanceof Error ? err.message : "restore-failed"
+      });
+    }
+  } finally {
+    if (els.machineRestore) els.machineRestore.disabled = false;
+  }
+});
+
 fetchState()
   .then(() => {
     connectSSE();
+    void refreshMachine();
     void refreshLists();
     void refreshAccountUi();
     void probeWebsiteHealth();
