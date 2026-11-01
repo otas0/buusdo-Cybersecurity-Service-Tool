@@ -71,14 +71,16 @@
         <h2 id="accountTitle">Account</h2>
         <p id="accountHint" class="hint">Optional list sync (block/trust only). Offline backup stays below.</p>
         <p id="accountStatus" class="hint" role="status" aria-live="polite"></p>
-        <form id="accountSignInForm" class="list-add">
+        <form id="accountSignInForm" class="list-add account-row">
           <label class="visually-hidden" id="accountEmailLabel" for="accountEmail">Email</label>
-          <input id="accountEmail" type="email" autocomplete="email" placeholder="you@example.com" />
-          <button type="submit" id="accountSendBtn" class="text-button">Send link</button>
+          <input id="accountEmail" class="field-input" type="email" autocomplete="email" placeholder="you@example.com" />
+          <button type="submit" id="accountSendBtn">Send link</button>
         </form>
-        <label class="visually-hidden" id="accountDeviceLabel" for="accountDeviceCode">Device code</label>
-        <input id="accountDeviceCode" type="text" autocomplete="off" spellcheck="false" placeholder="Device code" />
-        <button type="button" id="accountExchangeBtn" class="text-button">Exchange code</button>
+        <div class="list-add account-row">
+          <label class="visually-hidden" id="accountDeviceLabel" for="accountDeviceCode">Device code</label>
+          <input id="accountDeviceCode" class="field-input" type="text" autocomplete="off" spellcheck="false" placeholder="Device code" />
+          <button type="button" id="accountExchangeBtn">Exchange code</button>
+        </div>
         <label class="api-toggle">
           <input type="checkbox" id="accountSyncToggle" />
           <span id="accountSyncLabel">Sync lists</span>
@@ -94,7 +96,7 @@
         <p id="listsHint" class="hint">Block/trust on this device. Export JSON to move lists for free.</p>
         <form id="listAddForm" class="list-add">
           <label class="visually-hidden" id="listDomainLabel" for="listDomain">Domain</label>
-          <input id="listDomain" type="text" inputmode="url" placeholder="example.com" autocomplete="off" spellcheck="false" />
+          <input id="listDomain" class="field-input" type="text" inputmode="url" placeholder="example.com" autocomplete="off" spellcheck="false" />
           <button type="submit" id="listBlockBtn">Block</button>
           <button type="button" id="listTrustBtn" class="text-button">Trust</button>
           <button type="button" id="listBlockTabBtn" class="text-button">Block this tab</button>
