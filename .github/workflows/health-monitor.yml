@@ -173,18 +173,8 @@ jobs:
           SEND=1
           RATE_LIMITED=false
           FORCE="${FORCE_SOFT_SLACK:-false}"
-          if [ -z "$SLACK_WEBHOOK_URL" ]; then
-            echo "::notice::SLACK_WEBHOOK_URL unset — skip soft-download Slack notice"
-            echo "updated=false" >> "$GITHUB_OUTPUT"
-            echo "rate_limited=false" >> "$GITHUB_OUTPUT"
-            {
-              echo "### Soft download Slack"
-              echo ""
-              echo "\`rateLimited=false|skipped-no-webhook\` — soft_warn=\`${SOFT}\`; secret unset."
-              echo ""
-            } >> "$GITHUB_STEP_SUMMARY"
-            exit 0
-          fi
+          # Rate limit before webhook so Actions summary can show rateLimited=true
+          # even when SLACK_WEBHOOK_URL is unset (ops still see the 1h gate).
           if [ "$FORCE" != "true" ] && [ -f /tmp/shield-soft-download-slack.json ]; then
             PREV_SOFT=$(python3 -c "import json;print(json.load(open('/tmp/shield-soft-download-slack.json')).get('softWarn',''))" 2>/dev/null || true)
             PREV_AT=$(python3 -c "import json;print(int(json.load(open('/tmp/shield-soft-download-slack.json')).get('sentAt',0)))" 2>/dev/null || echo 0)
@@ -206,6 +196,19 @@ jobs:
           echo "rate_limited=$RATE_LIMITED" >> "$GITHUB_OUTPUT"
           if [ "$SEND" != "1" ]; then
             echo "updated=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          if [ -z "$SLACK_WEBHOOK_URL" ]; then
+            echo "::notice::SLACK_WEBHOOK_URL unset — skip soft-download Slack notice"
+            # Still stamp rate state so a follow-up run within 1h reports rateLimited=true.
+            printf '{"softWarn":"%s","sentAt":%s}\n' "$SOFT" "$NOW" > /tmp/shield-soft-download-slack.json
+            echo "updated=true" >> "$GITHUB_OUTPUT"
+            {
+              echo "### Soft download Slack"
+              echo ""
+              echo "\`rateLimited=false|skipped-no-webhook\` — soft_warn=\`${SOFT}\`; secret unset."
+              echo ""
+            } >> "$GITHUB_STEP_SUMMARY"
             exit 0
           fi
           KIND="${{ steps.downloads.outputs.notarized_kind }}"
