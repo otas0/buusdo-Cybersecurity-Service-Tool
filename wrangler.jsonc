@@ -3,7 +3,8 @@
   // Preventive Shield — Cloudflare Workers (vinext).
   // Set CLOUDFLARE_ACCOUNT_ID in the environment, or uncomment account_id below.
   // "account_id": "YOUR_ACCOUNT_ID",
-  "name": "preventive-shield",
+  // workers.dev URL = https://pcpd.<account-subdomain>.workers.dev
+  "name": "pcpd",
   "compatibility_date": "2025-10-01",
   // nodejs_compat comes from vite.config.ts cloudflare plugin (do not duplicate here — API 10021).
   // Main entry is provided by @cloudflare/vite-plugin + vinext at build/deploy time.
