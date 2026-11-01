@@ -1,0 +1,44 @@
+# Minimal CF-reachable smoke (API-pushed when git HTTPS to github.com is blocked).
+# Full health-monitor.yml lands with the next normal push of main.
+name: Production health
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "*/15 * * * *"
+
+jobs:
+  health:
+    name: health + check:prod
+    runs-on: ubuntu-latest
+    steps:
+      - name: Resolve URL
+        id: target
+        run: |
+          URL="${{ vars.PRODUCTION_HEALTH_URL }}"
+          if [ -z "$URL" ]; then URL="https://pcpd.mtsu.workers.dev"; fi
+          URL=$(echo "$URL" | tr -d '[:space:]' | sed 's:/*$::')
+          echo "url=$URL" >> "$GITHUB_OUTPUT"
+          echo "HEALTH_BASE_URL=$URL" >> "$GITHUB_ENV"
+
+      - name: GET /api/health
+        run: |
+          set -euo pipefail
+          body=$(curl -fsS --max-time 30 "$HEALTH_BASE_URL/api/health")
+          echo "$body" | tee /tmp/health.json
+          echo "$body" | grep -q '"ok":true'
+          echo "$body" | grep -q '"curatedListPresent":true'
+          echo "$body" | grep -q '"accountSyncEnabled":false'
+
+      - name: POST /api/check (check:prod)
+        run: |
+          set -euo pipefail
+          body=$(curl -fsS --max-time 45 -X POST "$HEALTH_BASE_URL/api/check" \
+            -H 'content-type: application/json' -H 'accept: application/json' \
+            -d '{"url":"https://example.com"}')
+          echo "$body" | tee /tmp/check.json
+          echo "$body" | grep -q '"ok":true'
+          echo "$body" | grep -q '"timingValid":true'
+          echo "$body" | grep -q '"totalMs"'
+          echo "$body" | grep -q '"probeMs"'
+          echo "$body" | grep -q '"ambiguousProbeStatus"'
