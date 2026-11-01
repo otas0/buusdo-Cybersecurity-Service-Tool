@@ -26,6 +26,11 @@ on:
 permissions:
   contents: write
 
+# Serialize checklist commits so dual workflow_dispatch does not race on push.
+concurrency:
+  group: production-health-checklist
+  cancel-in-progress: false
+
 jobs:
   health:
     name: health + check:prod
@@ -273,7 +278,18 @@ jobs:
             exit 0
           fi
           git commit -m "chore: log check:prod from CI (${{ job.status }})"
-          if git push; then
+          # Retry rebase+push — concurrency group serializes jobs; this covers residual races.
+          ok=0
+          for i in 1 2 3 4 5; do
+            if git push; then
+              ok=1
+              break
+            fi
+            echo "::notice::checklist push attempt $i failed — pull --rebase and retry"
+            git pull --rebase origin "${{ github.ref_name }}" || true
+            sleep $((i * 2))
+          done
+          if [ "$ok" = "1" ]; then
             echo "pushed=true" >> "$GITHUB_OUTPUT"
             echo "::notice::Checklist row committed to default branch"
           else
