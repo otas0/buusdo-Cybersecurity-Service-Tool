@@ -29,6 +29,7 @@ Recorded via `npm run production:origin` → README + `shared/production-site.js
 
 | When (UTC) | Runner | Result | Notes |
 |------------|--------|--------|-------|
+| 2026-11-01 | github-actions/41288050274 | **OK** | `https://pcpd.mtsu.workers.dev` — health+check · https://github.com/otas0/preventive-cybersecurity-prototype/actions/runs/41288050274 |
 | 2026-11-01 | Operator laptop (Asia) | **timeout** | Local TCP to previous `preventive-shield.mtsu.workers.dev` timed out; not a Worker crash — see [LOCAL_CF_CONNECTIVITY.md](LOCAL_CF_CONNECTIVITY.md) |
 | 2026-11-01 | Deploy rename | **live** | Worker name `pcpd` → `https://pcpd.mtsu.workers.dev` (privacy page verified remotely) |
 | 2026-11-01 | Cursor remote fetch | health **OK** | `curatedListPresent: true`; GET `/api/check` → 405 (POST-only, route present) |
