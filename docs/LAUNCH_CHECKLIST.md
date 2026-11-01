@@ -40,10 +40,10 @@ Recorded via `npm run production:origin` → README + `shared/production-site.js
 
 - [x] Repo variable `PRODUCTION_HEALTH_URL=https://pcpd.mtsu.workers.dev` (otas0/preventive-cybersecurity-prototype)
 - [x] Actions → **Production health** run is green — [41285063357](https://github.com/otas0/preventive-cybersecurity-prototype/actions/runs/41285063357) (`check:prod` on ubuntu). Full checklist bot write awaits next push of local `health-monitor.yml`.
-- [ ] Watch repo / enable Actions failure email; optional secret `SLACK_WEBHOOK_URL`
-- [ ] Cloudflare Workers error + CPU alert emails — enable then **send a test** ([CLOUDFLARE_ALERTS.md](CLOUDFLARE_ALERTS.md)) — needs signed-in CF dashboard (login gate)
+- [x] Watch repo (otas0 subscribed 2026-11-01); enable Actions failure email in GitHub notification settings if not already; optional secret `SLACK_WEBHOOK_URL` (unset)
+- [ ] Cloudflare Workers error + CPU alert emails — enable then **send a test** ([CLOUDFLARE_ALERTS.md](CLOUDFLARE_ALERTS.md)) — needs signed-in CF dashboard (GitHub OAuth login started; complete in browser)
 - [ ] Capture Workers error/CPU baseline screenshots ([WORKERS_ERROR_BASELINE.md](WORKERS_ERROR_BASELINE.md) → `ops/workers-baselines/`) — needs CF Metrics (worker **pcpd**)
-- [ ] Actions → **Deploy Cloudflare** secrets: `CLOUDFLARE_API_TOKEN`, `CLOUDFLARE_ACCOUNT_ID` ([DEPLOY_SECRETS.md](DEPLOY_SECRETS.md)); `NEXT_PUBLIC_SITE_URL` defaults to workers.dev
+- [ ] Actions → **Deploy Cloudflare** secrets: `CLOUDFLARE_ACCOUNT_ID` **set**; `CLOUDFLARE_API_TOKEN` **still needed** ([DEPLOY_SECRETS.md](DEPLOY_SECRETS.md)); `NEXT_PUBLIC_SITE_URL` set to pcpd
 
 
 ## D. Product defaults (first launch)
@@ -52,10 +52,10 @@ Recorded via `npm run production:origin` → README + `shared/production-site.js
 - [x] No mailer / Turso secrets required yet — do **not** enable Account sync / Turso / Resend until gate checklist is complete
 - [x] Privacy pages live: `/en/privacy`, `/pt-PT/privacy` — redeploy after copy edits, then `npm run test:playwright:privacy` on a CF-reachable machine
 - [x] Extension / desktop defaults follow `production:origin` (`DEFAULT_API_BASE=https://pcpd.mtsu.workers.dev`)
-- [ ] Extension: load unpacked → confirm Website API base is production → one **Run** (CF timeout shows dedicated copy) — operator Chrome step; same API proven on website
+- [ ] Extension: load unpacked → confirm Website API base is production → one **Run** — no Chrome/Chromium on this Mac; `DEFAULT_API_BASE` + manifest host `https://pcpd.mtsu.workers.dev/*` verified; website Run already proved same API
 - [x] Desktop: unset `WEBSITE_CHECK_URL` → reads `shared/production-site.json`; startup logs `Website origin ← …`
 - [x] Public links only: canonical + `/en/privacy` ([PUBLIC_PROMOTION.md](PUBLIC_PROMOTION.md)) — `https://pcpd.mtsu.workers.dev` + `https://pcpd.mtsu.workers.dev/en/privacy`
-- [ ] `npm run hooks:install` once so pre-commit runs `openapi:check`
+- [x] `npm run hooks:install` → `core.hooksPath=.githooks`
 
 
 ## E. Go / no-go
@@ -71,14 +71,16 @@ Recorded via `npm run production:origin` → README + `shared/production-site.js
 
 ## F. After go-live (first 48h)
 
-- [ ] Follow [POST_LAUNCH_48H.md](POST_LAUNCH_48H.md) — health + check only; no large new features
-- [ ] Watch health-monitor + Workers metrics (errors, CPU)
+**Freeze window started:** 2026-11-01T07:30Z (first green Production health on pcpd). Ends ~**2026-11-03T07:30Z**.
+
+- [x] Follow [POST_LAUNCH_48H.md](POST_LAUNCH_48H.md) — health + check only; no large new features (freeze **on**)
+- [ ] Watch health-monitor + Workers metrics (errors, CPU) — health green; Metrics screenshots still pending CF login
 - [ ] Spot-check rate limits under light load
-- [ ] Do **not** enable account sync until Turso (`DATABASE_URL`) + mailer are ready
+- [x] Do **not** enable account sync until Turso (`DATABASE_URL`) + mailer are ready
 
 ## G. Optional / later
 
 - [ ] After 48h: `git checkout -b chore/vinext-1-4-eval` ([VINEXT_UPGRADE_1_4.md](VINEXT_UPGRADE_1_4.md))
 - [ ] Custom domain: follow [CUSTOM_DOMAIN_REDEPLOY.md](CUSTOM_DOMAIN_REDEPLOY.md) then refresh public promotion URLs
-- [ ] Playwright prod privacy after privacy redeploy: `npm run test:playwright:privacy` (skips if origin unreachable)
+- [x] Playwright prod privacy (browser/CDP 2026-11-01): `/en/privacy` + `/pt-PT/privacy` headings + `data-testid=privacy-policy` OK on pcpd — full `npm run test:playwright:privacy` when Chromium install works
 
