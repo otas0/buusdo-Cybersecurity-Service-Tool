@@ -7,6 +7,7 @@
  * Aligns visually with the Chrome extension (Part 1).
  */
 
+const fs = require("fs");
 const path = require("path");
 const express = require("express");
 const state = require("./state");
@@ -111,6 +112,32 @@ const staticHeaders = {
     }
   }
 };
+
+/** Bump with desktop-app/package.json version so tray reopen never sticks on stale CSS/JS. */
+function assetVersion() {
+  try {
+    return String(require(path.join(ROOT, "package.json")).version || "0");
+  } catch {
+    return "0";
+  }
+}
+
+function injectAssetVersion(html) {
+  const v = assetVersion();
+  return String(html).replace(
+    /(\/(?:shared|css|js)\/[^"'?\s]+(?:\.(?:css|js)))(?:\?v=[^"']*)?/g,
+    `$1?v=${v}`
+  );
+}
+
+app.get(["/", "/index.html"], (_req, res) => {
+  const indexPath = path.join(ROOT, "public", "index.html");
+  let html = fs.readFileSync(indexPath, "utf8");
+  html = injectAssetVersion(html);
+  res.setHeader("Cache-Control", "no-store");
+  res.type("html").send(html);
+});
+
 app.use("/shared", express.static(SHARED, staticHeaders));
 app.use(express.static(path.join(ROOT, "public"), staticHeaders));
 
