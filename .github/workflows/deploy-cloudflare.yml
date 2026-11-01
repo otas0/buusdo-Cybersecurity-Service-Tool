@@ -1,13 +1,17 @@
 # Manual Cloudflare Workers deploy (workflow_dispatch).
+# Setup guide: docs/DEPLOY_SECRETS.md
 # Secrets (Settings → Secrets and variables → Actions):
 #   CLOUDFLARE_API_TOKEN   — Edit Cloudflare Workers template (or custom Account.Workers Scripts:Edit)
-#   CLOUDFLARE_ACCOUNT_ID  — dash.cloudflare.com/<id>
+#   CLOUDFLARE_ACCOUNT_ID  — dash.cloudflare.com/<id> (also: npx wrangler whoami)
 # Optional variable:
 #   NEXT_PUBLIC_SITE_URL   — https://YOUR_DOMAIN or https://….workers.dev (no trailing slash)
 #
 # After first success: locally run
 #   npm run production:origin -- https://…
 # then commit the updated origin files / README.
+# Custom domain second deploy: docs/CUSTOM_DOMAIN_REDEPLOY.md
+# Local laptop timeouts ≠ outage: docs/LOCAL_CF_CONNECTIVITY.md
+
 
 name: Deploy Cloudflare
 
@@ -23,11 +27,18 @@ on:
         required: false
         type: boolean
         default: true
+      run_privacy_smoke:
+        description: "After success, call Privacy prod smoke (Playwright)"
+        required: false
+        type: boolean
+        default: true
 
 jobs:
   deploy:
     name: deploy:cloudflare
     runs-on: ubuntu-latest
+    outputs:
+      site_url: ${{ steps.site.outputs.url }}
     steps:
       - uses: actions/checkout@v4
 
@@ -41,19 +52,21 @@ jobs:
         run: |
           OVERRIDE="${{ github.event.inputs.site_url }}"
           VAR="${{ vars.NEXT_PUBLIC_SITE_URL }}"
+          # Default public origin until custom domain replaces it (docs/CUSTOM_DOMAIN_REDEPLOY.md).
+          DEFAULT="https://pcpd.mtsu.workers.dev"
           if [ -n "$OVERRIDE" ]; then
             URL="$OVERRIDE"
-          else
+          elif [ -n "$VAR" ]; then
             URL="$VAR"
+          else
+            URL="$DEFAULT"
+            echo "::notice::NEXT_PUBLIC_SITE_URL unset — defaulting to $DEFAULT (set repo variable to override)"
           fi
           URL=$(echo "$URL" | tr -d '[:space:]' | sed 's:/*$::')
           echo "url=$URL" >> "$GITHUB_OUTPUT"
-          if [ -n "$URL" ]; then
-            echo "NEXT_PUBLIC_SITE_URL=$URL" >> "$GITHUB_ENV"
-            echo "::notice::NEXT_PUBLIC_SITE_URL=$URL"
-          else
-            echo "::warning::NEXT_PUBLIC_SITE_URL unset — deploy may use relative URLs; set input or repo variable"
-          fi
+          echo "NEXT_PUBLIC_SITE_URL=$URL" >> "$GITHUB_ENV"
+          echo "::notice::NEXT_PUBLIC_SITE_URL=$URL"
+
 
       - name: Install
         run: npm ci
@@ -92,9 +105,14 @@ jobs:
             echo "| NEXT_PUBLIC_SITE_URL | \`${{ steps.site.outputs.url }}\` |"
             echo "| command | \`npm run deploy:cloudflare\` |"
             echo ""
-            echo "After first workers.dev URL is known, run locally:"
-            echo ""
-            echo '```bash'
-            echo "npm run production:origin -- https://YOUR.workers.dev"
-            echo '```'
+            echo "Custom domain next: docs/CUSTOM_DOMAIN_REDEPLOY.md (also update PUBLIC_PROMOTION.md)."
           } >> "$GITHUB_STEP_SUMMARY"
+
+  privacy:
+    name: privacy-prod (after deploy)
+    needs: deploy
+    if: github.event.inputs.run_privacy_smoke == 'true'
+    uses: ./.github/workflows/privacy-prod.yml
+    with:
+      url: ${{ needs.deploy.outputs.site_url }}
+
