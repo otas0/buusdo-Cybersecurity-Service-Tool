@@ -44,7 +44,9 @@ npm run openapi:check   # cmp all three — also run in CI quality job
 
 **OpenAPI is 1.5.2** (`accountSyncEnabled` on `/api/health`). Do not bump the patch for docs-only or timing-only edits. When health optional fields grow again (and only then): bump OpenAPI `info.version` patch in the **same PR** as `HEALTH_JSON_ALLOWLIST` + named `timingSchemaFail*` asserts, then `openapi:sync`. Edit `docs/API_CHECK_CONTRACT.md` only — never hand-edit `extension/shared/`. PR checklist: [`.github/pull_request_template.md`](.github/pull_request_template.md).
 
-A project Cursor hook (`.cursor/hooks/openapi-check.sh`) runs on **`git commit`** (including `commit -m`, husky, and npm/npx wrappers) only when staged paths include `openapi-check-timing.yaml` or `check-timing.schema.json`.
+A project Cursor hook (`.cursor/hooks/openapi-check.sh`) runs **`npm run openapi:check` on every `git commit`**.  
+Also install the git hook path once: `npm run hooks:install` (uses `.githooks/pre-commit`).
+
 
 ### Desktop scan-resources smoke
 

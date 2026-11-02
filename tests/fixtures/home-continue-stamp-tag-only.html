@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<!--
+  Tiny unit fixture for tag-only stamp === title (no Playwright Chromium).
+  Open with ?tag=only (no run). Used by tests/home-continue-stamp-tag-only.test.ts.
+  Formula must match shared/home-continue-stamp.ts + ops/home-continue-timeline.html.
+-->
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>stamp tag-only fixture</title>
+  </head>
+  <body>
+    <p id="run-stamp" data-testid="home-continue-stamp" hidden></p>
+    <svg id="svg" data-testid="home-continue-svg" role="img">
+      <title id="svg-title">Home-continue timeline</title>
+    </svg>
+    <script>
+      function stampLabelFromParams(search) {
+        const params = new URLSearchParams(search);
+        const stampTag = params.get("tag") || "";
+        const stampRun = params.get("run") || "";
+        return stampTag || stampRun
+          ? `Home-continue timeline · ${stampTag || "—"}${stampRun ? ` · run ${stampRun}` : ""}`
+          : "Home-continue timeline";
+      }
+      function applyOnPageStamp() {
+        const stampLabel = stampLabelFromParams(window.location.search);
+        const el = document.getElementById("run-stamp");
+        const params = new URLSearchParams(window.location.search);
+        const stampTag = params.get("tag") || "";
+        const stampRun = params.get("run") || "";
+        if (el) {
+          if (!stampTag && !stampRun) {
+            el.hidden = true;
+            el.textContent = "";
+          } else {
+            el.hidden = false;
+            el.textContent = stampLabel;
+          }
+        }
+        const svg = document.getElementById("svg");
+        if (svg) {
+          svg.setAttribute("aria-label", stampLabel);
+          let title = document.getElementById("svg-title");
+          if (!title) {
+            title = document.createElementNS("http://www.w3.org/2000/svg", "title");
+            title.id = "svg-title";
+            svg.insertBefore(title, svg.firstChild);
+          }
+          title.textContent = stampLabel;
+        }
+      }
+      applyOnPageStamp();
+      // Export for Node unit tests that eval this file’s formula.
+      window.__SHIELD_STAMP_LABEL__ = stampLabelFromParams;
+    </script>
+  </body>
+</html>

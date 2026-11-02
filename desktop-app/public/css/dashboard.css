@@ -486,6 +486,44 @@ h1 {
   color: var(--halt);
 }
 
+.primary-path {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 18px;
+  margin: 14px 0 10px;
+}
+
+.threat-summary {
+  margin: 12px 0 16px;
+  padding-top: 12px;
+  border-top: 1px solid var(--line);
+}
+
+.threat-summary h2 {
+  margin: 0 0 4px;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.threat-summary h3 {
+  margin: 8px 0 4px;
+  font-size: 11px;
+  font-weight: 500;
+  color: #a39e93;
+}
+
+.mini-log li .check-on-web {
+  margin-left: 8px;
+  font-size: 11px;
+}
+
+.proxy-quiet {
+  color: var(--halt);
+  border: 1px solid var(--halt);
+  padding: 8px 10px;
+  margin: 8px 0 12px;
+}
+
 .account {
   margin-top: 22px;
   padding-top: 16px;

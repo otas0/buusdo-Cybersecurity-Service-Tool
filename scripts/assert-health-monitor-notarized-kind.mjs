@@ -31,5 +31,11 @@ for (const needle of [
 if (!yml.includes("http-404")) {
   fail("health-monitor.yml must mention notarized http-404 annotate path");
 }
+if (!yml.includes("RELEASE.md") || (!yml.includes("steps 2–3") && !yml.includes("steps 2-3"))) {
+  fail("health-monitor.yml http-404 soft_warn must link RELEASE.md notarized checklist steps 2–3");
+}
+if (!yml.includes("gate pending")) {
+  fail("health-monitor.yml must summarize gate pending when STAGING_HEALTH_URL unset");
+}
 
 console.log("assert-health-monitor-notarized-kind ok");

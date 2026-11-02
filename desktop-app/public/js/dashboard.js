@@ -56,6 +56,19 @@ const els = {
   websiteCheckBtn: document.getElementById("websiteCheckBtn"),
   websiteCheckLabel: document.getElementById("websiteCheckLabel"),
   websiteCheckStatus: document.getElementById("websiteCheckStatus"),
+  websiteBlockOnDevice: document.getElementById("websiteBlockOnDevice"),
+  pathScanMachine: document.getElementById("pathScanMachine"),
+  pathCheckWeb: document.getElementById("pathCheckWeb"),
+  pathSyncAccount: document.getElementById("pathSyncAccount"),
+  threatSummaryTitle: document.getElementById("threatSummaryTitle"),
+  threatSummaryHint: document.getElementById("threatSummaryHint"),
+  threatMachineTitle: document.getElementById("threatMachineTitle"),
+  threatWebTitle: document.getElementById("threatWebTitle"),
+  threatMachineList: document.getElementById("threatMachineList"),
+  threatWebList: document.getElementById("threatWebList"),
+  proxyQuietBanner: document.getElementById("proxyQuietBanner"),
+  updateCheckBtn: document.getElementById("updateCheckBtn"),
+  updateCheckStatus: document.getElementById("updateCheckStatus"),
   proxyBody: document.getElementById("proxyBody"),
   proxyGuide: document.getElementById("proxyGuide"),
   proxyGuideShow: document.getElementById("proxyGuideShow"),
@@ -72,6 +85,11 @@ const els = {
   proxyGuideLinux: document.getElementById("proxyGuideLinux"),
   proxyGuideBrowser: document.getElementById("proxyGuideBrowser"),
   proxyGuideCurl: document.getElementById("proxyGuideCurl"),
+  proxyMacSetBtn: document.getElementById("proxyMacSetBtn"),
+  proxyMacClearBtn: document.getElementById("proxyMacClearBtn"),
+  proxyMacSetHonest: document.getElementById("proxyMacSetHonest"),
+  proxyMacSetStatus: document.getElementById("proxyMacSetStatus"),
+  updateCheckDownload: document.getElementById("updateCheckDownload"),
   honestLimitsGate: document.getElementById("honestLimitsGate"),
   honestLimitsKicker: document.getElementById("honestLimitsKicker"),
   honestLimitsTitle: document.getElementById("honestLimitsTitle"),
@@ -173,6 +191,21 @@ let diagnosticsExportPath = null;
 let hostPlatform = "darwin";
 /** Honest-limits skip → promote Scan again as primary CTA (until scan leaves idle). */
 let honestLimitsSkipped = false;
+/** Hostname-only recent website checks (never full URL). */
+const RECENT_WEB_KEY = "shieldRecentWebChecks";
+/** @type {Array<{host:string,level:string,at:string}>} */
+let recentWebChecks = (() => {
+  try {
+    const raw = sessionStorage.getItem(RECENT_WEB_KEY);
+    const parsed = raw ? JSON.parse(raw) : [];
+    return Array.isArray(parsed) ? parsed.slice(0, 8) : [];
+  } catch {
+    return [];
+  }
+})();
+/** Last website-check hostname for Block on this device. */
+let lastWebsiteCheckHost = null;
+let personalBlockCountSession = 0;
 let proxyGuideOsOpened = false;
 const PROXY_GUIDE_CLOSED_KEY = "shieldProxyGuideUserClosed";
 /** User closed outer proxy guide — do not reopen on lang / state refresh / reload. */
@@ -282,6 +315,19 @@ function applyI18n() {
   if (els.websiteHealthLabel) els.websiteHealthLabel.textContent = t(lang, "websiteHealth");
   if (els.websiteCheckLabel) els.websiteCheckLabel.textContent = t(lang, "websiteCheck");
   if (els.websiteCheckBtn) els.websiteCheckBtn.disabled = !websiteReachable;
+  if (els.websiteBlockOnDevice) els.websiteBlockOnDevice.textContent = t(lang, "websiteBlockOnDevice");
+  if (els.pathScanMachine) els.pathScanMachine.textContent = t(lang, "pathScanMachine");
+  if (els.pathCheckWeb) els.pathCheckWeb.textContent = t(lang, "pathCheckWeb");
+  if (els.pathSyncAccount) els.pathSyncAccount.textContent = t(lang, "pathSyncAccount");
+  if (els.threatSummaryTitle) els.threatSummaryTitle.textContent = t(lang, "threatSummaryTitle");
+  if (els.threatSummaryHint) els.threatSummaryHint.textContent = t(lang, "threatSummaryHint");
+  if (els.threatMachineTitle) els.threatMachineTitle.textContent = t(lang, "threatMachineTitle");
+  if (els.threatWebTitle) els.threatWebTitle.textContent = t(lang, "threatWebTitle");
+  if (els.updateCheckBtn) els.updateCheckBtn.textContent = t(lang, "updateCheck");
+  if (els.proxyQuietBanner && !els.proxyQuietBanner.hidden) {
+    els.proxyQuietBanner.textContent = t(lang, "proxyQuietBanner");
+  }
+  renderThreatSummary();
   els.proxyBody.textContent = t(lang, "proxyBody");
   if (els.proxyGuideSummary) els.proxyGuideSummary.textContent = t(lang, "proxyGuideSummary");
   if (els.proxyGuideShow) els.proxyGuideShow.textContent = t(lang, "proxyGuideShow");
@@ -294,6 +340,15 @@ function applyI18n() {
   if (els.proxyGuideLinux) els.proxyGuideLinux.textContent = t(lang, "proxyGuideLinux");
   if (els.proxyGuideBrowser) els.proxyGuideBrowser.textContent = t(lang, "proxyGuideBrowser");
   if (els.proxyGuideCurl) els.proxyGuideCurl.textContent = t(lang, "proxyGuideCurl");
+  if (els.proxyMacSetHonest) els.proxyMacSetHonest.textContent = t(lang, "proxyMacSetHonest");
+  if (els.proxyMacSetBtn) {
+    els.proxyMacSetBtn.textContent = t(lang, "proxyMacSet");
+    els.proxyMacSetBtn.hidden = hostPlatform !== "darwin";
+  }
+  if (els.proxyMacClearBtn) {
+    els.proxyMacClearBtn.textContent = t(lang, "proxyMacClear");
+    els.proxyMacClearBtn.hidden = hostPlatform !== "darwin";
+  }
   if (els.honestLimitsKicker) els.honestLimitsKicker.textContent = t(lang, "honestLimitsKicker");
   if (els.honestLimitsTitle) els.honestLimitsTitle.textContent = t(lang, "honestLimitsTitle");
   if (els.honestLimitsBody) els.honestLimitsBody.textContent = t(lang, "honestLimitsBody");
@@ -535,6 +590,7 @@ function updatePersonalBadge() {
 
 function renderLog(blocks) {
   lastBlocks = Array.isArray(blocks) ? blocks : [];
+  updateProxyQuietBanner();
   updatePersonalBadge();
   const filtered =
     logFilter === "all" ? lastBlocks : lastBlocks.filter((b) => b.kind === logFilter);
@@ -820,6 +876,12 @@ async function runWebsiteCheck() {
     }
     const level = data.analysis.risk?.level || "?";
     const total = data.analysis.timing?.totalMs;
+    const host = String(data.analysis.parsed?.hostname || data.analysis.parsed?.registrableDomain || "")
+      .toLowerCase()
+      .replace(/\.$/, "");
+    lastWebsiteCheckHost = host || null;
+    if (els.websiteBlockOnDevice) els.websiteBlockOnDevice.hidden = !host;
+    if (host) rememberWebCheck(host, level);
     const readout = riskLevelToReadout(level);
     setReadout(readout);
     if (readout === "danger") els.statusDetail.textContent = t(lang, "detailDanger");
@@ -829,12 +891,171 @@ async function runWebsiteCheck() {
       level,
       total: total == null ? "—" : String(total)
     });
+    renderThreatSummary();
   } catch (err) {
     const message = err instanceof Error ? err.message : "unreachable";
     els.websiteCheckStatus.textContent = `${t(lang, "websiteCheckFail", { error: message })} ${t(lang, "websiteCheckHintDev")}`;
   } finally {
     els.websiteCheckBtn.disabled = !websiteReachable;
   }
+}
+
+function rememberWebCheck(host, level) {
+  const privacyOff = currentPrivacyMode() === "off";
+  // Never store mode: keep only in-memory for this page session (no sessionStorage).
+  const row = { host, level: String(level || "?"), at: new Date().toISOString() };
+  recentWebChecks = [row, ...recentWebChecks.filter((r) => r.host !== host)].slice(0, 8);
+  if (!privacyOff) {
+    try {
+      sessionStorage.setItem(RECENT_WEB_KEY, JSON.stringify(recentWebChecks));
+    } catch {
+      /* ignore */
+    }
+  } else {
+    try {
+      sessionStorage.removeItem(RECENT_WEB_KEY);
+    } catch {
+      /* ignore */
+    }
+  }
+}
+
+function showMessageToast(message, kind = "caution", opts = {}) {
+  if (!els.toastHost) return;
+  const el = document.createElement("div");
+  el.className = `toast ${kind === "danger" ? "toast-danger" : "toast-caution"}`;
+  el.textContent = message;
+  if (opts.testId) el.dataset.testid = opts.testId;
+  els.toastHost.appendChild(el);
+  requestAnimationFrame(() => el.classList.add("is-visible"));
+  setTimeout(() => {
+    el.classList.remove("is-visible");
+    setTimeout(() => el.remove(), 250);
+  }, 3200);
+}
+
+/** Prefer toast live region; mute accountStatus while toast is up (avoid double SR). */
+function setAccountStatusQuiet(msg) {
+  if (!els.accountStatus) return;
+  els.accountStatus.setAttribute("aria-live", "off");
+  els.accountStatus.textContent = msg || "";
+  window.setTimeout(() => {
+    els.accountStatus?.setAttribute("aria-live", "polite");
+  }, 3400);
+}
+
+function forceProxyGuideOpen(reasonKey) {
+  if (els.proxyQuietBanner) {
+    els.proxyQuietBanner.hidden = false;
+    els.proxyQuietBanner.textContent = t(lang, reasonKey || "proxyQuietBanner");
+  }
+  persistProxyGuideUserClosed(false);
+  if (els.proxyGuide) els.proxyGuide.open = true;
+  syncProxyGuideShowButton();
+  els.proxyGuide?.scrollIntoView({ block: "nearest" });
+}
+
+function updateProxyQuietBanner() {
+  if (!els.proxyQuietBanner) return;
+  const quiet = personalBlockCountSession > 0 && (!lastBlocks || lastBlocks.length === 0);
+  if (quiet) {
+    els.proxyQuietBanner.hidden = false;
+    els.proxyQuietBanner.textContent = t(lang, "proxyQuietBanner");
+  }
+}
+
+async function blockHostOnDevice(host) {
+  const domain = String(host || "").trim().toLowerCase();
+  if (!domain) return false;
+  const res = await fetch("/api/lists/block", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ domain, reason: "website-check" })
+  }).then((r) => r.json());
+  if (!res?.ok) return false;
+  personalBlockCountSession += 1;
+  if (res.lists) renderLists(res.lists);
+  forceProxyGuideOpen("proxyGuideAfterBlock");
+  updateProxyQuietBanner();
+  return true;
+}
+
+async function runAccountSync(opts = {}) {
+  const { auto = false } = opts;
+  try {
+    const res = await fetch("/api/account/sync", { method: "POST" }).then((r) => r.json());
+    if (!res?.ok) {
+      const msg = t(lang, auto ? "accountAutoSyncFail" : "accountSyncFail", {
+        error: res?.error || "fail"
+      });
+      if (auto) {
+        setAccountStatusQuiet(msg);
+        showMessageToast(msg, "danger", { testId: "account-auto-sync-toast" });
+      } else {
+        setAccountStatus(msg);
+      }
+      return false;
+    }
+    if (res.lists) renderLists(res.lists);
+    const okMsg = auto
+      ? t(lang, "accountAutoSyncOk")
+      : res.merged
+        ? t(lang, "accountSyncMerged")
+        : t(lang, "accountSyncOk");
+    if (auto) {
+      setAccountStatusQuiet(okMsg);
+      showMessageToast(okMsg, "caution", { testId: "account-auto-sync-toast" });
+    } else {
+      setAccountStatus(okMsg);
+    }
+    return true;
+  } catch (err) {
+    const msg = t(lang, auto ? "accountAutoSyncFail" : "accountSyncFail", {
+      error: err instanceof Error ? err.message : "fail"
+    });
+    if (auto) {
+      setAccountStatusQuiet(msg);
+      showMessageToast(msg, "danger", { testId: "account-auto-sync-toast" });
+    } else {
+      setAccountStatus(msg);
+    }
+    return false;
+  }
+}
+
+function renderThreatSummary() {
+  const machineHosts = [];
+  const seen = new Set();
+  for (const item of lastMachine?.openFindings || []) {
+    if (item?.enforceable === "block-host" && item.host && !seen.has(item.host)) {
+      seen.add(item.host);
+      machineHosts.push(item.host);
+    }
+  }
+  for (const item of lastMachine?.settledFindings || []) {
+    if (item?.host && !seen.has(item.host)) {
+      seen.add(item.host);
+      machineHosts.push(item.host);
+    }
+  }
+  fillTextList(
+    els.threatMachineList,
+    machineHosts.slice(0, 8).map((host) => ({
+      text: host,
+      host,
+      checkWeb: true
+    })),
+    t(lang, "threatSummaryEmpty")
+  );
+  fillTextList(
+    els.threatWebList,
+    recentWebChecks.map((row) => ({
+      text: t(lang, "threatWebRow", { host: row.host, level: row.level }),
+      host: row.host,
+      checkWeb: true
+    })),
+    t(lang, "threatSummaryEmpty")
+  );
 }
 
 /** @type {EventSource|null} */
@@ -1360,6 +1581,16 @@ els.accountExchangeBtn?.addEventListener("click", async () => {
       return;
     }
     await refreshAccountUi();
+    // Prefer sync on after sign-in so auto-sync can run.
+    if (els.accountSyncToggle && !els.accountSyncToggle.checked) {
+      els.accountSyncToggle.checked = true;
+      await fetch("/api/account/prefs", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ syncEnabled: true })
+      });
+    }
+    await runAccountSync({ auto: true });
   } catch (err) {
     setAccountStatus(t(lang, "accountSyncFail", { error: err instanceof Error ? err.message : "fail" }));
   }
@@ -1372,6 +1603,7 @@ els.accountSyncToggle?.addEventListener("change", async () => {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ syncEnabled })
   });
+  if (syncEnabled) await runAccountSync({ auto: true });
 });
 
 els.accountSignOutBtn?.addEventListener("click", async () => {
@@ -1380,17 +1612,172 @@ els.accountSignOutBtn?.addEventListener("click", async () => {
 });
 
 els.accountSyncNowBtn?.addEventListener("click", async () => {
+  await runAccountSync({ auto: false });
+});
+
+els.websiteBlockOnDevice?.addEventListener("click", async () => {
+  if (!lastWebsiteCheckHost) {
+    showMessageToast(t(lang, "websiteBlockNeedHost"), "danger");
+    return;
+  }
+  const ok = await blockHostOnDevice(lastWebsiteCheckHost);
+  if (ok) {
+    showMessageToast(t(lang, "websiteBlockedOnDevice", { host: lastWebsiteCheckHost }));
+  }
+});
+
+els.pathScanMachine?.addEventListener("click", () => {
+  document.getElementById("machineScan")?.scrollIntoView({ block: "start" });
+  void els.machineRescan?.click();
+});
+
+els.pathCheckWeb?.addEventListener("click", () => {
+  els.checkUrl?.focus();
+  document.getElementById("checkForm")?.scrollIntoView({ block: "center" });
+});
+
+els.pathSyncAccount?.addEventListener("click", () => {
+  document.getElementById("accountSection")?.scrollIntoView({ block: "start" });
+  if (!els.accountSyncToggle?.disabled) void runAccountSync({ auto: false });
+});
+
+els.updateCheckBtn?.addEventListener("click", async () => {
+  if (els.updateCheckStatus) els.updateCheckStatus.hidden = false;
+  if (els.updateCheckDownload) els.updateCheckDownload.hidden = true;
   try {
-    const res = await fetch("/api/account/sync", { method: "POST" }).then((r) => r.json());
+    const res = await fetch("/api/update-check").then((r) => r.json());
     if (!res?.ok) {
-      setAccountStatus(t(lang, "accountSyncFail", { error: res?.error || "fail" }));
+      if (els.updateCheckStatus) {
+        els.updateCheckStatus.textContent = t(lang, "updateCheckFail", { error: res?.error || "fail" });
+      }
       return;
     }
-    if (res.lists) renderLists(res.lists);
-    setAccountStatus(res.merged ? t(lang, "accountSyncMerged") : t(lang, "accountSyncOk"));
+    if (els.updateCheckStatus) {
+      const headNote = t(lang, "updateCheckNotarizedHead", {
+        status: String(res.notarizedHeadStatus ?? (res.notarizedHeadOk ? 200 : "?"))
+      });
+      const base = res.preferNotarized
+        ? t(lang, "updateCheckNotarizedReady", {
+            version: res.version || "?",
+            tag: res.releaseTag || "?"
+          })
+        : t(lang, "updateCheckCurrent", {
+            version: res.version || "?",
+            tag: res.releaseTag || "?"
+          });
+      els.updateCheckStatus.textContent = `${base} ${headNote}`;
+    }
+    if (els.updateCheckDownload && res.downloadUrl) {
+      els.updateCheckDownload.hidden = false;
+      els.updateCheckDownload.href = res.downloadUrl;
+      els.updateCheckDownload.textContent = res.preferNotarized
+        ? t(lang, "updateCheckDownload")
+        : t(lang, "updateCheckDownloadUnsigned");
+    }
   } catch (err) {
-    setAccountStatus(t(lang, "accountSyncFail", { error: err instanceof Error ? err.message : "fail" }));
+    if (els.updateCheckStatus) {
+      els.updateCheckStatus.textContent = t(lang, "updateCheckFail", {
+        error: err instanceof Error ? err.message : "fail"
+      });
+    }
   }
+});
+
+els.proxyMacSetBtn?.addEventListener("click", async () => {
+  if (els.proxyMacSetStatus) {
+    els.proxyMacSetStatus.hidden = false;
+    els.proxyMacSetStatus.textContent = "…";
+  }
+  try {
+    const res = await fetch("/api/proxy/macos-set", { method: "POST" }).then((r) => r.json());
+    if (!els.proxyMacSetStatus) return;
+    if (res?.ok && res.applied) {
+      els.proxyMacSetStatus.textContent = t(lang, "proxyMacSetOk", {
+        service: res.service || "Wi-Fi",
+        host: res.host || "127.0.0.1",
+        port: String(res.port || 8080)
+      });
+      showMessageToast(els.proxyMacSetStatus.textContent);
+      if (els.proxyGuideMacDetails) els.proxyGuideMacDetails.open = true;
+      if (els.proxyGuide) els.proxyGuide.open = true;
+    } else {
+      els.proxyMacSetStatus.textContent = t(lang, "proxyMacSetFail", {
+        error: res?.error || res?.note || "denied"
+      });
+    }
+  } catch (err) {
+    if (els.proxyMacSetStatus) {
+      els.proxyMacSetStatus.textContent = t(lang, "proxyMacSetFail", {
+        error: err instanceof Error ? err.message : "fail"
+      });
+    }
+  }
+});
+
+els.proxyMacClearBtn?.addEventListener("click", async () => {
+  if (els.proxyMacSetStatus) {
+    els.proxyMacSetStatus.hidden = false;
+    els.proxyMacSetStatus.textContent = "…";
+  }
+  try {
+    const res = await fetch("/api/proxy/macos-clear", { method: "POST" }).then((r) => r.json());
+    if (!els.proxyMacSetStatus) return;
+    if (res?.ok && res.applied) {
+      els.proxyMacSetStatus.textContent = t(lang, "proxyMacClearOk", {
+        service: res.service || "Wi-Fi"
+      });
+      showMessageToast(els.proxyMacSetStatus.textContent);
+      if (els.proxyGuideMacDetails) els.proxyGuideMacDetails.open = true;
+      if (els.proxyGuide) els.proxyGuide.open = true;
+    } else {
+      els.proxyMacSetStatus.textContent = t(lang, "proxyMacClearFail", {
+        error: res?.error || res?.note || "denied"
+      });
+    }
+  } catch (err) {
+    if (els.proxyMacSetStatus) {
+      els.proxyMacSetStatus.textContent = t(lang, "proxyMacClearFail", {
+        error: err instanceof Error ? err.message : "fail"
+      });
+    }
+  }
+});
+
+function fillCheckFromThreatHost(host) {
+  if (!host || !els.checkUrl) return;
+  els.checkUrl.value = host;
+  document.getElementById("checkForm")?.scrollIntoView({ block: "center" });
+  els.checkUrl.focus();
+}
+
+document.addEventListener("click", (ev) => {
+  const btn = ev.target instanceof Element ? ev.target.closest("button.check-on-web") : null;
+  if (btn) {
+    const host = btn.getAttribute("data-host");
+    fillCheckFromThreatHost(host);
+    if (!host) return;
+    if (websiteReachable) void runWebsiteCheck();
+    else
+      void probeWebsiteHealth().then(() => {
+        if (websiteReachable) void runWebsiteCheck();
+      });
+    return;
+  }
+  const threatLi = ev.target instanceof Element ? ev.target.closest("#threatMachineList li, #threatWebList li") : null;
+  if (!threatLi) return;
+  if (ev.target instanceof Element && ev.target.closest("button")) return;
+  const host = threatLi.getAttribute("data-host") || threatLi.querySelector("button.check-on-web")?.getAttribute("data-host");
+  if (host) fillCheckFromThreatHost(host);
+});
+
+document.addEventListener("keydown", (ev) => {
+  if (ev.key !== "Enter") return;
+  const threatLi = ev.target instanceof Element ? ev.target.closest("#threatMachineList li, #threatWebList li") : null;
+  if (!threatLi) return;
+  const host = threatLi.getAttribute("data-host");
+  if (!host) return;
+  ev.preventDefault();
+  fillCheckFromThreatHost(host);
 });
 
 function machineReason(reason) {
@@ -1401,7 +1788,11 @@ function machineRows(findings, limit) {
   const rows = (findings || []).slice(0, limit).map((item) => {
     const label = machineReason(item.reason);
     const text = item.display ? `${label} — ${item.display}` : label;
-    return item.path ? `${text} · ${item.path}` : text;
+    const body = item.path ? `${text} · ${item.path}` : text;
+    if (item.enforceable === "block-host" && item.host) {
+      return { text: body, host: item.host, checkWeb: true };
+    }
+    return body;
   });
   const extra = (findings || []).length > limit ? (findings || []).length - limit : 0;
   if (extra > 0) rows.push(t(lang, "machineMore", { n: String(extra) }));
@@ -1429,7 +1820,9 @@ function fillTextList(list, rows, emptyText) {
   for (const row of items) {
     const li = document.createElement("li");
     if (row && typeof row === "object") {
-      li.textContent = row.text;
+      const label = document.createElement("span");
+      label.textContent = row.text;
+      li.appendChild(label);
       if (row.title) li.title = row.title;
       if (row.errorCode) li.dataset.restoreError = row.errorCode;
       if (row.title && row.errorCode) {
@@ -1441,6 +1834,26 @@ function fillTextList(list, rows, emptyText) {
         li.appendChild(tip);
         li.tabIndex = 0;
         li.setAttribute("aria-describedby", tipId);
+      }
+      if (row.host) {
+        li.dataset.host = row.host;
+        li.classList.add("threat-host-row");
+        li.style.cursor = "pointer";
+        li.title = row.host;
+        if (!li.hasAttribute("tabindex")) li.tabIndex = 0;
+        const enterHint =
+          lang === "pt-PT"
+            ? `${row.host}. Prima Enter para verificar.`
+            : `${row.host}. Press Enter to check.`;
+        li.setAttribute("aria-label", enterHint);
+      }
+      if (row.checkWeb && row.host) {
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "text-button check-on-web";
+        btn.dataset.host = row.host;
+        btn.textContent = t(lang, "checkOnWebsite");
+        li.appendChild(btn);
       }
     } else {
       li.textContent = row;
@@ -1494,6 +1907,7 @@ function renderMachine(view) {
   }
   fillTextList(els.machineOpen, machineRows(view?.openFindings, 8), t(lang, "machineEmptyList"));
   fillTextList(els.machineSettled, machineRows(view?.settledFindings, 8), t(lang, "machineEmptyList"));
+  renderThreatSummary();
   const quarantineRows = (view?.quarantineItems || []).map((item) => {
     if (!item.error) return { text: item.from };
     return {
@@ -1853,6 +2267,11 @@ async function decideMachine(choice) {
     }
     if (data.scan) renderMachine(data.scan);
     if (data.lists) renderLists(data.lists);
+    if (choice === "block-maximum") {
+      personalBlockCountSession += 1;
+      forceProxyGuideOpen("proxyGuideAfterBlock");
+      updateProxyQuietBanner();
+    }
   } catch (err) {
     if (els.machineStatus) {
       els.machineStatus.textContent = t(lang, "machineDecideFail", {
@@ -1933,6 +2352,23 @@ els.machineRestore?.addEventListener("click", async () => {
   }
 });
 
+function consumeDeepLinkBlockHost() {
+  try {
+    const params = new URLSearchParams(location.search);
+    const host = (params.get("blockHost") || "").trim().toLowerCase();
+    if (!host) return;
+    void blockHostOnDevice(host).then((ok) => {
+      if (ok) showMessageToast(t(lang, "websiteBlockedOnDevice", { host }));
+      document.getElementById("listsSection")?.scrollIntoView({ block: "start" });
+    });
+    params.delete("blockHost");
+    const next = `${location.pathname}${params.toString() ? `?${params}` : ""}${location.hash || "#listsSection"}`;
+    history.replaceState(null, "", next);
+  } catch {
+    /* ignore */
+  }
+}
+
 fetchState()
   .then(() => {
     connectSSE();
@@ -1940,6 +2376,8 @@ fetchState()
     void refreshLists();
     void refreshAccountUi();
     void probeWebsiteHealth();
+    renderThreatSummary();
+    consumeDeepLinkBlockHost();
     window.setInterval(() => {
       void probeWebsiteHealth({ silent: true });
     }, websiteHealthPollMs);

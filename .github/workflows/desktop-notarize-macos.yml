@@ -1,0 +1,182 @@
+# macOS APP_ONLY notarization — real Developer ID + notarytool profile required.
+# Does not run on every PR. Dispatch manually when signing secrets are configured.
+name: desktop-notarize-macos
+
+on:
+  workflow_dispatch:
+    inputs:
+      node_embed_version:
+        description: "Official Node tarball version to embed"
+        type: string
+        default: "22.13.0"
+      release_tag:
+        # Sync with shared/desktop-downloads.json releaseTag — scripts/assert-notarize-release-tag-default.mjs (typecheck).
+        description: "GitHub Release tag to attach the notarized zip (default = shared/desktop-downloads.json releaseTag)"
+        type: string
+        default: "desktop-v0.2.0"
+
+permissions:
+  contents: write
+
+jobs:
+  notarize:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+      - name: Require signing secrets
+        env:
+          SIGN_IDENTITY: ${{ secrets.MACOS_SIGN_IDENTITY }}
+          NOTARY_PROFILE: ${{ secrets.MACOS_NOTARY_PROFILE }}
+          NOTARY_APPLE_ID: ${{ secrets.MACOS_NOTARY_APPLE_ID }}
+          NOTARY_TEAM_ID: ${{ secrets.MACOS_NOTARY_TEAM_ID }}
+          NOTARY_APP_PASSWORD: ${{ secrets.MACOS_NOTARY_APP_PASSWORD }}
+          MACOS_CERT_P12_BASE64: ${{ secrets.MACOS_CERT_P12_BASE64 }}
+        run: |
+          missing=()
+          if [ -z "$SIGN_IDENTITY" ]; then
+            missing+=("MACOS_SIGN_IDENTITY")
+          fi
+          if [ -z "$NOTARY_PROFILE" ]; then
+            if [ -z "$NOTARY_APPLE_ID" ]; then missing+=("MACOS_NOTARY_APPLE_ID"); fi
+            if [ -z "$NOTARY_TEAM_ID" ]; then missing+=("MACOS_NOTARY_TEAM_ID"); fi
+            if [ -z "$NOTARY_APP_PASSWORD" ]; then missing+=("MACOS_NOTARY_APP_PASSWORD"); fi
+            if [ -z "$NOTARY_APPLE_ID" ] || [ -z "$NOTARY_TEAM_ID" ] || [ -z "$NOTARY_APP_PASSWORD" ]; then
+              missing+=("MACOS_NOTARY_PROFILE")
+            fi
+          fi
+          if [ ${#missing[@]} -gt 0 ]; then
+            echo "::error::macOS notarize secrets missing: ${missing[*]}"
+            echo "::error::Required: MACOS_SIGN_IDENTITY, and either MACOS_NOTARY_PROFILE or (MACOS_NOTARY_APPLE_ID + MACOS_NOTARY_TEAM_ID + MACOS_NOTARY_APP_PASSWORD)."
+            echo "::error::Optional for CI runners: MACOS_CERT_P12_BASE64 + MACOS_CERT_P12_PASSWORD (+ MACOS_KEYCHAIN_PASSWORD)."
+            if [ -z "$MACOS_CERT_P12_BASE64" ]; then
+              echo "::warning::MACOS_CERT_P12_BASE64 unset — identity must already exist in the runner keychain."
+            fi
+            exit 1
+          fi
+          echo "Signing secrets present (identity + notary path)"
+      - name: Import certificate (optional P12)
+        env:
+          MACOS_CERT_P12_BASE64: ${{ secrets.MACOS_CERT_P12_BASE64 }}
+          MACOS_CERT_P12_PASSWORD: ${{ secrets.MACOS_CERT_P12_PASSWORD }}
+          KEYCHAIN_PASSWORD: ${{ secrets.MACOS_KEYCHAIN_PASSWORD }}
+        run: |
+          if [ -z "$MACOS_CERT_P12_BASE64" ]; then
+            echo "No MACOS_CERT_P12_BASE64 — assuming identity already in runner keychain"
+            exit 0
+          fi
+          CERT_PATH="$RUNNER_TEMP/certificate.p12"
+          echo "$MACOS_CERT_P12_BASE64" | base64 --decode > "$CERT_PATH"
+          KEYCHAIN="$RUNNER_TEMP/shield-signing.keychain-db"
+          KC_PASS="${KEYCHAIN_PASSWORD:-shield-ci-keychain}"
+          security create-keychain -p "$KC_PASS" "$KEYCHAIN"
+          security set-keychain-settings -lut 21600 "$KEYCHAIN"
+          security unlock-keychain -p "$KC_PASS" "$KEYCHAIN"
+          security import "$CERT_PATH" -P "$MACOS_CERT_P12_PASSWORD" -A -t cert -f pkcs12 -k "$KEYCHAIN"
+          security list-keychain -d user -s "$KEYCHAIN"
+          security set-key-partition-list -S apple-tool:,apple: -s -k "$KC_PASS" "$KEYCHAIN"
+      - name: Store notary credentials if using Apple ID secrets
+        env:
+          NOTARY_APPLE_ID: ${{ secrets.MACOS_NOTARY_APPLE_ID }}
+          NOTARY_TEAM_ID: ${{ secrets.MACOS_NOTARY_TEAM_ID }}
+          NOTARY_APP_PASSWORD: ${{ secrets.MACOS_NOTARY_APP_PASSWORD }}
+          NOTARY_PROFILE: ${{ secrets.MACOS_NOTARY_PROFILE }}
+        run: |
+          if [ -z "$NOTARY_APPLE_ID" ]; then
+            echo "Using existing notary keychain profile (${NOTARY_PROFILE:-PreventiveShield})"
+            exit 0
+          fi
+          PROFILE="${NOTARY_PROFILE:-PreventiveShield}"
+          xcrun notarytool store-credentials "$PROFILE" \
+            --apple-id "$NOTARY_APPLE_ID" \
+            --team-id "$NOTARY_TEAM_ID" \
+            --password "$NOTARY_APP_PASSWORD"
+
+      - name: Build .app (official Node tarball)
+        env:
+          NODE_EMBED_VERSION: ${{ inputs.node_embed_version }}
+        run: |
+          cd desktop-app
+          npm run pack:macos
+          test -x "dist/macos/Preventive Shield.app/Contents/Resources/node/bin/node"
+      - name: Sign + notarize APP_ONLY=1
+        env:
+          SIGN_IDENTITY: ${{ secrets.MACOS_SIGN_IDENTITY }}
+          NOTARY_PROFILE: ${{ secrets.MACOS_NOTARY_PROFILE || 'PreventiveShield' }}
+        run: |
+          cd desktop-app
+          APP_ONLY=1 ./packaging/macos/sign-notarize.sh --app-only "dist/macos/Preventive Shield.app"
+          codesign --verify --deep --strict --verbose=2 "dist/macos/Preventive Shield.app"
+          spctl --assess --type execute -vv "dist/macos/Preventive Shield.app" || true
+          # Canonical Release asset name (preferred over unsigned PreventiveShield-macos-app.zip).
+          cp -f dist/macos/PreventiveShield-app.zip dist/macos/PreventiveShield-macos-app-notarized.zip
+          test -f dist/macos/PreventiveShield-macos-app-notarized.zip
+      - name: Upload notarized .app zip
+        uses: actions/upload-artifact@v4
+        with:
+          name: PreventiveShield-macos-app-notarized
+          path: desktop-app/dist/macos/PreventiveShield-macos-app-notarized.zip
+          if-no-files-found: warn
+      - name: Attach notarized zip to GitHub Release (swap preferred download)
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RELEASE_TAG: ${{ inputs.release_tag }}
+        run: |
+          set -euo pipefail
+          JSON_TAG=$(node -e "process.stdout.write(require('./shared/desktop-downloads.json').releaseTag||'')")
+          TAG="${RELEASE_TAG:-$JSON_TAG}"
+          if [ -z "$TAG" ]; then
+            echo "::error::release_tag empty and shared/desktop-downloads.json releaseTag missing"
+            exit 1
+          fi
+          echo "Using release tag: $TAG (input='${RELEASE_TAG:-}' json='$JSON_TAG')"
+          ZIP="desktop-app/dist/macos/PreventiveShield-macos-app-notarized.zip"
+          if ! gh release view "$TAG" >/dev/null 2>&1; then
+            echo "::error::Release $TAG not found. Run desktop-release first (or pass an existing release_tag). Notarized zip stays as a workflow artifact only."
+            exit 1
+          fi
+          gh release upload "$TAG" "$ZIP" --clobber
+          echo "Attached notarized zip to $TAG"
+          ASSET_URL="https://github.com/${{ github.repository }}/releases/download/${TAG}/PreventiveShield-macos-app-notarized.zip"
+          CODE=$(curl -sS -o /dev/null -w '%{http_code}' -I -L --max-time 45 "$ASSET_URL" || true)
+          echo "Notarized asset HEAD → HTTP $CODE ($ASSET_URL)"
+          PROMOTE_URL="https://github.com/${{ github.repository }}/actions/workflows/desktop-promote-macos-url.yml"
+          # ?release_tag= is a human hint only — GitHub has no stable workflow_dispatch form-prefill
+          # query API yet (community/discussions/51159; docs still require manual input / gh -f / REST).
+          # TODO(github-prefill): when GitHub ships a stable UI query/API for form prefill, switch
+          # PROMOTE_UI to that deep-link and keep the gh CLI fence as backup.
+          PROMOTE_UI="${PROMOTE_URL}?release_tag=${TAG}"
+          {
+            echo "### Promote macOS primary URL"
+            echo ""
+            if [ "$CODE" = "200" ]; then
+              PROMOTE_CLI="gh workflow run desktop-promote-macos-url.yml -f release_tag=$TAG"
+              echo "- Notarized asset HEAD: **HTTP $CODE** — ready to promote"
+              echo "- Workflow UI: $PROMOTE_UI"
+              echo "  (set workflow_dispatch input \`release_tag=$TAG\`; form prefill via query TBD if GitHub adds a stable API)"
+              echo "- Copy-paste CLI:"
+              echo "\`\`\`"
+              echo "$PROMOTE_CLI"
+              echo "\`\`\`"
+            else
+              echo "> [!WARNING]"
+              echo "> **Do not promote yet** — notarized asset HEAD is **HTTP $CODE** (need 200)."
+              echo ""
+              echo "- Notarized asset HEAD: **HTTP $CODE** — do not promote yet"
+              echo "- Workflow UI (after HEAD 200): $PROMOTE_UI"
+              echo "  (set workflow_dispatch input \`release_tag=$TAG\`; form prefill via query TBD if GitHub adds a stable API)"
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"
+          # workflow_dispatch UI: open the URL, then set input release_tag=$TAG
+          # PROMOTE_CLI is only set/echoed when HEAD is 200 — never log it otherwise.
+          if [ "$CODE" = "200" ]; then
+            PROMOTE_CLI="gh workflow run desktop-promote-macos-url.yml -f release_tag=$TAG"
+            echo "::notice::Notarized zip is live. Promote Settings primary URL via workflow_dispatch: $PROMOTE_URL (set release_tag=$TAG; runs verify --write-effective + PR)."
+            echo "::notice::Copy-paste: $PROMOTE_CLI"
+            echo "Promote CLI: $PROMOTE_CLI"
+          else
+            echo "::warning::HEAD was $CODE — do not promote yet (GitHub CDN may lag). Promote workflow: $PROMOTE_URL (release_tag=$TAG)"
+          fi

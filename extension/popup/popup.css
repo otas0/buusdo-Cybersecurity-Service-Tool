@@ -449,6 +449,33 @@ button.diag-gated[aria-disabled="true"] {
   to { outline-color: transparent; }
 }
 
+.toast-host {
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  left: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  z-index: 20;
+  pointer-events: none;
+}
+
+.toast {
+  background: var(--text);
+  color: var(--bg);
+  padding: 8px 10px;
+  font-family: var(--mono, ui-monospace, monospace);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.toast.is-visible { opacity: 1; }
+.toast-danger { background: var(--accent, #e85d04); }
+
 .text-button {
   background: transparent;
   border: 0;

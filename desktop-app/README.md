@@ -1,26 +1,29 @@
-# Preventive Shield — Desktop App
+# Preventive Shield — Desktop App (MVP)
 
-Local Node.js companion to the Chrome extension (`../extension`) and the first-party website check API.
+On launch it scans this computer as far as the signed-in user can read. If it finds something actionable, it asks whether to block all of it. **Yes** adds hosts to the personal block list and quarantines allowed user-owned files. **No** leaves them in place. System folders are not edited, processes are not killed, HTTPS is not decrypted. Restore undoes this scan’s hosts and quarantined files.
 
-**Blocking** (proxy + scan + personal lists) lives here and in the extension. The website only **checks** addresses — it does not store or enforce your personal block list.
+```bash
+cd desktop-app && npm install
+npm run install:silent    # data dir; open-at-login stays off
+npm run launch            # scan → ask → proxy on :8080, UI on :3010
+# verify gate (repo root): SHIELD_QUIT_GRACE_MS=0 npm run mvp
+# release notes: RELEASE.md
+```
+
+
+The website only **checks** addresses. Blocking lives here and in the extension.
 
 ### Personal lists (`shield-lists-v1`)
 
-Dashboard **Personal lists** block/trust hosts and write `desktop-app/data/shield-backup.json` (override with `SHIELD_LISTS_PATH`). Schema: [`shared/SHIELD_LISTS_V1.md`](../shared/SHIELD_LISTS_V1.md). Export/import the same JSON as the extension.
+Dashboard **Personal lists** write `shield-backup.json` under the user data directory (macOS: `~/Library/Application Support/Preventive Shield/`; override with `SHIELD_LISTS_PATH` / `SHIELD_DATA_DIR`). Schema: [`shared/SHIELD_LISTS_V1.md`](../shared/SHIELD_LISTS_V1.md).
 
-**Syncthing (optional):** point a Syncthing folder at `desktop-app/data/` (or the file’s parent) so `shield-backup.json` syncs across machines; import is not required when both sides watch the same file path via the shared folder.
+**Syncthing (optional):** sync that user data directory (or the lists file’s parent).
 
 **File watch:** the desktop process watches the **parent directory** of `shield-backup.json` (not only the file inode). Syncthing often does an atomic replace (write temp → rename), which can remove and recreate the file — directory watch still fires, then the store reloads and emits an SSE `lists` event so the dashboard updates without polling. Duplicate emits from API write + watch are debounced (~600ms) by list signature.
 
 **Proxy response headers:** refused HTTP/CONNECT responses set `X-Preventive-Shield: blocked` and `X-Preventive-Shield-Kind` to `tracker` | `phishing` | `user-block` (personal list).
 
-**Reveal file:** dashboard **Reveal file** calls `POST /api/lists/reveal`. With Node-only `npm start` it returns `{ deferred: true }` and the UI copies the path. With the optional Electron shell:
-
-```bash
-cd desktop-app
-npm install --save-dev electron   # once
-npm run electron                  # sets global.__shieldElectronShell → shell.openPath
-```
+**Reveal file:** `POST /api/lists/reveal`. With the launcher/browser shell it returns `{ deferred: true }` and the UI copies the path.
 
 **SSE lists debounce:** `SHIELD_LISTS_SSE_DEBOUNCE_MS` (default `600`) suppresses duplicate `lists` events when an API write and `fs.watch` both fire.
 
@@ -38,23 +41,43 @@ npm run electron                  # sets global.__shieldElectronShell → shell.
 |---------|---------|------|
 | Dashboard UI | `http://localhost:3010` | Scan UI, bilingual EN / pt-PT, live block log (`UI_PORT`, default 3010) |
 | Website API | `http://localhost:3000` | vinext `npm run dev` — set as `WEBSITE_CHECK_URL` |
-| HTTP proxy | `127.0.0.1:8080` | Plain-HTTP interceptor against the shared tracker / phishing signal lists |
+| HTTP proxy | `127.0.0.1:8080` | Plain-HTTP interceptor against the shared tracker / phishing signal lists — see dashboard **proxy guide** for OS/browser setup |
 
 ## Run
 
 ```bash
 cd desktop-app
 npm install
-npm start
+npm run launch    # single-instance lock, opens the system browser, Quit stops ports
+# or: npm start   # server only (no browser / lock)
 ```
 
-Then open the dashboard (default **http://localhost:3010** — `UI_PORT` defaults to **3010** so vinext can keep `:3000`). Override with `UI_PORT=3000` only if the website is not running on 3000.
+Dashboard default **http://localhost:3010** (`UI_PORT`). Writable lists / quarantine / decisions live under the user data directory (see [PACKAGING.md](./PACKAGING.md)) — not inside the repo. Open at login stays **off** until enabled in the footer. The footer shows the data folder path (Syncthing) with a copy button.
+
+### Home-scan continue timeline
+
+`npm run smoke:desktop-home-continue` (from repo root) walks the real home directory read-only and writes a `currentDir` sample timeline to:
+
+`desktop-app/dist/smoke-currentDir-timeline.json`
+
+That path is gitignored (`dist/` + explicit timeline name); keep it as a local or CI artifact only. It never calls block/quarantine. Chart it locally via [`ops/home-continue-timeline.html`](../ops/home-continue-timeline.html).
+
+Quit grace before closing sockets: `SHIELD_QUIT_GRACE_MS` (default `200`). Optional desktop smokes: `npm run check:desktop` (also a `workflow_dispatch` job in CI, not on every PR). That script runs proxy + install-accept smokes, the dashboard/ops/index **bare `:focus` gate** (`assert-dashboard-no-bare-focus`), **`verify:desktop-downloads:fixture`**, then prints and runs three tsx files: [`tests/focus-gate-bare-focus.test.ts`](../tests/focus-gate-bare-focus.test.ts), [`tests/spa-replace-state-hashchange.test.ts`](../tests/spa-replace-state-hashchange.test.ts), [`tests/home-continue-stamp-tag-only.test.ts`](../tests/home-continue-stamp-tag-only.test.ts). Related: [`tests/desktop-downloads-clear-stub.test.ts`](../tests/desktop-downloads-clear-stub.test.ts).
+
+### Verify — focus-gate fixture dir
+
+Unit tests / local assert only — never export in production CI. Never set / export `SHIELD_FOCUS_GATE_*` in Actions env. Example path:
+
+`SHIELD_FOCUS_GATE_FIXTURE_DIR=tests/fixtures/focus-gate-bad node scripts/assert-dashboard-no-bare-focus.mjs`
+
+(expects `index.html` + `home-continue-timeline.html` under that dir; see [RELEASE.md Focus-gate](./RELEASE.md#focus-gate-fixture-overrides).)
 
 ### Website check env
 
 | Variable | Default | Role |
 |----------|---------|------|
-| `WEBSITE_CHECK_URL` | `http://localhost:3000` | First-party website origin (vinext `npm run dev`). Prefer `localhost` over `127.0.0.1` — vinext binds hostname `localhost` (often IPv6). Use `http://localhost:3001` only if the site was started with `npm run dev:3001`. |
+| `WEBSITE_CHECK_URL` | *(see below)* | Override first-party website origin. If **unset**, desktop reads `../shared/production-site.json` → `productionOrigin` after `npm run production:origin`; if that is empty, falls back to `http://localhost:3000`. Prefer `localhost` over `127.0.0.1` for local vinext. |
+
 | `WEBSITE_HEALTH_POLL_MS` | `15000` (min `5000`) | How often the dashboard silently re-probes `/api/website-health` so the check button re-enables when the site comes up. Desktop passes this as `?pollMs=` on website `GET /api/health`; the JSON **echoes** `pollMs` so operators can confirm the interval without the UI. If the echo differs from the local poll, the health OK toast mentions it. |
 | `CHECK_PERSONAL_HINT_LOG` | (unset = on) | Website env: set `0` to silence the fixed `[api/check] personalListBlocked hint accepted` soft notice. Health JSON echoes `personalHintLogEnabled`. |
 

@@ -74,13 +74,7 @@ function recordBlock(evt) {
   if (evt.kind === "tracker") state.totalTrackersBlocked += 1;
   if (evt.kind === "phishing" || evt.kind === "user-block") state.totalPhishingBlocked += 1;
 
-  const level = levelFromCounts(state.totalTrackersBlocked, state.totalPhishingBlocked);
-  state.lastScan = {
-    level,
-    trackersBlocked: state.totalTrackersBlocked,
-    phishingHits: state.totalPhishingBlocked
-  };
-
+  // Proxy blocks update the log and counters only. The address readout is finishScan.
   let entry = null;
   if (state.privacyMode !== "off") {
     entry = {
@@ -169,6 +163,10 @@ function emit(type, payload) {
   bus.emit("event", { type, payload, at: new Date().toISOString() });
 }
 
+function publish(type, payload) {
+  emit(type, payload);
+}
+
 function subscribe(listener) {
   bus.on("event", listener);
   return () => bus.off("event", listener);
@@ -181,6 +179,7 @@ module.exports = {
   emitLists,
   listsEmitDebounceMs,
   finishScan,
+  publish,
   subscribe,
   levelFromCounts,
   MAX_LOG,

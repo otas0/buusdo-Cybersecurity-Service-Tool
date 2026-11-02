@@ -1,9 +1,25 @@
 name: CI
+# run-name is event/PR label only — mid-job rename is impossible.
+# See desktop-app/RELEASE.md#ci-strict-run-name (STRICT_MAC_SOURCE_TITLE via follow-up step name).
+run-name: "CI — ${{ github.event_name }}${{ github.event.pull_request.number && format(' PR #{0}', github.event.pull_request.number) || '' }}"
 
 on:
   push:
     branches: [main, master]
   pull_request:
+  schedule:
+    # Nightly 05:15 UTC — desktop MVP + check:desktop (does not slow PR quality)
+    - cron: "15 5 * * *"
+  workflow_dispatch:
+    inputs:
+      run_desktop_check:
+        description: "Run check:desktop (proxy readout + install-accept)"
+        type: boolean
+        default: true
+      run_mvp:
+        description: "Run npm run mvp (full desktop MVP gate)"
+        type: boolean
+        default: true
 
 # evaluation-diff is a separate required-capable check on PRs (exit 1 on newly failed scenarios).
 jobs:
@@ -136,6 +152,303 @@ jobs:
 
       - name: Build
         run: npm run build
+
+  desktop-linux:
+    name: desktop-linux (sample + deb)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+      - name: Install
+        run: npm ci || npm install --no-fund --no-audit
+      - name: Linux autostart / crontab sample
+        run: npm run sample:desktop-linux-autostart
+      - name: Assemble amd64 deb
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq dpkg-dev rsync
+          cd desktop-app && ARCH=amd64 npm run pack:linux
+          test -f dist/linux/preventive-shield_0.2.0_amd64.deb
+      - name: Tray icons in amd64 pack tree
+        run: |
+          node scripts/assert-pack-tray-files.mjs desktop-app/dist/linux/preventive-shield_0.2.0_amd64/usr/lib/preventive-shield/assets
+          npm run smoke:desktop-pack-tray-assets
+      - name: Smoke-install amd64 .deb
+        run: |
+          sudo apt-get install -y -qq nodejs xdg-utils || true
+          sudo dpkg -i desktop-app/dist/linux/preventive-shield_0.2.0_amd64.deb || sudo apt-get install -f -y
+          test -x /usr/bin/preventive-shield
+          test -f /usr/lib/preventive-shield/src/launcher.js
+          # Staged deb tree (argv) + installed pack root — same icon list, both must pass.
+          SHIELD_PACK_TRAY_ROOT=/usr/lib/preventive-shield \
+            node scripts/assert-pack-tray-files.mjs \
+            desktop-app/dist/linux/preventive-shield_0.2.0_amd64/usr/lib/preventive-shield/assets
+          SHIELD_PACK_TRAY_ROOT=/usr/lib/preventive-shield npm run smoke:desktop-pack-tray-assets
+          SHIELD_LAUNCHER_NO_BROWSER=1 SHIELD_MACHINE_SCAN=0 \
+            /usr/bin/preventive-shield --install
+          dpkg-query -W -f='${Package} ${Version} ${Status}\n' preventive-shield
+          sudo dpkg -r preventive-shield
+          test ! -e /usr/bin/preventive-shield
+      - name: Assemble arm64 staged tree
+        run: |
+          cd desktop-app && ARCH=arm64 npm run pack:linux
+          test -d dist/linux/preventive-shield_0.2.0_arm64
+          grep -q 'Architecture: arm64' dist/linux/preventive-shield_0.2.0_arm64/DEBIAN/control
+          # Staged tree exists (test -d above) — assets/ with tray icons is required.
+          ARM64_ASSETS=dist/linux/preventive-shield_0.2.0_arm64/usr/lib/preventive-shield/assets
+          if [ ! -d "$ARM64_ASSETS" ]; then
+            echo "::error::arm64 staged tree present but assets/ missing — tray icons required"
+            exit 1
+          fi
+          node ../scripts/assert-pack-tray-files.mjs "$ARM64_ASSETS"
+          EXPECTED_TRAY=$(node -e "process.stdout.write(String(require('../shared/desktop-tray-icons.json').length))")
+          TRAY_COUNT=$(ls -1 "$ARM64_ASSETS"/tray-icon* 2>/dev/null | wc -l | tr -d ' ')
+          echo "arm64 tray-icon listing (count=$TRAY_COUNT expected=$EXPECTED_TRAY):"
+          ls -la "$ARM64_ASSETS"/tray-icon*
+          if [ "$TRAY_COUNT" != "$EXPECTED_TRAY" ]; then
+            echo "::error::arm64 tray-icon* count ($TRAY_COUNT) != shared/desktop-tray-icons.json length ($EXPECTED_TRAY)"
+            exit 1
+          fi
+          # Basename set must match shared/desktop-tray-icons.json entries (not only count).
+          EXPECTED_NAMES=$(node -e "JSON.parse(require('fs').readFileSync('../shared/desktop-tray-icons.json','utf8')).slice().sort().forEach(n=>console.log(n))")
+          ACTUAL_NAMES=$(ls -1 "$ARM64_ASSETS"/tray-icon* 2>/dev/null | xargs -n1 basename | sort)
+          if [ "$ACTUAL_NAMES" != "$EXPECTED_NAMES" ]; then
+            echo "::error::arm64 tray-icon* basenames != shared/desktop-tray-icons.json"
+            echo "expected:"
+            echo "$EXPECTED_NAMES"
+            echo "actual:"
+            echo "$ACTUAL_NAMES"
+            exit 1
+          fi
+          echo "arm64 tray-icon basename set ok"
+          # Shared typo scan (icon-tray*, Tray-Icon.png case variants, …) — same as tests/arm64-tray-icon-typo.test.ts
+          node ../scripts/assert-tray-icon-typos.mjs "$ARM64_ASSETS"
+          echo "arm64 tray-icon typo scan ok (incl. icon-tray*)"
+          # Cross-arch .deb may be absent without a foreign dpkg; staged tree is the artifact.
+          if [ -f dist/linux/preventive-shield_0.2.0_arm64.deb ]; then
+            echo "arm64 deb built on this runner"
+          else
+            echo "arm64 staged tree only (no cross dpkg-deb) — uploading directory"
+            tar -C dist/linux -czf dist/linux/preventive-shield_0.2.0_arm64-staged.tar.gz preventive-shield_0.2.0_arm64
+          fi
+
+      - name: Upload deb artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: desktop-linux-debs
+          path: |
+            desktop-app/dist/linux/*.deb
+            desktop-app/dist/linux/*-staged.tar.gz
+          if-no-files-found: warn
+
+  desktop-windows:
+    name: desktop-windows (Startup sample + stage)
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+      - name: Install
+        run: npm ci || npm install --no-fund --no-audit
+      - name: Windows Startup / Run / schtasks sample
+        run: npm run sample:desktop-windows-startup
+      - name: Stage NSIS tree with node.exe
+        shell: bash
+        run: |
+          cd desktop-app
+          npm run pack:windows-stage
+          test -d packaging/windows/stage/app
+          test -f packaging/windows/stage/app/src/launcher.js
+          test -f packaging/windows/stage/node.exe
+          ls packaging/windows/stage | head
+      - name: Tray icons in Windows stage tree
+        shell: bash
+        run: |
+          test -f desktop-app/packaging/windows/stage/app/assets/tray-icon.ico
+          test -f desktop-app/packaging/windows/stage/app/assets/tray-icon.png
+          npm run smoke:desktop-pack-tray-assets
+      - name: Build NSIS installer (makensis)
+        shell: bash
+        run: |
+          choco install nsis -y --no-progress
+          export PATH="/c/Program Files (x86)/NSIS:/c/Program Files/NSIS:$PATH"
+          cd desktop-app
+          mkdir -p dist/windows
+          makensis packaging/windows/preventive-shield.nsi
+          test -f dist/windows/PreventiveShield-Setup-User.exe
+      - name: Silent-install NSIS and confirm node.exe beside app
+        shell: pwsh
+        run: |
+          $root = Join-Path $PWD "desktop-app"
+          $verify = Join-Path $root "dist/windows/verify-install"
+          $setup = Join-Path $root "dist/windows/PreventiveShield-Setup-User.exe"
+          if (Test-Path $verify) { Remove-Item -Recurse -Force $verify }
+          New-Item -ItemType Directory -Path $verify | Out-Null
+          # /S silent; /D= last (NSIS install directory)
+          $p = Start-Process -FilePath $setup -ArgumentList @("/S", "/D=$verify") -PassThru -Wait
+          if ($p.ExitCode -ne 0 -and $p.ExitCode -ne $null) {
+            Write-Host "installer exit $($p.ExitCode) — checking tree anyway"
+          }
+          $node = Join-Path $verify "node.exe"
+          $launcher = Join-Path $verify "app/src/launcher.js"
+          if (-not (Test-Path $node)) { throw "missing $node after silent NSIS install" }
+          if (-not (Test-Path $launcher)) { throw "missing $launcher after silent NSIS install" }
+          Get-ChildItem $verify | Select-Object -First 12 | Format-Table Name, Length
+          Write-Host "node.exe + app tree present under install dir"
+      - name: signtool verify when Authenticode secrets present
+        shell: pwsh
+        env:
+          WIN_CERT_PFX_BASE64: ${{ secrets.WIN_CERT_PFX_BASE64 }}
+          WIN_CERT_PFX_PASSWORD: ${{ secrets.WIN_CERT_PFX_PASSWORD }}
+          WIN_CERT_REQUIRE: ${{ vars.WIN_CERT_REQUIRE || '0' }}
+        run: |
+          if ([string]::IsNullOrWhiteSpace($env:WIN_CERT_PFX_BASE64)) {
+            if ($env:WIN_CERT_REQUIRE -eq "1") {
+              throw "WIN_CERT_REQUIRE=1 but WIN_CERT_PFX_BASE64 unset — signtool verify cannot be skipped"
+            }
+            Write-Host "No WIN_CERT_PFX_BASE64 — skip signtool verify"
+            exit 0
+          }
+          $pfx = Join-Path $env:RUNNER_TEMP "shield-win-ci.pfx"
+          [IO.File]::WriteAllBytes($pfx, [Convert]::FromBase64String($env:WIN_CERT_PFX_BASE64))
+          $exe = Join-Path $PWD "desktop-app/dist/windows/PreventiveShield-Setup-User.exe"
+          & signtool sign /f $pfx /p $env:WIN_CERT_PFX_PASSWORD /fd SHA256 /tr http://timestamp.digicert.com /td SHA256 $exe
+          if ($LASTEXITCODE -ne 0) { throw "signtool sign failed" }
+          & signtool verify /pa $exe
+          if ($LASTEXITCODE -ne 0) { throw "signtool verify failed" }
+          Write-Host "signtool verify ok"
+      - name: Upload NSIS installer
+        uses: actions/upload-artifact@v4
+        with:
+          name: desktop-windows-nsis
+          path: desktop-app/dist/windows/PreventiveShield-Setup-User.exe
+          if-no-files-found: warn
+
+  desktop-macos:
+    name: desktop-macos (install-accept / LaunchAgent)
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+      - name: Install
+        run: npm ci || npm install --no-fund --no-audit
+      - name: Assert no product LaunchAgent on runner account
+        run: |
+          AGENT="$HOME/Library/LaunchAgents/pt.preventiveshield.desktop.plist"
+          if [ -f "$AGENT" ]; then
+            echo "::error::Unexpected LaunchAgent on CI account: $AGENT"
+            exit 1
+          fi
+          echo "LaunchAgent absent — ok"
+      - name: Install-accept smoke
+        run: npm run smoke:desktop-install-accept
+
+  check-desktop-optional:
+    name: check:desktop (dispatch / nightly)
+    if: >-
+      ${{ github.event_name == 'schedule' ||
+          (github.event_name == 'workflow_dispatch' && inputs.run_desktop_check == true) }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+      - name: Install
+        run: npm ci || npm install --no-fund --no-audit
+      - name: check:desktop
+        env:
+          SHIELD_QUIT_GRACE_MS: "0"
+        # tsx line + GITHUB_STEP_SUMMARY written once by package.json check:desktop (no double-print).
+        run: npm run check:desktop
+      - name: Upload currentDir timeline if present
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: smoke-currentDir-timeline
+          path: desktop-app/dist/smoke-currentDir-timeline.json
+          if-no-files-found: ignore
+
+  mvp-optional:
+    name: mvp (dispatch / nightly)
+    if: >-
+      ${{ github.event_name == 'schedule' ||
+          (github.event_name == 'workflow_dispatch' && inputs.run_mvp == true) }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+      - name: Install
+        run: npm ci || npm install --no-fund --no-audit
+      - name: Install Playwright Chromium (DOM Standby in proxy smoke)
+        run: npx playwright install --with-deps chromium
+      - name: quarantine focus-visible Tab smoke
+        run: npm run test:playwright:quarantine-focus
+      - name: npm run mvp
+        env:
+          SHIELD_QUIT_GRACE_MS: "0"
+        run: npm run mvp
+      - name: home-continue timeline (read-only)
+        env:
+          SHIELD_QUIT_GRACE_MS: "0"
+        run: npm run smoke:desktop-home-continue
+      - name: verify desktop download URLs (soft, or STRICT if Release exists)
+        # After first desktop-v0.2.0 publish this step must fail the mvp job on any URL miss.
+        continue-on-error: false
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RELEASE_TAG: desktop-v0.2.0
+        run: |
+          set -euo pipefail
+          if gh release view "$RELEASE_TAG" >/dev/null 2>&1; then
+            echo "Release $RELEASE_TAG present — VERIFY_DESKTOP_DOWNLOADS_STRICT=1 (mvp fails on 404)"
+            VERIFY_DESKTOP_DOWNLOADS_STRICT=1 npm run verify:desktop-downloads
+          else
+            echo "Release $RELEASE_TAG absent — soft verify (404 OK until first publish)"
+            npm run verify:desktop-downloads
+          fi
+      - name: tray icons in packaging trees
+        run: npm run smoke:desktop-pack-tray-assets
+      - name: Export home-continue timeline PNG (ops chart)
+        if: always()
+        env:
+          SHIELD_RELEASE_TAG: desktop-v0.2.0
+          GITHUB_RUN_ID: ${{ github.run_id }}
+        run: |
+          set -euo pipefail
+          if [ ! -f desktop-app/dist/smoke-currentDir-timeline.json ]; then
+            echo "No timeline JSON — skip PNG"
+            exit 0
+          fi
+          # Chromium already installed for mvp proxy DOM — reuse cache; install only if missing.
+          if [ -d "${PLAYWRIGHT_BROWSERS_PATH:-$HOME/.cache/ms-playwright}" ]; then
+            echo "Reusing Playwright Chromium from mvp install"
+          else
+            echo "Playwright browsers missing — installing chromium once"
+            npx playwright install --with-deps chromium
+          fi
+          node scripts/export-home-continue-png.mjs
+      - name: Upload mvp + home-continue timeline
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: mvp-nightly-logs
+          path: |
+            desktop-app/dist/smoke-currentDir-timeline.json
+            desktop-app/dist/smoke-currentDir-timeline.png
+          if-no-files-found: warn
 
   evaluation-diff:
     name: evaluation-diff
@@ -317,6 +630,10 @@ jobs:
           # Never literal-edit STRICT_G=… — only append/rename entries in STRICT_TITLES below.
           # Soft-asserts (legend bbox, intel More, probe-blocked filter labels, leave-chip i18n)
           # stay inside existing titles — do not add a STRICT title for soft-only checks.
+          # CDN href title: change STRICT_MAC_SOURCE_TITLE only (array + soft-assert docs use it).
+          # Documents settings-desktop-download-mac href + aria-describedby (no aria-description / title).
+          STRICT_MAC_SOURCE_TITLE="mac-source visible when mirror stubbed via fixture (CDN href)"
+          echo "STRICT_MAC_SOURCE_TITLE=$STRICT_MAC_SOURCE_TITLE"
           STRICT_TITLES=(
             "block-lists note links"
             "click Settings nav twice"
@@ -329,12 +646,16 @@ jobs:
             "timing-flag-chips ambiguousProbeStatus after mocked 403"
             "settings legend ambiguousProbeStatus label matches i18n"
             "screenshot checklist + CSV filter"
+            "opens privacy honest-limits without full reload"
+            "locale toggle from Settings keeps #settings-desktop"
+            "mac-source hidden when mirror empty"
+            "$STRICT_MAC_SOURCE_TITLE"
           )
           STRICT_G=$(IFS='|'; echo "${STRICT_TITLES[*]}")
-          LIST_OUT=$(npx playwright test playwright/settings-narrow.spec.ts -g "$STRICT_G" --list 2>&1 || true)
+          LIST_OUT=$(npx playwright test playwright/settings-narrow.spec.ts playwright/settings-honest-limits.spec.ts -g "$STRICT_G" --list 2>&1 || true)
           echo "$LIST_OUT"
           # Guard against title renames leaving the -g filter matching nothing.
-          MATCH_COUNT=$(echo "$LIST_OUT" | grep -cE 'settings-narrow\.spec\.ts:' || true)
+          MATCH_COUNT=$(echo "$LIST_OUT" | grep -cE 'settings-(narrow|honest-limits)\.spec\.ts:' || true)
           if [ "${MATCH_COUNT:-0}" -lt 1 ]; then
             echo "::error::Strict Playwright -g matched zero tests — update the filter after renaming specs"
             {
@@ -351,6 +672,34 @@ jobs:
               MISSING="${MISSING}${MISSING:+, }$title"
             fi
           done
+          # Dedicated rename guard: STRICT_MAC_SOURCE_TITLE must appear as an exact title line.
+          if ! echo "$LIST_OUT" | grep -Fq "$STRICT_MAC_SOURCE_TITLE"; then
+            # Annotation + check-run title hint; follow-up step name also surfaces the title.
+            echo "::error title=STRICT_MAC_SOURCE_TITLE::Playwright --list lacks exact title: $STRICT_MAC_SOURCE_TITLE"
+            echo "::notice title=STRICT_MAC_SOURCE_TITLE::$STRICT_MAC_SOURCE_TITLE"
+            echo "::notice::STRICT_MAC_SOURCE_TITLE=$STRICT_MAC_SOURCE_TITLE"
+            echo "::notice::Follow-up step name: STRICT_MAC_SOURCE_TITLE missing: $STRICT_MAC_SOURCE_TITLE"
+            echo "strict_mac_source_missing=1" >> "$GITHUB_OUTPUT"
+            echo "strict_mac_source_title=$STRICT_MAC_SOURCE_TITLE" >> "$GITHUB_OUTPUT"
+            {
+              echo "## Strict Playwright filter"
+              echo ""
+              echo "Missing exact title line for \`STRICT_MAC_SOURCE_TITLE\`:"
+              echo ""
+              echo "\`$STRICT_MAC_SOURCE_TITLE\`"
+              echo ""
+              echo "See [CI STRICT run-name](desktop-app/RELEASE.md#ci-strict-run-name) — mid-job \`run-name\` rename is impossible; failure is via this guard + follow-up step."
+              echo ""
+              echo "Follow-up step name (Actions UI): \`STRICT_MAC_SOURCE_TITLE missing: $STRICT_MAC_SOURCE_TITLE\`"
+              echo ""
+              echo "### Titles"
+              echo ""
+              echo "- STRICT_MAC_SOURCE_TITLE=\`$STRICT_MAC_SOURCE_TITLE\`"
+              echo ""
+              echo "$LIST_OUT" | grep -E 'settings-(narrow|honest-limits)\.spec\.ts:' | sed 's/^/- /' || true
+            } >> "$GITHUB_STEP_SUMMARY"
+            exit 1
+          fi
           EXPECTED_COUNT=${#STRICT_TITLES[@]}
           if [ -n "$MISSING" ]; then
             {
@@ -360,7 +709,7 @@ jobs:
               echo ""
               echo "### Titles"
               echo ""
-              echo "$LIST_OUT" | grep -E 'settings-narrow\.spec\.ts:' | sed 's/^/- /' || true
+              echo "$LIST_OUT" | grep -E 'settings-(narrow|honest-limits)\.spec\.ts:' | sed 's/^/- /' || true
             } >> "$GITHUB_STEP_SUMMARY"
             exit 1
           fi
@@ -373,7 +722,7 @@ jobs:
               echo ""
               echo "### Titles"
               echo ""
-              echo "$LIST_OUT" | grep -E 'settings-narrow\.spec\.ts:' | sed 's/^/- /' || true
+              echo "$LIST_OUT" | grep -E 'settings-(narrow|honest-limits)\.spec\.ts:' | sed 's/^/- /' || true
             } >> "$GITHUB_STEP_SUMMARY"
             exit 1
           fi
@@ -385,13 +734,20 @@ jobs:
             echo ""
             echo "### Titles"
             echo ""
-            echo "$LIST_OUT" | grep -E 'settings-narrow\.spec\.ts:' | sed 's/^/- /' || true
+            echo "$LIST_OUT" | grep -E 'settings-(narrow|honest-limits)\.spec\.ts:' | sed 's/^/- /' || true
           } >> "$GITHUB_STEP_SUMMARY"
-          npx playwright test playwright/settings-narrow.spec.ts -g "$STRICT_G"
+          npx playwright test playwright/settings-narrow.spec.ts playwright/settings-honest-limits.spec.ts -g "$STRICT_G"
         env:
           PLAYWRIGHT_BASE_URL: ${{ vars.PLAYWRIGHT_BASE_URL || 'http://localhost:3000' }}
           STRICT_LEAVE_AND_BLOCK: "1"
           CI: true
+
+      # Surfaces STRICT_MAC_SOURCE_TITLE in the Actions step list (run-name cannot change mid-job).
+      - name: "STRICT_MAC_SOURCE_TITLE missing: ${{ steps.pw_strict.outputs.strict_mac_source_title }}"
+        if: failure() && steps.pw_strict.outputs.strict_mac_source_missing == '1'
+        run: |
+          echo "::error title=STRICT_MAC_SOURCE_TITLE::${{ steps.pw_strict.outputs.strict_mac_source_title }}"
+          exit 1
 
       - name: Upload Playwright report on strict failure
         if: failure() && steps.pw_strict.outcome == 'failure'

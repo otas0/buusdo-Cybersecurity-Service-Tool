@@ -1,0 +1,185 @@
+# After notarized zip returns HEAD 200, promote shared/desktop-downloads.json
+# macosAppZipUrl (Settings primary via macDownloadUrl) and open a PR.
+# Website Settings + desktop /api/update-check both prefer this primary when live.
+name: desktop-promote-macos-url
+
+on:
+  workflow_dispatch:
+    inputs:
+      release_tag:
+        description: "Release tag whose notarized zip should become primary"
+        type: string
+        default: "desktop-v0.2.0"
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  promote:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: HEAD-check and --write-effective
+        id: promote
+        env:
+          RELEASE_TAG: ${{ inputs.release_tag }}
+        run: |
+          set -euo pipefail
+          NOTARIZED=$(node -e "const j=require('./shared/desktop-downloads.json'); process.stdout.write(j.macosAppZipUrlNotarized||'')")
+          if [ -z "$NOTARIZED" ]; then
+            echo "::error::macosAppZipUrlNotarized missing from shared/desktop-downloads.json"
+            exit 1
+          fi
+          CODE=$(curl -sS -o /dev/null -w '%{http_code}' -I -L --max-time 30 "$NOTARIZED" || true)
+          echo "Notarized HEAD → HTTP $CODE ($NOTARIZED)"
+          echo "notarized_head_code=$CODE" >> "$GITHUB_OUTPUT"
+          echo "NOTARIZED_HEAD_CODE=$CODE" >> "$GITHUB_ENV"
+          echo "NOTARIZED_URL=$NOTARIZED" >> "$GITHUB_ENV"
+          if [ "$CODE" != "200" ]; then
+            echo "::error::Notarized asset not HTTP 200 — attach via desktop-notarize-macos first (tag $RELEASE_TAG)"
+            exit 1
+          fi
+          node scripts/verify-desktop-download-urls.mjs --write-effective
+          git diff -- shared/desktop-downloads.json | tee /tmp/desktop-downloads.promote.diff || true
+          cp /tmp/desktop-downloads.promote.diff desktop-downloads.promote.diff || true
+          if git diff --quiet -- shared/desktop-downloads.json; then
+            echo "::error::No change after --write-effective (macosAppZipUrl already notarized or identical) — refusing empty commit"
+            exit 1
+          fi
+      - name: Open PR with promoted macOS URL
+        id: open_pr
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RELEASE_TAG: ${{ inputs.release_tag }}
+          NOTARIZED_HEAD_CODE: ${{ env.NOTARIZED_HEAD_CODE }}
+          NOTARIZED_URL: ${{ env.NOTARIZED_URL }}
+        run: |
+          set -euo pipefail
+          if git diff --quiet -- shared/desktop-downloads.json; then
+            echo "::error::Staged tree would empty-commit — abort"
+            exit 1
+          fi
+          DIFF_FILE=/tmp/desktop-downloads.promote.diff
+          if [ ! -s "$DIFF_FILE" ]; then
+            git diff -- shared/desktop-downloads.json > "$DIFF_FILE"
+          fi
+          cp "$DIFF_FILE" desktop-downloads.promote.diff
+          BRANCH="chore/promote-macos-notarized-${RELEASE_TAG}-$(date +%s)"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git checkout -b "$BRANCH"
+          git add shared/desktop-downloads.json
+          if git diff --cached --quiet; then
+            echo "::error::git add produced empty index — refusing empty commit"
+            exit 1
+          fi
+          git commit -m "chore(desktop): promote notarized macOS zip as primary download ($RELEASE_TAG)"
+          git push -u origin "$BRANCH"
+          PR_URL=$(gh pr create \
+            --title "Promote notarized macOS download ($RELEASE_TAG)" \
+            --body "$(cat <<EOF
+          ## Summary
+          - \`node scripts/verify-desktop-download-urls.mjs --write-effective\` after notarized HEAD **${NOTARIZED_HEAD_CODE}**
+          - Notarized asset: \`${NOTARIZED_URL}\`
+          - Settings primary \`macosAppZipUrl\` now prefers the notarized Release asset
+
+          ## Test plan
+          - [ ] \`VERIFY_DESKTOP_DOWNLOADS_STRICT=1 npm run verify:desktop-downloads\`
+          - [ ] Website Settings macOS link downloads the notarized zip
+          EOF
+          )")
+          echo "PR: $PR_URL"
+          PR_NUM=$(echo "$PR_URL" | grep -oE '[0-9]+$' || true)
+          {
+            echo "## shared/desktop-downloads.json diff"
+            echo ""
+            echo '```diff'
+            cat "$DIFF_FILE"
+            echo '```'
+          } > /tmp/promote-pr-comment.md
+          if gh pr comment "$PR_URL" --body-file /tmp/promote-pr-comment.md; then
+            echo "PR comment with promote diff posted"
+          else
+            echo "::warning::gh pr comment failed (rate-limit or API) — trying commit comment fallback"
+            SHA=$(git rev-parse HEAD)
+            # Include PR_NUM in promote diff artifact filename + artifact name when fallback fires.
+            FALLBACK_DIFF="desktop-downloads.promote.pr-${PR_NUM:-unknown}.diff"
+            ARTIFACT_NAME="desktop-downloads-promote-diff-pr-${PR_NUM:-unknown}"
+            cp "$DIFF_FILE" "$FALLBACK_DIFF"
+            cp "$FALLBACK_DIFF" "/tmp/$FALLBACK_DIFF"
+            echo "PROMOTE_FALLBACK_DIFF=$FALLBACK_DIFF" >> "$GITHUB_ENV"
+            echo "PROMOTE_ARTIFACT_NAME=$ARTIFACT_NAME" >> "$GITHUB_ENV"
+            echo "promote_artifact_name=$ARTIFACT_NAME" >> "$GITHUB_OUTPUT"
+            {
+              if [ -n "$PR_NUM" ]; then
+                echo "Promote PR: #$PR_NUM ($PR_URL)"
+                echo ""
+              fi
+              cat /tmp/promote-pr-comment.md
+            } > /tmp/promote-commit-comment.md
+            if gh api "repos/${{ github.repository }}/commits/${SHA}/comments" \
+              -f body="$(cat /tmp/promote-commit-comment.md)"; then
+              echo "Commit comment fallback posted on $SHA (PR #$PR_NUM) artifact=$ARTIFACT_NAME"
+              {
+                echo "### Promote diff comment"
+                echo ""
+                echo "PR comment failed; fallback **commit comment** on [\`$SHA\`](https://github.com/${{ github.repository }}/commit/$SHA)$( [ -n "$PR_NUM" ] && echo " (PR [#$PR_NUM]($PR_URL))" )."
+                echo ""
+                echo "Diff artifact name: \`$ARTIFACT_NAME\` (file: \`$FALLBACK_DIFF\`)"
+              } >> "$GITHUB_STEP_SUMMARY"
+            else
+              echo "::error::Required diff comment failed (PR comment + commit comment) — hard failure"
+              echo "comment_failed=1" >> "$GITHUB_OUTPUT"
+              exit 1
+            fi
+          fi
+
+
+      # PR-named artifact only (generic fallback upload removed — coverage via promote_artifact_name).
+      - name: Upload promote diff (fallback artifact)
+        id: promote_artifact
+        if: always() && steps.open_pr.outputs.promote_artifact_name != ''
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ steps.open_pr.outputs.promote_artifact_name }}
+          path: |
+            desktop-downloads.promote.diff
+            desktop-downloads.promote.pr-*.diff
+            /tmp/desktop-downloads.promote.diff
+            /tmp/desktop-downloads.promote.pr-*.diff
+          if-no-files-found: warn
+      - name: Link promote diff artifact in summary
+        if: always() && steps.promote_artifact.outcome == 'success' && steps.open_pr.outputs.promote_artifact_name != ''
+        env:
+          ARTIFACT_URL: ${{ steps.promote_artifact.outputs.artifact-url }}
+          ARTIFACT_ID: ${{ steps.promote_artifact.outputs.artifact-id }}
+          ARTIFACT_NAME: ${{ steps.open_pr.outputs.promote_artifact_name }}
+        run: |
+          set -euo pipefail
+          {
+            echo "### Promote diff artifact"
+            echo ""
+            echo "- Name: \`$ARTIFACT_NAME\`"
+            if [ -n "${ARTIFACT_URL:-}" ]; then
+              echo "- Download: $ARTIFACT_URL"
+            fi
+            if [ -n "${ARTIFACT_ID:-}" ]; then
+              echo "- Artifact id: \`$ARTIFACT_ID\` — [run artifacts](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})"
+              if [ -z "${ARTIFACT_URL:-}" ]; then
+                echo "ARTIFACT_ID=$ARTIFACT_ID"
+                echo "- Copy-paste download hint:"
+                echo "\`\`\`"
+                echo "gh api repos/${{ github.repository }}/actions/artifacts/$ARTIFACT_ID/zip > ${ARTIFACT_NAME}.zip"
+                echo "\`\`\`"
+              fi
+            fi
+            if [ -z "${ARTIFACT_URL:-}" ] && [ -z "${ARTIFACT_ID:-}" ]; then
+              # Stub keeps ARTIFACT_ID= ordering documented (unit: tests/promote-artifact-summary.test.ts).
+              echo "# ARTIFACT_ID=  (empty — Actions did not expose artifact-url or artifact-id)"
+              echo "- [Run artifacts](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}) (open \`$ARTIFACT_NAME\`)"
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"

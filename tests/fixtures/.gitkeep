@@ -1,0 +1,1 @@
+# SHIELD_LISTING_KEEP_TEMP=1 → listing-mirror-live-temp.json stays ignored (.gitignore + .cursorignore) — do not commit.

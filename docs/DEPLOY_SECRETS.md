@@ -26,7 +26,57 @@ Workflow: [.github/workflows/deploy-cloudflare.yml](../.github/workflows/deploy-
 |----------|---------|
 | `NEXT_PUBLIC_SITE_URL` | Deploy build public origin. **If unset**, Deploy workflow defaults to `https://pcpd.mtsu.workers.dev`. Override when the custom domain is live. |
 | `PRODUCTION_HEALTH_URL` | Same origin for [health-monitor.yml](../.github/workflows/health-monitor.yml) (also defaults to workers.dev if unset) |
+| `STAGING_HEALTH_URL` | **Non-prod** Worker origin for Account-sync gate smoke. Must **not** equal `PRODUCTION_HEALTH_URL`. When set, Production health runs job `staging-account-sync` and asserts `accountSyncEnabled: true` **only** on this URL. |
 | `CHECKLIST_CI_WRITE` | Set to `0` to disable bot commits that append check:prod rows to LAUNCH_CHECKLIST |
+
+## Staging Account sync (Turso + mailer) — before prod flip
+
+Do **not** enable sync on production workers.dev. Use a separate staging Worker / preview. Gate checklist: [ACCOUNT_SYNC_GATE.md](ACCOUNT_SYNC_GATE.md). Record the green Actions run in [LAUNCH_CHECKLIST.md](LAUNCH_CHECKLIST.md) § D.
+
+### Wrangler vars (staging Worker)
+
+| Var | Value |
+|-----|--------|
+| `ACCOUNT_SYNC_ENABLED` | `1` |
+| `ACCOUNT_SYNC_REQUIRE_TURSO` | `1` (keep; never file store on Workers) |
+
+Use the **staging** env in `wrangler.jsonc` (Worker name `pcpd-staging`, `ACCOUNT_SYNC_ENABLED=1`, `ACCOUNT_SYNC_DEV_RETURN_LINK=1`). Never copy those vars onto the top-level (prod) block.
+
+```bash
+# Deploy staging (after vinext/wrangler build — same pipeline as prod, different --env)
+# npx wrangler deploy --env staging
+
+npx wrangler secret put DATABASE_URL --env staging
+npx wrangler secret put DATABASE_AUTH_TOKEN --env staging
+npx wrangler secret put AUTH_MAGIC_SECRET --env staging
+npx wrangler secret put LISTS_ENC_KEY --env staging
+npx wrangler secret put AUTH_FROM_EMAIL --env staging
+# Mailer — pick one:
+npx wrangler secret put RESEND_API_KEY --env staging
+# OR
+# npx wrangler secret put POSTMARK_SERVER_TOKEN --env staging
+
+# Smoke (devLink JSON — staging only):
+# STAGING_HEALTH_URL=https://pcpd-staging.<subdomain>.workers.dev npm run smoke:staging-magic-link
+```
+
+| Secret | Purpose |
+|--------|---------|
+| `DATABASE_URL` | Turso / libsql URL |
+| `DATABASE_AUTH_TOKEN` | Turso auth token (if required by URL) |
+| `AUTH_MAGIC_SECRET` | Magic-link HMAC / signing |
+| `LISTS_ENC_KEY` | Encrypt list backups at rest |
+| `AUTH_FROM_EMAIL` | From address for magic links |
+| `RESEND_API_KEY` **or** `POSTMARK_SERVER_TOKEN` | Mailer |
+
+After deploy:
+
+1. Set GitHub Actions variable `STAGING_HEALTH_URL=https://YOUR-STAGING.workers.dev` (≠ prod).
+2. Actions → **Production health** → confirm job **staging-account-sync** is green (`accountSyncEnabled: true`).
+3. Paste the run URL into LAUNCH_CHECKLIST § D.
+4. Desktop + extension device-exchange smoke ([ACCOUNT_SYNC_GATE.md](ACCOUNT_SYNC_GATE.md)).
+
+**Prod remains** `ACCOUNT_SYNC_ENABLED=0` until that checklist is complete.
 
 
 ## Verify
@@ -43,3 +93,17 @@ If the public URL changed, run locally and commit:
 ```bash
 npm run production:origin -- https://YOUR_ORIGIN
 ```
+
+## Desktop Windows Authenticode (optional)
+
+Used by [.github/workflows/desktop-release.yml](../.github/workflows/desktop-release.yml) when publishing the NSIS installer to the same GitHub Release as macOS/Linux.
+
+| Secret / env | Purpose |
+|--------------|---------|
+| `WIN_CERT_PFX_BASE64` | Base64-encoded `.pfx` / `.p12` code-signing certificate |
+| `WIN_CERT_PFX_PASSWORD` | Password for that PFX |
+| `WIN_CERT_REQUIRE` | Set to `1` on the release job (env) or as a **repo variable** to **refuse** uploading / skipping verify when the PFX secret is missing |
+
+When `WIN_CERT_PFX_BASE64` is unset and `WIN_CERT_REQUIRE` is not `1`, the workflow still uploads `PreventiveShield-Setup-User.exe` unsigned and prints a notice. CI `desktop-windows` (`.github/workflows/ci.yml`) honors the same repo var `WIN_CERT_REQUIRE=1`: if the PFX secret is missing, the job **fails** instead of skipping `signtool verify`. Release (`desktop-release.yml`) refuses an unsigned upload under the same flag.
+
+**Production recommendation:** once the org Authenticode PFX is installed as `WIN_CERT_PFX_BASE64` / `WIN_CERT_PFX_PASSWORD`, set the repo variable **`WIN_CERT_REQUIRE=1`** so both release uploads and CI `desktop-windows` cannot silently skip signing.

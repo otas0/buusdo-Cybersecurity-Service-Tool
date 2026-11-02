@@ -3,6 +3,7 @@
   "name": "Preventive Shield",
   "version": "0.1.0",
   "description": "Block known trackers and flag phishing-like URLs. English and European Portuguese. Data storage defaults to off.",
+  "homepage_url": "https://pcpd.mtsu.workers.dev",
   "permissions": [
     "declarativeNetRequest",
     "storage",

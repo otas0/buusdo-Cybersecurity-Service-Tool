@@ -1,0 +1,81 @@
+# After promote PR merges (shared/desktop-downloads.json on default branch),
+# re-run soft HEAD verify and leave a commit comment for Settings operators.
+name: desktop-downloads-verify-settings
+
+on:
+  push:
+    branches: [main, master]
+    paths:
+      - "shared/desktop-downloads.json"
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Soft verify desktop download URLs
+        id: verify
+        run: |
+          set +e
+          node scripts/verify-desktop-download-urls.mjs 2>&1 | tee /tmp/desktop-downloads-verify.txt
+          code=$?
+          set -e
+          soft=$(grep -E '^DOWNLOAD_SOFT_WARN_COUNT=' /tmp/desktop-downloads-verify.txt | tail -n1 | cut -d= -f2 || true)
+          soft=${soft:-0}
+          notarized_ok=$(grep -E '^NOTARIZED_HEAD_OK=' /tmp/desktop-downloads-verify.txt | tail -n1 | cut -d= -f2 || true)
+          primary=$(node -e "const j=require('./shared/desktop-downloads.json'); process.stdout.write(j.macosAppZipUrl||'')")
+          notarized=$(node -e "const j=require('./shared/desktop-downloads.json'); process.stdout.write(j.macosAppZipUrlNotarized||'')")
+          promoted=0
+          if [ -n "$primary" ] && [ "$primary" = "$notarized" ]; then promoted=1; fi
+          echo "soft_warn=$soft" >> "$GITHUB_OUTPUT"
+          echo "notarized_ok=${notarized_ok:-0}" >> "$GITHUB_OUTPUT"
+          echo "promoted=$promoted" >> "$GITHUB_OUTPUT"
+          echo "verify_exit=$code" >> "$GITHUB_OUTPUT"
+          {
+            echo "### Settings macOS download verify"
+            echo ""
+            echo "- Soft warn: \`$soft\`"
+            echo "- Notarized HEAD ok: \`${notarized_ok:-0}\`"
+            echo "- Primary is notarized: \`$promoted\`"
+            echo ""
+            echo "Website **Settings → Desktop downloads** uses \`macDownloadUrl\` → \`macosAppZipUrl\`."
+            if [ "$promoted" = "1" ]; then
+              echo "Primary already points at the notarized zip — Settings should no longer show unsigned-until-promote."
+            else
+              echo "Primary ≠ notarized — Settings may show unsigned / ready-to-promote notes until \`desktop-promote-macos-url\` merges."
+            fi
+            echo ""
+            echo '```'
+            tail -n 30 /tmp/desktop-downloads-verify.txt || true
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+      - name: Comment on commit (Settings note)
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PROMOTED: ${{ steps.verify.outputs.promoted }}
+          NOTARIZED_OK: ${{ steps.verify.outputs.notarized_ok }}
+          SOFT: ${{ steps.verify.outputs.soft_warn }}
+        run: |
+          set -euo pipefail
+          SHA="${{ github.sha }}"
+          BODY=$(cat <<EOF
+          ### Settings desktop download verify
+
+          Soft HEAD after \`shared/desktop-downloads.json\` push:
+          - soft_warn=\`${SOFT}\`
+          - notarized_ok=\`${NOTARIZED_OK}\`
+          - primary_is_notarized=\`${PROMOTED}\`
+
+          Check Website **Settings** macOS link (\`data-testid=settings-desktop-download-mac\`).
+          If primary is notarized, unsigned-until-promote / ready-to-promote notes should clear after deploy.
+          EOF
+          )
+          gh api "repos/${{ github.repository }}/commits/${SHA}/comments" -f body="$BODY" || \
+            echo "::warning::commit comment failed (non-fatal)"

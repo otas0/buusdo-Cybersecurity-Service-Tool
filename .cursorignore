@@ -1,0 +1,2 @@
+# Local-only debug keep from listing assert (SHIELD_LISTING_KEEP_TEMP=1) — see desktop-app/RELEASE.md#listing-keep-temp
+tests/fixtures/listing-mirror-live-temp.json

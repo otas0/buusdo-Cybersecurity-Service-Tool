@@ -1,0 +1,10 @@
+{
+  "chromeWebStoreUrl": "",
+  "safariAppStoreUrl": "",
+  "chromeWebStoreItemId": "",
+  "safariBundleId": "pt.community.preventiveshield",
+  "safariExtensionBundleId": "pt.community.preventiveshield.Extension",
+  "privacyPolicyUrl": "https://pcpd.mtsu.workers.dev/en/privacy",
+  "supportHomepageUrl": "https://pcpd.mtsu.workers.dev",
+  "notes": "Fill chromeWebStoreUrl / safariAppStoreUrl after store approval. Website Settings uses these as primary install links. Empty = show ‘listing soon’ + developer docs fallback."
+}

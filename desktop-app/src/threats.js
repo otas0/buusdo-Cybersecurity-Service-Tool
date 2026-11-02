@@ -5,6 +5,7 @@
 
 const path = require("path");
 const { pathToFileURL } = require("url");
+const { sharedRoot } = require("./shared-root");
 const listsStore = require("./lists-store");
 
 let classifyUrlBase = () => ({ kind: null, reason: null, host: null, display: "" });
@@ -12,7 +13,7 @@ let countThirdPartyTrackersFn = () => 0;
 let listsMod = null;
 
 async function loadDetector() {
-  const href = pathToFileURL(path.resolve(__dirname, "../../shared/detect.mjs")).href;
+  const href = pathToFileURL(path.join(sharedRoot(), "detect.mjs")).href;
   const mod = await import(href);
   classifyUrlBase = mod.classifyUrl;
   countThirdPartyTrackersFn =

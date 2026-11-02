@@ -2,11 +2,17 @@
   "name": "portugal-cp-desktop-app",
   "version": "0.2.0",
   "private": true,
-  "description": "Part 2 — local Preventive Shield dashboard (Express :3010) + educational HTTP proxy (:8080). Electron remains unpinned until a version is chosen — then pin the SAME exact version in optionalDependencies.electron and peerDependencies.electron (must be identical).",
-  "main": "src/server.js",
+  "description": "Preventive Shield desktop MVP — scan this computer, ask maximum block, enforce via personal list + local proxy. Launcher + system browser.",
+  "main": "src/launcher.js",
   "scripts": {
     "start": "node src/server.js",
     "dev": "node --watch src/server.js",
+    "launch": "node src/launcher.js",
+    "install:silent": "node src/launcher.js --install",
+    "mvp": "npm run install:silent && node src/launcher.js",
+    "pack:macos": "bash packaging/macos/build-app.sh",
+    "pack:linux": "bash packaging/linux/build-deb.sh",
+    "pack:windows-stage": "bash packaging/windows/stage-nsis.sh",
     "electron": "electron electron-main.js"
   },
   "engines": {
@@ -15,7 +21,9 @@
   "dependencies": {
     "express": "^4.21.2"
   },
-  "optionalDependencies": {},
+  "optionalDependencies": {
+    "systray2": "^2.1.4"
+  },
   "peerDependencies": {
     "electron": "*"
   },

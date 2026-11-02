@@ -16,8 +16,39 @@ export function RiskResult({ analysis, t, onReset }: { analysis: Analysis; t: Re
   const [feedbackNote, setFeedbackNote] = useState("");
   const [showDetails, setShowDetails] = useState(false);
   const [draftMarks, setDraftMarks] = useState<FeedbackMark[]>([]);
+  const [desktopBlockNote, setDesktopBlockNote] = useState("");
   const pt = t.navCheck === "Verificar";
   const feedbackHost = parsed.hostname.toLowerCase().replace(/\.$/, "");
+
+  async function openDesktopBlock() {
+    setDesktopBlockNote("");
+    const deep = `http://127.0.0.1:3010/?blockHost=${encodeURIComponent(feedbackHost)}#listsSection`;
+    try {
+      const ctrl = new AbortController();
+      const timer = setTimeout(() => ctrl.abort(), 1500);
+      const res = await fetch("http://127.0.0.1:3010/api/state", {
+        method: "GET",
+        signal: ctrl.signal,
+        mode: "cors"
+      }).catch(() => null);
+      clearTimeout(timer);
+      if (!res || !res.ok) {
+        setDesktopBlockNote(
+          pt
+            ? "Abra primeiro o desktop Escudo (localhost:3010), depois tente de novo."
+            : "Open the Escudo desktop app first (localhost:3010), then try again."
+        );
+        return;
+      }
+      window.open(deep, "_blank", "noopener,noreferrer");
+    } catch {
+      setDesktopBlockNote(
+        pt
+          ? "Abra primeiro o desktop Escudo (localhost:3010), depois tente de novo."
+          : "Open the Escudo desktop app first (localhost:3010), then try again."
+      );
+    }
+  }
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -265,6 +296,25 @@ export function RiskResult({ analysis, t, onReset }: { analysis: Analysis; t: Re
           >
             {t.leave}
           </button>
+          {(risk.recommendation === "LEAVE_AND_BLOCK" ||
+            risk.level === "CRITICAL" ||
+            risk.level === "HIGH") && (
+            <>
+              <button
+                type="button"
+                className="text-button"
+                data-testid="add-desktop-block"
+                onClick={() => void openDesktopBlock()}
+              >
+                {pt ? "Bloquear no desktop (Escudo)" : "Block on desktop (Shield)"}
+              </button>
+              {desktopBlockNote ? (
+                <p className="hint" data-testid="desktop-block-need-app" role="status">
+                  {desktopBlockNote}
+                </p>
+              ) : null}
+            </>
+          )}
           {/* Hold (CAUTION) or Clear with 403/429/503: surface ambiguousProbeStatus next to Leave. */}
           {analysis.timing?.ambiguousProbeStatus ? (
             <span

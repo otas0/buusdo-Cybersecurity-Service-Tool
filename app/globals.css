@@ -28,6 +28,12 @@ select {
   color: inherit;
 }
 
+/* Kill UA light/white button chrome on the dark field. */
+button {
+  background: transparent;
+  border: 0;
+}
+
 button,
 a {
   -webkit-tap-highlight-color: transparent;

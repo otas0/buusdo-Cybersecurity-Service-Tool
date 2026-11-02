@@ -84,8 +84,13 @@ export async function sendMagicLinkEmail(opts: {
   return { ok: true, provider: "dev-skip" };
 }
 
-/** Never return magic URL in JSON when production. */
+/**
+ * Return magic URL in JSON for local/staging smoke only.
+ * Explicit ACCOUNT_SYNC_DEV_RETURN_LINK=1 → allow (staging Worker env).
+ * Never set that var on the production Worker.
+ */
 export function shouldReturnDevLink(): boolean {
+  if (process.env.ACCOUNT_SYNC_DEV_RETURN_LINK === "1") return true;
   if (process.env.NODE_ENV === "production") return false;
   return process.env.ACCOUNT_SYNC_DEV_RETURN_LINK !== "0";
 }

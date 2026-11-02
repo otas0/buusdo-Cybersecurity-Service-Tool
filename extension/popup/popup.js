@@ -108,7 +108,8 @@ const els = {
   accountSyncLabel: document.getElementById("accountSyncLabel"),
   accountSyncNowBtn: document.getElementById("accountSyncNowBtn"),
   accountSignOutBtn: document.getElementById("accountSignOutBtn"),
-  accountSignInForm: document.getElementById("accountSignInForm")
+  accountSignInForm: document.getElementById("accountSignInForm"),
+  toastHost: document.getElementById("toastHost")
 };
 
 /** @type {{ domain: string, timer: ReturnType<typeof setTimeout> } | null} */
@@ -842,6 +843,31 @@ function setAccountStatus(msg) {
   els.accountStatus.textContent = msg || "";
 }
 
+/** Mute status live region while toast announces (avoid double SR). */
+function setAccountStatusQuiet(msg) {
+  if (!els.accountStatus) return;
+  els.accountStatus.setAttribute("aria-live", "off");
+  els.accountStatus.textContent = msg || "";
+  window.setTimeout(() => {
+    els.accountStatus?.setAttribute("aria-live", "polite");
+  }, 3400);
+}
+
+/** Match desktop dashboard toast (auto-sync success / fail). */
+function showMessageToast(message, kind = "caution", opts = {}) {
+  if (!els.toastHost || !message) return;
+  const el = document.createElement("div");
+  el.className = `toast ${kind === "danger" ? "toast-danger" : ""}`;
+  el.textContent = message;
+  if (opts.testId) el.dataset.testid = opts.testId;
+  els.toastHost.appendChild(el);
+  requestAnimationFrame(() => el.classList.add("is-visible"));
+  setTimeout(() => {
+    el.classList.remove("is-visible");
+    setTimeout(() => el.remove(), 250);
+  }, 3200);
+}
+
 function syncAccountControlsSignedIn(signedIn) {
   const on = Boolean(signedIn);
   if (els.accountSyncToggle) {
@@ -906,6 +932,88 @@ els.accountSignInForm?.addEventListener("submit", async (e) => {
   }
 });
 
+async function runAccountSync({ auto = false } = {}) {
+  const mode = normalizePrivacyMode(els.privacySelect?.value);
+  if (mode === "off") {
+    const msg = t(lang, "accountNeedPrivacy");
+    setAccountStatus(msg);
+    return false;
+  }
+  const tokens = await readAccountTokens(api.storage.local);
+  if (!tokens.accessToken) {
+    setAccountStatus(t(lang, "accountSignedOut"));
+    return false;
+  }
+  if (!tokens.syncEnabled) {
+    if (!auto) setAccountStatus(t(lang, "accountSyncToggle"));
+    return false;
+  }
+  try {
+    const base = await accountApiBase();
+    const exportRes = await api.runtime.sendMessage({ type: "SHIELD_LISTS_EXPORT" });
+    if (!exportRes?.ok || !exportRes.backup) {
+      const msg = t(lang, auto ? "accountAutoSyncFail" : "accountSyncFail", {
+        error: "no-local-lists"
+      });
+      if (auto) {
+        setAccountStatusQuiet(msg);
+        showMessageToast(msg, "danger", { testId: "account-auto-sync-toast" });
+      } else {
+        setAccountStatus(msg);
+      }
+      return false;
+    }
+    const put = await accountFetch(base, "/api/sync/lists", {
+      method: "PUT",
+      token: tokens.accessToken,
+      body: JSON.stringify({
+        backup: exportRes.backup,
+        client: "extension",
+        baseUpdatedAt: exportRes.backup?.updatedAt
+      })
+    });
+    const putData = await put.json();
+    if (!put.ok || !putData.ok) {
+      const msg = t(lang, auto ? "accountAutoSyncFail" : "accountSyncFail", {
+        error: putData.error || String(put.status)
+      });
+      if (auto) {
+        setAccountStatusQuiet(msg);
+        showMessageToast(msg, "danger", { testId: "account-auto-sync-toast" });
+      } else {
+        setAccountStatus(msg);
+      }
+      return false;
+    }
+    if (putData.backup) {
+      await importBackupPayload(putData.backup);
+    }
+    const okMsg = auto
+      ? t(lang, "accountAutoSyncOk")
+      : putData.merged
+        ? t(lang, "accountSyncMerged")
+        : t(lang, "accountSyncOk");
+    if (auto) {
+      setAccountStatusQuiet(okMsg);
+      showMessageToast(okMsg, "caution", { testId: "account-auto-sync-toast" });
+    } else {
+      setAccountStatus(okMsg);
+    }
+    return true;
+  } catch (err) {
+    const msg = t(lang, auto ? "accountAutoSyncFail" : "accountSyncFail", {
+      error: err instanceof Error ? err.message : "fail"
+    });
+    if (auto) {
+      setAccountStatusQuiet(msg);
+      showMessageToast(msg, "danger", { testId: "account-auto-sync-toast" });
+    } else {
+      setAccountStatus(msg);
+    }
+    return false;
+  }
+}
+
 els.accountExchangeBtn?.addEventListener("click", async () => {
   const mode = normalizePrivacyMode(els.privacySelect?.value);
   if (mode === "off") {
@@ -925,16 +1033,19 @@ els.accountExchangeBtn?.addEventListener("click", async () => {
       setAccountStatus(t(lang, "accountSyncFail", { error: data.error || String(res.status) }));
       return;
     }
+    const syncOn = els.accountSyncToggle?.checked !== false;
     await persistAccountTokens(
       {
         accessToken: data.accessToken,
         refreshToken: data.refreshToken,
         email: (els.accountEmail?.value || "").trim() || "signed-in",
-        syncEnabled: els.accountSyncToggle?.checked === true
+        syncEnabled: syncOn
       },
       api.storage.local
     );
+    if (els.accountSyncToggle) els.accountSyncToggle.checked = syncOn;
     await refreshAccountUi();
+    if (syncOn) await runAccountSync({ auto: true });
   } catch (err) {
     setAccountStatus(t(lang, "accountSyncFail", { error: err instanceof Error ? err.message : "fail" }));
   }
@@ -963,48 +1074,7 @@ els.accountSignOutBtn?.addEventListener("click", async () => {
 });
 
 els.accountSyncNowBtn?.addEventListener("click", async () => {
-  const mode = normalizePrivacyMode(els.privacySelect?.value);
-  if (mode === "off") {
-    setAccountStatus(t(lang, "accountNeedPrivacy"));
-    return;
-  }
-  const tokens = await readAccountTokens(api.storage.local);
-  if (!tokens.accessToken) {
-    setAccountStatus(t(lang, "accountSignedOut"));
-    return;
-  }
-  if (!tokens.syncEnabled) {
-    setAccountStatus(t(lang, "accountSyncToggle"));
-    return;
-  }
-  try {
-    const base = await accountApiBase();
-    const exportRes = await api.runtime.sendMessage({ type: "SHIELD_LISTS_EXPORT" });
-    if (!exportRes?.ok || !exportRes.backup) {
-      setAccountStatus(t(lang, "accountSyncFail", { error: "no-local-lists" }));
-      return;
-    }
-    const put = await accountFetch(base, "/api/sync/lists", {
-      method: "PUT",
-      token: tokens.accessToken,
-      body: JSON.stringify({
-        backup: exportRes.backup,
-        client: "extension",
-        baseUpdatedAt: exportRes.backup?.updatedAt
-      })
-    });
-    const putData = await put.json();
-    if (!put.ok || !putData.ok) {
-      setAccountStatus(t(lang, "accountSyncFail", { error: putData.error || String(put.status) }));
-      return;
-    }
-    if (putData.backup) {
-      await importBackupPayload(putData.backup);
-    }
-    setAccountStatus(putData.merged ? t(lang, "accountSyncMerged") : t(lang, "accountSyncOk"));
-  } catch (err) {
-    setAccountStatus(t(lang, "accountSyncFail", { error: err instanceof Error ? err.message : "fail" }));
-  }
+  await runAccountSync({ auto: false });
 });
 
 async function runScan() {

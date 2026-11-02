@@ -38,6 +38,13 @@ import {
 import { buildRiskNotes, summarizeExportPlan } from "../security/feedback-batch";
 import { maxProbeAmongTimeouts, suggestProbeTimeoutMs } from "../security/probe-budget-suggest";
 import { CopyEnvLine } from "./CopyEnvLine";
+import extensionStores from "../shared/extension-stores.json" with { type: "json" };
+import desktopDownloads from "../shared/desktop-downloads.json" with { type: "json" };
+import {
+  macDownloadUrl,
+  macMirrorUrl,
+  resolveDesktopDownloads
+} from "../shared/desktop-downloads-resolve";
 import {
   downloadFullHistoryCsv,
   downloadTimeoutSummaryCsv,
@@ -47,6 +54,27 @@ import { probeBudgetCopy, PROBE_TIMEOUT_ENV_KEY } from "../shared/probe-budget-c
 import { formatTimingFlagChips, timingLabels } from "./timing-copy";
 import type { CheckTiming } from "../security/analyse";
 import { AccountSettings } from "./AccountSettings";
+
+const CHROME_STORE_URL = String(extensionStores.chromeWebStoreUrl || "").trim();
+const SAFARI_STORE_URL = String(extensionStores.safariAppStoreUrl || "").trim();
+const STORE_DOCS_URL =
+  "https://github.com/otas0/preventive-cybersecurity-prototype/blob/main/docs/EXTENSION_STORE_DISTRIBUTE.md";
+const EXT_SETUP_DOCS_URL =
+  "https://github.com/otas0/preventive-cybersecurity-prototype/blob/main/docs/EXTENSION_CHROME_SAFARI.md";
+const DESKTOP_MIRRORS =
+  desktopDownloads.mirrors && typeof desktopDownloads.mirrors === "object"
+    ? (desktopDownloads.mirrors as Record<string, string>)
+    : {};
+function desktopUrl(primary: string, mirrorKey: string) {
+  const mirror = String(DESKTOP_MIRRORS[mirrorKey] || "").trim();
+  return mirror || String(primary || "").trim();
+}
+const DESKTOP_WIN_URL = desktopUrl(desktopDownloads.windowsNsisUrl, "windowsNsisUrl");
+const DESKTOP_MAC_URL = desktopUrl(desktopDownloads.macosAppZipUrl, "macosAppZipUrl");
+const DESKTOP_LINUX_URL = desktopUrl(desktopDownloads.linuxDebAmd64Url, "linuxDebAmd64Url");
+const DESKTOP_PACKAGING_URL = String(desktopDownloads.packagingDocsUrl || STORE_DOCS_URL).trim();
+const DESKTOP_RELEASE_URL = String(desktopDownloads.releaseNotesUrl || DESKTOP_PACKAGING_URL).trim();
+const DESKTOP_RELEASE_TAG = String(desktopDownloads.releaseTag || "").trim();
 
 /** Legend timing — labels only; same helper as RiskResult chips. */
 const TIMING_FLAG_LEGEND: CheckTiming = {
@@ -86,12 +114,36 @@ function formatDiagnosticCode(
 
 export function SettingsPanel({
   locale,
-  onBack
+  onBack,
+  onOpenHonestLimits
 }: {
   locale: Locale;
   onBack: () => void;
+  onOpenHonestLimits?: () => void;
 }) {
   const t = getMessages(locale);
+  const enMsg = getMessages("en");
+  const ptMsg = getMessages("pt-PT");
+  // Localize CDN SR copy only when EN/pt-PT mirror-related strings diverge.
+  const cdnCopyDiverges =
+    enMsg.privacyDesktopMirrorNote !== ptMsg.privacyDesktopMirrorNote ||
+    enMsg.desktopDownloadSourceCdn !== ptMsg.desktopDownloadSourceCdn ||
+    enMsg.desktopDownloadMacSource !== ptMsg.desktopDownloadMacSource;
+  // After mount so SSR/hydration stay aligned; Playwright stubs via window.__SHIELD_TEST_DESKTOP_DOWNLOADS__.
+  const [showMacSource, setShowMacSource] = useState(false);
+  const [macHref, setMacHref] = useState(DESKTOP_MAC_URL);
+  const [macPromoteNote, setMacPromoteNote] = useState<"none" | "unsigned-until-promote" | "ready-to-promote">(
+    "none"
+  );
+  const macCdnDesc =
+    showMacSource && macHref
+      ? cdnCopyDiverges
+        ? t.desktopDownloadMacSource.replace(
+            "{source}",
+            `${t.desktopDownloadSourceCdn} — ${macHref}`
+          )
+        : macHref
+      : undefined;
   const [mode, setMode] = useState<PrivacyMode>("off");
   const [history, setHistory] = useState<CheckHistoryEntry[]>([]);
   const [drafts, setDrafts] = useState<FeedbackDraft[]>([]);
@@ -155,6 +207,37 @@ export function SettingsPanel({
       );
     }
   }
+
+  useEffect(() => {
+    const downloads = resolveDesktopDownloads();
+    setShowMacSource(Boolean(macMirrorUrl(downloads)));
+    setMacHref(macDownloadUrl(downloads) || DESKTOP_MAC_URL);
+    const primary = String(downloads.macosAppZipUrl || "").trim();
+    const notarized = String(downloads.macosAppZipUrlNotarized || "").trim();
+    const unsigned = String(downloads.macosAppZipUrlUnsigned || "").trim();
+    const notPromoted =
+      Boolean(notarized) &&
+      ((unsigned && primary === unsigned) || (primary && primary !== notarized));
+    // Optimistic static note; soft HEAD below may upgrade to ready-to-promote.
+    setMacPromoteNote(notPromoted ? "unsigned-until-promote" : "none");
+    let cancelled = false;
+    void fetch("/api/desktop-downloads/status")
+      .then((r) => r.json())
+      .then((data: { macNote?: string }) => {
+        if (cancelled) return;
+        if (data?.macNote === "ready-to-promote" || data?.macNote === "unsigned-until-promote") {
+          setMacPromoteNote(data.macNote);
+        } else if (!notPromoted) {
+          setMacPromoteNote("none");
+        }
+      })
+      .catch(() => {
+        /* keep static note */
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   useEffect(() => {
     const timer = window.setTimeout(() => {
@@ -257,18 +340,27 @@ export function SettingsPanel({
       const section = document.getElementById("settings-block-lists");
       (live || section)?.scrollIntoView({ block: "start" });
     }
+    function focusDesktop() {
+      if (typeof window === "undefined") return;
+      if (window.location.hash !== "#settings-desktop") return;
+      // Locale full navigation keeps #settings-desktop — scroll into view after load.
+      document.getElementById("settings-desktop")?.scrollIntoView({ block: "start" });
+    }
     const timer = window.setTimeout(() => {
       focusPrivacySelect();
       focusBlockLists();
+      focusDesktop();
     }, 0);
     window.addEventListener("hashchange", focusPrivacySelect);
     window.addEventListener("hashchange", focusBlockLists);
+    window.addEventListener("hashchange", focusDesktop);
     window.addEventListener("shield:settings-privacy", focusPrivacySelect);
     window.addEventListener("shield:settings-block-lists", focusBlockLists);
     return () => {
       window.clearTimeout(timer);
       window.removeEventListener("hashchange", focusPrivacySelect);
       window.removeEventListener("hashchange", focusBlockLists);
+      window.removeEventListener("hashchange", focusDesktop);
       window.removeEventListener("shield:settings-privacy", focusPrivacySelect);
       window.removeEventListener("shield:settings-block-lists", focusBlockLists);
     };
@@ -551,6 +643,114 @@ export function SettingsPanel({
 
       <AccountSettings locale={locale} />
 
+      <section
+        className="settings-block"
+        id="settings-desktop"
+        data-testid="settings-desktop-downloads"
+        aria-labelledby="settings-desktop-heading"
+      >
+        {/* id must stay unique page-wide — do not reuse in AccountSettings (assert-desktop-download-messages). */}
+        <h2 id="settings-desktop-heading">{t.desktopDownloadsTitle}</h2>
+        <p className="hint">{t.desktopDownloadsIntro}</p>
+        <p className="hint" data-testid="settings-desktop-download-row">
+          <a
+            className="text-button"
+            href={DESKTOP_WIN_URL || DESKTOP_PACKAGING_URL}
+            target="_blank"
+            rel="noreferrer"
+          >
+            {DESKTOP_WIN_URL ? t.desktopDownloadWindows : `${t.desktopDownloadWindows} — ${t.desktopDownloadSoon}`}
+          </a>
+          {" · "}
+          <a
+            className="text-button"
+            href={macHref || DESKTOP_PACKAGING_URL}
+            target="_blank"
+            rel="noreferrer"
+            data-testid="settings-desktop-download-mac"
+            aria-describedby={macCdnDesc ? "settings-desktop-mac-cdn-desc" : undefined}
+          >
+            {macHref ? t.desktopDownloadMac : `${t.desktopDownloadMac} — ${t.desktopDownloadSoon}`}
+          </a>
+          {macCdnDesc ? (
+            <span
+              id="settings-desktop-mac-cdn-desc"
+              data-testid="settings-desktop-mac-cdn-desc"
+              className="visually-hidden"
+            >
+              {macCdnDesc}
+            </span>
+          ) : null}
+          {macPromoteNote !== "none" ? (
+            <span
+              className="hint"
+              data-testid={
+                macPromoteNote === "ready-to-promote"
+                  ? "settings-desktop-mac-ready-to-promote"
+                  : "settings-desktop-mac-unsigned-note"
+              }
+              style={{ display: "block", marginTop: "0.35rem" }}
+            >
+              {macPromoteNote === "ready-to-promote"
+                ? t.desktopDownloadReadyToPromote
+                : t.desktopDownloadUnsignedUntilPromote}
+            </span>
+          ) : null}
+          {" · "}
+          <a
+            className="text-button"
+            href={DESKTOP_LINUX_URL || DESKTOP_PACKAGING_URL}
+            target="_blank"
+            rel="noreferrer"
+          >
+            {DESKTOP_LINUX_URL ? t.desktopDownloadLinux : `${t.desktopDownloadLinux} — ${t.desktopDownloadSoon}`}
+          </a>
+        </p>
+        {DESKTOP_RELEASE_TAG ? (
+          <p className="scope-note" data-testid="settings-desktop-release-tag">
+            {t.desktopDownloadReleaseTag.replace("{tag}", DESKTOP_RELEASE_TAG)}
+          </p>
+        ) : null}
+        {showMacSource ? (
+          <p
+            className="scope-note"
+            data-testid="settings-desktop-mac-source"
+            title={macCdnDesc || undefined}
+          >
+            {t.desktopDownloadMacSource.replace(
+              "{source}",
+              `${t.desktopDownloadSourceCdn} · ${t.desktopDownloadSourceGithub}`
+            )}
+          </p>
+        ) : null}
+        <p className="hint">
+          <a className="text-button" href={DESKTOP_PACKAGING_URL} target="_blank" rel="noreferrer">
+            {t.desktopDownloadPackaging}
+          </a>
+          {" · "}
+          <a className="text-button" href={DESKTOP_RELEASE_URL} target="_blank" rel="noreferrer">
+            {t.desktopDownloadRelease}
+          </a>
+          {" · "}
+          <a className="text-button" href={DESKTOP_PACKAGING_URL} target="_blank" rel="noreferrer">
+            {t.blockListsInstallDesktop}
+          </a>
+          {" · "}
+          <a
+            className="text-button"
+            href={`/${locale === "pt-PT" ? "pt-PT" : "en"}/privacy#privacy-honest-limits`}
+            data-testid="settings-desktop-honest-limits"
+            onClick={(e) => {
+              if (!onOpenHonestLimits) return;
+              e.preventDefault();
+              onOpenHonestLimits();
+            }}
+          >
+            {t.desktopHonestLimitsLink}
+          </a>
+        </p>
+      </section>
+
       <section className="settings-block" id="settings-block-lists">
         <h2>{t.blocked}</h2>
         <p className="hint">
@@ -572,20 +772,29 @@ export function SettingsPanel({
         <p className="hint">
           <a
             className="text-button"
-            href="https://github.com/darrenlucase/preventive-cybersecurity-prototype/blob/main/extension/README.md"
+            href={CHROME_STORE_URL || STORE_DOCS_URL}
             target="_blank"
             rel="noreferrer"
           >
-            {t.blockListsInstallExt}
+            {CHROME_STORE_URL ? t.blockListsGetChrome : t.blockListsChromeListingSoon}
           </a>
           {" · "}
           <a
             className="text-button"
-            href="https://github.com/darrenlucase/preventive-cybersecurity-prototype/blob/main/desktop-app/README.md"
+            href={SAFARI_STORE_URL || STORE_DOCS_URL}
             target="_blank"
             rel="noreferrer"
           >
-            {t.blockListsInstallDesktop}
+            {SAFARI_STORE_URL ? t.blockListsGetSafari : t.blockListsSafariListingSoon}
+          </a>
+          {" · "}
+          <a
+            className="text-button"
+            href={EXT_SETUP_DOCS_URL}
+            target="_blank"
+            rel="noreferrer"
+          >
+            {t.blockListsInstallChromeSafari}
           </a>
         </p>
       </section>

@@ -65,8 +65,42 @@ const site = {
 };
 writeFileSync(jsonPath, `${JSON.stringify(site, null, 2)}\n`, "utf8");
 
+// Ensure MV3 host_permissions include the production origin for Website API fetch.
+const manifestPath = join(root, "extension", "manifest.json");
+try {
+  const manifest = JSON.parse(readFileSync(manifestPath, "utf8"));
+  const pattern = `${origin}/*`;
+  const hosts = Array.isArray(manifest.host_permissions) ? manifest.host_permissions : [];
+  const kept = hosts.filter((h) => !/workers\.dev\/\*$/i.test(String(h)));
+  if (!kept.includes(pattern)) kept.push(pattern);
+  manifest.host_permissions = kept;
+  writeFileSync(manifestPath, `${JSON.stringify(manifest, null, 2)}\n`, "utf8");
+  console.info(`[production:origin] extension host_permissions workers.dev → ${pattern}`);
+} catch (err) {
+  console.warn(
+    "[production:origin] could not patch extension/manifest.json:",
+    err instanceof Error ? err.message : err
+  );
+}
+
+const promoPath = join(root, "docs", "PUBLIC_PROMOTION.md");
+try {
+  let promo = readFileSync(promoPath, "utf8");
+  promo = promo.replace(
+    /https:\/\/[a-z0-9.-]+\.workers\.dev/gi,
+    origin
+  );
+  writeFileSync(promoPath, promo, "utf8");
+  console.info(`[production:origin] updated docs/PUBLIC_PROMOTION.md → ${origin}`);
+} catch (err) {
+  console.warn(
+    "[production:origin] could not patch PUBLIC_PROMOTION.md:",
+    err instanceof Error ? err.message : err
+  );
+}
 
 const readmePath = join(root, "README.md");
+
 let readme = readFileSync(readmePath, "utf8");
 const block = `### Live production origin
 
@@ -75,6 +109,11 @@ const block = `### Live production origin
 - Set after deploy: \`npm run production:origin -- ${origin}\`
 - Health: \`npm run health:prod -- --url ${origin}\`
 - Check smoke: \`npm run check:prod -- --url ${origin}\`
+
+Ops docs: [PRODUCTION_HOSTING](docs/PRODUCTION_HOSTING.md) · [LAUNCH_CHECKLIST](docs/LAUNCH_CHECKLIST.md) · [DEPLOY_SECRETS](docs/DEPLOY_SECRETS.md) · [CUSTOM_DOMAIN_REDEPLOY](docs/CUSTOM_DOMAIN_REDEPLOY.md) · [CANONICAL_HOST](docs/CANONICAL_HOST.md) · [CLOUDFLARE_ALERTS](docs/CLOUDFLARE_ALERTS.md) · [LOCAL_CF_CONNECTIVITY](docs/LOCAL_CF_CONNECTIVITY.md) · [POST_LAUNCH_48H](docs/POST_LAUNCH_48H.md) · [VINEXT_UPGRADE_1_4](docs/VINEXT_UPGRADE_1_4.md)
+
+Scheduled monitor: set GitHub Actions variable \`PRODUCTION_HEALTH_URL\` → workflow **Production health**.  
+Optional deploy: Actions → **Deploy Cloudflare** with secrets from [DEPLOY_SECRETS.md](docs/DEPLOY_SECRETS.md).
 `;
 
 if (/### Live production origin[\s\S]*?(?=\n### |\n## |$)/.test(readme)) {

@@ -76,6 +76,19 @@ const steps = [
     console.error("FAIL: desktop-app/src/server.js must inject asset ?v= from package.json");
     process.exit(1);
   }
+  if (!serverSrc.includes('"/api/update-check"') && !serverSrc.includes("'/api/update-check'")) {
+    console.error("FAIL: desktop-app/src/server.js must expose GET /api/update-check");
+    process.exit(1);
+  }
+  if (!serverSrc.includes("preferNotarized") || !serverSrc.includes("macosAppZipUrlNotarized")) {
+    console.error("FAIL: /api/update-check must prefer notarized zip when HEAD 200");
+    process.exit(1);
+  }
+  const indexHtml = readFileSync(path.join(root, "desktop-app/public/index.html"), "utf8");
+  if (!indexHtml.includes('data-testid="primary-path"')) {
+    console.error("FAIL: desktop-app/public/index.html must expose primary-path");
+    process.exit(1);
+  }
 }
 
 let failed = 0;

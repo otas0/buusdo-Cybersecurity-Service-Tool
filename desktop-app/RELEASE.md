@@ -151,6 +151,17 @@ Quarantine restore-error rows (dashboard): keyboard-only a11y — Tab to a resto
 | Windows NSIS | CI `desktop-windows` stages `node.exe` and runs `makensis` |
 | Linux amd64 `.deb` | CI `desktop-linux` uploads `preventive-shield_0.2.0_amd64.deb` |
 
+### Notarized macOS zip — upload + promote checklist
+
+Asset name in `shared/desktop-downloads.json`: `macosAppZipUrlNotarized` → `PreventiveShield-macos-app-notarized.zip` on Release tag `releaseTag`.
+
+1. [ ] Build macOS app (`npm run pack:macos` / CI artifact).
+2. [ ] Actions → **desktop-notarize-macos** attaches notarized zip to the same GitHub Release (tag = `releaseTag`).
+3. [ ] Soft HEAD: `npm run verify:desktop-downloads` → `NOTARIZED_HEAD_OK=1` (or wait until GitHub CDN propagates).
+4. [ ] Actions → **desktop-promote-macos-url** (`release_tag` = `releaseTag`) → PR sets `macosAppZipUrl` = notarized URL.
+5. [ ] Merge PR → Website Settings macOS link + desktop `GET /api/update-check` (`preferNotarized` / `downloadUrl`) agree on the notarized zip.
+6. [ ] Until step 4, Settings shows **unsigned until promote** (`data-testid=settings-desktop-mac-unsigned-note`).
+
 Promote Settings primary macOS URL after notarized HEAD 200 (tag from `shared/desktop-downloads.json`):
 
 ```bash

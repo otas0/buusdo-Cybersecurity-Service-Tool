@@ -50,11 +50,36 @@ test.describe("production privacy pages", () => {
     await expect(page.getByTestId("privacy-policy")).toBeVisible();
     await expect(page.getByRole("heading", { name: /Privacy policy/i })).toBeVisible();
     await expect(page.getByTestId("privacy-policy-updated")).toContainText(/2026/);
+    await expect(page.getByTestId("privacy-honest-limits")).toBeVisible();
+    await expect(page.getByTestId("privacy-honest-limits")).toContainText(/No TLS decryption/i);
+  });
+
+  test("/en/privacy#privacy-honest-limits deep-link", async ({ page }) => {
+    await page.goto(`${base}/en/privacy#privacy-honest-limits`, { waitUntil: "domcontentloaded" });
+    await expect(page.locator("#privacy-honest-limits")).toBeVisible();
+    await expect(page.getByTestId("privacy-honest-limits")).toBeVisible();
   });
 
   test("/pt-PT/privacy shows policy", async ({ page }) => {
     await page.goto(`${base}/pt-PT/privacy`, { waitUntil: "domcontentloaded" });
     await expect(page.getByTestId("privacy-policy")).toBeVisible();
     await expect(page.getByRole("heading", { name: /Política de privacidade/i })).toBeVisible();
+    await expect(page.getByTestId("privacy-honest-limits")).toBeVisible();
+    await expect(page.getByTestId("privacy-honest-limits")).toContainText(/Sem desencriptação TLS/i);
+  });
+
+  test("/en/settings shows desktop download slots", async ({ page }) => {
+    await page.goto(`${base}/en/settings#settings-desktop`, { waitUntil: "domcontentloaded" });
+    await expect(page.locator("#settings-desktop")).toBeVisible();
+    await expect(page.getByTestId("settings-desktop-downloads")).toBeVisible();
+    await expect(page.getByTestId("settings-desktop-honest-limits")).toBeVisible();
+    await expect(page.getByTestId("settings-desktop-release-tag")).toBeVisible();
+  });
+
+  test("/pt-PT/settings shows desktop download slots", async ({ page }) => {
+    await page.goto(`${base}/pt-PT/settings#settings-desktop`, { waitUntil: "domcontentloaded" });
+    await expect(page.locator("#settings-desktop")).toBeVisible();
+    await expect(page.getByTestId("settings-desktop-downloads")).toBeVisible();
+    await expect(page.getByTestId("settings-desktop-honest-limits")).toBeVisible();
   });
 });

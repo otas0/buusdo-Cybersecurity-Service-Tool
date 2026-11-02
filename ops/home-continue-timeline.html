@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Preventive Shield — home-continue timeline</title>
+    <link rel="stylesheet" href="../shared/tokens.css" />
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        font-family: var(--font);
+        background: var(--bg);
+        color: var(--text);
+        padding: 1.5rem;
+      }
+      h1 {
+        font-size: 1.15rem;
+        font-weight: 600;
+        margin: 0 0 0.35rem;
+        letter-spacing: 0.02em;
+      }
+      .mute {
+        color: var(--muted);
+        margin: 0 0 1.25rem;
+      }
+      .toolbar {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+        align-items: center;
+        margin-bottom: 1rem;
+      }
+      .toolbar button,
+      .toolbar label.file {
+        font: inherit;
+        color: var(--text);
+        background: var(--bg-elev);
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+        padding: 0.4rem 0.75rem;
+        cursor: pointer;
+      }
+      .toolbar button:focus-visible,
+      .toolbar label.file:focus-within {
+        outline: 1px solid var(--halt);
+        outline-offset: 1px;
+      }
+      .toolbar input[type="file"] {
+        display: none;
+      }
+      .chart {
+        width: min(960px, 100%);
+        height: 280px;
+        border: 1px solid var(--line);
+        background: var(--bg-elev);
+        position: relative;
+      }
+      svg {
+        width: 100%;
+        height: 100%;
+        display: block;
+      }
+      table {
+        border-collapse: collapse;
+        margin-top: 1.25rem;
+        width: min(960px, 100%);
+        font-size: 12px;
+        font-family: var(--mono);
+      }
+      th,
+      td {
+        text-align: left;
+        padding: 0.35rem 0.5rem;
+        border-bottom: 1px solid var(--line);
+      }
+      th {
+        color: var(--muted);
+        font-weight: 500;
+        font-family: var(--font);
+      }
+      code {
+        font-family: var(--mono);
+        font-size: 0.9em;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Home-continue timeline</h1>
+    <p class="mute">
+      Instrument view of <code>desktop-app/dist/smoke-currentDir-timeline.json</code> from
+      <code>npm run smoke:desktop-home-continue</code> (read-only). Local only — nothing leaves this page.
+    </p>
+    <p class="mute" id="run-stamp" data-testid="home-continue-stamp" hidden></p>
+    <div class="toolbar">
+      <label class="file">
+        Load JSON
+        <input id="file" type="file" accept="application/json,.json" />
+      </label>
+      <button type="button" id="exportPng" disabled>Export PNG</button>
+    </div>
+    <div class="chart" id="chart" aria-label="files over time">
+      <svg
+        id="svg"
+        data-testid="home-continue-svg"
+        viewBox="0 0 960 280"
+        role="img"
+        aria-label="files over time"
+      >
+        <title id="svg-title">Home-continue timeline</title>
+      </svg>
+    </div>
+    <canvas id="pngCanvas" width="960" height="280" hidden></canvas>
+    <table>
+      <thead>
+        <tr>
+          <th>ms</th>
+          <th>status</th>
+          <th>files</th>
+          <th>currentDir</th>
+          <th>capped</th>
+        </tr>
+      </thead>
+      <tbody id="rows"></tbody>
+    </table>
+    <script src="./home-continue-stamp.browser.js"></script>
+    <script>
+      const svg = document.getElementById("svg");
+      const rows = document.getElementById("rows");
+      const exportBtn = document.getElementById("exportPng");
+      const pngCanvas = document.getElementById("pngCanvas");
+      let lastTimeline = [];
+
+      const COLORS = {
+        bg: "#161616",
+        line: "rgba(243, 241, 234, 0.16)",
+        text: "#f3f1ea",
+        muted: "#8d897f",
+        halt: "#ff4d00"
+      };
+
+      function render(data) {
+        const timeline = Array.isArray(data?.timeline) ? data.timeline : [];
+        lastTimeline = timeline;
+        exportBtn.disabled = timeline.length < 2;
+        rows.replaceChildren();
+        for (const sample of timeline) {
+          const tr = document.createElement("tr");
+          for (const key of ["ms", "status", "files", "currentDir", "capped"]) {
+            const td = document.createElement("td");
+            td.textContent = String(sample?.[key] ?? "");
+            tr.appendChild(td);
+          }
+          rows.appendChild(tr);
+        }
+        svg.replaceChildren();
+        if (timeline.length < 2) {
+          const t = document.createElementNS("http://www.w3.org/2000/svg", "text");
+          t.setAttribute("x", "24");
+          t.setAttribute("y", "140");
+          t.setAttribute("fill", COLORS.muted);
+          t.setAttribute("font-family", "Helvetica Neue, Helvetica, Arial, sans-serif");
+          t.textContent = timeline.length ? "Need ≥2 samples for a chart" : "No samples";
+          svg.appendChild(t);
+          applyOnPageStamp();
+          return;
+        }
+        const pad = { l: 48, r: 16, t: 16, b: 36 };
+        const w = 960 - pad.l - pad.r;
+        const h = 280 - pad.t - pad.b;
+        const xs = timeline.map((s) => Number(s.ms) || 0);
+        const ys = timeline.map((s) => Number(s.files) || 0);
+        const minX = Math.min(...xs);
+        const maxX = Math.max(...xs) || 1;
+        const maxY = Math.max(...ys, 1);
+        const xScale = (v) => pad.l + ((v - minX) / (maxX - minX || 1)) * w;
+        const yScale = (v) => pad.t + h - (v / maxY) * h;
+        const axis = document.createElementNS("http://www.w3.org/2000/svg", "line");
+        axis.setAttribute("x1", String(pad.l));
+        axis.setAttribute("x2", String(pad.l + w));
+        axis.setAttribute("y1", String(pad.t + h));
+        axis.setAttribute("y2", String(pad.t + h));
+        axis.setAttribute("stroke", COLORS.line);
+        svg.appendChild(axis);
+        const pts = timeline
+          .map((s, i) => `${xScale(xs[i]).toFixed(1)},${yScale(ys[i]).toFixed(1)}`)
+          .join(" ");
+        const poly = document.createElementNS("http://www.w3.org/2000/svg", "polyline");
+        poly.setAttribute("fill", "none");
+        poly.setAttribute("stroke", COLORS.halt);
+        poly.setAttribute("stroke-width", "2");
+        poly.setAttribute("points", pts);
+        svg.appendChild(poly);
+        timeline.forEach((s, i) => {
+          const c = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+          c.setAttribute("cx", String(xScale(xs[i])));
+          c.setAttribute("cy", String(yScale(ys[i])));
+          c.setAttribute("r", "4");
+          c.setAttribute("fill", s.capped ? COLORS.halt : COLORS.text);
+          svg.appendChild(c);
+        });
+        applyOnPageStamp();
+      }
+
+      function exportPng() {
+        if (lastTimeline.length < 2) return;
+        const ctx = pngCanvas.getContext("2d");
+        const W = 960;
+        const H = 280;
+        ctx.fillStyle = COLORS.bg;
+        ctx.fillRect(0, 0, W, H);
+        const pad = { l: 48, r: 16, t: 16, b: 36 };
+        const w = W - pad.l - pad.r;
+        const h = H - pad.t - pad.b;
+        const xs = lastTimeline.map((s) => Number(s.ms) || 0);
+        const ys = lastTimeline.map((s) => Number(s.files) || 0);
+        const minX = Math.min(...xs);
+        const maxX = Math.max(...xs) || 1;
+        const maxY = Math.max(...ys, 1);
+        const xScale = (v) => pad.l + ((v - minX) / (maxX - minX || 1)) * w;
+        const yScale = (v) => pad.t + h - (v / maxY) * h;
+        ctx.strokeStyle = COLORS.line;
+        ctx.beginPath();
+        ctx.moveTo(pad.l, pad.t + h);
+        ctx.lineTo(pad.l + w, pad.t + h);
+        ctx.stroke();
+        ctx.strokeStyle = COLORS.halt;
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        lastTimeline.forEach((_, i) => {
+          const x = xScale(xs[i]);
+          const y = yScale(ys[i]);
+          if (i === 0) ctx.moveTo(x, y);
+          else ctx.lineTo(x, y);
+        });
+        ctx.stroke();
+        lastTimeline.forEach((s, i) => {
+          ctx.fillStyle = s.capped ? COLORS.halt : COLORS.text;
+          ctx.beginPath();
+          ctx.arc(xScale(xs[i]), yScale(ys[i]), 4, 0, Math.PI * 2);
+          ctx.fill();
+        });
+        const params = new URLSearchParams(window.location.search);
+        const stampTag = params.get("tag") || "";
+        const stampRun = params.get("run") || "";
+        const stamp =
+          stampTag || stampRun
+            ? `Preventive Shield — home-continue · ${stampTag || "—"}${stampRun ? ` · run ${stampRun}` : ""}`
+            : "Preventive Shield — home-continue timeline";
+        ctx.fillStyle = COLORS.muted;
+        ctx.font = "12px Helvetica Neue, Helvetica, Arial, sans-serif";
+        ctx.fillText(stamp, 16, 20);
+        const a = document.createElement("a");
+        a.download = `home-continue-timeline-${Date.now()}.png`;
+        a.href = pngCanvas.toDataURL("image/png");
+        a.click();
+      }
+
+      document.getElementById("file").addEventListener("change", async (ev) => {
+        const file = ev.target.files?.[0];
+        if (!file) return;
+        render(JSON.parse(await file.text()));
+      });
+      exportBtn.addEventListener("click", exportPng);
+
+      function applyOnPageStamp() {
+        // stampLabelFromParams from ./home-continue-stamp.browser.js (synced from shared/home-continue-stamp.ts).
+        const params = new URLSearchParams(window.location.search);
+        const stampTag = params.get("tag") || "";
+        const stampRun = params.get("run") || "";
+        const stampLabel = stampLabelFromParams(window.location.search);
+        const el = document.getElementById("run-stamp");
+        if (el) {
+          if (!stampTag && !stampRun) {
+            el.hidden = true;
+            el.textContent = "";
+          } else {
+            el.hidden = false;
+            // Same string as SVG title / aria-label when tag+run (or tag-only) are set.
+            el.textContent = stampLabel;
+          }
+        }
+        const chart = document.getElementById("chart");
+        if (chart) chart.setAttribute("aria-label", stampLabel);
+        const svg = document.getElementById("svg");
+        if (svg) svg.setAttribute("aria-label", stampLabel);
+        if (svg) {
+          let title = document.getElementById("svg-title");
+          if (!title) {
+            title = document.createElementNS("http://www.w3.org/2000/svg", "title");
+            title.id = "svg-title";
+            svg.insertBefore(title, svg.firstChild);
+          }
+          title.textContent = stampLabel;
+        }
+      }
+
+      async function loadFromQueryOrDefault() {
+        applyOnPageStamp();
+        const params = new URLSearchParams(window.location.search);
+        const fileParam = params.get("file");
+        // ?file= relative to this HTML (ops/) or absolute URL. CI: ?file=../desktop-app/dist/smoke-currentDir-timeline.json
+        const candidates = [];
+        if (fileParam) candidates.push(fileParam);
+        candidates.push("../desktop-app/dist/smoke-currentDir-timeline.json");
+        for (const url of candidates) {
+          try {
+            const res = await fetch(url);
+            if (!res.ok) continue;
+            const data = await res.json();
+            render(data);
+            return;
+          } catch {
+            /* try next */
+          }
+        }
+      }
+      void loadFromQueryOrDefault();
+    </script>
+  </body>
+</html>

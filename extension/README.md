@@ -32,31 +32,37 @@ Support only: a successful paste writes ISO timestamp `shieldListsLastPasteAt` t
 - **Bilingual** English / European Portuguese.
 - **Privacy modes** — default never store; optional this-device log or diagnostics for support.
 
-## Chrome (unpacked)
+## Users — install from stores
 
-1. Open `chrome://extensions` (Chromium browsers that support MV3 work the same way).
-2. Enable **Developer mode**.
-3. **Load unpacked** → select this folder:
+| Browser | Where |
+|---------|--------|
+| **Chrome** | [Chrome Web Store](https://chromewebstore.google.com/) — **Add to Chrome** (listing URL in [`shared/extension-stores.json`](../shared/extension-stores.json) after publish) |
+| **Safari (macOS)** | [Mac App Store](https://apps.apple.com/) — install **Preventive Shield**, then Safari → **Settings → Extensions** → enable |
 
+Packaging / App Store Connect / Web Store upload: [docs/EXTENSION_STORE_DISTRIBUTE.md](../docs/EXTENSION_STORE_DISTRIBUTE.md).
+
+```bash
+npm run pack:chrome-store    # zip for Chrome Web Store
+npm run safari:archive       # Release archive (needs Apple team signing)
 ```
-…/Portugal Cybersecurity CP/extension
-```
 
-4. Pin the extension, open a normal https page, open the toolbar icon, press **Run**.
+## Chrome (developers — Load unpacked)
 
-## Safari (macOS)
+1. Open `chrome://extensions` → Developer mode → **Load unpacked** → this `extension/` folder.
+2. Confirm Website API base is `https://pcpd.mtsu.workers.dev` → **Run** on an https tab.
+3. Do **not** tell end users to Load unpacked — ship via **`npm run pack:chrome-store`**.
 
-Safari needs a thin wrapper app. The Xcode project in `../safari/` already points at this folder.
+Local CF timeouts: [LOCAL_CF_CONNECTIVITY.md](../docs/LOCAL_CF_CONNECTIVITY.md).
 
-1. Open `safari/Preventive Shield/Preventive Shield.xcodeproj` in Xcode.
-2. Select the **Preventive Shield** scheme (macOS) and **Run** (⌘R).
-3. In Safari: **Settings → Extensions** → enable **Preventive Shield**.
-4. If the extension is unsigned: Safari → **Develop → Allow Unsigned Extensions** (enable the Develop menu under Settings → Advanced if needed).
-5. Open a normal https page, open the toolbar icon, press **Run**.
+## Safari (developers — Xcode)
 
-Requires **Safari 16.4+**. Rebuild the app after changing files under `extension/`.
+Wrapper app: `../safari/` (points at this folder). Requires **Safari 16.4+**.
 
-To regenerate the wrapper after a major manifest change:
+1. `npm run safari:build` or Run in Xcode.
+2. Develop → Allow Unsigned Extensions while iterating.
+3. End users get the app from the **Mac App Store**, not unsigned Debug builds.
+
+Regenerate wrapper after a major manifest change:
 
 ```bash
 xcrun safari-web-extension-converter "$(pwd)" \
@@ -90,12 +96,14 @@ xcrun safari-web-extension-converter "$(pwd)" \
 
 Privacy defaults to never store. The popup can switch to this-device only or diagnostics for support (`{ source, threat_type }` only — to troubleshoot technical issues, not to publish privacy).
 
-## Website `/api/check` contract (later)
+## Website `/api/check` (live)
 
 Do **not** wire Google Safe Browsing or other third-party reputation APIs into the extension.
 
-When the website is the source of truth for live checks, the extension should call the shipped site’s `POST /api/check` read-only and render `analysis.risk` / `analysis.timing` / `analysis.live` — see [`docs/API_CHECK_CONTRACT.md`](../docs/API_CHECK_CONTRACT.md). Until that integration ships, keep using local address signals in `shared/detect.js` only.
+The popup **Run** path calls the production Website API (`DEFAULT_API_BASE` → `https://pcpd.mtsu.workers.dev`) `POST /api/check` and renders `analysis.risk` / `analysis.timing` / `analysis.live` — see [`docs/API_CHECK_CONTRACT.md`](../docs/API_CHECK_CONTRACT.md). Local address signals in `shared/detect.js` still power on-page phishing/tracker heuristics in the service worker.
 
 Popup Website-API mute announce (Trackers digit + `aria-live`) uses [`shared/trackers-announce.mjs`](shared/trackers-announce.mjs) (`TRACKERS_ANNOUNCE_CLEAR_MS`) so a later `/api/check` scan can re-announce after the clear delay.
+
+Chrome + Safari MVP steps: [docs/EXTENSION_CHROME_SAFARI.md](../docs/EXTENSION_CHROME_SAFARI.md).
 
 **Operators:** `probe-blocked` (HTTP 403/429/503) is not phishing proof — see [Operators FAQ — probe-blocked vs phishing](../docs/API_CHECK_CONTRACT.md#operators-faq--probe-blocked-vs-phishing) in the contract.

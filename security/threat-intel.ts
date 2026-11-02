@@ -6,8 +6,8 @@ import { classifyUrl } from "../shared/detect.mjs";
 import { getCachedThreat, setCachedThreat } from "./threat-cache";
 import { isOwnThreatMergePtEnabled } from "./env-local";
 /** Static imports — bundled into Cloudflare Workers (fs cwd paths are empty there). */
-import curatedThreatsJson from "./data/curated-threats.json";
-import curatedThreatsPtJson from "./data/curated-threats.pt.json";
+import curatedThreatsJson from "./data/curated-threats.json" with { type: "json" };
+import curatedThreatsPtJson from "./data/curated-threats.pt.json" with { type: "json" };
 
 export interface ThreatIntelProvider {
   providerName: string;

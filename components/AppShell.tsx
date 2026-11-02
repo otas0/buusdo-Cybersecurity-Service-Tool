@@ -34,6 +34,7 @@ import {
   retryAfterPreferenceDeltaSec
 } from "../security/retry-after";
 import { PROBE_TIMEOUT_ENV_KEY } from "../shared/probe-budget-copy.mjs";
+import { replaceStateMaybeHashchange } from "../shared/spa-replace-state";
 
 type ShellView = "check" | "settings" | "privacy";
 
@@ -45,8 +46,8 @@ function viewFromSlug(slug: string[]): ShellView {
 
 function pathForView(locale: Locale, next: ShellView, hash = ""): string {
   if (next === "settings") return `/${locale}/settings${hash}`;
-  if (next === "privacy") return `/${locale}/privacy`;
-  return `/${locale}`;
+  if (next === "privacy") return `/${locale}/privacy${hash}`;
+  return `/${locale}${hash}`;
 }
 
 const PROGRESS_STEPS = ["parse", "threat", "probe", "risk"] as const;
@@ -92,8 +93,36 @@ function Header({
 }) {
   const t = getMessages(locale);
   const other = locale === "en" ? "pt-PT" : "en";
+  const [viewHash, setViewHash] = useState("");
+  useEffect(() => {
+    if (view !== "privacy" && view !== "settings") {
+      setViewHash("");
+      return;
+    }
+    setViewHash(window.location.hash || "");
+    function onHash() {
+      setViewHash(window.location.hash || "");
+    }
+    window.addEventListener("hashchange", onHash);
+    return () => window.removeEventListener("hashchange", onHash);
+  }, [view]);
+  const settingsHash =
+    view === "settings" &&
+    (viewHash === "#settings-desktop" ||
+      viewHash === "#settings-privacy" ||
+      viewHash === "#settings-block-lists")
+      ? viewHash
+      : "";
+  const privacyHash =
+    view === "privacy" && viewHash.startsWith("#")
+      ? viewHash
+      : "";
   const otherPath =
-    view === "settings" ? `/${other}/settings` : view === "privacy" ? `/${other}/privacy` : `/${other}`;
+    view === "settings"
+      ? `/${other}/settings${settingsHash}`
+      : view === "privacy"
+        ? `/${other}/privacy${privacyHash}`
+        : `/${other}`;
   return (
     <header className="top">
       <div className="brand">
@@ -126,6 +155,7 @@ function Header({
         <a
           className="lang"
           href={otherPath}
+          data-testid="locale-toggle"
           aria-label={other === "pt-PT" ? "Mudar para português europeu" : "Switch to English"}
         >
           {locale === "en" ? "PT" : "EN"}
@@ -542,17 +572,64 @@ export function AppShell({ locale, slug }: { locale: Locale; slug: string[] }) {
     return () => window.clearTimeout(timer);
   }, [slug]);
 
-  function navigate(next: ShellView) {
+  // Privacy deep-links (e.g. Settings → #privacy-honest-limits): scroll after the
+  // privacy panel mounts so view-switch does not race the hash target.
+  useEffect(() => {
+    if (view !== "privacy") return;
+    function scrollPrivacyHash() {
+      const hash = typeof window !== "undefined" ? window.location.hash : "";
+      if (hash !== "#privacy-honest-limits") return;
+      const el = document.getElementById("privacy-honest-limits");
+      el?.scrollIntoView({ block: "start" });
+    }
+    const raf = window.requestAnimationFrame(() => {
+      window.requestAnimationFrame(scrollPrivacyHash);
+    });
+    window.addEventListener("hashchange", scrollPrivacyHash);
+    return () => {
+      window.cancelAnimationFrame(raf);
+      window.removeEventListener("hashchange", scrollPrivacyHash);
+    };
+  }, [view, slug]);
+
+  // Settings hash-only updates while already on Settings (SPA) — scroll #settings-desktop.
+  useEffect(() => {
+    if (view !== "settings") return;
+    function scrollSettingsDesktopHash() {
+      const hash = typeof window !== "undefined" ? window.location.hash : "";
+      if (hash !== "#settings-desktop") return;
+      document.getElementById("settings-desktop")?.scrollIntoView({ block: "start" });
+    }
+    const raf = window.requestAnimationFrame(() => {
+      window.requestAnimationFrame(scrollSettingsDesktopHash);
+    });
+    window.addEventListener("hashchange", scrollSettingsDesktopHash);
+    return () => {
+      window.cancelAnimationFrame(raf);
+      window.removeEventListener("hashchange", scrollSettingsDesktopHash);
+    };
+  }, [view, slug]);
+
+  function navigate(next: ShellView, hashOverride?: string) {
     const alreadySettings = view === "settings";
     setView(next);
     // Already on Settings → block-lists; first open → data section.
-    const hash =
-      next === "settings" ? (alreadySettings ? "#settings-block-lists" : "#settings-privacy") : "";
+    let hash = hashOverride ?? "";
+    if (!hash && next === "settings") {
+      hash = alreadySettings ? "#settings-block-lists" : "#settings-privacy";
+    }
     const path = pathForView(locale, next, hash);
     if (typeof window !== "undefined") {
-      window.history.replaceState(null, "", path);
+      // SPA: vinext soft nav may emit framenavigated — Playwright asserts document `load` only
+      // (@see playwright/helpers/spa-settings-nav.ts + settings-honest-limits flake note).
+      replaceStateMaybeHashchange(path);
       if (next === "settings") {
         window.setTimeout(() => {
+          if (hash === "#settings-desktop") {
+            // Privacy mirror note (SPA) or deep-link — scroll downloads into view.
+            document.getElementById("settings-desktop")?.scrollIntoView({ block: "start" });
+            return;
+          }
           if (alreadySettings || hash === "#settings-block-lists") {
             window.dispatchEvent(new Event("shield:settings-block-lists"));
             const live = document.querySelector<HTMLElement>('[data-testid="settings-block-lists-live"]');
@@ -566,6 +643,11 @@ export function AppShell({ locale, slug }: { locale: Locale; slug: string[] }) {
           }
         }, 0);
       }
+      if (next === "privacy" && hash === "#privacy-honest-limits") {
+        window.setTimeout(() => {
+          document.getElementById("privacy-honest-limits")?.scrollIntoView({ block: "start" });
+        }, 0);
+      }
     }
   }
 
@@ -573,9 +655,17 @@ export function AppShell({ locale, slug }: { locale: Locale; slug: string[] }) {
     <div className="shell">
       <Header locale={locale} view={view} onNavigate={navigate} />
       {view === "settings" ? (
-        <SettingsPanel locale={locale} onBack={() => navigate("check")} />
+        <SettingsPanel
+          locale={locale}
+          onBack={() => navigate("check")}
+          onOpenHonestLimits={() => navigate("privacy", "#privacy-honest-limits")}
+        />
       ) : view === "privacy" ? (
-        <PrivacyPanel locale={locale} onBack={() => navigate("check")} />
+        <PrivacyPanel
+          locale={locale}
+          onBack={() => navigate("check")}
+          onOpenDesktopDownloads={() => navigate("settings", "#settings-desktop")}
+        />
       ) : (
         <Home locale={locale} />
       )}

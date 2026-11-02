@@ -5,6 +5,7 @@ import {
 } from "../../shared/shield-lists.mjs";
 import { isE2EEnvelope } from "../../shared/lists-e2e-crypto.mjs";
 import { assertListsWithinCap, listsMaxBytes } from "./lists-cap";
+import { assertBackupDomainsAreHostsOnly } from "./reject-full-urls";
 import { getListBackup, readOnlyStore, setListBackup, withStore } from "./store";
 
 export function parseShieldListsOrThrow(raw: unknown) {
@@ -66,6 +67,7 @@ export function putUserLists(
     });
   }
 
+  assertBackupDomainsAreHostsOnly(incomingRaw);
   const incoming = parseBackup(incomingRaw);
   assertListsWithinCap(incoming);
 

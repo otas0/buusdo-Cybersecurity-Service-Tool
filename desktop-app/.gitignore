@@ -1,4 +1,7 @@
 node_modules/
 data/
+dist/
+dist/smoke-currentDir-timeline.json
+packaging/windows/stage/
 .DS_Store
 *.log

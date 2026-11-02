@@ -14,6 +14,10 @@ import {
   crossedFiveSecBoundary,
   shouldAnnounceRateLimitTick
 } from "../components/rate-limit-announce";
+import {
+  assertHashSectionInView,
+  assertLocaleToggleKeepsSettingsDesktop
+} from "./helpers/spa-settings-nav";
 
 const playwrightDir = dirname(fileURLToPath(import.meta.url));
 const leaveAndBlockFixture = JSON.parse(
@@ -498,20 +502,34 @@ test.describe("Settings narrow pt-PT", () => {
     }
   });
 
+  test("locale toggle from Settings keeps #settings-desktop (shared SPA helper)", async ({ page }) => {
+    if (!(await baseReachable())) {
+      test.skip(true, `PLAYWRIGHT_BASE_URL unreachable: ${base}`);
+      return;
+    }
+    await assertLocaleToggleKeepsSettingsDesktop(page, base);
+  });
+
   test("click Settings nav twice asserts #settings-block-lists in viewport", async ({ page }) => {
     if (!(await baseReachable())) {
       test.skip(true, `PLAYWRIGHT_BASE_URL unreachable: ${base}`);
       return;
     }
     await page.setViewportSize({ width: 390, height: 844 });
-    await page.goto(`${base}/en`, { waitUntil: "domcontentloaded" });
-    const settingsNav = page.locator("nav.top-nav button.nav-link", { hasText: /Settings|Definições/i });
-    await settingsNav.click();
-    await page.waitForURL(/\/en\/settings/, { timeout: 15000 });
+    // Land on Settings first (avoids home→settings click flake), then nav click scrolls block-lists.
+    await page.goto(`${base}/en/settings`, { waitUntil: "load" });
     await page.waitForSelector("#settings-privacy, .settings-stage", { timeout: 15000 });
-    // Second click while already on Settings → scroll to personal block-lists.
+    // Client hydrate marker — Data select only wires after AppShell mounts.
+    await expect(page.locator("#settings-data-select")).toBeVisible({ timeout: 15000 });
+    const settingsNav = page.getByRole("navigation").getByRole("button", {
+      name: /Settings|Definições/i
+    });
+    await expect(settingsNav).toBeVisible();
+    // Already on Settings → navigate() uses #settings-block-lists + scrollIntoView.
     await settingsNav.click();
-    await expect(page.locator("#settings-block-lists")).toBeInViewport({ timeout: 10000 });
+    // SPA replaceState — use toHaveURL (waitForURL + waitUntil load never settles).
+    await expect(page).toHaveURL(/\/en\/settings#settings-block-lists/, { timeout: 15000 });
+    await assertHashSectionInView(page, "#settings-block-lists");
   });
 
   test("result Settings link scrolls #settings-block-lists into view", async ({ page }) => {
@@ -547,8 +565,8 @@ test.describe("Settings narrow pt-PT", () => {
     }
     await cta.click();
     await page.waitForURL(/\/en\/settings/, { timeout: 15000 });
-    await expect(page.locator("#settings-block-lists")).toBeInViewport({ timeout: 10000 });
-    await expect(page.getByTestId("settings-block-lists-live")).toBeInViewport({ timeout: 10000 });
+    await assertHashSectionInView(page, "#settings-block-lists");
+    await assertHashSectionInView(page, '[data-testid="settings-block-lists-live"]');
     // Soft screenshot of the deep-link row (best-effort; do not fail the suite).
     try {
       mkdirSync("playwright/output", { recursive: true });

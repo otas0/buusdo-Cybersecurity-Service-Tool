@@ -24,10 +24,23 @@ After a **custom domain**: update both GitHub variables, re-run `production:orig
 
 Verify bot can write: [CHECKLIST_CI_WRITE.md](CHECKLIST_CI_WRITE.md).
 
+Checklist **Notes** column format (Production health OK rows):
+
+`health+check · softDownloadWarn=<n> · notarized=<missing|ok|http-404|…> · <run_url>`
+
+Sample (healthy downloads):
+
+`health+check · softDownloadWarn=0 · notarized=ok · https://github.com/…/actions/runs/…`
+
+When soft Slack is skipped inside the 1h window, the Actions job summary includes `rateLimited=true` (notice-only; checklist Notes still use the format above). Ops drill: workflow_dispatch **force_soft_slack** bypasses that limit. Unset webhook → summary `rateLimited=false|skipped-no-webhook`.
+
+See [LAUNCH_CHECKLIST.md](LAUNCH_CHECKLIST.md) § check:prod log.
+
 ## Alerts
 
 - GitHub workflow-failure email → Watch repo ([HEALTH_ALERTS.md](HEALTH_ALERTS.md))
 - Optional Slack → secret `SLACK_WEBHOOK_URL`; test via Actions → **Slack alert test**
+- Soft desktop download HEAD warnings (including notarized missing vs 404) → Slack **notice-only** (job stays green; not a page); rate-limited to **one notice per hour** when the soft warn count is unchanged — [HEALTH_ALERTS.md](HEALTH_ALERTS.md)
 - Cloudflare Workers error/CPU email → [CLOUDFLARE_ALERTS.md](CLOUDFLARE_ALERTS.md)
 
 ## Do not open early

@@ -166,12 +166,13 @@
   border-radius: 0;
 }
 
+/* Primary CTA = Halt fill (not cream/white — reads as an instrument mark on the dark field). */
 .shell .primary-button {
   min-height: 0;
   border: 0;
   border-radius: 0;
   padding: 0 18px;
-  background: var(--text);
+  background: var(--halt);
   color: var(--bg);
   font-family: var(--mono);
   font-size: 12px;
@@ -181,12 +182,16 @@
 }
 
 .shell .primary-button:hover {
-  background: var(--accent);
+  background: var(--text);
   color: var(--bg);
 }
 
 .shell .primary-button:disabled {
-  opacity: 0.4;
+  background: var(--idle);
+  color: var(--muted);
+  outline: 1px solid var(--halt);
+  outline-offset: 1px;
+  opacity: 1;
   cursor: not-allowed;
 }
 
@@ -194,10 +199,16 @@
   background: transparent;
   border: 0;
   padding: 0;
-  color: var(--muted);
+  color: var(--text);
   cursor: pointer;
   text-decoration: underline;
+  text-decoration-color: var(--line);
   text-underline-offset: 3px;
+}
+
+.shell .text-button:hover {
+  color: var(--halt);
+  text-decoration-color: var(--halt);
 }
 
 .shell .loading {
@@ -463,14 +474,15 @@
 
 .shell .timing-flag-chip {
   padding: 2px 8px;
-  border: 1px solid var(--line);
-  color: var(--muted);
-  background: transparent;
+  border: 1px solid rgba(243, 241, 234, 0.32);
+  color: var(--text);
+  background: var(--bg-soft);
 }
 
 .shell .timing-flag-chip.is-on {
   border-color: var(--halt);
   color: var(--text);
+  background: transparent;
   outline: 1px solid var(--halt);
   outline-offset: 1px;
 }

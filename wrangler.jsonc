@@ -4,6 +4,8 @@
   // Set CLOUDFLARE_ACCOUNT_ID in the environment, or uncomment account_id below.
   // "account_id": "YOUR_ACCOUNT_ID",
   // workers.dev URL = https://pcpd.<account-subdomain>.workers.dev
+  // Staging: `npx wrangler deploy --env staging` (or vinext equivalent) → Worker name pcpd-staging.
+  // Never put ACCOUNT_SYNC_ENABLED=1 or ACCOUNT_SYNC_DEV_RETURN_LINK on the top-level (prod) vars.
   "name": "pcpd",
   "compatibility_date": "2025-10-01",
   // nodejs_compat comes from vite.config.ts cloudflare plugin (do not duplicate here — API 10021).
@@ -16,5 +18,19 @@
     "ACCOUNT_SYNC_ENABLED": "0",
     // When enabling sync, also set DATABASE_URL (+ AUTH_TOKEN) secrets — never file store on Workers.
     "ACCOUNT_SYNC_REQUIRE_TURSO": "1"
+  },
+  "env": {
+    "staging": {
+      // Separate Worker — secrets via `wrangler secret put … --env staging`
+      "name": "pcpd-staging",
+      "workers_dev": true,
+      "preview_urls": true,
+      "vars": {
+        "ACCOUNT_SYNC_ENABLED": "1",
+        "ACCOUNT_SYNC_REQUIRE_TURSO": "1",
+        // Staging-only: magic JSON may include devLink for smoke (never on prod top-level vars).
+        "ACCOUNT_SYNC_DEV_RETURN_LINK": "1"
+      }
+    }
   }
 }

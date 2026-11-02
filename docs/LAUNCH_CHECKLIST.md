@@ -29,20 +29,13 @@ Recorded via `npm run production:origin` → README + `shared/production-site.js
 
 | When (UTC) | Runner | Result | Notes |
 |------------|--------|--------|-------|
-| 2026-11-02 | github-actions/41417766080 | **OK** | `https://pcpd.mtsu.workers.dev` — health+check · softDownloadWarn=5 · notarized=http-404 · https://github.com/otas0/preventive-cybersecurity-prototype/actions/runs/41417766080 |
-| 2026-11-02 | github-actions/41377030512 | **OK** | `https://pcpd.mtsu.workers.dev` — health+check · softDownloadWarn=5 · notarized=http-404 · https://github.com/otas0/preventive-cybersecurity-prototype/actions/runs/41377030512 |
-| 2026-11-01 | github-actions/41359696345 | **OK** | `https://pcpd.mtsu.workers.dev` — health+check · softDownloadWarn=5 · notarized=http-404 · https://github.com/otas0/preventive-cybersecurity-prototype/actions/runs/41359696345 |
-| 2026-11-01 | github-actions/41341521608 | **OK** | `https://pcpd.mtsu.workers.dev` — health+check · softDownloadWarn=5 · notarized=http-404 · https://github.com/otas0/preventive-cybersecurity-prototype/actions/runs/41341521608 |
-| 2026-11-01 | github-actions/41319855407 | **OK** | `https://pcpd.mtsu.workers.dev` — health+check · softDownloadWarn=5 · notarized=http-404 · https://github.com/otas0/preventive-cybersecurity-prototype/actions/runs/41319855407 |
-| 2026-11-01 | github-actions/41318698412 | **OK** | `https://pcpd.mtsu.workers.dev` — health+check · softDownloadWarn=5 · notarized=http-404 · https://github.com/otas0/preventive-cybersecurity-prototype/actions/runs/41318698412 |
-| 2026-11-01 | github-actions/41318446546 | **OK** | `https://pcpd.mtsu.workers.dev` — health+check · softDownloadWarn=0 · notarized=missing · https://github.com/otas0/preventive-cybersecurity-prototype/actions/runs/41318446546 |
-| 2026-11-01 | github-actions/41317940153 | **OK** | `https://pcpd.mtsu.workers.dev` — health+check · https://github.com/otas0/preventive-cybersecurity-prototype/actions/runs/41317940153 |
-| 2026-11-01 | github-actions/41288050274 | **OK** | `https://pcpd.mtsu.workers.dev` — health+check · https://github.com/otas0/preventive-cybersecurity-prototype/actions/runs/41288050274 |
 | 2026-11-01 | Operator laptop (Asia) | **timeout** | Local TCP to previous `preventive-shield.mtsu.workers.dev` timed out; not a Worker crash — see [LOCAL_CF_CONNECTIVITY.md](LOCAL_CF_CONNECTIVITY.md) |
 | 2026-11-01 | Deploy rename | **live** | Worker name `pcpd` → `https://pcpd.mtsu.workers.dev` (privacy page verified remotely) |
 | 2026-11-01 | Cursor remote fetch | health **OK** | `curatedListPresent: true`; GET `/api/check` → 405 (POST-only, route present) |
 | 2026-11-01T07:23Z | Cursor IDE browser (CF-reachable) | **OK** | `POST /api/check` `https://example.com` → `ok`, `timingValid`, `probeMs≈23`, `totalMs≈23`, DNS+HTTP 200, `ambiguousProbeStatus=false`. UI Run on `/en` also Clear / proceed-with-care with timing strip. |
 | 2026-11-01T07:30Z | github-actions (Production health) | **OK** | [run 41285063357](https://github.com/otas0/preventive-cybersecurity-prototype/actions/runs/41285063357) ubuntu · `PRODUCTION_HEALTH_URL=https://pcpd.mtsu.workers.dev` · health `ok`+`curatedListPresent` · check `ok`+`timingValid` · `probeMs=13` `totalMs=13` |
+| 2026-11-01 | OPS sample (format) | **OK** | health+check · softDownloadWarn=0 · notarized=ok · https://example.test/actions/runs/0 |
+| 2026-11-01 | OPS note | — | Soft Slack skip → Actions summary \`rateLimited=true\` (not a checklist FAIL) |
 
 
 ## C. Monitoring
@@ -58,7 +51,9 @@ Recorded via `npm run production:origin` → README + `shared/production-site.js
 ## D. Product defaults (first launch)
 
 - [x] `ACCOUNT_SYNC_ENABLED=0`; `ACCOUNT_SYNC_REQUIRE_TURSO=1` in `wrangler.jsonc` — **keep sync off** until Turso + mailer ([ACCOUNT_SYNC_GATE.md](ACCOUNT_SYNC_GATE.md))
-- [x] No mailer / Turso secrets required yet — do **not** enable Account sync / Turso / Resend until gate checklist is complete
+- [ ] **Staging Account gate:** Turso + Resend/Postmark + `ACCOUNT_SYNC_ENABLED=1` on a non-prod Worker → health `accountSyncEnabled: true` + desktop device-exchange smoke ([ACCOUNT_SYNC_GATE.md](ACCOUNT_SYNC_GATE.md)) — then flip prod
+- [ ] **OPS — staging smoke run URL:** after CI job `staging-account-sync` is green (`vars.STAGING_HEALTH_URL` set; asserts `accountSyncEnabled: true` **only** on that staging URL), paste Actions run here → `_pending_` — secrets template: [DEPLOY_SECRETS.md](DEPLOY_SECRETS.md) § Staging Account sync
+- [x] No mailer / Turso secrets required yet on **production** — do **not** enable Account sync / Turso / Resend until gate checklist is complete
 - [x] Privacy pages live: `/en/privacy`, `/pt-PT/privacy` — redeploy after copy edits, then `npm run test:playwright:privacy` on a CF-reachable machine
 - [x] Extension / desktop defaults follow `production:origin` (`DEFAULT_API_BASE=https://pcpd.mtsu.workers.dev`)
 - [ ] Extension: load unpacked → confirm Website API base is production → one **Run** — no Chrome/Chromium on this Mac; `DEFAULT_API_BASE` + manifest host `https://pcpd.mtsu.workers.dev/*` verified; website Run already proved same API
@@ -78,6 +73,10 @@ Recorded via `npm run production:origin` → README + `shared/production-site.js
 | Canonical | Single public origin |
 | Sync | Off until Turso + production mailer |
 
+**Website MVP verdict (2026-11-01): GO** for public check on workers.dev. Remaining CF alert/Metrics/`CLOUDFLARE_API_TOKEN` items are ops hygiene, not product blockers.
+
+**Extension distribute (users):** Safari → **Mac App Store**; Chrome → **Chrome Web Store**. Pack: `npm run pack:chrome-store` / `npm run safari:archive`. Fill URLs in [`shared/extension-stores.json`](../shared/extension-stores.json) after approval — [EXTENSION_STORE_DISTRIBUTE.md](EXTENSION_STORE_DISTRIBUTE.md).
+
 ## F. After go-live (first 48h)
 
 **Freeze window started:** 2026-11-01T07:30Z (first green Production health on pcpd). Ends ~**2026-11-03T07:30Z**.
@@ -92,4 +91,3 @@ Recorded via `npm run production:origin` → README + `shared/production-site.js
 - [ ] After 48h: `git checkout -b chore/vinext-1-4-eval` ([VINEXT_UPGRADE_1_4.md](VINEXT_UPGRADE_1_4.md))
 - [ ] Custom domain: follow [CUSTOM_DOMAIN_REDEPLOY.md](CUSTOM_DOMAIN_REDEPLOY.md) then refresh public promotion URLs
 - [x] Playwright prod privacy (browser/CDP 2026-11-01): `/en/privacy` + `/pt-PT/privacy` headings + `data-testid=privacy-policy` OK on pcpd — full `npm run test:playwright:privacy` when Chromium install works
-

@@ -135,9 +135,14 @@ jobs:
                 echo "::notice::Notarized desktop download URL missing — soft; health job continues"
               elif [ "$notarized_kind" = "http-404" ]; then
                 echo "> **Notarized HEAD 404** — annotated only; job stays green."
-                echo "::notice::Notarized desktop download HEAD 404 — soft; health job continues"
+                echo ">"
+                echo "> Next: [desktop-app/RELEASE.md](../desktop-app/RELEASE.md) **Notarized macOS zip** checklist **steps 2–3**"
+                echo "> (desktop-notarize-macos attach → soft HEAD \`NOTARIZED_HEAD_OK=1\`), then **desktop-promote-macos-url**."
+                echo "::notice::Notarized desktop download HEAD 404 — soft; see RELEASE.md notarized checklist steps 2–3"
               else
                 echo "> **Notarized HEAD ≠ 200** (kind \`${notarized_kind}\`, status \`${notarized_status:-?}\`) — annotated only; job stays green."
+                echo ">"
+                echo "> See [desktop-app/RELEASE.md](../desktop-app/RELEASE.md) notarized checklist steps 2–3 when kind is http-404 / unreachable."
                 echo "::notice::Notarized desktop download HEAD ≠ 200 (kind ${notarized_kind}, status ${notarized_status:-?}) — soft; health job continues"
               fi
             fi
@@ -349,3 +354,49 @@ jobs:
         if: failure()
         run: |
           echo "::error::Production health or check:prod failed. Watchers receive GitHub workflow-failure email. Slack: secret SLACK_WEBHOOK_URL + workflow Slack alert test (docs/HEALTH_ALERTS.md)."
+
+  # Always report staging gate status — never silently skip when URL unset.
+  staging-account-sync:
+    name: staging health (account sync on)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Staging gate or health
+        env:
+          STAGING_URL: ${{ vars.STAGING_HEALTH_URL }}
+          PROD_URL: ${{ vars.PRODUCTION_HEALTH_URL }}
+        run: |
+          set -euo pipefail
+          URL=$(echo "${STAGING_URL:-}" | tr -d '[:space:]' | sed 's:/*$::')
+          PROD=$(echo "${PROD_URL:-}" | tr -d '[:space:]' | sed 's:/*$::')
+          if [ -z "$PROD" ]; then PROD="https://pcpd.mtsu.workers.dev"; fi
+          RUN_URL="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          if [ -z "$URL" ]; then
+            {
+              echo "### Staging Account sync"
+              echo ""
+              echo "**gate pending** — set repository variable \`STAGING_HEALTH_URL\` to a non-prod Worker"
+              echo "(Turso + mailer + \`ACCOUNT_SYNC_ENABLED=1\` via \`wrangler --env staging\`)."
+              echo "See docs/DEPLOY_SECRETS.md § Staging Account sync · docs/ACCOUNT_SYNC_GATE.md"
+              echo ""
+              echo "Production stays \`accountSyncEnabled: false\` until the gate checklist is complete."
+            } >> "$GITHUB_STEP_SUMMARY"
+            echo "::notice::STAGING_HEALTH_URL unset — Account sync gate pending (not a failure)"
+            exit 0
+          fi
+          if [ "$URL" = "$PROD" ]; then
+            echo "::error::STAGING_HEALTH_URL must not equal production ($PROD)"
+            exit 1
+          fi
+          body=$(curl -fsS --max-time 30 "$URL/api/health")
+          echo "$body" | tee /tmp/staging-health.json
+          echo "$body" | grep -q '"ok":true'
+          echo "$body" | grep -q '"accountSyncEnabled":true'
+          {
+            echo "### Staging Account sync health"
+            echo ""
+            echo "- URL: \`$URL\`"
+            echo "- Assert: \`accountSyncEnabled: true\` (staging only)"
+            echo "- Run: $RUN_URL"
+            echo ""
+            echo "Paste into docs/LAUNCH_CHECKLIST.md § D after green smoke."
+          } >> "$GITHUB_STEP_SUMMARY"

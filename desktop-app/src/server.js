@@ -25,6 +25,7 @@ const { defaultDataDir, ensureDataDir } = require("./user-data");
 const { quitGraceMs } = require("./quit-grace");
 const diagnosticsExport = require("./diagnostics-export");
 const { revealPathInShell } = require("./reveal-path");
+const macosHttpProxy = require("./macos-http-proxy");
 
 function trayAvailable() {
   if (typeof global.__shieldTrayAvailable === "boolean") return global.__shieldTrayAvailable;
@@ -702,6 +703,85 @@ app.post("/api/website-check", async (req, res) => {
       ok: false,
       error: err instanceof Error ? err.message : "website-check-unreachable",
       timingValid: false
+    });
+  }
+});
+
+/** Soft HEAD — never throws; status 0 means unreachable. */
+async function softHead(url) {
+  if (!url) return { ok: false, status: 0 };
+  try {
+    const ctrl = new AbortController();
+    const timer = setTimeout(() => ctrl.abort(), 12_000);
+    const res = await fetch(url, { method: "HEAD", redirect: "follow", signal: ctrl.signal });
+    clearTimeout(timer);
+    return { ok: res.status === 200, status: res.status };
+  } catch {
+    return { ok: false, status: 0 };
+  }
+}
+
+/** Desktop update hint — prefer notarized zip when HEAD 200. */
+app.get("/api/update-check", async (_req, res) => {
+  try {
+    const downloadsPath = path.join(sharedRoot(), "desktop-downloads.json");
+    const pkg = JSON.parse(fs.readFileSync(path.join(ROOT, "package.json"), "utf8"));
+    const downloads = JSON.parse(fs.readFileSync(downloadsPath, "utf8"));
+    const primary = String(downloads.macosAppZipUrl || "").trim() || null;
+    const notarized = String(downloads.macosAppZipUrlNotarized || "").trim() || null;
+    const notarizedHead = await softHead(notarized);
+    const preferNotarized = Boolean(notarized && notarizedHead.ok);
+    const downloadUrl = preferNotarized ? notarized : primary;
+    res.json({
+      ok: true,
+      version: pkg.version || null,
+      releaseTag: downloads.releaseTag || null,
+      macosAppZipUrl: primary,
+      macosAppZipUrlNotarized: notarized,
+      notarizedHeadOk: notarizedHead.ok,
+      notarizedHeadStatus: notarizedHead.status,
+      preferNotarized,
+      downloadUrl,
+      notes: preferNotarized
+        ? "Notarized zip HEAD 200 — use downloadUrl for install/update."
+        : "Notarized not ready — unsigned primary (or attach via desktop-notarize-macos)."
+    });
+  } catch (err) {
+    res.status(500).json({
+      ok: false,
+      error: err instanceof Error ? err.message : "update-check-failed"
+    });
+  }
+});
+
+/**
+ * Optional: write macOS system HTTP(S) proxy to 127.0.0.1:8080 (user must authorize).
+ * Honest: educational proxy only; does not claim full traffic coverage.
+ */
+app.post("/api/proxy/macos-set", async (_req, res) => {
+  try {
+    const result = await macosHttpProxy.setHttpProxy({
+      host: "127.0.0.1",
+      port: PROXY_PORT
+    });
+    res.status(result.ok ? 200 : 400).json({ ok: result.ok, ...result });
+  } catch (err) {
+    res.status(500).json({
+      ok: false,
+      error: err instanceof Error ? err.message : "macos-proxy-failed"
+    });
+  }
+});
+
+/** Optional: turn off macOS system HTTP(S) proxy (user must authorize). */
+app.post("/api/proxy/macos-clear", async (_req, res) => {
+  try {
+    const result = await macosHttpProxy.clearHttpProxy({});
+    res.status(result.ok ? 200 : 400).json({ ok: result.ok, ...result });
+  } catch (err) {
+    res.status(500).json({
+      ok: false,
+      error: err instanceof Error ? err.message : "macos-proxy-clear-failed"
     });
   }
 });

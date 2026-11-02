@@ -1,20 +1,28 @@
 /**
  * Persist personal block/trust lists (shield-lists-v1) on disk for the desktop app.
- * Default path: desktop-app/data/shield-backup.json (or SHIELD_LISTS_PATH).
+ * Default: user data dir / shield-backup.json (see user-data.js), or SHIELD_LISTS_PATH.
  * Syncthing-friendly: watch that file across machines.
  */
 const fs = require("fs");
 const path = require("path");
 const { pathToFileURL } = require("url");
+const { sharedRoot } = require("./shared-root");
+const { ensureDataDir } = require("./user-data");
 
-const DEFAULT_PATH = path.resolve(__dirname, "../data/shield-backup.json");
+function defaultDataDir() {
+  return ensureDataDir();
+}
+
+function defaultListsPath() {
+  return path.join(defaultDataDir(), "shield-backup.json");
+}
 
 let listsMod = null;
 let cache = null;
 
 async function loadMod() {
   if (listsMod) return listsMod;
-  const href = pathToFileURL(path.resolve(__dirname, "../../shared/shield-lists.mjs")).href;
+  const href = pathToFileURL(path.join(sharedRoot(), "shield-lists.mjs")).href;
   listsMod = await import(href);
   return listsMod;
 }
@@ -22,7 +30,7 @@ async function loadMod() {
 function listsPath() {
   return process.env.SHIELD_LISTS_PATH
     ? path.resolve(process.env.SHIELD_LISTS_PATH)
-    : DEFAULT_PATH;
+    : defaultListsPath();
 }
 
 /** File mtime (ms since epoch) for Syncthing operators; null if missing. */

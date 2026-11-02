@@ -33,6 +33,25 @@ test("parseShieldListsOrThrow rejects non-v1", () => {
   assert.throws(() => parseShieldListsOrThrow({ schema: "nope", blocked: [], trusted: [] }));
 });
 
+test("putUserLists rejects full URL in backup domain (400 path)", () => {
+  resetAccountStoreForTests();
+  const user = withStore((store) => upsertUser(store, "url-reject@example.com"));
+  assert.throws(
+    () =>
+      putUserLists(
+        user.id,
+        {
+          schema: "shield-lists-v1",
+          updatedAt: "2026-11-02T00:00:00.000Z",
+          blocked: [{ domain: "https://evil.example/phish", reason: "user" }],
+          trusted: []
+        },
+        null
+      ),
+    /backup-full-url-forbidden/
+  );
+});
+
 test("put + get round-trip encrypts at rest", () => {
   resetAccountStoreForTests();
   const user = withStore((store) => upsertUser(store, "lists@example.com"));

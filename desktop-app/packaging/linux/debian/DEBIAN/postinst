@@ -1,0 +1,28 @@
+#!/bin/sh
+set -e
+# Silent install: user data dir + openAtLogin=false. Never write autostart.
+# CI packages against Node 22 (see .github/workflows/ci.yml setup-node). Depends: nodejs (>= 18).
+CI_NODE_MAJOR=22
+MIN_NODE_MAJOR=18
+
+if ! command -v node >/dev/null 2>&1; then
+  echo "preventive-shield: node is not on PATH." >&2
+  echo "preventive-shield: install the nodejs package (Depends: nodejs >= ${MIN_NODE_MAJOR}; CI uses ${CI_NODE_MAJOR}) then reconfigure:" >&2
+  echo "  sudo dpkg --configure -a" >&2
+  echo "  node /usr/lib/preventive-shield/src/launcher.js --install" >&2
+  exit 1
+fi
+
+NODE_VER="$(node -p "process.versions.node" 2>/dev/null || true)"
+NODE_MAJOR="$(node -p "Number(process.versions.node.split('.')[0])" 2>/dev/null || echo 0)"
+if [ -z "$NODE_MAJOR" ] || [ "$NODE_MAJOR" -lt "$MIN_NODE_MAJOR" ]; then
+  echo "preventive-shield: node ${NODE_VER:-unknown} is below ${MIN_NODE_MAJOR}.x (Depends)." >&2
+  echo "preventive-shield: install nodejs >= ${MIN_NODE_MAJOR} (CI builds against ${CI_NODE_MAJOR}.x)." >&2
+  exit 1
+fi
+if [ "$NODE_MAJOR" -ne "$CI_NODE_MAJOR" ]; then
+  echo "preventive-shield: note — CI builds against Node ${CI_NODE_MAJOR}; found ${NODE_VER}." >&2
+fi
+
+node /usr/lib/preventive-shield/src/launcher.js --install || true
+exit 0

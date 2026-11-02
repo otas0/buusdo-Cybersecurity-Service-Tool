@@ -50,7 +50,10 @@ export const STRINGS = {
     websiteApiOk: "API OK · {level} · {total}ms · timing schema valid",
     websiteApiUserBlock: "Personal block list matched this host (read-only hint).",
     websiteApiFail: "API check failed: {error}",
+    websiteApiCfUnreachable:
+      "This computer cannot reach the Cloudflare workers.dev API (timeout). The Worker may still be healthy — try another network, or open the API base in a browser. See docs/LOCAL_CF_CONNECTIVITY.md.",
     websiteApiSchemaFail: "Timing schema failed: {errors}",
+
     listsSupportBlob: "Support diagnostics JSON",
     listsSupportNeedDiag: "Choose Diagnostics under Data to export.",
     listsSupportBlobOk: "Support blob copied (lastPasteAt only — no payload).",
@@ -71,6 +74,8 @@ export const STRINGS = {
     accountNeedPrivacy: "Choose This device only or Diagnostics to keep account tokens.",
     accountSyncOk: "Lists synced.",
     accountSyncMerged: "Lists merged with cloud.",
+    accountAutoSyncOk: "Lists auto-synced after sign-in.",
+    accountAutoSyncFail: "Auto-sync failed: {error}",
     accountSyncFail: "Sync failed: {error}",
     accountDisabled: "Account sync off on server.",
     accountOfflineBackup: "Offline backup: export JSON or QR (no account required).",
@@ -151,7 +156,10 @@ export const STRINGS = {
     websiteApiOk: "API OK · {level} · {total}ms · schema de timing válido",
     websiteApiUserBlock: "A lista pessoal bloqueou este anfitrião (dica só de leitura).",
     websiteApiFail: "Falha na API: {error}",
+    websiteApiCfUnreachable:
+      "Este computador não alcança a API Cloudflare workers.dev (timeout). O Worker pode estar saudável — tente outra rede, ou abra a base da API no browser. Ver docs/LOCAL_CF_CONNECTIVITY.md.",
     websiteApiSchemaFail: "Schema de timing falhou: {errors}",
+
     listsSupportBlob: "JSON de diagnóstico para suporte",
     listsSupportNeedDiag: "Escolha Diagnóstico em Dados para exportar.",
     listsSupportBlobOk: "Blob de suporte copiado (só lastPasteAt — sem carga).",
@@ -172,6 +180,8 @@ export const STRINGS = {
     accountNeedPrivacy: "Escolha Só neste dispositivo ou Diagnóstico para guardar tokens da conta.",
     accountSyncOk: "Listas sincronizadas.",
     accountSyncMerged: "Listas fundidas com a nuvem.",
+    accountAutoSyncOk: "Listas sincronizadas automaticamente após o início de sessão.",
+    accountAutoSyncFail: "Falha na sincronização automática: {error}",
     accountSyncFail: "Falha na sincronização: {error}",
     accountDisabled: "Sincronização de conta desligada no servidor.",
     accountOfflineBackup: "Cópia offline: exporte JSON ou QR (sem conta).",

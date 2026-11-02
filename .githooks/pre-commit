@@ -1,0 +1,13 @@
+#!/usr/bin/env sh
+# Daily pre-commit: OpenAPI / schema copies + home-continue stamp must stay in sync.
+# Install once: npm run hooks:install
+set -e
+cd "$(git rev-parse --show-toplevel)"
+npm run openapi:check || {
+  echo "hint: openapi copies drifted — run: npm run openapi:sync" >&2
+  exit 1
+}
+npm run sync:home-continue-stamp:check || {
+  echo "hint: stamp drifted — run: npm run sync:home-continue-stamp" >&2
+  exit 1
+}

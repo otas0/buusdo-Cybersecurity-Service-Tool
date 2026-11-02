@@ -1,0 +1,1 @@
+Unit-test-only bare `:focus` fixtures for `SHIELD_FOCUS_GATE_FIXTURE_DIR` — see [Focus-gate fixture overrides](../../../desktop-app/RELEASE.md#focus-gate-fixture-overrides).

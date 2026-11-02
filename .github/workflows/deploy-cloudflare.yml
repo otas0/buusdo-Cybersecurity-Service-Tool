@@ -115,4 +115,3 @@ jobs:
     uses: ./.github/workflows/privacy-prod.yml
     with:
       url: ${{ needs.deploy.outputs.site_url }}
-

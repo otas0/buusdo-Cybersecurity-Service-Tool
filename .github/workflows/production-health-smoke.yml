@@ -1,0 +1,88 @@
+# Minimal CF-reachable smoke (also on origin via Contents API when git HTTPS is blocked).
+# Prefer health-monitor.yml once the full local main is pushed.
+name: Production health
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "*/15 * * * *"
+
+jobs:
+  health:
+    name: health + check:prod
+    runs-on: ubuntu-latest
+    steps:
+      - name: Resolve URL
+        id: target
+        run: |
+          URL="${{ vars.PRODUCTION_HEALTH_URL }}"
+          if [ -z "$URL" ]; then URL="https://pcpd.mtsu.workers.dev"; fi
+          URL=$(echo "$URL" | tr -d '[:space:]' | sed 's:/*$::')
+          echo "url=$URL" >> "$GITHUB_OUTPUT"
+          echo "HEALTH_BASE_URL=$URL" >> "$GITHUB_ENV"
+
+      - name: GET /api/health
+        run: |
+          set -euo pipefail
+          body=$(curl -fsS --max-time 30 "$HEALTH_BASE_URL/api/health")
+          echo "$body" | tee /tmp/health.json
+          echo "$body" | grep -q '"ok":true'
+          echo "$body" | grep -q '"curatedListPresent":true'
+          echo "$body" | grep -q '"accountSyncEnabled":false'
+
+      - name: POST /api/check (check:prod)
+        run: |
+          set -euo pipefail
+          body=$(curl -fsS --max-time 45 -X POST "$HEALTH_BASE_URL/api/check" \
+            -H 'content-type: application/json' -H 'accept: application/json' \
+            -d '{"url":"https://example.com"}')
+          echo "$body" | tee /tmp/check.json
+          echo "$body" | grep -q '"ok":true'
+          echo "$body" | grep -q '"timingValid":true'
+          echo "$body" | grep -q '"totalMs"'
+          echo "$body" | grep -q '"probeMs"'
+          echo "$body" | grep -q '"ambiguousProbeStatus"'
+
+  # Always report staging gate status — never silently skip when URL unset.
+  staging-account-sync:
+    name: staging health (account sync on)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Staging gate or health
+        env:
+          STAGING_URL: ${{ vars.STAGING_HEALTH_URL }}
+          PROD_URL: ${{ vars.PRODUCTION_HEALTH_URL }}
+        run: |
+          set -euo pipefail
+          URL=$(echo "${STAGING_URL:-}" | tr -d '[:space:]' | sed 's:/*$::')
+          PROD=$(echo "${PROD_URL:-}" | tr -d '[:space:]' | sed 's:/*$::')
+          if [ -z "$PROD" ]; then PROD="https://pcpd.mtsu.workers.dev"; fi
+          RUN_URL="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          if [ -z "$URL" ]; then
+            {
+              echo "### Staging Account sync"
+              echo ""
+              echo "**gate pending** — set repository variable \`STAGING_HEALTH_URL\` to a non-prod Worker"
+              echo "(Turso + mailer + \`ACCOUNT_SYNC_ENABLED=1\` via \`wrangler --env staging\`)."
+              echo "See docs/DEPLOY_SECRETS.md § Staging Account sync · docs/ACCOUNT_SYNC_GATE.md"
+            } >> "$GITHUB_STEP_SUMMARY"
+            echo "::notice::STAGING_HEALTH_URL unset — Account sync gate pending (not a failure)"
+            exit 0
+          fi
+          if [ "$URL" = "$PROD" ]; then
+            echo "::error::STAGING_HEALTH_URL must not equal production ($PROD)"
+            exit 1
+          fi
+          body=$(curl -fsS --max-time 30 "$URL/api/health")
+          echo "$body" | tee /tmp/staging-health.json
+          echo "$body" | grep -q '"ok":true'
+          echo "$body" | grep -q '"accountSyncEnabled":true'
+          {
+            echo "### Staging Account sync health"
+            echo ""
+            echo "- URL: \`$URL\`"
+            echo "- Assert: \`accountSyncEnabled: true\` (staging only)"
+            echo "- Run: $RUN_URL"
+            echo ""
+            echo "Paste the run URL into docs/LAUNCH_CHECKLIST.md § D after a green smoke."
+          } >> "$GITHUB_STEP_SUMMARY"

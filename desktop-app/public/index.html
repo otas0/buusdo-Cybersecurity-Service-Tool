@@ -68,6 +68,29 @@
           </p>
           <p id="statusDetail" class="detail">Type an address.</p>
 
+          <nav class="primary-path" id="primaryPath" aria-label="Primary path" data-testid="primary-path">
+            <button type="button" id="pathScanMachine" class="text-button" data-testid="path-scan-machine">Scan this computer</button>
+            <button type="button" id="pathCheckWeb" class="text-button" data-testid="path-check-web">Check a website</button>
+            <button type="button" id="pathSyncAccount" class="text-button" data-testid="path-sync-account">Sync lists</button>
+          </nav>
+
+          <section class="threat-summary" id="threatSummary" aria-labelledby="threatSummaryTitle" data-testid="threat-summary">
+            <h2 id="threatSummaryTitle">Threat summary</h2>
+            <p id="threatSummaryHint" class="hint">Hosts from this computer plus recent website checks (hostname only — never full URLs when Never store).</p>
+            <div class="list-cols">
+              <div>
+                <h3 id="threatMachineTitle">This computer</h3>
+                <ul id="threatMachineList" class="mini-log" data-testid="threat-machine-list"></ul>
+              </div>
+              <div>
+                <h3 id="threatWebTitle">Website checks</h3>
+                <ul id="threatWebList" class="mini-log" data-testid="threat-web-list"></ul>
+              </div>
+            </div>
+          </section>
+
+          <p id="proxyQuietBanner" class="hint proxy-quiet" hidden data-testid="proxy-quiet-banner" role="status"></p>
+
           <form id="checkForm" class="check">
             <label class="visually-hidden" id="checkLabel" for="checkUrl">Address</label>
             <input id="checkUrl" name="url" type="text" inputmode="url" placeholder="example.com" autocomplete="off" spellcheck="false" />
@@ -91,8 +114,14 @@
             <button type="button" id="websiteCheckBtn" class="text-button website-check" disabled>
               <span id="websiteCheckLabel">Website API check</span>
             </button>
+            <button type="button" id="websiteBlockOnDevice" class="text-button" hidden data-testid="website-block-on-device">
+              Block on this device
+            </button>
             <p id="websiteCheckStatus" class="detail" hidden></p>
           </div>
+          <p id="updateCheckStatus" class="hint" data-testid="update-check-status" hidden></p>
+          <a id="updateCheckDownload" class="text-button" data-testid="update-check-download" hidden href="#" rel="noopener noreferrer"></a>
+          <button type="button" id="updateCheckBtn" class="text-button" data-testid="update-check">Check for desktop update</button>
         </section>
 
         <section class="sheet">
@@ -144,6 +173,14 @@
               <details class="proxy-guide-os" id="proxyGuideMacDetails" data-platform="darwin">
                 <summary id="proxyGuideMacSummary">macOS</summary>
                 <p id="proxyGuideMac" class="hint"></p>
+                <p id="proxyMacSetHonest" class="hint" data-testid="proxy-mac-set-honest"></p>
+                <button type="button" id="proxyMacSetBtn" class="text-button" data-testid="proxy-mac-set" hidden>
+                  Set macOS HTTP proxy (needs authorization)
+                </button>
+                <button type="button" id="proxyMacClearBtn" class="text-button" data-testid="proxy-mac-clear" hidden>
+                  Turn off macOS HTTP proxy
+                </button>
+                <p id="proxyMacSetStatus" class="hint" data-testid="proxy-mac-set-status" hidden></p>
               </details>
               <details class="proxy-guide-os" id="proxyGuideWinDetails" data-platform="win32">
                 <summary id="proxyGuideWinSummary">Windows</summary>

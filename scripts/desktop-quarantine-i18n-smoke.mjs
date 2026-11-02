@@ -80,6 +80,23 @@ if (t("en", "accountExchange") !== "Exchange code") {
 if (t("pt-PT", "accountExchange") !== "Trocar código") {
   fail(`pt-PT accountExchange: got ${JSON.stringify(t("pt-PT", "accountExchange"))}`);
 }
+
+// Primary-path CTAs (machine / web / account) — EN + pt-PT required.
+for (const [key, en, pt] of [
+  ["pathScanMachine", "Scan this computer", "Analisar este computador"],
+  ["pathCheckWeb", "Check a website", "Verificar um site"],
+  ["pathSyncAccount", "Sync lists", "Sincronizar listas"],
+  ["checkOnWebsite", "Check on website", "Verificar no site"],
+  ["websiteBlockOnDevice", "Block on this device", "Bloquear neste dispositivo"],
+  ["threatSummaryTitle", "Threat summary", "Resumo de ameaças"]
+]) {
+  if (t("en", key) !== en) fail(`EN ${key}: got ${JSON.stringify(t("en", key))}`);
+  if (t("pt-PT", key) !== pt) fail(`pt-PT ${key}: got ${JSON.stringify(t("pt-PT", key))}`);
+}
+
+if (!indexHtml.includes('data-testid="primary-path"') || !indexHtml.includes('data-testid="threat-summary"')) {
+  fail("index.html must expose primary-path + threat-summary test ids");
+}
 if (t("en", "accountDevicePlaceholder") !== "Device code from magic link") {
   fail(`EN accountDevicePlaceholder: got ${JSON.stringify(t("en", "accountDevicePlaceholder"))}`);
 }
@@ -88,6 +105,39 @@ if (!STRINGS["pt-PT"].accountDevicePlaceholder) {
 }
 
 const dash = await readFile(path.join(root, "desktop-app/public/js/dashboard.js"), "utf8");
+if (!dash.includes("rememberWebCheck") || !dash.includes("blockHostOnDevice")) {
+  fail("dashboard must implement web-check remember + block-on-device linkage");
+}
+if (!dash.includes('currentPrivacyMode() === "off"')) {
+  fail("dashboard must avoid persisting web-check rows under Never store");
+}
+if (!dash.includes("preferNotarized") || !dash.includes("updateCheckDownload")) {
+  fail("dashboard update-check must surface notarized download when preferNotarized");
+}
+if (!dash.includes("fillCheckFromThreatHost") || !dash.includes("threat-host-row")) {
+  fail("threat summary host click must fill check box");
+}
+if (!dash.includes('ev.key !== "Enter"') && !dash.includes("ev.key !== 'Enter'")) {
+  fail("threat summary host row must fill check on Enter");
+}
+if (!dash.includes("/api/proxy/macos-clear") || !dash.includes("proxyMacClear")) {
+  fail("dashboard must wire macOS proxy clear");
+}
+if (!dash.includes("updateCheckNotarizedHead") || !dash.includes("notarizedHeadStatus")) {
+  fail("update-check UI must show notarizedHeadStatus");
+}
+if (!dash.includes('account-auto-sync-toast') || !dash.includes("setAccountStatusQuiet")) {
+  fail("auto-sync toast must use data-testid=account-auto-sync-toast and quiet status aria");
+}
+if (!dash.includes("Press Enter to check") && !dash.includes("press Enter to check")) {
+  fail("threat host aria-label must mention Press Enter to check");
+}
+if (!STRINGS.en.updateCheckNotarizedReady || !STRINGS["pt-PT"].updateCheckNotarizedReady) {
+  fail("updateCheckNotarizedReady missing EN/pt-PT");
+}
+if (!STRINGS.en.proxyMacSetHonest || !STRINGS["pt-PT"].proxyMacSet) {
+  fail("macOS proxy one-click strings missing EN/pt-PT");
+}
 if (!dash.includes('code === "destination-exists"')) fail("dashboard missing destination-exists map");
 if (!dash.includes('code === "missing-quarantine"')) fail("dashboard missing missing-quarantine map");
 if (!dash.includes("machineRestoreReason_restore_failed")) fail("dashboard missing restore-failed fallback");

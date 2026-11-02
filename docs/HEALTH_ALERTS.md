@@ -15,7 +15,8 @@ When **Production health** fails, GitHub emails subscribed watchers. No extra se
 
 1. Create an Incoming Webhook for your ops channel.
 2. Repo → Settings → Secrets → Actions → `SLACK_WEBHOOK_URL`.
-3. On failure the workflow POSTs a short text payload with the run URL.
+3. On **health/check failure** the workflow POSTs a short text payload with the run URL (failure alert).
+4. On **soft desktop download HEAD warnings** (count > 0, including notarized HEAD ≠ 200) the workflow POSTs an **information notice only** — the job stays green; this is not a page. Notices are **rate-limited to once per hour** when `soft_warn` is unchanged (cache key); a changed warn count always notifies. When skipped, the job summary includes `rateLimited=true`. Workflow_dispatch **force_soft_slack** bypasses the rate limit for ops drills. If `SLACK_WEBHOOK_URL` is unset, the summary still records `rateLimited=false|skipped-no-webhook`.
 
 ## Checklist write-back
 

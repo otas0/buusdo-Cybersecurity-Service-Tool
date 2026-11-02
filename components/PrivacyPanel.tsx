@@ -1,16 +1,31 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { getMessages, type Locale } from "../i18n/messages";
+import { macMirrorUrl, resolveDesktopDownloads } from "../shared/desktop-downloads-resolve";
 
 export function PrivacyPanel({
   locale,
-  onBack
+  onBack,
+  onOpenDesktopDownloads
 }: {
   locale: Locale;
   onBack: () => void;
+  /** SPA: Settings → #settings-desktop (scroll after client navigate). */
+  onOpenDesktopDownloads?: () => void;
 }) {
   const t = getMessages(locale);
   const pt = locale === "pt-PT";
+  // Client resolve so Playwright stubs (__SHIELD_TEST_DESKTOP_DOWNLOADS__) win over SSR HTML.
+  const [mirrorLive, setMirrorLive] = useState(false);
+  const [releaseNotesUrl, setReleaseNotesUrl] = useState("#");
+  useEffect(() => {
+    const downloads = resolveDesktopDownloads();
+    setMirrorLive(Boolean(macMirrorUrl(downloads)));
+    setReleaseNotesUrl(String(downloads.releaseNotesUrl || "#"));
+  }, []);
+
+  // Hash scroll is owned by AppShell after view switch (avoids Settings → privacy race).
 
   return (
     <main className="stage settings-stage" data-testid="privacy-policy">
@@ -28,6 +43,35 @@ export function PrivacyPanel({
         <p className="hint">{t.privacyPolicyStoreBody}</p>
       </section>
 
+      <section className="settings-block" id="privacy-honest-limits">
+        <h3 className="settings-subhead">{t.privacyPolicyLimitsTitle}</h3>
+        <p className="hint" data-testid="privacy-honest-limits">
+          {t.privacyPolicyLimitsBody}
+        </p>
+        {mirrorLive ? (
+          <p className="scope-note">
+            <a
+              className="text-button"
+              href={`/${pt ? "pt-PT" : "en"}/settings#settings-desktop`}
+              data-testid="privacy-desktop-mirror-note"
+              onClick={(e) => {
+                if (!onOpenDesktopDownloads) return;
+                e.preventDefault();
+                onOpenDesktopDownloads();
+              }}
+              onKeyDown={(e) => {
+                if (!onOpenDesktopDownloads) return;
+                if (e.key !== "Enter" && e.key !== " ") return;
+                e.preventDefault();
+                onOpenDesktopDownloads();
+              }}
+            >
+              {t.privacyDesktopMirrorNote}
+            </a>
+          </p>
+        ) : null}
+      </section>
+
       <section className="settings-block">
         <h3 className="settings-subhead">{t.privacyPolicyAccountTitle}</h3>
         <p className="hint">{t.privacyPolicyAccountBody}</p>
@@ -40,6 +84,22 @@ export function PrivacyPanel({
 
       <p className="scope-note" data-testid="privacy-policy-updated">
         {t.privacyPolicyUpdated}
+      </p>
+
+      <p className="hint">
+        <a className="text-button" href={`/${pt ? "pt-PT" : "en"}/settings#settings-desktop`}>
+          {t.desktopDownloadsTitle}
+        </a>
+        {" · "}
+        <a
+          className="text-button"
+          href={releaseNotesUrl}
+          target="_blank"
+          rel="noreferrer"
+          data-testid="privacy-desktop-release-notes"
+        >
+          {t.desktopDownloadRelease}
+        </a>
       </p>
 
       <div className="action-row settings-actions">

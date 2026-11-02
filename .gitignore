@@ -10,6 +10,8 @@
 
 # testing
 /coverage
+# listing assert debug keep (SHIELD_LISTING_KEEP_TEMP=1)
+/tests/fixtures/listing-mirror-live-temp.json
 
 # next.js
 /.next/
