@@ -629,7 +629,15 @@ async function runWebsiteApiCheck() {
     scheduleAccountAutoPull(base);
   } catch (err) {
     const message = err instanceof Error ? err.message : "unreachable";
-    els.websiteApiStatus.textContent = t(lang, "websiteApiFail", { error: message });
+    const baseNow = apiBase();
+    const looksCfTimeout =
+      /workers\.dev/i.test(baseNow) &&
+      /failed to fetch|networkerror|load failed|aborted|timeout|timed out|unreachable/i.test(
+        message
+      );
+    els.websiteApiStatus.textContent = looksCfTimeout
+      ? t(lang, "websiteApiCfUnreachable")
+      : t(lang, "websiteApiFail", { error: message });
   }
 }
 
@@ -834,10 +842,22 @@ function setAccountStatus(msg) {
   els.accountStatus.textContent = msg || "";
 }
 
+function syncAccountControlsSignedIn(signedIn) {
+  const on = Boolean(signedIn);
+  if (els.accountSyncToggle) {
+    els.accountSyncToggle.disabled = !on;
+    els.accountSyncToggle.title = on ? "" : t(lang, "accountSignedOut");
+  }
+  if (els.accountSyncNowBtn) els.accountSyncNowBtn.disabled = !on;
+  if (els.accountSignOutBtn) els.accountSignOutBtn.disabled = !on;
+}
+
 async function refreshAccountUi() {
   const tokens = await readAccountTokens(api.storage.local);
+  const signedIn = Boolean(tokens.email && tokens.accessToken);
   if (els.accountSyncToggle) els.accountSyncToggle.checked = tokens.syncEnabled;
-  if (tokens.email && tokens.accessToken) {
+  syncAccountControlsSignedIn(signedIn);
+  if (signedIn) {
     setAccountStatus(t(lang, "accountSignedIn", { email: tokens.email }));
   } else {
     setAccountStatus(t(lang, "accountSignedOut"));
