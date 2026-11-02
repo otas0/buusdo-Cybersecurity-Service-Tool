@@ -39,12 +39,36 @@ case "$NODE_SRC" in
     ;;
 esac
 
-rsync -a --delete \
-  --exclude node_modules --exclude dist --exclude data --exclude packaging/windows/stage \
-  --exclude '*.log' \
-  "$ROOT/" "$STAGE/app/"
+# Prefer rsync; fall back to tar/cp on Windows runners without rsync (exit 127).
+stage_tree() {
+  local src="$1" dest="$2"
+  shift 2
+  local excludes=("$@")
+  if command -v rsync >/dev/null 2>&1; then
+    local args=(-a --delete)
+    local ex
+    for ex in "${excludes[@]}"; do
+      args+=(--exclude "$ex")
+    done
+    rsync "${args[@]}" "$src" "$dest"
+    return
+  fi
+  mkdir -p "$dest"
+  # Portable copy without rsync: tar stream with excludes.
+  (
+    cd "$src" || exit 1
+    local tar_ex=()
+    for ex in "${excludes[@]}"; do
+      tar_ex+=(--exclude="$ex")
+    done
+    tar "${tar_ex[@]}" -cf - .
+  ) | (cd "$dest" && tar -xf -)
+}
+
+stage_tree "$ROOT/" "$STAGE/app/" \
+  node_modules dist data packaging/windows/stage '*.log'
 mkdir -p "$STAGE/shared"
-rsync -a --delete "$REPO/shared/" "$STAGE/shared/"
+stage_tree "$REPO/shared/" "$STAGE/shared/"
 
 cat > "$STAGE/run.cmd" <<'EOF'
 @echo off

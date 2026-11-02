@@ -20,6 +20,7 @@ import path from "node:path";
 import { setTimeout as delay } from "node:timers/promises";
 
 const data = await mkdtemp(path.join(os.tmpdir(), "shield-install-accept-"));
+const scanRoot = await mkdtemp(path.join(os.tmpdir(), "shield-install-scan-"));
 const loginItem = path.join(data, "login-item-should-not-exist");
 const uiPort = 32151;
 const proxyPort = 32152;
@@ -52,6 +53,8 @@ const env = {
   SHIELD_DATA_DIR: data,
   SHIELD_AUTOSTART_PATH: loginItem,
   SHIELD_LAUNCHER_NO_BROWSER: "1",
+  // Tiny fixture home — CI runner $HOME is huge; without this first-open scan never reaches scanning/ready in time.
+  SHIELD_MACHINE_SCAN_ROOT: scanRoot,
   SHIELD_MACHINE_SCAN_MAX_FILES: "30",
   SHIELD_MACHINE_SCAN_SYSTEM: "0",
   SHIELD_HONEST_LIMITS: "0",
@@ -141,5 +144,8 @@ try {
 } finally {
   child.kill("SIGTERM");
   await delay(200);
-  await rm(data, { recursive: true, force: true });
+  await Promise.all([
+    rm(data, { recursive: true, force: true }),
+    rm(scanRoot, { recursive: true, force: true })
+  ]);
 }
