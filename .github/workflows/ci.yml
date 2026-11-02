@@ -614,6 +614,29 @@ jobs:
           PLAYWRIGHT_BASE_URL: ${{ vars.PLAYWRIGHT_BASE_URL || 'http://localhost:3000' }}
           ACCOUNT_SYNC_ENABLED: "1"
 
+      # Optional live website components (vinext). Soft-skip inside specs if base unreachable.
+      - name: Live RiskResult Block-on-desktop (optional)
+        id: pw_risk_live
+        if: steps.pw_install.outcome == 'success'
+        continue-on-error: true
+        run: |
+          BASE="${PLAYWRIGHT_BASE_URL:-http://localhost:3000}"
+          export PLAYWRIGHT_BASE_URL="$BASE"
+          npm run test:playwright:risk-result-desktop-block-live
+        env:
+          PLAYWRIGHT_BASE_URL: ${{ vars.PLAYWRIGHT_BASE_URL || 'http://localhost:3000' }}
+
+      - name: Live Settings ready-to-promote (optional, real SettingsPanel)
+        id: pw_settings_live
+        if: steps.pw_install.outcome == 'success'
+        continue-on-error: true
+        run: |
+          BASE="${PLAYWRIGHT_BASE_URL:-http://localhost:3000}"
+          export PLAYWRIGHT_BASE_URL="$BASE"
+          npm run test:playwright:settings-mac-ready-to-promote-live
+        env:
+          PLAYWRIGHT_BASE_URL: ${{ vars.PLAYWRIGHT_BASE_URL || 'http://localhost:3000' }}
+
       - name: Strict deep-link + double-nav (hard fail)
         id: pw_strict
         if: steps.pw_install.outcome == 'success'

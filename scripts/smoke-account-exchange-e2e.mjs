@@ -11,25 +11,13 @@ import { tmpdir } from "node:os";
 import path from "node:path";
 import { pathToFileURL } from "node:url";
 import { createRequire } from "node:module";
+import { stagingSoftSkip, stagingUrlOrExit } from "./lib/strict-staging.mjs";
 
-const staging = String(process.env.STAGING_HEALTH_URL || "").trim().replace(/\/$/, "");
-const prod = String(process.env.PRODUCTION_HEALTH_URL || "https://pcpd.mtsu.workers.dev")
-  .trim()
-  .replace(/\/$/, "");
-
-if (!staging) {
-  console.log("smoke:account-exchange-e2e SKIP — STAGING_HEALTH_URL unset (gate pending)");
-  process.exit(0);
-}
-if (staging === prod) {
-  console.error("REFUSE: staging URL equals production");
-  process.exit(1);
-}
+const { staging } = stagingUrlOrExit("smoke:account-exchange-e2e");
 
 const health = await fetch(`${staging}/api/health`).then((r) => r.json());
 if (!health?.accountSyncEnabled) {
-  console.log("smoke:account-exchange-e2e SKIP — accountSyncEnabled false on staging");
-  process.exit(0);
+  stagingSoftSkip("smoke:account-exchange-e2e", "accountSyncEnabled false on staging");
 }
 
 const email = `ex-e2e-${Date.now()}@example.com`;
@@ -40,10 +28,10 @@ const magicRes = await fetch(`${staging}/api/auth/magic/request`, {
 });
 const magicBody = await magicRes.json();
 if (!magicBody?.devLink) {
-  console.log(
-    "smoke:account-exchange-e2e SKIP — no devLink (need ACCOUNT_SYNC_DEV_RETURN_LINK=1 on staging)"
+  stagingSoftSkip(
+    "smoke:account-exchange-e2e",
+    "no devLink (need ACCOUNT_SYNC_DEV_RETURN_LINK=1 on staging)"
   );
-  process.exit(0);
 }
 
 // Consume magic via GET (sets session / returns device path depending on client).

@@ -37,6 +37,11 @@ At the same time:
 | DNS resolves but SYN dropped | `dig`/`nslookup` OK; connect never completes |
 | Worker actually down | Dashboard errors spike; remote fetch also fails |
 
-## Operator rule
+## Operator rule (default)
+
+**If the laptop cannot open `*.workers.dev` or `github.com` git HTTPS:** verify production only via GitHub Actions → **Production health** (ubuntu is CF-reachable). Do not treat local `curl` timeouts as Worker outages. Prefer [GIT_SSH_SETUP.md](GIT_SSH_SETUP.md) for git when HTTPS:443 is filtered.
+
+## Operator rule (detail)
+
 
 Treat **remote health OK + local timeout** as a **connectivity** issue. Fix the network or use CI smoke; only escalate as an outage when health fails from a known-good runner.

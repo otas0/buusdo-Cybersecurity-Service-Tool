@@ -58,7 +58,10 @@ npx wrangler secret put RESEND_API_KEY --env staging
 
 # Smoke (devLink JSON — staging only):
 # STAGING_HEALTH_URL=https://pcpd-staging.<subdomain>.workers.dev npm run smoke:staging-magic-link
+# STRICT_STAGING=1 …  → hard-fail SKIP (unset URL / no Turso / no DEV_RETURN)
 ```
+
+**STRICT_STAGING=1:** `smoke:staging-magic-link`, `smoke:account-exchange-e2e`, and `smoke:account-lists-bidirectional` exit **1** on SKIP (missing `STAGING_HEALTH_URL`, sync off, or no `devLink`). Default (unset) stays soft SKIP exit 0 so `check:desktop` stays green before the gate opens.
 
 | Secret | Purpose |
 |--------|---------|

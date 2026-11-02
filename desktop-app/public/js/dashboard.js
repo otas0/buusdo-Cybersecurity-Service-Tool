@@ -2369,6 +2369,9 @@ function consumeDeepLinkBlockHost() {
   }
 }
 
+/** Playwright / local smoke — real auto-sync toast path without Exchange. */
+window.__SHIELD_RUN_ACCOUNT_SYNC__ = (opts) => runAccountSync(opts || {});
+
 fetchState()
   .then(() => {
     connectSSE();

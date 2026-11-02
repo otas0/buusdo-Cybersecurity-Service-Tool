@@ -7,25 +7,13 @@
  * Without staging → exit 0 skip (gate pending).
  */
 import assert from "node:assert/strict";
+import { stagingSoftSkip, stagingUrlOrExit } from "./lib/strict-staging.mjs";
 
-const staging = String(process.env.STAGING_HEALTH_URL || "").trim().replace(/\/$/, "");
-const prod = String(process.env.PRODUCTION_HEALTH_URL || "https://pcpd.mtsu.workers.dev")
-  .trim()
-  .replace(/\/$/, "");
-
-if (!staging) {
-  console.log("smoke:account-lists-bidirectional SKIP — STAGING_HEALTH_URL unset (gate pending)");
-  process.exit(0);
-}
-if (staging === prod) {
-  console.error("REFUSE: staging URL equals production");
-  process.exit(1);
-}
+const { staging } = stagingUrlOrExit("smoke:account-lists-bidirectional");
 
 const health = await fetch(`${staging}/api/health`).then((r) => r.json());
 if (!health?.accountSyncEnabled) {
-  console.log("smoke:account-lists-bidirectional SKIP — accountSyncEnabled false");
-  process.exit(0);
+  stagingSoftSkip("smoke:account-lists-bidirectional", "accountSyncEnabled false");
 }
 
 const email = `lists-bi-${Date.now()}@example.com`;
@@ -37,10 +25,10 @@ const magic = await fetch(`${staging}/api/auth/magic/request`, {
 }).then((r) => r.json());
 
 if (!magic?.devLink) {
-  console.log(
-    "smoke:account-lists-bidirectional SKIP — no devLink (need ACCOUNT_SYNC_DEV_RETURN_LINK=1 on staging)"
+  stagingSoftSkip(
+    "smoke:account-lists-bidirectional",
+    "no devLink (need ACCOUNT_SYNC_DEV_RETURN_LINK=1 on staging)"
   );
-  process.exit(0);
 }
 
 const u = new URL(magic.devLink, staging);

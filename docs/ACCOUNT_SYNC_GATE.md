@@ -37,7 +37,7 @@ Workers have no durable local disk. File store under `data/account-sync/` is for
 1. Deploy staging via `wrangler.jsonc` **`env.staging`** (`pcpd-staging`) with Turso + mailer secrets — never copy `ACCOUNT_SYNC_ENABLED=1` / `ACCOUNT_SYNC_DEV_RETURN_LINK=1` onto top-level prod vars ([DEPLOY_SECRETS.md](DEPLOY_SECRETS.md)).
 2. Set GitHub Actions variable `STAGING_HEALTH_URL` to that origin (must **not** equal `PRODUCTION_HEALTH_URL` / workers.dev prod). When unset, CI summary says **gate pending** (not a silent skip).
 3. `GET /api/health` → `accountSyncEnabled: true`, `accountSyncTursoConfigured: true`. CI job **staging-account-sync** asserts `accountSyncEnabled: true` **only** against `STAGING_HEALTH_URL`.
-4. `STAGING_HEALTH_URL=… npm run smoke:staging-magic-link` (JSON `devLink` — staging only) → desktop device code → Exchange → auto-sync toast (`data-testid=account-auto-sync-toast`).
+4. `STAGING_HEALTH_URL=… npm run smoke:staging-magic-link` (JSON `devLink` — staging only) → desktop device code → Exchange → auto-sync toast (`data-testid=account-auto-sync-toast`). Use `STRICT_STAGING=1` when the gate must hard-fail SKIP (unset URL / sync off / no `devLink`). Bidirectional lists: `smoke:account-lists-bidirectional`. Real desktop toast+blockHost: `npm run smoke:desktop-auto-sync-toast`.
 5. Website dangerous result → **Block on desktop** → local list write + proxy guide (desktop must already be running on `:3010`).
 6. Extension: same Account token after Exchange → auto-sync + fail toast (same lists schema; domain hosts only — **never full URLs**). Optional: `npm run smoke:account-exchange-e2e`.
 7. Paste the green staging Actions run URL into [LAUNCH_CHECKLIST.md](LAUNCH_CHECKLIST.md) § D, then flip production.

@@ -1,11 +1,11 @@
 # Minimal CF-reachable smoke (also on origin via Contents API when git HTTPS is blocked).
-# Prefer health-monitor.yml once the full local main is pushed.
-name: Production health
+# Full soft_warn / Slack / notarized HEAD lives in health-monitor.yml (name: Production health).
+# Keep this name distinct so `gh workflow run` does not collide.
+name: Production health smoke
 
 on:
   workflow_dispatch:
-  schedule:
-    - cron: "*/15 * * * *"
+  # No schedule — avoid dual */15 cron with health-monitor.yml
 
 jobs:
   health:
