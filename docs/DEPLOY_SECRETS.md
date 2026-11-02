@@ -28,6 +28,7 @@ Workflow: [.github/workflows/deploy-cloudflare.yml](../.github/workflows/deploy-
 | `PRODUCTION_HEALTH_URL` | Same origin for [health-monitor.yml](../.github/workflows/health-monitor.yml) (also defaults to workers.dev if unset) |
 | `STAGING_HEALTH_URL` | **Non-prod** Worker origin for Account-sync gate smoke. Must **not** equal `PRODUCTION_HEALTH_URL`. When set, Production health runs job `staging-account-sync` and asserts `accountSyncEnabled: true` **only** on this URL. |
 | `CHECKLIST_CI_WRITE` | Set to `0` to disable bot commits that append check:prod rows to LAUNCH_CHECKLIST |
+| `RUN_PLAYWRIGHT_SETTINGS` | Set to `true` to run optional CI job `playwright-settings` (includes live RiskResult / Settings ready-to-promote soft steps). |
 
 ## Staging Account sync (Turso + mailer) — before prod flip
 
