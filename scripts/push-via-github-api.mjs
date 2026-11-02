@@ -104,7 +104,8 @@ const commit = await api(`/repos/${owner}/${repo}/git/commits`, {
   method: "POST",
   body: {
     message:
-      "Ship Cloudflare Workers launch path onto main (API sync; github.com git HTTPS blocked locally).\n\nIncludes health-monitor check:prod + production origin pcpd.",
+      process.env.COMMIT_MESSAGE ||
+      "Deliver desktop↔website linkage with staging Account gate guards.\n\nAPI sync — github.com git HTTPS blocked locally. Block-on-desktop, auto-sync toasts, staging wrangler env, CI gate-pending summary.",
     tree: tree.sha,
     parents: [remoteSha]
   }

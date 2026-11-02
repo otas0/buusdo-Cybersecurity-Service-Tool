@@ -7,11 +7,12 @@ import { readFileSync, existsSync } from "node:fs";
 import path from "node:path";
 import { expect, test } from "@playwright/test";
 
-const base = process.env.PLAYWRIGHT_BASE_URL || "http://localhost:3000";
+const base = (process.env.PLAYWRIGHT_BASE_URL || "").trim().replace(/\/$/, "");
 const fixturePath = path.resolve("playwright/fixtures/leave-and-block.json");
 const curatedPath = path.resolve("security/data/curated-threats.json");
 
 async function baseReachable(): Promise<boolean> {
+  if (!base) return false;
   try {
     const res = await fetch(base, { signal: AbortSignal.timeout(4000) });
     return res.status > 0;
@@ -27,6 +28,11 @@ function curatedHasHost(host: string): boolean {
 }
 
 test("live RiskResult: desktop down → desktop-block-need-app", async ({ page }) => {
+  // Live suite only — never default to localhost (CI / check:desktop use the offline fixture instead).
+  if (!base) {
+    test.skip(true, "set PLAYWRIGHT_BASE_URL to run live RiskResult (offline: risk-result-desktop-block.spec.ts)");
+    return;
+  }
   if (!(await baseReachable())) {
     test.skip(true, `PLAYWRIGHT_BASE_URL unreachable: ${base}`);
     return;

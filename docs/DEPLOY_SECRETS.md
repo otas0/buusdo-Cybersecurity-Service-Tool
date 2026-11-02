@@ -75,8 +75,11 @@ After deploy:
 2. Actions → **Production health** → confirm job **staging-account-sync** is green (`accountSyncEnabled: true`).
 3. Paste the run URL into LAUNCH_CHECKLIST § D.
 4. Desktop + extension device-exchange smoke ([ACCOUNT_SYNC_GATE.md](ACCOUNT_SYNC_GATE.md)).
+5. Optional: `STAGING_HEALTH_URL=… npm run smoke:account-lists-bidirectional` (desktop PUT host → GET; full-URL PUT → 400).
 
 **Prod remains** `ACCOUNT_SYNC_ENABLED=0` until that checklist is complete.
+
+**This workstation:** cannot put Turso/Resend secrets without your dashboard credentials — leave § D `_pending_` until you run the secret puts above.
 
 
 ## Verify

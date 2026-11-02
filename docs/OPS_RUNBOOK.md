@@ -51,4 +51,6 @@ See [LAUNCH_CHECKLIST.md](LAUNCH_CHECKLIST.md) § check:prod log.
 ## Baselines & connectivity
 
 - Workers metrics PNGs → [WORKERS_ERROR_BASELINE.md](WORKERS_ERROR_BASELINE.md)
-- Laptop cannot reach workers.dev → [LOCAL_CF_CONNECTIVITY.md](LOCAL_CF_CONNECTIVITY.md) (not an outage by itself)
+- Laptop cannot reach workers.dev → [LOCAL_CF_CONNECTIVITY.md](LOCAL_CF_CONNECTIVITY.md) (not an outage by itself). **Ops default:** verify prod health only via Actions → **Production health** (ubuntu is CF-reachable); skip local `curl`/`health:prod` when TCP times out.
+- Notarized zip still 404 → soft_warn only; Slack/summary point at [desktop-app/RELEASE.md](../desktop-app/RELEASE.md) checklist steps 2–3 — do **not** run `desktop-promote-macos-url` until HEAD 200.
+- Buusdo / other products → separate Cursor workspace / conversation; never mix into this Shield PR.

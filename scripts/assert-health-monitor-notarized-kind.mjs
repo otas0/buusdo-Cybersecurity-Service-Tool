@@ -37,5 +37,8 @@ if (!yml.includes("RELEASE.md") || (!yml.includes("steps 2–3") && !yml.include
 if (!yml.includes("gate pending")) {
   fail("health-monitor.yml must summarize gate pending when STAGING_HEALTH_URL unset");
 }
+if (!yml.includes("RELEASE_HINT") || !yml.includes("steps 2–3")) {
+  fail("health-monitor.yml soft Slack must include RELEASE_HINT / RELEASE steps 2–3");
+}
 
 console.log("assert-health-monitor-notarized-kind ok");

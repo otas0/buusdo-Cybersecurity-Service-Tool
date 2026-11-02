@@ -52,7 +52,8 @@ Recorded via `npm run production:origin` → README + `shared/production-site.js
 
 - [x] `ACCOUNT_SYNC_ENABLED=0`; `ACCOUNT_SYNC_REQUIRE_TURSO=1` in `wrangler.jsonc` — **keep sync off** until Turso + mailer ([ACCOUNT_SYNC_GATE.md](ACCOUNT_SYNC_GATE.md))
 - [ ] **Staging Account gate:** Turso + Resend/Postmark + `ACCOUNT_SYNC_ENABLED=1` on a non-prod Worker → health `accountSyncEnabled: true` + desktop device-exchange smoke ([ACCOUNT_SYNC_GATE.md](ACCOUNT_SYNC_GATE.md)) — then flip prod
-- [ ] **OPS — staging smoke run URL:** after CI job `staging-account-sync` is green (`vars.STAGING_HEALTH_URL` set; asserts `accountSyncEnabled: true` **only** on that staging URL), paste Actions run here → `_pending_` — secrets template: [DEPLOY_SECRETS.md](DEPLOY_SECRETS.md) § Staging Account sync
+- [ ] **OPS — staging smoke run URL:** after CI job `staging-account-sync` is green (`vars.STAGING_HEALTH_URL` set; asserts `accountSyncEnabled: true` **only** on that staging URL), paste Actions run here → `_pending_` — secrets template: [DEPLOY_SECRETS.md](DEPLOY_SECRETS.md) § Staging Account sync. **Blocker:** Turso + mailer + `wrangler secret put … --env staging` not configured on this machine; do not invent a run URL.
+- [x] **Local CF timeout:** when the laptop cannot reach `*.workers.dev`, use GitHub Actions **Production health** only ([LOCAL_CF_CONNECTIVITY.md](LOCAL_CF_CONNECTIVITY.md)) — do not treat laptop curl timeout as an outage
 - [x] No mailer / Turso secrets required yet on **production** — do **not** enable Account sync / Turso / Resend until gate checklist is complete
 - [x] Privacy pages live: `/en/privacy`, `/pt-PT/privacy` — redeploy after copy edits, then `npm run test:playwright:privacy` on a CF-reachable machine
 - [x] Extension / desktop defaults follow `production:origin` (`DEFAULT_API_BASE=https://pcpd.mtsu.workers.dev`)
