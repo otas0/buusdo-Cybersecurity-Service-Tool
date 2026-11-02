@@ -118,6 +118,75 @@ test("Account + listDomain field-input: dark field, light type, Halt focus", asy
 
     const scheme = await page.evaluate(() => getComputedStyle(document.documentElement).colorScheme);
     expect(scheme).toMatch(/dark/i);
+
+    // Select inherits color-scheme: dark for native menus (Electron / Chromium).
+    const selectScheme = await page.evaluate(() => {
+      const el = document.createElement("select");
+      el.className = "privacy-select-probe";
+      document.body.appendChild(el);
+      const s = getComputedStyle(el).colorScheme;
+      el.remove();
+      return s;
+    });
+    expect(selectScheme).toMatch(/dark/i);
+  } finally {
+    server.close();
+  }
+});
+
+test("narrow viewport: foot-actions clear of dataDirHint", async ({ page }) => {
+  if (!existsSync(cssPath) || !existsSync(tokensPath)) {
+    test.skip(true, "dashboard.css or tokens.css missing");
+    return;
+  }
+
+  const html = `<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <link rel="stylesheet" href="/tokens.css" />
+  <link rel="stylesheet" href="/dashboard.css" />
+</head>
+<body style="background:#0e0e0e;color:#f3f1ea">
+  <footer class="foot">
+    <p id="dataDirHint" class="hint" data-testid="data-dir">Data folder (Syncthing): /tmp/shield</p>
+    <div class="foot-actions">
+      <button type="button" id="diagnosticsExport" class="text-button">Export diagnostics</button>
+    </div>
+  </footer>
+</body>
+</html>`;
+
+  const server = createServer((req, res) => {
+    const url = new URL(req.url || "/", "http://127.0.0.1");
+    if (url.pathname === "/dashboard.css") {
+      res.writeHead(200, { "Content-Type": "text/css" });
+      res.end(readFileSync(cssPath));
+      return;
+    }
+    if (url.pathname === "/tokens.css") {
+      res.writeHead(200, { "Content-Type": "text/css" });
+      res.end(readFileSync(tokensPath));
+      return;
+    }
+    res.writeHead(200, { "Content-Type": "text/html" });
+    res.end(html);
+  });
+  await new Promise<void>((resolve) => server.listen(0, "127.0.0.1", resolve));
+  const { port } = server.address() as { port: number };
+
+  try {
+    await page.setViewportSize({ width: 360, height: 720 });
+    await page.goto(`http://127.0.0.1:${port}/`);
+    const gap = await page.evaluate(() => {
+      const hint = document.getElementById("dataDirHint");
+      const actions = document.querySelector(".foot-actions");
+      if (!hint || !actions) return -1;
+      const a = hint.getBoundingClientRect();
+      const b = actions.getBoundingClientRect();
+      return b.top - a.bottom;
+    });
+    expect(gap).toBeGreaterThanOrEqual(12);
   } finally {
     server.close();
   }
