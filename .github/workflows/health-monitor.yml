@@ -1,5 +1,4 @@
 # Production health + check:prod on a schedule (ubuntu = CF-reachable).
-# Distinct from workflow "Production health smoke" (production-health-smoke.yml).
 # Set repository variable PRODUCTION_HEALTH_URL=https://pcpd.mtsu.workers.dev
 # (or custom canonical). Optional alerts: secrets SLACK_WEBHOOK_URL; watch repo for email.
 #
@@ -7,7 +6,6 @@
 # (contents: write). Disable push with repository variable CHECKLIST_CI_WRITE=0.
 # Bot write setup: docs/CHECKLIST_CI_WRITE.md · ops: docs/OPS_RUNBOOK.md
 
-# Keep this name unique (do not reuse "Production health smoke").
 name: Health monitor
 
 on:
@@ -224,32 +222,21 @@ jobs:
             exit 0
           fi
           KIND="${{ steps.downloads.outputs.notarized_kind }}"
-          RUN_URL="${{ steps.target.outputs.run_url }}"
-          NOTARY_STATUS="${{ steps.downloads.outputs.notarized_status }}"
           RELEASE_HINT=""
           if [ "$KIND" = "missing" ]; then
             NOTARY_LINE="Notarized: URL missing (not published yet)"
           elif [ "$KIND" = "http-404" ]; then
             NOTARY_LINE="Notarized: HEAD 404 (asset not on Release yet)"
-            RELEASE_HINT="Next: desktop-app/RELEASE.md Notarized macOS zip checklist steps 2-3 (notarize attach -> soft HEAD OK), then desktop-promote-macos-url."
+            RELEASE_HINT=" Next: desktop-app/RELEASE.md Notarized macOS zip checklist steps 2-3 (notarize attach -> soft HEAD OK), then desktop-promote-macos-url."
           elif [ "$KIND" = "ok" ]; then
             NOTARY_LINE="Notarized: HEAD 200"
           else
-            NOTARY_LINE="Notarized: kind=$KIND status=${NOTARY_STATUS}"
-            RELEASE_HINT="See desktop-app/RELEASE.md notarized checklist steps 2-3 when kind is http-404 / unreachable."
+            NOTARY_LINE="Notarized: kind=$KIND status=${{ steps.downloads.outputs.notarized_status }}"
+            RELEASE_HINT=" See desktop-app/RELEASE.md notarized checklist steps 2-3 when kind is http-404 / unreachable."
           fi
           # Notice-only (not a failure / not a page). Soft HEAD lag is expected pre-publish.
-          # Build with printf — multiline double-quoted strings + \${{ }} broke Actions workflow parse.
-          SLACK_TEXT=$(printf '%s\n%s\n%s\n%s' \
-            ":information_source: Preventive Shield download HEAD soft warnings (${SOFT})" \
-            "${NOTARY_LINE}" \
-            "Run: ${RUN_URL}" \
-            "(notice-only - health job stayed green)")
-          if [ -n "$RELEASE_HINT" ]; then
-            SLACK_TEXT=$(printf '%s\n%s' "$SLACK_TEXT" "$RELEASE_HINT")
-          fi
           curl -sS -X POST -H 'Content-type: application/json' \
-            --data "$(jq -n --arg text "$SLACK_TEXT" '{text:$text}')" \
+            --data "{\"text\":\":information_source: Preventive Shield download HEAD soft warnings (${SOFT})\\n${NOTARY_LINE}\\nRun: ${{ steps.target.outputs.run_url }}\\n(notice-only - health job stayed green)${RELEASE_HINT}\"}" \
             "$SLACK_WEBHOOK_URL"
           printf '{"softWarn":"%s","sentAt":%s}\n' "$SOFT" "$NOW" > /tmp/shield-soft-download-slack.json
           echo "updated=true" >> "$GITHUB_OUTPUT"
