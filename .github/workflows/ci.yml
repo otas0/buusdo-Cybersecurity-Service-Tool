@@ -170,6 +170,7 @@ jobs:
         run: |
           sudo apt-get update -qq
           sudo apt-get install -y -qq dpkg-dev rsync
+          npm run assert:debian-control-newline
           cd desktop-app && ARCH=amd64 npm run pack:linux
           test -f dist/linux/preventive-shield_0.2.0_amd64.deb
       - name: Tray icons in amd64 pack tree
@@ -342,7 +343,10 @@ jobs:
           node-version: "22"
           cache: npm
       - name: Install
-        run: npm ci || npm install --no-fund --no-audit
+        run: |
+          npm ci || npm install --no-fund --no-audit
+          # Desktop express (+ optional systray2) is not hoisted from the root package.json.
+          cd desktop-app && (npm ci || npm install --no-fund --no-audit)
       - name: Assert no product LaunchAgent on runner account
         run: |
           AGENT="$HOME/Library/LaunchAgents/pt.preventiveshield.desktop.plist"
@@ -367,7 +371,9 @@ jobs:
           node-version: "22"
           cache: npm
       - name: Install
-        run: npm ci || npm install --no-fund --no-audit
+        run: |
+          npm ci || npm install --no-fund --no-audit
+          cd desktop-app && (npm ci || npm install --no-fund --no-audit)
       - name: check:desktop
         env:
           SHIELD_QUIT_GRACE_MS: "0"

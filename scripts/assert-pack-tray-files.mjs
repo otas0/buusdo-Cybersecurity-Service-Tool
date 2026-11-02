@@ -10,8 +10,10 @@
 import { access } from "node:fs/promises";
 import { existsSync, readFileSync } from "node:fs";
 import path from "node:path";
+import { fileURLToPath } from "node:url";
 
-const root = path.resolve(".");
+// Repo root (not cwd) — CI runs this after `cd desktop-app`.
+const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const icons = JSON.parse(readFileSync(path.join(root, "shared/desktop-tray-icons.json"), "utf8"));
 if (!Array.isArray(icons) || icons.length < 1) {
   console.error("shared/desktop-tray-icons.json must be a non-empty array");
