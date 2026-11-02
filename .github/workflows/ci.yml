@@ -187,8 +187,11 @@ jobs:
             node scripts/assert-pack-tray-files.mjs \
             desktop-app/dist/linux/preventive-shield_0.2.0_amd64/usr/lib/preventive-shield/assets
           SHIELD_PACK_TRAY_ROOT=/usr/lib/preventive-shield npm run smoke:desktop-pack-tray-assets
-          SHIELD_LAUNCHER_NO_BROWSER=1 SHIELD_MACHINE_SCAN=0 \
+          # Deb install must not write ~/.config (often not writable as expected on runners).
+          DEB_DATA=$(mktemp -d)
+          SHIELD_DATA_DIR="$DEB_DATA" SHIELD_LAUNCHER_NO_BROWSER=1 SHIELD_MACHINE_SCAN=0 \
             /usr/bin/preventive-shield --install
+          rm -rf "$DEB_DATA"
           dpkg-query -W -f='${Package} ${Version} ${Status}\n' preventive-shield
           sudo dpkg -r preventive-shield
           test ! -e /usr/bin/preventive-shield

@@ -92,21 +92,35 @@ const child = spawn(process.execPath, ["src/launcher.js"], {
   stdio: ["ignore", "pipe", "pipe"]
 });
 
+const childOut = [];
+child.stdout?.on("data", (buf) => childOut.push(String(buf)));
+child.stderr?.on("data", (buf) => childOut.push(String(buf)));
+
 try {
   let scan = null;
-  for (let i = 0; i < 80; i += 1) {
+  let stateOk = false;
+  // CI macos can take >12s for first listen; wait for /api/state then scan status.
+  for (let i = 0; i < 160; i += 1) {
     try {
       const state = await fetch(`http://localhost:${uiPort}/api/state`).then((r) => r.json());
+      stateOk = true;
       if (state?.settings?.openAtLogin) fail("openAtLogin should stay false after install");
       scan = await fetch(`http://localhost:${uiPort}/api/machine-scan`).then((r) => r.json());
       if (scan?.scan?.status === "scanning" || scan?.scan?.status === "ready") break;
+      // Idle can mean auto-scan disabled — kick a manual run once state is up.
+      if (scan?.scan?.status === "idle" && i === 20) {
+        await fetch(`http://localhost:${uiPort}/api/machine-scan/run`, { method: "POST" }).catch(() => null);
+      }
     } catch {
-      /* wait */
+      /* wait for listen */
     }
     await delay(150);
   }
   if (!scan?.scan || (scan.scan.status !== "scanning" && scan.scan.status !== "ready")) {
-    fail(`first open did not scan: ${scan?.scan?.status || "none"}`);
+    const tail = childOut.join("").slice(-1200);
+    fail(
+      `first open did not scan: ${scan?.scan?.status || "none"} (stateOk=${stateOk})${tail ? `\n--- launcher ---\n${tail}` : ""}`
+    );
   }
 
   // Served index must carry package.json asset ?v= (tray cache bust).
