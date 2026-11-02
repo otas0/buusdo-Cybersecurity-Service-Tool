@@ -7,7 +7,8 @@
 # (contents: write). Disable push with repository variable CHECKLIST_CI_WRITE=0.
 # Bot write setup: docs/CHECKLIST_CI_WRITE.md · ops: docs/OPS_RUNBOOK.md
 
-name: Production health
+# Keep this name unique (do not reuse "Production health smoke").
+name: Health monitor
 
 on:
   schedule:
@@ -15,7 +16,7 @@ on:
   workflow_dispatch:
     inputs:
       url:
-        description: "Override base URL (https://…); empty = PRODUCTION_HEALTH_URL"
+        description: "Override base URL (https://...); empty = PRODUCTION_HEALTH_URL"
         required: false
         default: ""
       force_soft_slack:
