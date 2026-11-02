@@ -7,8 +7,10 @@
 
 import { readdirSync, readFileSync, existsSync, statSync } from "node:fs";
 import path from "node:path";
+import { fileURLToPath } from "node:url";
 
-const root = path.resolve(".");
+// Repo root (not cwd) — CI runs this after `cd desktop-app`.
+const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const assetsDir = process.argv[2] ? path.resolve(process.argv[2]) : null;
 if (!assetsDir) {
   console.error("usage: node scripts/assert-tray-icon-typos.mjs <assets-dir>");
