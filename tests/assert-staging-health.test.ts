@@ -23,6 +23,22 @@ test("assert-staging-health fail-closes on missing Turso flag", () => {
   assert.match(script, /accountSyncEnabled/);
   assert.match(script, /fail closed|FAIL/i);
   assert.match(script, /gate pending/);
+  assert.match(script, /ACCOUNT_SYNC_GATE\.md/);
+  assert.match(script, /smoke:staging-magic-link/);
+  assert.match(script, /smoke:account-exchange-e2e/);
+});
+
+test("Staging STRICT smokes workflow exists and soft-skips when URL unset", () => {
+  const wf = readFileSync(
+    path.join(root, ".github/workflows/staging-strict-smokes.yml"),
+    "utf8"
+  );
+  assert.match(wf, /STRICT_STAGING/);
+  assert.match(wf, /smoke:staging-magic-link/);
+  assert.match(wf, /smoke:account-exchange-e2e/);
+  assert.match(wf, /smoke:account-lists-bidirectional/);
+  assert.match(wf, /gate pending/);
+  assert.match(wf, /ACCOUNT_SYNC_GATE\.md/);
 });
 
 test("Health monitor + Production health smoke both call assert-staging-health", () => {

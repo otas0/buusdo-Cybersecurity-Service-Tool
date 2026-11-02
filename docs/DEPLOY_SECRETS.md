@@ -18,14 +18,20 @@ Workflow: [.github/workflows/deploy-cloudflare.yml](../.github/workflows/deploy-
 3. Account resources → include the account that owns Worker **`pcpd`**.
 4. Create → copy once → paste into GitHub `CLOUDFLARE_API_TOKEN`.
 
-**Status (2026-11-02):** `CLOUDFLARE_ACCOUNT_ID` is set on `otas0/preventive-cybersecurity-prototype`. **`CLOUDFLARE_API_TOKEN` is still missing** — Deploy Cloudflare (prod + staging) cannot run from Actions until you paste a dashboard token:
+**Status (2026-11-02):** `CLOUDFLARE_ACCOUNT_ID` is set on `otas0/preventive-cybersecurity-prototype`. **`CLOUDFLARE_API_TOKEN` is still missing** — Deploy Cloudflare (prod + staging) cannot run from Actions until **you** paste a dashboard token (this agent cannot invent or retrieve it):
 
 ```bash
 # dash.cloudflare.com/profile/api-tokens → Edit Cloudflare Workers → create → copy once
 gh secret set CLOUDFLARE_API_TOKEN --repo otas0/preventive-cybersecurity-prototype
-# paste token, then:
+# paste token, then put Turso/mailer on staging BEFORE first health assert:
+#   npx wrangler secret put DATABASE_URL --env staging
+#   npx wrangler secret put DATABASE_AUTH_TOKEN --env staging
+#   npx wrangler secret put AUTH_MAGIC_SECRET --env staging
+#   npx wrangler secret put LISTS_ENC_KEY --env staging
+#   npx wrangler secret put AUTH_FROM_EMAIL --env staging
+#   npx wrangler secret put RESEND_API_KEY --env staging   # or POSTMARK_SERVER_TOKEN
 gh workflow run "Deploy Cloudflare" --repo otas0/preventive-cybersecurity-prototype -f target=staging
-# or -f target=production
+# After URL known → set STAGING_HEALTH_URL → workflow "Staging STRICT smokes"
 ```
 
 Wrangler OAuth / `wrangler login` cannot be copied into GH secrets — use an API token.

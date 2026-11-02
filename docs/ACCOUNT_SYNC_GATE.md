@@ -48,3 +48,7 @@ Workers have no durable local disk. File store under `data/account-sync/` is for
 6. Website dangerous result → **Block on desktop** → local list write + proxy guide (desktop must already be running on `:3010`).
 7. Extension lists schema: domain hosts only — **never full URLs**.
 8. Paste the green staging Actions run URL into [LAUNCH_CHECKLIST.md](LAUNCH_CHECKLIST.md) § D, then flip production.
+
+## Scheduled STRICT smokes (Actions)
+
+Workflow [.github/workflows/staging-strict-smokes.yml](../.github/workflows/staging-strict-smokes.yml) (**Staging STRICT smokes**): cron every 6h + `workflow_dispatch`. Unset `STAGING_HEALTH_URL` → soft **gate pending** (exit 0). When set → `assert-staging-health` (Turso fail-closed) then `STRICT_STAGING=1` magic-link + exchange + lists. Desktop toast + Chrome unpacked remain manual after green. Health monitor staging job summary links here for the ordered command block.

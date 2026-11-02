@@ -26,13 +26,30 @@ function writeSummary(lines) {
   appendFileSync(summaryPath, `${lines.join("\n")}\n`);
 }
 
+const GATE_DOC =
+  "https://github.com/otas0/preventive-cybersecurity-prototype/blob/main/docs/ACCOUNT_SYNC_GATE.md";
+const SECRETS_DOC =
+  "https://github.com/otas0/preventive-cybersecurity-prototype/blob/main/docs/DEPLOY_SECRETS.md";
+const ORDERED_SMOKES = [
+  "STRICT_STAGING=1 STAGING_HEALTH_URL=… npm run smoke:staging-magic-link",
+  "STRICT_STAGING=1 STAGING_HEALTH_URL=… npm run smoke:account-exchange-e2e",
+  "STRICT_STAGING=1 STAGING_HEALTH_URL=… npm run smoke:account-lists-bidirectional",
+  "npm run smoke:desktop-auto-sync-toast",
+];
+
 if (!staging) {
   writeSummary([
     "### Staging Account sync",
     "",
     "**gate pending** — set repository variable `STAGING_HEALTH_URL` to a non-prod Worker",
     "(Turso + mailer + `ACCOUNT_SYNC_ENABLED=1` via `wrangler --env staging`).",
-    "See docs/DEPLOY_SECRETS.md § Staging Account sync · docs/ACCOUNT_SYNC_GATE.md",
+    "",
+    `- Secrets template: [DEPLOY_SECRETS.md](${SECRETS_DOC})`,
+    `- Ordered STRICT smokes: [ACCOUNT_SYNC_GATE.md](${GATE_DOC})`,
+    "",
+    "```bash",
+    ...ORDERED_SMOKES,
+    "```",
     "",
     "Production stays `accountSyncEnabled: false` until the gate checklist is complete.",
   ]);
@@ -75,6 +92,12 @@ if (fails.length) {
     runUrl ? `- Run: ${runUrl}` : "",
     "",
     "Fix Turso secrets (`DATABASE_URL` / `DATABASE_AUTH_TOKEN`) on `pcpd-staging`, redeploy `--env staging`.",
+    "",
+    `Ordered STRICT smokes after green health: [ACCOUNT_SYNC_GATE.md](${GATE_DOC})`,
+    "",
+    "```bash",
+    ...ORDERED_SMOKES,
+    "```",
   ].filter(Boolean));
   console.error(
     `assert-staging-health FAIL — ${fails.join("; ")} (STAGING_HEALTH_URL set → require Turso configured)`
@@ -90,6 +113,12 @@ writeSummary([
   runUrl ? `- Run: ${runUrl}` : "",
   "",
   "Paste into docs/LAUNCH_CHECKLIST.md § D after green STRICT smokes.",
+  "",
+  `Next — ordered STRICT smokes: [ACCOUNT_SYNC_GATE.md](${GATE_DOC})`,
+  "",
+  "```bash",
+  ...ORDERED_SMOKES.map((c) => c.replace("STAGING_HEALTH_URL=…", `STAGING_HEALTH_URL=${staging}`)),
+  "```",
 ].filter(Boolean));
 
 console.log(
