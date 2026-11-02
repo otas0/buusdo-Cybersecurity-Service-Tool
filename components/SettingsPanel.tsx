@@ -223,8 +223,10 @@ export function SettingsPanel({
     let cancelled = false;
     void fetch("/api/desktop-downloads/status")
       .then((r) => r.json())
-      .then((data: { macNote?: string }) => {
+      .then((raw: unknown) => {
         if (cancelled) return;
+        const data =
+          raw && typeof raw === "object" ? (raw as { macNote?: string }) : null;
         if (data?.macNote === "ready-to-promote" || data?.macNote === "unsigned-until-promote") {
           setMacPromoteNote(data.macNote);
         } else if (!notPromoted) {
