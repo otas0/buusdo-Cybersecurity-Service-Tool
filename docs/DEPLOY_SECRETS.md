@@ -83,7 +83,7 @@ After deploy:
 
 **Prod remains** `ACCOUNT_SYNC_ENABLED=0` until that checklist is complete.
 
-**This workstation (2026-11-02):** `pcpd-staging` does not exist yet; Turso CLI / Resend keys absent; cannot `wrangler secret put` without your credentials. Leave LAUNCH_CHECKLIST § D `_pending_` until you run the secret puts + deploy above, then:
+**This workstation (2026-11-02):** `pcpd-staging` does not exist yet; Turso CLI / Resend keys absent; cannot `wrangler secret put` without your credentials. Repo Actions secrets still only `CLOUDFLARE_ACCOUNT_ID` (no API token / Slack / Turso). Leave LAUNCH_CHECKLIST § D `_pending_` until you run the secret puts + deploy above, then:
 
 ```bash
 gh variable set STAGING_HEALTH_URL --repo otas0/preventive-cybersecurity-prototype -b 'https://pcpd-staging.YOUR_SUBDOMAIN.workers.dev'
