@@ -52,5 +52,6 @@ See [LAUNCH_CHECKLIST.md](LAUNCH_CHECKLIST.md) § check:prod log.
 
 - Workers metrics PNGs → [WORKERS_ERROR_BASELINE.md](WORKERS_ERROR_BASELINE.md)
 - Laptop cannot reach workers.dev → [LOCAL_CF_CONNECTIVITY.md](LOCAL_CF_CONNECTIVITY.md) (not an outage by itself). **Ops default:** verify prod health only via Actions (ubuntu is CF-reachable); skip local `curl`/`health:prod` when TCP times out. Prefer workflow **Health monitor** (soft_warn + Slack RELEASE hint + checklist write-back). Use **Production health smoke** only for a thin CF `/api/health`+`/api/check` gate when you do not need soft_warn.
+- Desktop packaging CI (2026-11-02): linux deb needs trailing newline on `DEBIAN/control`; windows `stage-nsis.sh` falls back without `rsync`; macos install-accept uses `SHIELD_MACHINE_SCAN_ROOT` tiny fixture (runner `$HOME` too large for first-open deadline).
 - Notarized zip still 404 → soft_warn only; Slack/summary point at [desktop-app/RELEASE.md](../desktop-app/RELEASE.md) checklist steps 2–3 — do **not** run `desktop-promote-macos-url` until `NOTARIZED_HEAD_OK=1` / HEAD 200. Custom domain cutover stays hold until Account staging gate + [POST_LAUNCH_48H.md](POST_LAUNCH_48H.md) allow.
 - Buusdo / other products → separate Cursor workspace / conversation; never `move_agent_to_root` here; never mix into this Shield PR.
