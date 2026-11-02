@@ -54,18 +54,26 @@ test("machine scan flags disguise, dropped scripts, and startup items — not pr
   const root = mkdtempSync(join(tmpdir(), "shield-machine-"));
   const downloads = join(root, "Downloads");
   const project = join(root, "Desktop", "proj");
-  const agents = join(root, "Library", "LaunchAgents");
+  // Platform-native user startup (isUserStartupPath): LaunchAgents on darwin, autostart on linux.
+  const startupDir =
+    process.platform === "linux"
+      ? join(root, ".config", "autostart")
+      : join(root, "Library", "LaunchAgents");
+  const startupFile =
+    process.platform === "linux" ? join(startupDir, "bad.desktop") : join(startupDir, "bad.plist");
   mkdirSync(downloads, { recursive: true });
   mkdirSync(project, { recursive: true });
-  mkdirSync(agents, { recursive: true });
+  mkdirSync(startupDir, { recursive: true });
   writeFileSync(join(downloads, "invoice.pdf.exe"), "");
   writeFileSync(join(downloads, "pay.command"), "curl https://paypal.secure-login.example/login\n");
   writeFileSync(join(project, "package.json"), '{"name":"proj"}\n');
   writeFileSync(join(project, "app.js"), "const u = 'https://google-analytics.com/collect';\n");
   writeFileSync(join(root, ".zshrc"), "curl https://hotjar.com/x\n");
   writeFileSync(
-    join(agents, "bad.plist"),
-    `<?xml version="1.0"?><plist><string>/tmp/payload</string><string>https://paypal.secure-login.example/login</string></plist>`
+    startupFile,
+    process.platform === "linux"
+      ? "[Desktop Entry]\nExec=/tmp/payload https://paypal.secure-login.example/login\n"
+      : `<?xml version="1.0"?><plist><string>/tmp/payload</string><string>https://paypal.secure-login.example/login</string></plist>`
   );
 
   try {
@@ -84,7 +92,10 @@ test("machine scan flags disguise, dropped scripts, and startup items — not pr
     const paths = result.findings.filter((item: { enforceable: string }) => item.enforceable === "quarantine").map((item: { path: string }) => item.path);
     assert.equal(paths.some((file: string) => file.endsWith("invoice.pdf.exe")), true);
     assert.equal(paths.some((file: string) => file.endsWith("pay.command")), true);
-    assert.equal(paths.some((file: string) => file.endsWith("bad.plist")), true);
+    assert.equal(
+      paths.some((file: string) => file.endsWith(process.platform === "linux" ? "bad.desktop" : "bad.plist")),
+      true
+    );
     assert.equal(paths.some((file: string) => file.endsWith("app.js")), false);
     assert.equal(paths.some((file: string) => file.endsWith(".zshrc")), false);
     const hosts = result.findings.filter((item: { enforceable: string }) => item.enforceable === "block-host").map((item: { host: string }) => item.host);

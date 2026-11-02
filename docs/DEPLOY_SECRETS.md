@@ -82,7 +82,19 @@ After deploy:
 
 **Prod remains** `ACCOUNT_SYNC_ENABLED=0` until that checklist is complete.
 
-**This workstation:** cannot put Turso/Resend secrets without your dashboard credentials — leave § D `_pending_` until you run the secret puts above.
+**This workstation (2026-11-02):** `pcpd-staging` does not exist yet; Turso CLI / Resend keys absent; cannot `wrangler secret put` without your credentials. Leave LAUNCH_CHECKLIST § D `_pending_` until you run the secret puts + deploy above, then:
+
+```bash
+gh variable set STAGING_HEALTH_URL --repo otas0/preventive-cybersecurity-prototype -b 'https://pcpd-staging.YOUR_SUBDOMAIN.workers.dev'
+# must differ from PRODUCTION_HEALTH_URL=https://pcpd.mtsu.workers.dev
+STRICT_STAGING=1 STAGING_HEALTH_URL="$STAGING_HEALTH_URL" npm run smoke:staging-magic-link
+STRICT_STAGING=1 STAGING_HEALTH_URL="$STAGING_HEALTH_URL" npm run smoke:account-lists-bidirectional
+gh workflow run "Health monitor" --repo otas0/preventive-cybersecurity-prototype
+```
+
+**Slack soft_warn:** set `SLACK_WEBHOOK_URL` ([HEALTH_ALERTS.md](HEALTH_ALERTS.md)); drill with `-f force_soft_slack=true`. Confirmed path builds RELEASE steps 2-3 hint when notarized HEAD is 404 — delivery needs the secret.
+
+**Notarized promote:** hold `desktop-promote-macos-url` until `NOTARIZED_HEAD_OK=1`. After HEAD 200, verify live Settings `settings-desktop-mac-ready-to-promote` with `PLAYWRIGHT_BASE_URL=… npm run test:playwright:settings-mac-ready-to-promote-live`.
 
 
 ## Verify

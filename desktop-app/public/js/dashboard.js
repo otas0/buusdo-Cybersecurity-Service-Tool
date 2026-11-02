@@ -2369,7 +2369,10 @@ function consumeDeepLinkBlockHost() {
   }
 }
 
-/** Playwright / local smoke — real auto-sync toast path without Exchange. */
+/**
+ * Smoke-only hook for scripts/smoke-desktop-auto-sync-toast.mjs (and Playwright).
+ * Not a product API — do not call from UI; Exchange still uses runAccountSync directly.
+ */
 window.__SHIELD_RUN_ACCOUNT_SYNC__ = (opts) => runAccountSync(opts || {});
 
 fetchState()
