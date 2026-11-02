@@ -166,11 +166,12 @@ jobs:
         run: npm ci || npm install --no-fund --no-audit
       - name: Linux autostart / crontab sample
         run: npm run sample:desktop-linux-autostart
+      - name: Assert debian control trailing newline
+        run: npm run assert:debian-control-newline
       - name: Assemble amd64 deb
         run: |
           sudo apt-get update -qq
           sudo apt-get install -y -qq dpkg-dev rsync
-          npm run assert:debian-control-newline
           cd desktop-app && ARCH=amd64 npm run pack:linux
           test -f dist/linux/preventive-shield_0.2.0_amd64.deb
       - name: Tray icons in amd64 pack tree

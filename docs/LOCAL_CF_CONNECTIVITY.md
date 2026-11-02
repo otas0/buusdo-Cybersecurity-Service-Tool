@@ -39,7 +39,7 @@ At the same time:
 
 ## Operator rule (default)
 
-**If the laptop cannot open `*.workers.dev` or `github.com` git HTTPS:** verify production only via GitHub Actions → **Production health** (ubuntu is CF-reachable). Do not treat local `curl` timeouts as Worker outages. Prefer [GIT_SSH_SETUP.md](GIT_SSH_SETUP.md) for git when HTTPS:443 is filtered.
+**If the laptop cannot open `*.workers.dev` or `github.com` git HTTPS:** verify production **only** via GitHub Actions (**Health monitor** or **Production health smoke** — ubuntu is CF-reachable). Do not treat local `curl` timeouts as Worker outages; do not debug CF from this laptop when TCP times out. Prefer [GIT_SSH_SETUP.md](GIT_SSH_SETUP.md) for git when HTTPS:443 is filtered.
 
 ## Operator rule (detail)
 

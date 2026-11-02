@@ -36,9 +36,15 @@ Workers have no durable local disk. File store under `data/account-sync/` is for
 
 1. Deploy staging via `wrangler.jsonc` **`env.staging`** (`pcpd-staging`) with Turso + mailer secrets — never copy `ACCOUNT_SYNC_ENABLED=1` / `ACCOUNT_SYNC_DEV_RETURN_LINK=1` onto top-level prod vars ([DEPLOY_SECRETS.md](DEPLOY_SECRETS.md)).
 2. Set GitHub Actions variable `STAGING_HEALTH_URL` to that origin (must **not** equal `PRODUCTION_HEALTH_URL` / workers.dev prod). When unset, CI summary says **gate pending** (not a silent skip).
-3. `GET /api/health` → `accountSyncEnabled: true`, `accountSyncTursoConfigured: true`. CI job **staging-account-sync** asserts `accountSyncEnabled: true` **only** against `STAGING_HEALTH_URL`.
-4. `STRICT_STAGING=1 STAGING_HEALTH_URL=… npm run smoke:staging-magic-link` (JSON `devLink` — staging only) → desktop device code → Exchange → auto-sync toast (`data-testid=account-auto-sync-toast`). Bidirectional lists: `STRICT_STAGING=1 … npm run smoke:account-lists-bidirectional`. Real desktop toast+blockHost (no staging): `npm run smoke:desktop-auto-sync-toast`.
-5. Extension: popup already uses `data-testid=account-auto-sync-toast` + same EN auto-sync copy as desktop (`extension/popup/popup.js`). After staging Exchange works, smoke once on a real device (code path is wired; gate is staging). Prod wrangler must keep `ACCOUNT_SYNC_DEV_RETURN_LINK` off top-level — `npm run assert:wrangler-prod-no-dev-return`.
+3. `GET /api/health` → `accountSyncEnabled: true`, `accountSyncTursoConfigured: true`. CI job **staging-account-sync** (`scripts/assert-staging-health.mjs`) **fail-closes** when `STAGING_HEALTH_URL` is set but either flag is false (only against that staging URL — never prod).
+4. Ordered STRICT smokes (after magic-link green, Exchange → toast):
+   ```bash
+   STRICT_STAGING=1 STAGING_HEALTH_URL="$STAGING_HEALTH_URL" npm run smoke:staging-magic-link
+   STRICT_STAGING=1 STAGING_HEALTH_URL="$STAGING_HEALTH_URL" npm run smoke:account-exchange-e2e
+   STRICT_STAGING=1 STAGING_HEALTH_URL="$STAGING_HEALTH_URL" npm run smoke:account-lists-bidirectional
+   npm run smoke:desktop-auto-sync-toast   # toast + blockHost on local desktop :3010
+   ```
+5. Extension unpacked on real Chrome: after Exchange works, load `extension/` → same Account token → confirm `data-testid=account-auto-sync-toast` (popup already wired in `extension/popup/popup.js`). Prod wrangler must keep `ACCOUNT_SYNC_DEV_RETURN_LINK` off top-level — `npm run assert:wrangler-prod-no-dev-return`.
 6. Website dangerous result → **Block on desktop** → local list write + proxy guide (desktop must already be running on `:3010`).
-7. Extension: same Account token after Exchange → auto-sync + fail toast (same lists schema; domain hosts only — **never full URLs**). Optional: `npm run smoke:account-exchange-e2e`.
+7. Extension lists schema: domain hosts only — **never full URLs**.
 8. Paste the green staging Actions run URL into [LAUNCH_CHECKLIST.md](LAUNCH_CHECKLIST.md) § D, then flip production.

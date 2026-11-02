@@ -18,17 +18,27 @@ Workflow: [.github/workflows/deploy-cloudflare.yml](../.github/workflows/deploy-
 3. Account resources → include the account that owns Worker **`pcpd`**.
 4. Create → copy once → paste into GitHub `CLOUDFLARE_API_TOKEN`.
 
-**Status (2026-11-01):** `CLOUDFLARE_ACCOUNT_ID` is set on `otas0/preventive-cybersecurity-prototype`. `CLOUDFLARE_API_TOKEN` still needs a dashboard-created token pasted into Actions secrets (Wrangler OAuth cannot be copied into GH).
+**Status (2026-11-02):** `CLOUDFLARE_ACCOUNT_ID` is set on `otas0/preventive-cybersecurity-prototype`. **`CLOUDFLARE_API_TOKEN` is still missing** — Deploy Cloudflare (prod + staging) cannot run from Actions until you paste a dashboard token:
+
+```bash
+# dash.cloudflare.com/profile/api-tokens → Edit Cloudflare Workers → create → copy once
+gh secret set CLOUDFLARE_API_TOKEN --repo otas0/preventive-cybersecurity-prototype
+# paste token, then:
+gh workflow run "Deploy Cloudflare" --repo otas0/preventive-cybersecurity-prototype -f target=staging
+# or -f target=production
+```
+
+Wrangler OAuth / `wrangler login` cannot be copied into GH secrets — use an API token.
 
 ## Recommended variables
 
 | Variable | Purpose |
 |----------|---------|
-| `NEXT_PUBLIC_SITE_URL` | Deploy build public origin. **If unset**, Deploy workflow defaults to `https://pcpd.mtsu.workers.dev`. Override when the custom domain is live. |
+| `NEXT_PUBLIC_SITE_URL` | Deploy build public origin. **If unset**, Deploy workflow defaults to `https://pcpd.mtsu.workers.dev`. Override when the custom domain is live (**custom domain hold** until Account gate + [POST_LAUNCH_48H.md](POST_LAUNCH_48H.md)). |
 | `PRODUCTION_HEALTH_URL` | Same origin for [health-monitor.yml](../.github/workflows/health-monitor.yml) (also defaults to workers.dev if unset) |
-| `STAGING_HEALTH_URL` | **Non-prod** Worker origin for Account-sync gate smoke. Must **not** equal `PRODUCTION_HEALTH_URL`. When set, Production health runs job `staging-account-sync` and asserts `accountSyncEnabled: true` **only** on this URL. |
+| `STAGING_HEALTH_URL` | **Non-prod** Worker origin for Account-sync gate. Must **not** equal `PRODUCTION_HEALTH_URL`. When set, job `staging-account-sync` **fail-closes** unless `accountSyncEnabled` **and** `accountSyncTursoConfigured` are both `true` (`scripts/assert-staging-health.mjs`). Unset → summary **gate pending** (exit 0). |
 | `CHECKLIST_CI_WRITE` | Set to `0` to disable bot commits that append check:prod rows to LAUNCH_CHECKLIST |
-| `RUN_PLAYWRIGHT_SETTINGS` | Optional CI job `playwright-settings` (live RiskResult / Settings). Set `true` when vinext Settings narrow is green; keep `false` while that job is noisy (2026-11-02). |
+| `RUN_PLAYWRIGHT_SETTINGS` | Optional CI job `playwright-settings`. Keep **`false`** until offline Settings narrow (`npm run test:playwright:settings`) is green; only then `gh variable set RUN_PLAYWRIGHT_SETTINGS --body true`. |
 
 ## Staging Account sync (Turso + mailer) — before prod flip
 
@@ -73,37 +83,52 @@ npx wrangler secret put RESEND_API_KEY --env staging
 | `AUTH_FROM_EMAIL` | From address for magic links |
 | `RESEND_API_KEY` **or** `POSTMARK_SERVER_TOKEN` | Mailer |
 
-After deploy:
+After deploy (Actions: **Deploy Cloudflare** → `target=staging`, or local `npm run deploy:cloudflare:staging`):
 
-1. Set GitHub Actions variable `STAGING_HEALTH_URL=https://YOUR-STAGING.workers.dev` (≠ prod).
-2. Actions → **Production health** → confirm job **staging-account-sync** is green (`accountSyncEnabled: true`).
-3. Paste the run URL into LAUNCH_CHECKLIST § D.
-4. Desktop + extension device-exchange smoke ([ACCOUNT_SYNC_GATE.md](ACCOUNT_SYNC_GATE.md)).
-5. Optional: `STAGING_HEALTH_URL=… npm run smoke:account-lists-bidirectional` (desktop PUT host → GET; full-URL PUT → 400).
+1. Copy the exact workers.dev URL from the deploy log (form `https://pcpd-staging.<subdomain>.workers.dev`) — **no placeholders**.
+2. Paste that exact URL into this doc under **Staging URL (live)** below, then:
+   ```bash
+   gh variable set STAGING_HEALTH_URL --repo otas0/preventive-cybersecurity-prototype -b 'https://pcpd-staging.<exact-subdomain>.workers.dev'
+   ```
+3. Actions → **Health monitor** or **Production health smoke** → job **staging health (account sync on)** green (`accountSyncEnabled` + `accountSyncTursoConfigured`).
+4. Paste the run URL into LAUNCH_CHECKLIST § D.
+5. STRICT + Exchange + toast sequence ([ACCOUNT_SYNC_GATE.md](ACCOUNT_SYNC_GATE.md)).
+
+### Staging URL (live)
+
+_Pending first `pcpd-staging` deploy._ Replace this line with the exact origin (no `<subdomain>` placeholders):
+
+`STAGING_HEALTH_URL=` _(unset — set after deploy)_
 
 **Prod remains** `ACCOUNT_SYNC_ENABLED=0` until that checklist is complete.
 
 **This workstation (2026-11-02):** `pcpd-staging` does not exist yet; Turso CLI / Resend keys absent; cannot `wrangler secret put` without your credentials. Repo Actions secrets still only `CLOUDFLARE_ACCOUNT_ID` (no API token / Slack / Turso). Leave LAUNCH_CHECKLIST § D `_pending_` until you run the secret puts + deploy above, then:
 
 ```bash
-gh variable set STAGING_HEALTH_URL --repo otas0/preventive-cybersecurity-prototype -b 'https://pcpd-staging.YOUR_SUBDOMAIN.workers.dev'
-# must differ from PRODUCTION_HEALTH_URL=https://pcpd.mtsu.workers.dev
+# After deploy prints the exact URL — substitute it here (must ≠ PRODUCTION_HEALTH_URL):
+export STAGING_HEALTH_URL='https://pcpd-staging.<exact-subdomain>.workers.dev'
+gh variable set STAGING_HEALTH_URL --repo otas0/preventive-cybersecurity-prototype -b "$STAGING_HEALTH_URL"
 STRICT_STAGING=1 STAGING_HEALTH_URL="$STAGING_HEALTH_URL" npm run smoke:staging-magic-link
+STRICT_STAGING=1 STAGING_HEALTH_URL="$STAGING_HEALTH_URL" npm run smoke:account-exchange-e2e
 STRICT_STAGING=1 STAGING_HEALTH_URL="$STAGING_HEALTH_URL" npm run smoke:account-lists-bidirectional
+# Local desktop toast+blockHost (uses staging token from exchange when configured):
+npm run smoke:desktop-auto-sync-toast
 gh workflow run "Health monitor" --repo otas0/preventive-cybersecurity-prototype
 ```
 
-**Slack soft_warn:** set `SLACK_WEBHOOK_URL` ([HEALTH_ALERTS.md](HEALTH_ALERTS.md)); drill with `-f force_soft_slack=true`. Confirmed path builds RELEASE steps 2-3 hint when notarized HEAD is 404 — delivery needs the secret.
+**Slack soft_warn:** set `SLACK_WEBHOOK_URL` ([HEALTH_ALERTS.md](HEALTH_ALERTS.md)); drill rate-limit: first `force_soft_slack=true` → `rateLimited=false`; second dispatch within 1h (without force, same soft_warn) → summary `rateLimited=true`.
 
-**Notarized promote:** hold `desktop-promote-macos-url` until `NOTARIZED_HEAD_OK=1`. After HEAD 200, verify live Settings `settings-desktop-mac-ready-to-promote` with `PLAYWRIGHT_BASE_URL=… npm run test:playwright:settings-mac-ready-to-promote-live`.
+**Notarized promote:** `desktop-promote-macos-url` refuses unless notarized asset HEAD is **200** and verify prints `NOTARIZED_HEAD_OK=1`. After that: live Settings `PLAYWRIGHT_BASE_URL=https://pcpd.mtsu.workers.dev npm run test:playwright:settings-mac-ready-to-promote-live`. Keep `RUN_PLAYWRIGHT_SETTINGS=false` until offline Settings narrow is green.
 
 
 ## Verify
 
-1. Actions → **Deploy Cloudflare** → **Run workflow**.
-2. Leave site URL empty to use `NEXT_PUBLIC_SITE_URL`, or paste an override.
-3. Job must not fail on “Set secrets CLOUDFLARE_API_TOKEN and CLOUDFLARE_ACCOUNT_ID”.
-4. When URL is set, job runs `health:prod` + optional `check:prod` on **ubuntu-latest** (usually CF-reachable).
+1. Paste `CLOUDFLARE_API_TOKEN` (required; Account ID alone is not enough).
+2. Actions → **Deploy Cloudflare** → **Run workflow** → choose `target=production` or `target=staging`.
+3. Leave site URL empty to use repo vars, or paste an override.
+4. Job must not fail on “Set secrets CLOUDFLARE_API_TOKEN and CLOUDFLARE_ACCOUNT_ID”.
+5. Production: `health:prod` + optional `check:prod` on **ubuntu-latest**. Staging: `assert-staging-health` (Turso fail-closed) when `STAGING_HEALTH_URL` / smoke URL is set.
+6. Laptop CF timeout → trust Actions only ([LOCAL_CF_CONNECTIVITY.md](LOCAL_CF_CONNECTIVITY.md)).
 
 ## After first CI deploy
 

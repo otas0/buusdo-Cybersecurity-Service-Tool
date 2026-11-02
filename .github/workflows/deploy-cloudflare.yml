@@ -5,12 +5,13 @@
 #   CLOUDFLARE_ACCOUNT_ID  — dash.cloudflare.com/<id> (also: npx wrangler whoami)
 # Optional variable:
 #   NEXT_PUBLIC_SITE_URL   — https://YOUR_DOMAIN or https://….workers.dev (no trailing slash)
+#   STAGING_HEALTH_URL     — after first staging deploy; must ≠ PRODUCTION_HEALTH_URL
 #
 # After first success: locally run
 #   npm run production:origin -- https://…
 # then commit the updated origin files / README.
-# Custom domain second deploy: docs/CUSTOM_DOMAIN_REDEPLOY.md
-# Local laptop timeouts ≠ outage: docs/LOCAL_CF_CONNECTIVITY.md
+# Custom domain second deploy: docs/CUSTOM_DOMAIN_REDEPLOY.md (hold until Account gate + POST_LAUNCH_48H).
+# Local laptop timeouts ≠ outage: docs/LOCAL_CF_CONNECTIVITY.md — trust Actions only.
 
 
 name: Deploy Cloudflare
@@ -18,17 +19,25 @@ name: Deploy Cloudflare
 on:
   workflow_dispatch:
     inputs:
+      target:
+        description: "Worker target (production = pcpd; staging = pcpd-staging)"
+        required: true
+        type: choice
+        options:
+          - production
+          - staging
+        default: production
       site_url:
-        description: "NEXT_PUBLIC_SITE_URL override (https://…); empty = repo variable"
+        description: "Health/smoke origin override (https://…); empty = repo var / default"
         required: false
         default: ""
       run_check_smoke:
-        description: "Also POST /api/check smoke after deploy"
+        description: "Also POST /api/check smoke after deploy (production only)"
         required: false
         type: boolean
         default: true
       run_privacy_smoke:
-        description: "After success, call Privacy prod smoke (Playwright)"
+        description: "After success, call Privacy prod smoke (production only)"
         required: false
         type: boolean
         default: true
@@ -39,6 +48,7 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       site_url: ${{ steps.site.outputs.url }}
+      target: ${{ steps.site.outputs.target }}
     steps:
       - uses: actions/checkout@v4
 
@@ -47,26 +57,45 @@ jobs:
           node-version: "22"
           cache: npm
 
-      - name: Resolve site URL
+      - name: Resolve site URL + target
         id: site
         run: |
+          TARGET="${{ github.event.inputs.target }}"
+          if [ -z "$TARGET" ]; then TARGET="production"; fi
           OVERRIDE="${{ github.event.inputs.site_url }}"
           VAR="${{ vars.NEXT_PUBLIC_SITE_URL }}"
+          STAGING_VAR="${{ vars.STAGING_HEALTH_URL }}"
           # Default public origin until custom domain replaces it (docs/CUSTOM_DOMAIN_REDEPLOY.md).
           DEFAULT="https://pcpd.mtsu.workers.dev"
-          if [ -n "$OVERRIDE" ]; then
-            URL="$OVERRIDE"
-          elif [ -n "$VAR" ]; then
-            URL="$VAR"
+          if [ "$TARGET" = "staging" ]; then
+            if [ -n "$OVERRIDE" ]; then
+              URL="$OVERRIDE"
+            elif [ -n "$STAGING_VAR" ]; then
+              URL="$STAGING_VAR"
+            else
+              # First staging deploy: health step skipped until STAGING_HEALTH_URL is set.
+              URL=""
+              echo "::notice::STAGING_HEALTH_URL unset — deploy will run; set the var to the printed workers.dev URL after first success"
+            fi
           else
-            URL="$DEFAULT"
-            echo "::notice::NEXT_PUBLIC_SITE_URL unset — defaulting to $DEFAULT (set repo variable to override)"
+            if [ -n "$OVERRIDE" ]; then
+              URL="$OVERRIDE"
+            elif [ -n "$VAR" ]; then
+              URL="$VAR"
+            else
+              URL="$DEFAULT"
+              echo "::notice::NEXT_PUBLIC_SITE_URL unset — defaulting to $DEFAULT (set repo variable to override)"
+            fi
           fi
           URL=$(echo "$URL" | tr -d '[:space:]' | sed 's:/*$::')
           echo "url=$URL" >> "$GITHUB_OUTPUT"
-          echo "NEXT_PUBLIC_SITE_URL=$URL" >> "$GITHUB_ENV"
-          echo "::notice::NEXT_PUBLIC_SITE_URL=$URL"
-
+          echo "target=$TARGET" >> "$GITHUB_OUTPUT"
+          if [ -n "$URL" ]; then
+            echo "NEXT_PUBLIC_SITE_URL=$URL" >> "$GITHUB_ENV"
+            echo "::notice::target=$TARGET NEXT_PUBLIC_SITE_URL=$URL"
+          else
+            echo "::notice::target=$TARGET (no smoke URL yet)"
+          fi
 
       - name: Install
         run: npm ci
@@ -75,43 +104,70 @@ jobs:
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          TARGET: ${{ steps.site.outputs.target }}
         run: |
           if [ -z "$CLOUDFLARE_API_TOKEN" ] || [ -z "$CLOUDFLARE_ACCOUNT_ID" ]; then
-            echo "::error::Set secrets CLOUDFLARE_API_TOKEN and CLOUDFLARE_ACCOUNT_ID"
+            echo "::error::Set secrets CLOUDFLARE_API_TOKEN and CLOUDFLARE_ACCOUNT_ID (docs/DEPLOY_SECRETS.md)"
             exit 1
           fi
-          npm run deploy:cloudflare
+          if [ "$TARGET" = "staging" ]; then
+            npm run deploy:cloudflare:staging
+          else
+            npm run deploy:cloudflare
+          fi
 
       - name: Health smoke
         if: steps.site.outputs.url != ''
         env:
           HEALTH_BASE_URL: ${{ steps.site.outputs.url }}
-        run: npm run health:prod -- --url "$HEALTH_BASE_URL"
+          TARGET: ${{ steps.site.outputs.target }}
+        run: |
+          set -euo pipefail
+          if [ "$TARGET" = "staging" ]; then
+            # Fail closed on Turso when STAGING_HEALTH_URL is the smoke origin.
+            STAGING_HEALTH_URL="$HEALTH_BASE_URL" \
+              PRODUCTION_HEALTH_URL="${{ vars.PRODUCTION_HEALTH_URL }}" \
+              GITHUB_RUN_URL="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}" \
+              node scripts/assert-staging-health.mjs
+          else
+            npm run health:prod -- --url "$HEALTH_BASE_URL"
+          fi
 
       - name: Check smoke
-        if: steps.site.outputs.url != '' && github.event.inputs.run_check_smoke == 'true'
+        if: steps.site.outputs.url != '' && steps.site.outputs.target == 'production' && github.event.inputs.run_check_smoke == 'true'
         env:
           HEALTH_BASE_URL: ${{ steps.site.outputs.url }}
         run: npm run check:prod -- --url "$HEALTH_BASE_URL"
 
       - name: Summary
         if: always()
+        env:
+          TARGET: ${{ steps.site.outputs.target }}
+          SMOKE_URL: ${{ steps.site.outputs.url }}
         run: |
+          CMD="npm run deploy:cloudflare"
+          if [ "$TARGET" = "staging" ]; then CMD="npm run deploy:cloudflare:staging"; fi
           {
             echo "## Deploy Cloudflare"
             echo ""
             echo "| Field | Value |"
             echo "| --- | --- |"
-            echo "| NEXT_PUBLIC_SITE_URL | \`${{ steps.site.outputs.url }}\` |"
-            echo "| command | \`npm run deploy:cloudflare\` |"
+            echo "| target | \`$TARGET\` |"
+            echo "| smoke URL | \`$SMOKE_URL\` |"
+            echo "| command | \`$CMD\` |"
             echo ""
-            echo "Custom domain next: docs/CUSTOM_DOMAIN_REDEPLOY.md (also update PUBLIC_PROMOTION.md)."
+            if [ "$TARGET" = "staging" ]; then
+              echo "After first staging deploy: paste the exact \`https://pcpd-staging.<subdomain>.workers.dev\` into docs/DEPLOY_SECRETS.md and \`gh variable set STAGING_HEALTH_URL\`."
+              echo "Then STRICT smokes → docs/ACCOUNT_SYNC_GATE.md."
+            else
+              echo "Custom domain: **hold** until Account gate + docs/POST_LAUNCH_48H.md (docs/CUSTOM_DOMAIN_REDEPLOY.md)."
+            fi
           } >> "$GITHUB_STEP_SUMMARY"
 
   privacy:
     name: privacy-prod (after deploy)
     needs: deploy
-    if: github.event.inputs.run_privacy_smoke == 'true'
+    if: github.event.inputs.run_privacy_smoke == 'true' && needs.deploy.outputs.target == 'production'
     uses: ./.github/workflows/privacy-prod.yml
     with:
       url: ${{ needs.deploy.outputs.site_url }}

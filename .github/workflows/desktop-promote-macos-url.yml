@@ -40,9 +40,15 @@ jobs:
           echo "NOTARIZED_HEAD_CODE=$CODE" >> "$GITHUB_ENV"
           echo "NOTARIZED_URL=$NOTARIZED" >> "$GITHUB_ENV"
           if [ "$CODE" != "200" ]; then
-            echo "::error::Notarized asset not HTTP 200 — attach via desktop-notarize-macos first (tag $RELEASE_TAG)"
+            echo "::error::Notarized asset not HTTP 200 — refuse promote (need NOTARIZED_HEAD_OK=1). Attach via desktop-notarize-macos first (tag $RELEASE_TAG)"
             exit 1
           fi
+          # Double-gate: verify script must also report NOTARIZED_HEAD_OK=1 before rewrite.
+          VERIFY_OUT=$(node scripts/verify-desktop-download-urls.mjs | tee /tmp/desktop-downloads-verify-before-promote.txt)
+          echo "$VERIFY_OUT" | grep -E '^NOTARIZED_HEAD_OK=1$' || {
+            echo "::error::NOTARIZED_HEAD_OK≠1 after HTTP 200 — refuse promote"
+            exit 1
+          }
           node scripts/verify-desktop-download-urls.mjs --write-effective
           git diff -- shared/desktop-downloads.json | tee /tmp/desktop-downloads.promote.diff || true
           cp /tmp/desktop-downloads.promote.diff desktop-downloads.promote.diff || true

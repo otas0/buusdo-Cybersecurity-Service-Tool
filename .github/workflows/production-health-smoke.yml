@@ -44,45 +44,19 @@ jobs:
           echo "$body" | grep -q '"ambiguousProbeStatus"'
 
   # Always report staging gate status — never silently skip when URL unset.
+  # Thin CF smoke only — no soft_warn / Slack / notarized HEAD (see health-monitor.yml).
+  # When STAGING_HEALTH_URL is set: fail closed unless Turso health flag is true.
   staging-account-sync:
     name: staging health (account sync on)
     runs-on: ubuntu-latest
     steps:
-      - name: Staging gate or health
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Staging gate or health (fail-closed Turso)
         env:
-          STAGING_URL: ${{ vars.STAGING_HEALTH_URL }}
-          PROD_URL: ${{ vars.PRODUCTION_HEALTH_URL }}
-        run: |
-          set -euo pipefail
-          URL=$(echo "${STAGING_URL:-}" | tr -d '[:space:]' | sed 's:/*$::')
-          PROD=$(echo "${PROD_URL:-}" | tr -d '[:space:]' | sed 's:/*$::')
-          if [ -z "$PROD" ]; then PROD="https://pcpd.mtsu.workers.dev"; fi
-          RUN_URL="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
-          if [ -z "$URL" ]; then
-            {
-              echo "### Staging Account sync"
-              echo ""
-              echo "**gate pending** — set repository variable \`STAGING_HEALTH_URL\` to a non-prod Worker"
-              echo "(Turso + mailer + \`ACCOUNT_SYNC_ENABLED=1\` via \`wrangler --env staging\`)."
-              echo "See docs/DEPLOY_SECRETS.md § Staging Account sync · docs/ACCOUNT_SYNC_GATE.md"
-            } >> "$GITHUB_STEP_SUMMARY"
-            echo "::notice::STAGING_HEALTH_URL unset — Account sync gate pending (not a failure)"
-            exit 0
-          fi
-          if [ "$URL" = "$PROD" ]; then
-            echo "::error::STAGING_HEALTH_URL must not equal production ($PROD)"
-            exit 1
-          fi
-          body=$(curl -fsS --max-time 30 "$URL/api/health")
-          echo "$body" | tee /tmp/staging-health.json
-          echo "$body" | grep -q '"ok":true'
-          echo "$body" | grep -q '"accountSyncEnabled":true'
-          {
-            echo "### Staging Account sync health"
-            echo ""
-            echo "- URL: \`$URL\`"
-            echo "- Assert: \`accountSyncEnabled: true\` (staging only)"
-            echo "- Run: $RUN_URL"
-            echo ""
-            echo "Paste the run URL into docs/LAUNCH_CHECKLIST.md § D after a green smoke."
-          } >> "$GITHUB_STEP_SUMMARY"
+          STAGING_HEALTH_URL: ${{ vars.STAGING_HEALTH_URL }}
+          PRODUCTION_HEALTH_URL: ${{ vars.PRODUCTION_HEALTH_URL }}
+          GITHUB_RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: node scripts/assert-staging-health.mjs
