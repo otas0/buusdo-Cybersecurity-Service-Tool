@@ -136,7 +136,7 @@ Or edit three places: shared TS, `ops/home-continue-stamp.browser.js`, `tests/fi
 
 CI sets a dynamic `run-name` from the event / PR label only. **Mid-job rename is impossible** in GitHub Actions — when `STRICT_MAC_SOURCE_TITLE` is missing from Playwright `--list`, the failure is surfaced via annotations and a follow-up step named `STRICT_MAC_SOURCE_TITLE missing: …`, not by rewriting `run-name`.
 
-Website Settings → Desktop downloads: `shared/desktop-downloads.json` (GitHub Release `desktop-v0.2.0` via workflow `desktop-release`). Prefer `PreventiveShield-macos-app-notarized.zip` from `desktop-notarize-macos` on the same Release. After attach (HEAD 200), promote Settings primary with Actions → **desktop-promote-macos-url** (`--write-effective` + PR). Optional CDN mirrors live under `mirrors.*` after first publish if GitHub rate-limits. Privacy mirrors honest limits.
+Website Settings → Desktop downloads: `shared/desktop-downloads.json` (GitHub Release `desktop-v0.2.0` via workflow `desktop-release`). Prefer `buusdo-cybersecurity-service-tool-macos-app-notarized.zip` from `desktop-notarize-macos` on the same Release. After attach (HEAD 200), promote Settings primary with Actions → **desktop-promote-macos-url** (`--write-effective` + PR). Optional CDN mirrors live under `mirrors.*` after first publish if GitHub rate-limits. Privacy mirrors honest limits.
 
 **Windows Authenticode:** once the org PFX is in GitHub secrets, set repo variable **`WIN_CERT_REQUIRE=1`** so CI `desktop-windows` and `desktop-release` refuse unsigned / skipped `signtool verify` (see `docs/DEPLOY_SECRETS.md`). Local check when a built installer exists: `WIN_CERT_REQUIRE=1 signtool verify /pa desktop-app/dist/windows/PreventiveShield-Setup-User.exe`.
 
@@ -153,7 +153,7 @@ Quarantine restore-error rows (dashboard): keyboard-only a11y — Tab to a resto
 
 ### Notarized macOS zip — upload + promote checklist
 
-Asset name in `shared/desktop-downloads.json`: `macosAppZipUrlNotarized` → `PreventiveShield-macos-app-notarized.zip` on Release tag `releaseTag`.
+Asset name in `shared/desktop-downloads.json`: `macosAppZipUrlNotarized` → `buusdo-cybersecurity-service-tool-macos-app-notarized.zip` on Release tag `releaseTag`.
 
 1. [ ] Build macOS app (`npm run pack:macos` / CI artifact).
 2. [ ] Actions → **desktop-notarize-macos** attaches notarized zip to the same GitHub Release (tag = `releaseTag`).

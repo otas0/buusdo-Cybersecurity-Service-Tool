@@ -50,7 +50,7 @@ codesign --verify --deep --strict --verbose=2 "$APP"
 
 if [[ "$APP_ONLY" == "1" ]]; then
   echo "APP_ONLY=1 — zipping .app for notarytool (no productbuild)"
-  ZIP_OUT="${ZIP_OUT:-$ROOT/dist/macos/PreventiveShield-app.zip}"
+  ZIP_OUT="${ZIP_OUT:-$ROOT/dist/macos/buusdo-cybersecurity-service-tool-app.zip}"
   mkdir -p "$(dirname "$ZIP_OUT")"
   ditto -c -k --keepParent "$APP" "$ZIP_OUT"
   echo "Notarizing $ZIP_OUT"

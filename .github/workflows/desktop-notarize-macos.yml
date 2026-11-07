@@ -111,14 +111,14 @@ jobs:
           APP_ONLY=1 ./packaging/macos/sign-notarize.sh --app-only "dist/macos/Preventive Shield.app"
           codesign --verify --deep --strict --verbose=2 "dist/macos/Preventive Shield.app"
           spctl --assess --type execute -vv "dist/macos/Preventive Shield.app" || true
-          # Canonical Release asset name (preferred over unsigned PreventiveShield-macos-app.zip).
-          cp -f dist/macos/PreventiveShield-app.zip dist/macos/PreventiveShield-macos-app-notarized.zip
-          test -f dist/macos/PreventiveShield-macos-app-notarized.zip
+          # Canonical Release asset (buusdo product filename; preferred over unsigned macos-app.zip).
+          cp -f dist/macos/buusdo-cybersecurity-service-tool-app.zip dist/macos/buusdo-cybersecurity-service-tool-macos-app-notarized.zip
+          test -f dist/macos/buusdo-cybersecurity-service-tool-macos-app-notarized.zip
       - name: Upload notarized .app zip
         uses: actions/upload-artifact@v4
         with:
-          name: PreventiveShield-macos-app-notarized
-          path: desktop-app/dist/macos/PreventiveShield-macos-app-notarized.zip
+          name: buusdo-cybersecurity-service-tool-macos-app-notarized
+          path: desktop-app/dist/macos/buusdo-cybersecurity-service-tool-macos-app-notarized.zip
           if-no-files-found: warn
       - name: Attach notarized zip to GitHub Release (swap preferred download)
         env:
@@ -133,14 +133,14 @@ jobs:
             exit 1
           fi
           echo "Using release tag: $TAG (input='${RELEASE_TAG:-}' json='$JSON_TAG')"
-          ZIP="desktop-app/dist/macos/PreventiveShield-macos-app-notarized.zip"
+          ZIP="desktop-app/dist/macos/buusdo-cybersecurity-service-tool-macos-app-notarized.zip"
           if ! gh release view "$TAG" >/dev/null 2>&1; then
             echo "::error::Release $TAG not found. Run desktop-release first (or pass an existing release_tag). Notarized zip stays as a workflow artifact only."
             exit 1
           fi
           gh release upload "$TAG" "$ZIP" --clobber
           echo "Attached notarized zip to $TAG"
-          ASSET_URL="https://github.com/${{ github.repository }}/releases/download/${TAG}/PreventiveShield-macos-app-notarized.zip"
+          ASSET_URL="https://github.com/${{ github.repository }}/releases/download/${TAG}/buusdo-cybersecurity-service-tool-macos-app-notarized.zip"
           CODE=$(curl -sS -o /dev/null -w '%{http_code}' -I -L --max-time 45 "$ASSET_URL" || true)
           echo "Notarized asset HEAD → HTTP $CODE ($ASSET_URL)"
           PROMOTE_URL="https://github.com/${{ github.repository }}/actions/workflows/desktop-promote-macos-url.yml"
