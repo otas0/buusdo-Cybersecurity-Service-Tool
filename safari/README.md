@@ -25,6 +25,8 @@ open "/tmp/ps-safari-dd/Build/Products/Debug/Preventive Shield.app"
 Or open `Preventive Shield/Preventive Shield.xcodeproj` → Run. Use **Develop → Allow Unsigned Extensions** while iterating.  
 (On-disk Xcode folder names remain legacy; Finder/Dock label uses CFBundleDisplayName.)
 
-**LargeIcon preview:** open the mac target → Assets → `LargeIcon.imageset` (or About chrome). Confirm dark field `#0e0e0e` with Halt mark — **no white plate**. CI: `npm run assert:safari-largeicon`. Operator still does one Xcode/Simulator glance after `npm run sync:brand-web`.
+**LargeIcon preview:** open the mac target → Assets → `LargeIcon.imageset` (or About chrome). Confirm dark field `#0e0e0e` with Halt mark — **no white plate**. CI: `npm run assert:safari-largeicon`.
+
+Verified 2026-11-07: corner samples `rgba(14,14,14,255)`, center Halt `rgba(255,77,0,255)` on 1x/2x/3x; `assert:safari-largeicon` green (zero white-plate pixels). After `npm run sync:brand-web`, re-run assert and glance Assets in Xcode.
 
 Chrome Web Store + shared package: `../extension/README.md`, `../docs/EXTENSION_CHROME_SAFARI.md`.
