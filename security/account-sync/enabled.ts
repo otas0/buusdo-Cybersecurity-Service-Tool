@@ -2,13 +2,10 @@
  * Account sync product gate.
  *
  * PRODUCT CANCELLED: magic-link auth + cloud list sync are not shipping.
- * Keep modules for offline/local tests only — `isAccountSyncEnabled()` stays false
- * even if ACCOUNT_SYNC_ENABLED=1 is set in env / wrangler.
+ * Dead store/auth/mail modules were removed — keep this file + gone.ts for health + 410 routes.
  */
-import { isSqlStoreConfigured } from "./store-sql";
-
 export const ACCOUNT_SYNC_ENABLED_ENV = "ACCOUNT_SYNC_ENABLED";
-/** Set to 1 on Cloudflare Workers (wrangler vars) so sync never uses the file store. */
+/** Legacy wrangler echo — sync never uses Turso while cancelled. */
 export const ACCOUNT_SYNC_REQUIRE_TURSO_ENV = "ACCOUNT_SYNC_REQUIRE_TURSO";
 
 /** Hard product cancel — do not re-enable without a new product decision. */
@@ -16,6 +13,18 @@ export const ACCOUNT_SYNC_PRODUCT_CANCELLED = true;
 
 export function isAccountSyncRequireTurso(): boolean {
   return process.env.ACCOUNT_SYNC_REQUIRE_TURSO === "1";
+}
+
+/** Health echo only — true if DATABASE_URL looks like libsql/Turso (does not enable sync). */
+export function isSqlStoreConfigured(): boolean {
+  const url = (process.env.DATABASE_URL || "").trim();
+  if (!url) return false;
+  return (
+    url.startsWith("libsql://") ||
+    url.startsWith("https://") ||
+    url.includes("turso.io") ||
+    url.startsWith("file:")
+  );
 }
 
 /**

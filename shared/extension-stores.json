@@ -6,5 +6,5 @@
   "safariExtensionBundleId": "com.buusdo.cst.Extension",
   "privacyPolicyUrl": "https://buusdocst.mtsu.workers.dev/en/privacy",
   "supportHomepageUrl": "https://buusdocst.mtsu.workers.dev",
-  "notes": "Store listing URLs stay empty until Chrome Web Store / Mac App Store approval — do not invent URLs. After approval, paste chromeWebStoreUrl / safariAppStoreUrl here and sync Safari Xcode bundle IDs to com.buusdo.cst* (legacy pt.community.* retired). Website Settings uses these as primary install links; empty = ‘listing soon’ + docs fallback."
+  "notes": "Store listing URLs stay empty until Chrome Web Store / Mac App Store approval — do not invent URLs. Safari Xcode bundles are already com.buusdo.cst / com.buusdo.cst.Extension (resign on operator Mac with Apple Team). After approval, paste chromeWebStoreUrl / safariAppStoreUrl here only. Website Settings uses these as primary install links; empty = ‘listing soon’ + docs fallback. Paste short description from docs/CHROME_STORE_LISTING_DRAFT.md (assert:formal-name bans the word sync in that field)."
 }

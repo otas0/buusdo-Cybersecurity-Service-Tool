@@ -18,6 +18,7 @@ export const messages = {
     navCheck: "Check",
     navSettings: "Settings",
     navPrivacy: "Privacy",
+    navListsOffline: "Lists",
     privacyPolicyTitle: "Privacy policy",
     privacyPolicyIntro:
       "buusdo Cybersecurity Service Tool (Buusdo product line — separate product) helps you check a website address before you trust it. Checks use first-party signals and our curated threat list. This page is the product privacy notice for the website, browser extension, and desktop app.",
@@ -330,6 +331,7 @@ export const messages = {
     navCheck: "Verificar",
     navSettings: "Definições",
     navPrivacy: "Privacidade",
+    navListsOffline: "Listas",
     privacyPolicyTitle: "Política de privacidade",
     privacyPolicyIntro:
       "O buusdo Cybersecurity Service Tool (linha Buusdo — produto distinto) ajuda a verificar um endereço de site antes de confiar nele. As verificações usam sinais próprios e a nossa lista curada de ameaças. Esta página é o aviso de privacidade do site, da extensão e da aplicação de ambiente de trabalho.",

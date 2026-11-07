@@ -15,9 +15,9 @@ import {
   ACCOUNT_SYNC_ENABLED_ENV,
   ACCOUNT_SYNC_REQUIRE_TURSO_ENV,
   isAccountSyncEnabled,
-  isAccountSyncRequireTurso
+  isAccountSyncRequireTurso,
+  isSqlStoreConfigured
 } from "../../../security/account-sync/enabled";
-import { isSqlStoreConfigured } from "../../../security/account-sync/store-sql";
 import { isCuratedListPresent } from "../../../security/threat-intel";
 
 export const runtime = "nodejs";

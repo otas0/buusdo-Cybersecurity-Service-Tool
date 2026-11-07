@@ -3,7 +3,7 @@
 First launch can stay on `https://buusdocst.mtsu.workers.dev`.  
 When you attach a real domain, do a **second** deploy so the client bundle knows the public origin.
 
-**Hold note:** Custom domain is **not** blocked on Account sync (that product is cancelled). Proceed when DNS + TLS + [POST_LAUNCH_48H.md](POST_LAUNCH_48H.md) hygiene are ready.
+**Hold note:** Custom domain is **not** blocked on Account sync (cancelled). Canonical stay on `https://buusdocst.mtsu.workers.dev` until you pick a host. Then: DNS → Worker custom domain → set `NEXT_PUBLIC_SITE_URL` + `PRODUCTION_HEALTH_URL` → redeploy → `npm run production:origin` → [POST_LAUNCH_48H.md](POST_LAUNCH_48H.md).
 
 ## 1. Attach the domain
 
@@ -23,6 +23,18 @@ Apex **or** `www` — not both as equals. See [CANONICAL_HOST.md](CANONICAL_HOST
 | `NEXT_PUBLIC_SITE_URL` | `https://YOUR_CANONICAL` (no trailing slash) |
 | `PRODUCTION_HEALTH_URL` | **same** canonical origin |
 
+After setting (or after `production:origin`), verify both Actions variables match the origin:
+
+```bash
+npm run production:origin -- https://YOUR_CANONICAL --check-github-vars
+# or vars-only against shared/production-site.json:
+npm run production:origin -- --check-github-vars
+```
+
+Requires authenticated `gh`. Mismatch exits 1 — fix Settings → Variables before the second deploy.
+
+**Hold:** do not cut over the custom domain until [POST_LAUNCH_48H.md](POST_LAUNCH_48H.md) hygiene is ready (freeze ended 2026-11-03; still prefer green health + CF alerts before DNS cutover). Custom domain is independent of Account sync (cancelled).
+
 ## 4. Redeploy with public URL
 
 ```bash
@@ -37,9 +49,9 @@ Privacy Playwright runs after deploy when `run_privacy_smoke` is true.
 ## 5. Retarget clients + public copy
 
 ```bash
-npm run production:origin -- https://YOUR_CANONICAL
+npm run production:origin -- https://YOUR_CANONICAL --check-github-vars
 # updates README, production-site.json, extension DEFAULT_API_BASE + host_permissions,
-# and rewrites docs/PUBLIC_PROMOTION.md tables
+# and rewrites docs/PUBLIC_PROMOTION.md tables; then gh-compares Actions vars
 npm run health:prod -- --url https://YOUR_CANONICAL
 npm run check:prod -- --url https://YOUR_CANONICAL
 ```

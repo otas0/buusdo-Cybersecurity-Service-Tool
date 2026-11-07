@@ -2,7 +2,7 @@
 
 Xcode macOS app that hosts the shared WebExtension in `../extension/`.
 
-Bundle IDs: prefer `com.buusdo.cst` / `com.buusdo.cst.Extension` (legacy on-disk may still say `pt.community.*` until Xcode migrate). 
+Bundle IDs: `com.buusdo.cst` / `com.buusdo.cst.Extension` (set in `project.pbxproj` + `ViewController.swift`). Resign locally with your Apple Developer Team after pull.
 User-facing display name: **buusdo Cybersecurity Service Tool**.
 
 ## Users

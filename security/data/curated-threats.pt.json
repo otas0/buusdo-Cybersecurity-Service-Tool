@@ -49,7 +49,7 @@
         "seguro-directo-acesso.example"
       ],
       "removed": [],
-      "notes": "Portugal insurance / IRS lookalikes (.example only) for EVAL-057–064 MERGE on/off pairs. Apply with: npm run threat:apply -- security/data/batches/pending-pt-insurance-irs.json --target=pt."
+      "notes": "pt-locale insurance / IRS lookalikes (.example only) for EVAL-057–064 MERGE on/off pairs. Apply with: npm run threat:apply -- security/data/batches/pending-pt-insurance-irs.json --target=pt."
     },
     {
       "at": "2026-10-25",
@@ -61,7 +61,7 @@
         "bancoctt-login.example"
       ],
       "removed": [],
-      "notes": "Next Portugal bank lookalikes (.example only) after 2026-10-25-pt-lookalikes. Apply with: npm run threat:apply -- security/data/batches/2026-10-25-pt-banks-next.json --target=pt. Keep EVAL-029–032 green; adds EVAL-049–056 MERGE on/off pairs."
+      "notes": "Next pt-locale bank lookalikes (.example only) after 2026-10-25-pt-lookalikes. Apply with: npm run threat:apply -- security/data/batches/2026-10-25-pt-banks-next.json --target=pt. Keep EVAL-029–032 green; adds EVAL-049–056 MERGE on/off pairs."
     },
     {
       "at": "2026-10-25",
@@ -75,7 +75,7 @@
         "ctt-tracking-pt.example"
       ],
       "removed": [],
-      "notes": "High-signal Portugal .pt-brand lookalikes (.example only). Apply with: npm run threat:apply -- security/data/batches/2026-10-25-pt-lookalikes.json --target=pt. Keep EVAL-029–032 green after apply."
+      "notes": "High-signal .pt-brand lookalikes (.example only). Apply with: npm run threat:apply -- security/data/batches/2026-10-25-pt-lookalikes.json --target=pt. Keep EVAL-029–032 green after apply."
     },
     {
       "at": "2026-10-21",
@@ -89,7 +89,7 @@
         "at-e-fatura.example"
       ],
       "removed": [],
-      "notes": "High-signal Portugal-oriented .example hosts for curated-threats.pt.json. Apply with: npm run threat:apply -- security/data/batches/2026-10-21-pt-high-signal.json --target=pt. Exercise Settings MERGE_PT write on a local draft PR after apply."
+      "notes": "High-signal pt-locale .example hosts for curated-threats.pt.json. Apply with: npm run threat:apply -- security/data/batches/2026-10-21-pt-high-signal.json --target=pt. Exercise Settings MERGE_PT write on a local draft PR after apply."
     }
   ]
 }

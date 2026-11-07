@@ -240,10 +240,7 @@ fs.writeFileSync(
   path.join(root, "desktop-app/assets/tray-icon.ico"),
   buildPngIco(icoPngs),
 );
-fs.writeFileSync(
-  path.join(root, "desktop-app/assets/tray-icon-32.png"),
-  await pngFromSvg(faviconSvg, 32),
-);
+// tray-icon.png is already 32px — do not also ship tray-icon-32.png (breaks pack basename set).
 
 // Safari mac AppIcon set (dark field + Halt)
 const safariIconDir = path.join(

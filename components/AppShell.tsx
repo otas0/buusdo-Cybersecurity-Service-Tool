@@ -165,6 +165,13 @@ function Header({
           {t.navPrivacy}
         </button>
         <a
+          className={`nav-link ${view === "lists-offline" ? "is-active" : ""}`}
+          href={`/${locale}/lists-offline`}
+          data-testid="nav-lists-offline"
+        >
+          {t.navListsOffline}
+        </a>
+        <a
           className="lang"
           href={otherPath}
           data-testid="locale-toggle"

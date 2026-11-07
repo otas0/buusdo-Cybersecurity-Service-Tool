@@ -1,7 +1,10 @@
-# @deprecated — Account sync modules
+# Account sync — cancelled (modules removed)
 
-**Status:** product cancelled (`ACCOUNT_SYNC_PRODUCT_CANCELLED` in `enabled.ts`).
+Cloud Account sync is **not shipping**. Keep only:
 
-Do not add features here. Prefer deleting call sites over extending. Website routes under `app/api/auth/*` and `app/api/sync/lists` return **`410 account-sync-cancelled`** via `gone.ts`. Desktop `/api/account*` returns the same. Unit tests may still import store/auth helpers locally.
+- `enabled.ts` — hard cancel gate + health echo (`accountSyncEnabled` always false)
+- `gone.ts` — shared **410** for `/api/auth/*` and `/api/sync/lists`
 
-Offline path: [docs/OFFLINE_LIST_SYNC.md](../../docs/OFFLINE_LIST_SYNC.md).
+Deleted: file/Turso store, magic-link auth, mail, crypto, lists-sync, HTTP helpers, and their unit tests.
+
+Cross-device lists: offline `shield-lists-v1` JSON/QR or desktop `shield-backup.json` (USB / Drive / Syncthing). See [docs/OFFLINE_LIST_SYNC.md](../../docs/OFFLINE_LIST_SYNC.md) and [docs/ACCOUNT_SYNC_GATE.md](../../docs/ACCOUNT_SYNC_GATE.md).

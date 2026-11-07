@@ -11,7 +11,7 @@
 9. **Conflict precedence:** block and trust are independent; the same domain can appear in both. This is the recorded low-severity design warning.
 10. **Language method:** automated checks and human review do not constitute professional linguistic certification.
 11. **UI coverage:** one canonical state-machine path was dry-run, not every browser and device combination.
-12. **No user/community evidence:** usability, behavior change, adoption and impact in Portugal were not measured.
+12. **No user/community evidence:** usability, behavior change, adoption and impact were not measured.
 13. **No real-world accuracy:** controlled false-positive and false-negative counts cannot be generalized to real websites.
 
 The evaluation demonstrates repeatable behavior against the current specification only.

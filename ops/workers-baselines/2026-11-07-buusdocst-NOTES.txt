@@ -1,13 +1,15 @@
-UTC=2026-11-07
+UTC=2026-11-07T11:49:35Z
 worker=buusdocst
 origin=https://buusdocst.mtsu.workers.dev
 dashboard=Cloudflare → Workers & Pages → buusdocst → Metrics
 range=last 24h (operator to confirm when capturing PNGs)
-version_id=pending — paste from Deployments after next Deploy Cloudflare run
+version_id=4cc3e254-45a2-4771-b04f-f29e2b5b7dc9
+deploy_run=https://github.com/otas0/buusdo-Cybersecurity-Service-Tool/actions/runs/42369768115
 files=
   2026-11-07-buusdocst-errors.png  (gitignored — capture from Metrics → Errors)
   2026-11-07-buusdocst-cpu.png     (gitignored — capture from Metrics → CPU time)
 notes=
   Legacy 2026-11-01-pcpd-NOTES.txt is archived label only (Worker pcpd deleted).
   PNGs are local-only per ops/workers-baselines/.gitignore — drop screenshots beside this NOTES file after CF login.
-status=NOTES scaffolded; PNG capture still needs signed-in CF Metrics session
+  version_id from Deploy Cloudflare wrangler output "Current Version ID".
+status=version_id recorded; PNG capture still needs signed-in CF Metrics session

@@ -3438,7 +3438,7 @@
         ],
         "recommendation": "PROCEED_WITH_CARE"
       },
-      "rationale": "With OWN_THREAT_MERGE_PT=0 Portugal seeds are not merged; caixa-secure-login.example must not hit known-threat from curated-threats.pt.json.",
+      "rationale": "With OWN_THREAT_MERGE_PT=0 pt-locale curated seeds are not merged; caixa-secure-login.example must not hit known-threat from curated-threats.pt.json.",
       "benign": true,
       "expectedDanger": false
     },

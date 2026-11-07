@@ -73,19 +73,22 @@ jobs:
       - name: Formal product name (README + brand.json)
         run: npm run assert:formal-name
 
-      - name: Store Halt/Clear/Hold FRAME (Sharp drift guard)
+      - name: Store Halt/Clear/Hold FRAME (Sharp structural floors)
         run: |
           npm run capture:store-halt-frame
-          if ! git diff --quiet -- \
+          # Byte-identical git diff is not portable (Sharp/libvips differs mac vs linux).
+          # Committed PNGs stay the human-reviewed refs; CI asserts structural floors.
+          node scripts/assert-store-halt-frame-floors.mjs
+          git checkout -- \
             docs/store-screenshots/FRAME-formal-name.png \
             docs/store-screenshots/FRAME-clear.png \
-            docs/store-screenshots/FRAME-hold.png; then
-            echo "::error::Committed FRAME PNGs drifted from capture:store-halt-frame — regenerate and commit"
-            git status --short -- docs/store-screenshots/FRAME-*.png
-            git diff --stat -- docs/store-screenshots/FRAME-*.png
-            exit 1
-          fi
-          echo "::notice::FRAME Halt/Clear/Hold match capture:store-halt-frame"
+            docs/store-screenshots/FRAME-hold.png
+          echo "::notice::FRAME Halt/Clear/Hold structural floors OK (working tree restored)"
+
+      - name: Store Halt FRAME Playwright cross-check (Chromium)
+        run: |
+          npx playwright install --with-deps chromium
+          npm run capture:store-halt-frame:playwright
 
       - name: Typecheck
         run: npm run typecheck
@@ -633,6 +636,10 @@ jobs:
       - name: Store Halt FRAME Playwright cross-check
         if: steps.pw_install.outcome == 'success'
         run: npm run capture:store-halt-frame:playwright
+
+      - name: China soft-fail (wrong health.service)
+        if: steps.pw_install.outcome == 'success'
+        run: PLAYWRIGHT_SKIP_WEBSERVER=1 npx playwright test playwright/china-soft-fail.spec.ts
 
       - name: Account sync (cancelled — soft skip)
         id: pw_account

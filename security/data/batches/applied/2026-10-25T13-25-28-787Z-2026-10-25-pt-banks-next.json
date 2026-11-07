@@ -3,7 +3,7 @@
   "kind": "report",
   "target": "curated-threats.pt.json",
   "reviewedBy": "local-operator",
-  "notes": "Next Portugal bank lookalikes (.example only) after 2026-10-25-pt-lookalikes. Apply with: npm run threat:apply -- security/data/batches/2026-10-25-pt-banks-next.json --target=pt. Keep EVAL-029–032 green; adds EVAL-049–056 MERGE on/off pairs.",
+  "notes": "Next pt-locale bank lookalikes (.example only) after 2026-10-25-pt-lookalikes. Apply with: npm run threat:apply -- security/data/batches/2026-10-25-pt-banks-next.json --target=pt. Keep EVAL-029–032 green; adds EVAL-049–056 MERGE on/off pairs.",
   "reviewChecklist": {
     "hostsReviewed": true,
     "falsePositivesConfirmed": true,

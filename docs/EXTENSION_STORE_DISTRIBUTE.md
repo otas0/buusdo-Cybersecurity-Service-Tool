@@ -56,17 +56,19 @@ Redeploy the website so Settings shows **Get for Chrome**.
 
 ## Safari — Mac App Store
 
-Wrapper: `safari/buusdo/` (target bundle `com.buusdo.cst`; migrate off legacy `pt.community.*`).
+Wrapper path (on disk): `safari/Preventive Shield/Preventive Shield.xcodeproj`.  
+**Bundle IDs (formal):** app `com.buusdo.cst`, extension `com.buusdo.cst.Extension` (legacy `pt.community.preventiveshield*` retired in pbxproj). Match [`shared/extension-stores.json`](../shared/extension-stores.json).
 
-### Archive (operator Mac)
+### Archive + resign (operator Mac)
 
-1. Xcode → open `safari/buusdo/buusdo.xcodeproj`
-2. Signing & Capabilities → your **Apple Developer Team** (Automatic)
-3. Scheme **buusdo** → **Any Mac** → **Product → Archive**
-4. Organizer → **Distribute App** → **App Store Connect**
-5. App Store Connect: listing screenshots, privacy nutrition labels, category Utilities / Productivity
-6. Privacy policy URL: `https://buusdocst.mtsu.workers.dev/en/privacy` — note the companion desktop app’s honest limits (no TLS decrypt, no process kill, system dirs report-only).
-7. Review notes: Safari Web Extension; after install user enables it under Safari → Settings → Extensions
+1. Xcode → open `safari/Preventive Shield/Preventive Shield.xcodeproj`
+2. Confirm **PRODUCT_BUNDLE_IDENTIFIER** = `com.buusdo.cst` / `.Extension`
+3. Signing & Capabilities → your **Apple Developer Team** (Automatic) → clean build folder → rebuild so Xcode re-signs
+4. Scheme for the app target → **Any Mac** → **Product → Archive**
+5. Organizer → **Distribute App** → **App Store Connect**
+6. App Store Connect: listing screenshots, privacy nutrition labels, category Utilities / Productivity
+7. Privacy policy URL: `https://buusdocst.mtsu.workers.dev/en/privacy`
+8. Review notes: Safari Web Extension; after install enable under Safari → Settings → Extensions
 
 CLI (optional, after team is set):
 
@@ -74,7 +76,11 @@ CLI (optional, after team is set):
 npm run safari:archive
 ```
 
+Codesign/notarize/App Store upload still need a local Apple Developer identity — CI cannot invent certificates.
+
 ### After approval
+
+Paste into `shared/extension-stores.json` (do **not** invent URLs before approval):
 
 ```json
 "safariAppStoreUrl": "https://apps.apple.com/app/id…"

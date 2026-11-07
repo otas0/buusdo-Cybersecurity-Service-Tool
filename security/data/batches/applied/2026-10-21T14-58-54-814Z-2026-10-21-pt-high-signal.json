@@ -3,7 +3,7 @@
   "kind": "report",
   "target": "curated-threats.pt.json",
   "reviewedBy": "local-operator",
-  "notes": "High-signal Portugal-oriented .example hosts for curated-threats.pt.json. Apply with: npm run threat:apply -- security/data/batches/2026-10-21-pt-high-signal.json --target=pt. Exercise Settings MERGE_PT write on a local draft PR after apply.",
+  "notes": "High-signal pt-locale .example hosts for curated-threats.pt.json. Apply with: npm run threat:apply -- security/data/batches/2026-10-21-pt-high-signal.json --target=pt. Exercise Settings MERGE_PT write on a local draft PR after apply.",
   "reviewChecklist": {
     "hostsReviewed": true,
     "falsePositivesConfirmed": true,

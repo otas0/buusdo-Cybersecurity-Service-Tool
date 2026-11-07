@@ -10,11 +10,15 @@ Do not list the item as only “buusdo”. Zip artifact: `buusdo-cybersecurity-s
 
 ## Short description (EN)
 
-Check a website before you trust it — first-party threat list.
+Paste into Chrome Web Store Dashboard → Store listing → Short description (avoid Account / cloud-list wording).
+
+Check a website before you trust it — first-party threat list, EN / Portuguese (Portugal).
 
 ## Short description (alternate locale)
 
-Verifique um site antes de confiar — lista própria de ameaças.
+Paste as additional locale short description (same rule).
+
+Verifique um site antes de confiar — lista própria de ameaças, EN / português europeu.
 
 ## Detailed description (EN)
 

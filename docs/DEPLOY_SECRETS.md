@@ -32,9 +32,9 @@ Wrangler OAuth / `wrangler login` cannot be copied into GH secrets — use an AP
 
 | Variable | Purpose |
 |----------|---------|
-| `NEXT_PUBLIC_SITE_URL` | Deploy build public origin. **If unset**, Deploy workflow defaults to `https://buusdocst.mtsu.workers.dev`. Override when the custom domain is live (**custom domain hold** + [POST_LAUNCH_48H.md](POST_LAUNCH_48H.md)). |
-| `PRODUCTION_HEALTH_URL` | Same origin for [health-monitor.yml](../.github/workflows/health-monitor.yml) (also defaults to workers.dev if unset) |
-| `STAGING_HEALTH_URL` | Optional non-prod Worker origin. When set, `assert-staging-health` requires `ok: true` and **`accountSyncEnabled: false`** (product cancelled). Must **not** equal `PRODUCTION_HEALTH_URL`. |
+| `NEXT_PUBLIC_SITE_URL` | Deploy build public origin. **Live:** `https://buusdocst.mtsu.workers.dev`. Override when the custom domain is live ([CUSTOM_DOMAIN_REDEPLOY.md](CUSTOM_DOMAIN_REDEPLOY.md) + [POST_LAUNCH_48H.md](POST_LAUNCH_48H.md)). |
+| `PRODUCTION_HEALTH_URL` | Same origin for [health-monitor.yml](../.github/workflows/health-monitor.yml). **Live:** `https://buusdocst.mtsu.workers.dev` |
+| `STAGING_HEALTH_URL` | Non-prod Worker origin. **Live:** `https://buusdocst-staging.mtsu.workers.dev`. `assert-staging-health` requires `ok: true` and **`accountSyncEnabled: false`**. Must **not** equal `PRODUCTION_HEALTH_URL`. |
 | `CHECKLIST_CI_WRITE` | Set to `0` to disable bot commits that append check:prod rows to LAUNCH_CHECKLIST |
 | `RUN_PLAYWRIGHT_SETTINGS` | Optional CI job `playwright-settings`. Keep **`false`** until offline Settings narrow (`npm run test:playwright:settings`) is green; only then `gh variable set RUN_PLAYWRIGHT_SETTINGS --body true`. |
 

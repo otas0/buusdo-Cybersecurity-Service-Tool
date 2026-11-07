@@ -20,9 +20,10 @@ Recorded via `npm run production:origin` → README + `shared/production-site.js
 - [x] **`check:prod`** against the origin — **OK** via GitHub ubuntu ([41285063357](https://github.com/otas0/buusdo-Cybersecurity-Service-Tool/actions/runs/41285063357)) + CF-reachable browser. Local laptop still TCP-timeouts `*.workers.dev` ([LOCAL_CF_CONNECTIVITY.md](LOCAL_CF_CONNECTIVITY.md)). Log below.
 - [x] `npm run production:origin -- https://buusdocst.mtsu.workers.dev` committed
 - [x] OG / social: Facebook Sharing Debugger + Twitter Card Validator on `https://buusdocst.mtsu.workers.dev` — `og:image` → `https://buusdocst.mtsu.workers.dev/og.png` (2026-11-07)
-- [ ] Custom domain attached on the Worker + TLS green ([CUSTOM_DOMAIN_REDEPLOY.md](CUSTOM_DOMAIN_REDEPLOY.md))
+- [ ] Custom domain attached on the Worker + TLS green ([CUSTOM_DOMAIN_REDEPLOY.md](CUSTOM_DOMAIN_REDEPLOY.md)) — **hold** until [POST_LAUNCH_48H.md](POST_LAUNCH_48H.md) hygiene (CF alerts + Metrics baselines); independent of Account sync
 - [ ] One canonical host only ([CANONICAL_HOST.md](CANONICAL_HOST.md)) — when custom domain exists
 - [ ] `NEXT_PUBLIC_SITE_URL=https://YOUR_DOMAIN` set for the **second** deploy build
+- [ ] `npm run production:origin -- https://YOUR_DOMAIN --check-github-vars` after vars update
 - [ ] Redeploy after setting the public URL
 - [ ] `npm run health:prod` + `npm run check:prod` against the canonical domain exit 0
 

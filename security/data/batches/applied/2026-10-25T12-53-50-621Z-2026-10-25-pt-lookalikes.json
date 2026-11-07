@@ -3,7 +3,7 @@
   "kind": "report",
   "target": "curated-threats.pt.json",
   "reviewedBy": "local-operator",
-  "notes": "High-signal Portugal .pt-brand lookalikes (.example only). Apply with: npm run threat:apply -- security/data/batches/2026-10-25-pt-lookalikes.json --target=pt. Keep EVAL-029–032 green after apply.",
+  "notes": "High-signal .pt-brand lookalikes (.example only). Apply with: npm run threat:apply -- security/data/batches/2026-10-25-pt-lookalikes.json --target=pt. Keep EVAL-029–032 green after apply.",
   "reviewChecklist": {
     "hostsReviewed": true,
     "falsePositivesConfirmed": true,
@@ -28,7 +28,7 @@
     {
       "host": "santander-pt-login.example",
       "state": "KNOWN_PHISHING",
-      "reason": "High-signal lookalike for Santander Portugal login"
+      "reason": "High-signal lookalike for Santander PT login"
     },
     {
       "host": "cgd-caixadirecta.example",

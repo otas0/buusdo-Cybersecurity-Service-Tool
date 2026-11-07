@@ -14,10 +14,11 @@ When **Health monitor** fails, GitHub emails subscribed watchers. No extra secre
 ## Slack (optional)
 
 1. Create an Incoming Webhook for your ops channel.
-2. Repo → Settings → Secrets → Actions → `SLACK_WEBHOOK_URL` (missing today → soft_warn exits `skipped-no-webhook`).
+2. Repo → Settings → Secrets → Actions → `SLACK_WEBHOOK_URL` (**still unset** 2026-11-07 — Slack alert test run 42370269849 failed Require webhook; soft_warn exits `skipped-no-webhook`).
    ```bash
    gh secret set SLACK_WEBHOOK_URL --repo otas0/buusdo-Cybersecurity-Service-Tool
-   # paste webhook URL, then:
+   # paste Incoming Webhook URL (operator-created; automation cannot invent it), then:
+   gh workflow run "Slack alert test" --repo otas0/buusdo-Cybersecurity-Service-Tool
    gh workflow run "Health monitor" --repo otas0/buusdo-Cybersecurity-Service-Tool -f force_soft_slack=true
    ```
 3. On **health/check failure** the workflow POSTs a short text payload with the run URL (failure alert). Body always includes `service=buusdocst` (Worker name).

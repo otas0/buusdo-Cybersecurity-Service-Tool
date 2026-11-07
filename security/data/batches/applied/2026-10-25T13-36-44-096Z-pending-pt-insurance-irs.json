@@ -3,7 +3,7 @@
   "kind": "report",
   "target": "curated-threats.pt.json",
   "reviewedBy": "local-operator",
-  "notes": "Portugal insurance / IRS lookalikes (.example only) for EVAL-057–064 MERGE on/off pairs. Apply with: npm run threat:apply -- security/data/batches/pending-pt-insurance-irs.json --target=pt.",
+  "notes": "pt-locale insurance / IRS lookalikes (.example only) for EVAL-057–064 MERGE on/off pairs. Apply with: npm run threat:apply -- security/data/batches/pending-pt-insurance-irs.json --target=pt.",
   "reviewChecklist": {
     "hostsReviewed": true,
     "falsePositivesConfirmed": true,
