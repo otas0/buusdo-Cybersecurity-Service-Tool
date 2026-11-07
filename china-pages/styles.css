@@ -56,8 +56,8 @@ a {
   max-width: min(220px, 55vw);
   object-fit: contain;
   object-position: left center;
-  background: #fff;
-  border: 1px solid var(--line);
+  background: transparent;
+  border: 0;
 }
 
 .shell .lang-switch,

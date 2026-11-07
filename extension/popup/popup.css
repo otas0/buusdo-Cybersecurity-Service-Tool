@@ -92,7 +92,8 @@ h1 {
   height: 28px;
   width: auto;
   max-width: 150px;
-  background: #fff;
+  background: transparent;
+  border: 0;
 }
 
 .visually-hidden {

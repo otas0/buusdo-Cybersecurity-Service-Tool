@@ -195,7 +195,8 @@ button:disabled.log-filter-reset {
   height: 36px;
   width: auto;
   max-width: 200px;
-  background: #fff;
+  background: transparent;
+  border: 0;
 }
 
 .kicker, .counts dt, .lang, .block-log .meta {
