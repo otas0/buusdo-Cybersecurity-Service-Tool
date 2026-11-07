@@ -5,7 +5,7 @@ alwaysApply: true
 
 # Shippable product only
 
-This repo ships **buusdo Cybersecurity Service Tool** as a real product in the Buusdo line — not a classroom or teacher demo. Legacy code/paths may still say Preventive Shield; user-facing brand is **buusdo Cybersecurity Service Tool**.
+This repo ships **buusdo Cybersecurity Service Tool** — a **separate** product in the Buusdo product **line** (not the Buusdo line itself, not other Buusdo products). Legacy code/paths may still say Preventive Shield; user-facing product name is **buusdo Cybersecurity Service Tool**.
 
 - Do **not** add demo, mock, fictional-only, teacher-demo, or “controlled demonstration” product UI.
 - Every user-facing feature must be something that can go live: real flows, real brands/signals where shown, reversible local choices, bilingual EN / pt-PT.

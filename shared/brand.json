@@ -1,8 +1,9 @@
 {
+  "productLine": "Buusdo",
   "shortName": "buusdo",
   "formalName": "buusdo Cybersecurity Service Tool",
   "tagline": "Cybersecurity Service Tool",
   "wordmarkPath": "/brand/buusdo-wordmark.png",
   "logoPath": "/brand/buusdo-logo.png",
-  "notes": "Official product name is formalName. Short UI lockup uses shortName + tagline. Legacy on-disk folders may still say Preventive Shield."
+  "notes": "Buusdo is the product LINE. This repo’s PRODUCT is formalName — same line, separate product/content/name. Do not conflate with other Buusdo-line products. Legacy on-disk folders may still say Preventive Shield."
 }

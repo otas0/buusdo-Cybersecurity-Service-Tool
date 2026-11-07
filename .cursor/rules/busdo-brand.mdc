@@ -1,15 +1,22 @@
 ---
-description: buusdo Cybersecurity Service Tool is the official product name
+description: Same Buusdo product line, separate product — do not conflate
 alwaysApply: true
 ---
 
-# buusdo brand (Buusdo product line)
+# Product line vs this product
 
-This repository ships **buusdo Cybersecurity Service Tool** (member of the Buusdo line).
+**Buusdo** = product line (parent brand / family).  
+**buusdo Cybersecurity Service Tool** = **this** product only (this repo).
 
-- Official name: **buusdo Cybersecurity Service Tool**
-- Short UI lockup: **buusdo** + tagline **Cybersecurity Service Tool** (`shared/brand.json`)
-- Logo assets: `public/brand/buusdo-logo.png`, `public/brand/buusdo-wordmark.png` (sync to `shared/brand/`, `extension/icons/`, `desktop-app/public/brand/`, `china-pages/assets/`)
-- Prefer website brand surfaces before extension/desktop polish
+They share a line, not an identity:
+
+- Same product **line**, separate product **content**, names are **not** identical → **not** the same product.
+- Do **not** treat this repo as “Buusdo” wholesale, or merge other Buusdo products’ features/assets/copy here.
+- Other Buusdo-line products stay in their own workspaces / PRs; never `move_agent_to_root` onto them mid-work here.
+
+## This product’s names
+
+- Official product name: **buusdo Cybersecurity Service Tool** (`shared/brand.json` → `formalName`)
+- Short UI lockup: **buusdo** + tagline **Cybersecurity Service Tool**
+- Logo: `public/brand/buusdo-logo.png`, `public/brand/buusdo-wordmark.png` (sync under `shared/brand/`, `extension/icons/`, `desktop-app/public/brand/`, `china-pages/assets/` as needed)
 - Legacy on-disk paths may still use `Preventive Shield` / `preventive-shield` — do not rename without a migrate plan
-- Other Buusdo products stay in separate workspaces; do not mix unrelated apps into this PR
