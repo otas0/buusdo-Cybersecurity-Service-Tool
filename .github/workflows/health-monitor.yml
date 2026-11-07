@@ -106,6 +106,13 @@ jobs:
           echo "$body" | grep -q '"probeMs"'
           echo "$body" | grep -q '"ambiguousProbeStatus"'
 
+      - name: Account-sync routes Gone (410)
+        env:
+          PRODUCTION_HEALTH_URL: ${{ env.HEALTH_BASE_URL }}
+        run: |
+          npm run assert:prod-auth-gone
+          echo "::notice::assert:prod-auth-gone OK against $HEALTH_BASE_URL"
+
       # Soft HEAD check of Settings download URLs (never fails the health job).
       - name: Desktop download HEAD (soft)
         id: downloads
