@@ -49,7 +49,7 @@ npm run safari:archive       # Release archive (needs Apple team signing)
 ## Chrome (developers — Load unpacked)
 
 1. Open `chrome://extensions` → Developer mode → **Load unpacked** → this `extension/` folder.
-2. Confirm Website API base is `https://pcpd.mtsu.workers.dev` → **Run** on an https tab.
+2. Confirm Website API base is `https://buusdocst.mtsu.workers.dev` → **Run** on an https tab.
 3. Do **not** tell end users to Load unpacked — ship via **`npm run pack:chrome-store`**.
 
 Local CF timeouts: [LOCAL_CF_CONNECTIVITY.md](../docs/LOCAL_CF_CONNECTIVITY.md).
@@ -100,7 +100,7 @@ Privacy defaults to never store. The popup can switch to this-device only or dia
 
 Do **not** wire Google Safe Browsing or other third-party reputation APIs into the extension.
 
-The popup **Run** path calls the production Website API (`DEFAULT_API_BASE` → `https://pcpd.mtsu.workers.dev`) `POST /api/check` and renders `analysis.risk` / `analysis.timing` / `analysis.live` — see [`docs/API_CHECK_CONTRACT.md`](../docs/API_CHECK_CONTRACT.md). Local address signals in `shared/detect.js` still power on-page phishing/tracker heuristics in the service worker.
+The popup **Run** path calls the production Website API (`DEFAULT_API_BASE` → `https://buusdocst.mtsu.workers.dev`) `POST /api/check` and renders `analysis.risk` / `analysis.timing` / `analysis.live` — see [`docs/API_CHECK_CONTRACT.md`](../docs/API_CHECK_CONTRACT.md). Local address signals in `shared/detect.js` still power on-page phishing/tracker heuristics in the service worker.
 
 Popup Website-API mute announce (Trackers digit + `aria-live`) uses [`shared/trackers-announce.mjs`](shared/trackers-announce.mjs) (`TRACKERS_ANNOUNCE_CLEAR_MS`) so a later `/api/check` scan can re-announce after the clear delay.
 

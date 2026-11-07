@@ -52,7 +52,7 @@ const stores = JSON.parse(
 const manifestPath = join(stage, "manifest.json");
 const manifest = JSON.parse(readFileSync(manifestPath, "utf8"));
 
-manifest.homepage_url = stores.supportHomepageUrl || "https://pcpd.mtsu.workers.dev";
+manifest.homepage_url = stores.supportHomepageUrl || "https://buusdocst.mtsu.workers.dev";
 if (stores.privacyPolicyUrl) {
   // Chrome Web Store listing also needs the URL; keep in description for reviewers.
   manifest.description = String(manifest.description || "").slice(0, 132);

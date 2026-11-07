@@ -2,13 +2,13 @@
 /**
  * Push local HEAD onto origin/main via GitHub Git Data API when github.com git HTTPS is unreachable.
  *
- *   OWNER=otas0 REPO=preventive-cybersecurity-prototype node scripts/push-via-github-api.mjs
+ *   OWNER=otas0 REPO=buusdocst node scripts/push-via-github-api.mjs
  */
 import { execFileSync } from "node:child_process";
 import { readFileSync } from "node:fs";
 
 const owner = process.env.OWNER || "otas0";
-const repo = process.env.REPO || "preventive-cybersecurity-prototype";
+const repo = process.env.REPO || "buusdocst";
 const branch = process.env.BRANCH || "main";
 const token = execFileSync("gh", ["auth", "token"], { encoding: "utf8" }).trim();
 if (!token) {

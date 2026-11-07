@@ -1,5 +1,7 @@
 # buusdo Cybersecurity Service Tool
 
+**Product (Workers):** https://buusdocst.mtsu.workers.dev/ · **China entry (GitHub Pages):** https://otas0.github.io/buusdocst/
+
 Official product name: **buusdo Cybersecurity Service Tool**. Part of the **Buusdo** product **line**, but a **separate** product (own content and name — not “Buusdo” itself, not other Buusdo-line apps). Bilingual English / European Portuguese; helps non-expert users check a website before they trust it.
 
 **Detect → Explain → Prevent / Block → Act → Verify**
@@ -63,11 +65,11 @@ npm run production:origin -- https://YOUR_WORKER.workers.dev   # writes README +
 
 ### Live production origin
 
-- **Origin:** `https://pcpd.mtsu.workers.dev`
-- **Canonical host:** `pcpd.mtsu.workers.dev` (prefer apex; redirect `www` → apex)
-- Set after deploy: `npm run production:origin -- https://pcpd.mtsu.workers.dev`
-- Health: `npm run health:prod -- --url https://pcpd.mtsu.workers.dev`
-- Check smoke: `npm run check:prod -- --url https://pcpd.mtsu.workers.dev`
+- **Origin:** `https://buusdocst.mtsu.workers.dev`
+- **Canonical host:** `buusdocst.mtsu.workers.dev` (prefer apex; redirect `www` → apex)
+- Set after deploy: `npm run production:origin -- https://buusdocst.mtsu.workers.dev`
+- Health: `npm run health:prod -- --url https://buusdocst.mtsu.workers.dev`
+- Check smoke: `npm run check:prod -- --url https://buusdocst.mtsu.workers.dev`
 
 Ops docs: [PRODUCTION_HOSTING](docs/PRODUCTION_HOSTING.md) · [LAUNCH_CHECKLIST](docs/LAUNCH_CHECKLIST.md) · [DEPLOY_SECRETS](docs/DEPLOY_SECRETS.md) · [CUSTOM_DOMAIN_REDEPLOY](docs/CUSTOM_DOMAIN_REDEPLOY.md) · [CANONICAL_HOST](docs/CANONICAL_HOST.md) · [CLOUDFLARE_ALERTS](docs/CLOUDFLARE_ALERTS.md) · [LOCAL_CF_CONNECTIVITY](docs/LOCAL_CF_CONNECTIVITY.md) · [POST_LAUNCH_48H](docs/POST_LAUNCH_48H.md) · [VINEXT_UPGRADE_1_4](docs/VINEXT_UPGRADE_1_4.md)
 

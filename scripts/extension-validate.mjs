@@ -53,17 +53,17 @@ if (!manifest.browser_specific_settings?.safari?.strict_min_version) {
 }
 
 const hosts = manifest.host_permissions || [];
-if (!hosts.some((h) => String(h).includes("pcpd.mtsu.workers.dev"))) {
-  fail("host_permissions must include https://pcpd.mtsu.workers.dev/* (run npm run production:origin)");
+if (!hosts.some((h) => String(h).includes("buusdocst.mtsu.workers.dev"))) {
+  fail("host_permissions must include https://buusdocst.mtsu.workers.dev/* (run npm run production:origin)");
 }
 
 const { DEFAULT_API_BASE, PRODUCTION_ORIGIN } = await import(
   join(root, "shared/api-base-migrate.mjs")
 );
-if (!String(DEFAULT_API_BASE).startsWith("https://pcpd.mtsu.workers.dev")) {
+if (!String(DEFAULT_API_BASE).startsWith("https://buusdocst.mtsu.workers.dev")) {
   fail(`DEFAULT_API_BASE expected pcpd, got ${DEFAULT_API_BASE}`);
 }
-if (PRODUCTION_ORIGIN !== "https://pcpd.mtsu.workers.dev") {
+if (PRODUCTION_ORIGIN !== "https://buusdocst.mtsu.workers.dev") {
   fail(`PRODUCTION_ORIGIN expected pcpd, got ${PRODUCTION_ORIGIN}`);
 }
 
@@ -77,7 +77,7 @@ try {
 
 // Site production-site.json agrees
 const site = require("../shared/production-site.json");
-if (site.productionOrigin !== "https://pcpd.mtsu.workers.dev") {
+if (site.productionOrigin !== "https://buusdocst.mtsu.workers.dev") {
   fail(`shared/production-site.json origin mismatch: ${site.productionOrigin}`);
 }
 

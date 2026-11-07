@@ -1,5 +1,5 @@
 # Production health + check:prod on a schedule (ubuntu = CF-reachable).
-# Set repository variable PRODUCTION_HEALTH_URL=https://pcpd.mtsu.workers.dev
+# Set repository variable PRODUCTION_HEALTH_URL=https://buusdocst.mtsu.workers.dev
 # (or custom canonical). Optional alerts: secrets SLACK_WEBHOOK_URL; watch repo for email.
 #
 # On success/failure, appends a row to docs/LAUNCH_CHECKLIST.md § check:prod log and pushes
@@ -64,7 +64,7 @@ jobs:
         run: |
           OVERRIDE="${{ github.event.inputs.url }}"
           VAR="${{ vars.PRODUCTION_HEALTH_URL }}"
-          DEFAULT="https://pcpd.mtsu.workers.dev"
+          DEFAULT="https://buusdocst.mtsu.workers.dev"
           if [ -n "$OVERRIDE" ]; then
             URL="$OVERRIDE"
           elif [ -n "$VAR" ]; then

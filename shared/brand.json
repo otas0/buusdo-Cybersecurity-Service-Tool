@@ -3,7 +3,9 @@
   "shortName": "buusdo",
   "formalName": "buusdo Cybersecurity Service Tool",
   "tagline": "Cybersecurity Service Tool",
-  "wordmarkPath": "/brand/buusdo-wordmark.png",
-  "logoPath": "/brand/buusdo-logo.png",
+  "wordmarkPath": "/brand/buusdo-wordmark.svg",
+  "logoPath": "/brand/buusdo-logo.svg",
+  "markPath": "/brand/buusdo-mark.svg",
+  "faviconPath": "/favicon.svg",
   "notes": "Buusdo is the product LINE. This repo’s PRODUCT is formalName — same line, separate product/content/name. Do not conflate with other Buusdo-line products. Legacy on-disk folders may still say Preventive Shield."
 }

@@ -36,4 +36,12 @@ App de ambiente de trabalho (opcional): sem desencriptação TLS, sem terminar p
 
 ## Privacy policy URL
 
-`https://pcpd.mtsu.workers.dev/en/privacy`
+`https://buusdocst.mtsu.workers.dev/en/privacy`
+
+## Homepage URL
+
+`https://buusdocst.mtsu.workers.dev`
+
+## China entry (when Workers is hard to reach)
+
+`https://otas0.github.io/buusdocst/`

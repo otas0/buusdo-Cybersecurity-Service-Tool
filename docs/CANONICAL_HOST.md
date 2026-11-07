@@ -3,7 +3,7 @@
 Ship **one** public origin. Do not advertise both `https://example.com` and `https://www.example.com` as equal.
 
 **workers.dev phase:** the single canonical origin is  
-`https://pcpd.mtsu.workers.dev`  
+`https://buusdocst.mtsu.workers.dev`  
 (until a custom domain replaces it — then re-run `production:origin` and update `PRODUCTION_HEALTH_URL`).
 
 

@@ -10,7 +10,7 @@ import { readFileSync, existsSync, statSync } from "node:fs";
 import { relative } from "node:path";
 
 const owner = process.env.OWNER || "otas0";
-const repo = process.env.REPO || "preventive-cybersecurity-prototype";
+const repo = process.env.REPO || "buusdocst";
 const branch = process.env.BRANCH || "main";
 const token = execFileSync("gh", ["auth", "token"], { encoding: "utf8" }).trim();
 

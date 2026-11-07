@@ -16,7 +16,7 @@ jobs:
         id: target
         run: |
           URL="${{ vars.PRODUCTION_HEALTH_URL }}"
-          if [ -z "$URL" ]; then URL="https://pcpd.mtsu.workers.dev"; fi
+          if [ -z "$URL" ]; then URL="https://buusdocst.mtsu.workers.dev"; fi
           URL=$(echo "$URL" | tr -d '[:space:]' | sed 's:/*$::')
           echo "url=$URL" >> "$GITHUB_OUTPUT"
           echo "HEALTH_BASE_URL=$URL" >> "$GITHUB_ENV"

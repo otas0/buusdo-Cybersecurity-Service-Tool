@@ -15,7 +15,7 @@ import { appendFileSync } from "node:fs";
 const staging = String(process.env.STAGING_HEALTH_URL || "")
   .trim()
   .replace(/\/$/, "");
-const prod = String(process.env.PRODUCTION_HEALTH_URL || "https://pcpd.mtsu.workers.dev")
+const prod = String(process.env.PRODUCTION_HEALTH_URL || "https://buusdocst.mtsu.workers.dev")
   .trim()
   .replace(/\/$/, "");
 const runUrl = String(process.env.GITHUB_RUN_URL || "").trim();
@@ -27,9 +27,9 @@ function writeSummary(lines) {
 }
 
 const GATE_DOC =
-  "https://github.com/otas0/preventive-cybersecurity-prototype/blob/main/docs/ACCOUNT_SYNC_GATE.md";
+  "https://github.com/otas0/buusdocst/blob/main/docs/ACCOUNT_SYNC_GATE.md";
 const SECRETS_DOC =
-  "https://github.com/otas0/preventive-cybersecurity-prototype/blob/main/docs/DEPLOY_SECRETS.md";
+  "https://github.com/otas0/buusdocst/blob/main/docs/DEPLOY_SECRETS.md";
 const ORDERED_SMOKES = [
   "STRICT_STAGING=1 STAGING_HEALTH_URL=… npm run smoke:staging-magic-link",
   "STRICT_STAGING=1 STAGING_HEALTH_URL=… npm run smoke:account-exchange-e2e",
@@ -91,7 +91,7 @@ if (fails.length) {
     `- Fail closed: ${fails.map((f) => `\`${f}\``).join(", ")}`,
     runUrl ? `- Run: ${runUrl}` : "",
     "",
-    "Fix Turso secrets (`DATABASE_URL` / `DATABASE_AUTH_TOKEN`) on `pcpd-staging`, redeploy `--env staging`.",
+    "Fix Turso secrets (`DATABASE_URL` / `DATABASE_AUTH_TOKEN`) on `buusdocst-staging`, redeploy `--env staging`.",
     "",
     `Ordered STRICT smokes after green health: [ACCOUNT_SYNC_GATE.md](${GATE_DOC})`,
     "",

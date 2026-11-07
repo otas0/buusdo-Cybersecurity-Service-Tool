@@ -4,7 +4,7 @@
 
 From some operator networks (e.g. Asia laptop), HTTPS to:
 
-`https://pcpd.mtsu.workers.dev`
+`https://buusdocst.mtsu.workers.dev`
 
 **TCP connect timed out** (`curl` exit 28, Node/Python `fetch`/`urlopen` timeout).
 
@@ -23,8 +23,8 @@ At the same time:
 2. Cloudflare dashboard → Workers → **pcpd** → Metrics (requests rising).
 3. From a reachable host:
    ```bash
-   npm run health:prod -- --url https://pcpd.mtsu.workers.dev
-   npm run check:prod -- --url https://pcpd.mtsu.workers.dev
+   npm run health:prod -- --url https://buusdocst.mtsu.workers.dev
+   npm run check:prod -- --url https://buusdocst.mtsu.workers.dev
    ```
 4. Log the result in [LAUNCH_CHECKLIST.md](LAUNCH_CHECKLIST.md) § check:prod log.
 

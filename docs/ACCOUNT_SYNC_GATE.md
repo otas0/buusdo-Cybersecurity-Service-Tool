@@ -34,7 +34,7 @@ Workers have no durable local disk. File store under `data/account-sync/` is for
 
 ## Staging smoke (before prod flip)
 
-1. Deploy staging via `wrangler.jsonc` **`env.staging`** (`pcpd-staging`) with Turso + mailer secrets — never copy `ACCOUNT_SYNC_ENABLED=1` / `ACCOUNT_SYNC_DEV_RETURN_LINK=1` onto top-level prod vars ([DEPLOY_SECRETS.md](DEPLOY_SECRETS.md)).
+1. Deploy staging via `wrangler.jsonc` **`env.staging`** (`buusdocst-staging`) with Turso + mailer secrets — never copy `ACCOUNT_SYNC_ENABLED=1` / `ACCOUNT_SYNC_DEV_RETURN_LINK=1` onto top-level prod vars ([DEPLOY_SECRETS.md](DEPLOY_SECRETS.md)).
 2. Set GitHub Actions variable `STAGING_HEALTH_URL` to that origin (must **not** equal `PRODUCTION_HEALTH_URL` / workers.dev prod). When unset, CI summary says **gate pending** (not a silent skip).
 3. `GET /api/health` → `accountSyncEnabled: true`, `accountSyncTursoConfigured: true`. CI job **staging-account-sync** (`scripts/assert-staging-health.mjs`) **fail-closes** when `STAGING_HEALTH_URL` is set but either flag is false (only against that staging URL — never prod).
 4. Ordered STRICT smokes (after magic-link green, Exchange → toast):

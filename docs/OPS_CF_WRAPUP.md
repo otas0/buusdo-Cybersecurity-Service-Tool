@@ -6,14 +6,14 @@ Do these once after website MVP. Not product blockers; needed for 48h watch and 
 
 1. [dash.cloudflare.com/profile/api-tokens](https://dash.cloudflare.com/profile/api-tokens) → **Create Token** → template **Edit Cloudflare Workers**
 2. Account = the one that owns Worker **`pcpd`**
-3. Repo `otas0/preventive-cybersecurity-prototype` → Settings → Secrets → Actions:
+3. Repo `otas0/buusdocst` → Settings → Secrets → Actions:
 
 ```bash
-gh secret set CLOUDFLARE_API_TOKEN --repo otas0/preventive-cybersecurity-prototype
+gh secret set CLOUDFLARE_API_TOKEN --repo otas0/buusdocst
 # paste token
 ```
 
-`CLOUDFLARE_ACCOUNT_ID` should already be set. Variable `NEXT_PUBLIC_SITE_URL=https://pcpd.mtsu.workers.dev`.
+`CLOUDFLARE_ACCOUNT_ID` should already be set. Variable `NEXT_PUBLIC_SITE_URL=https://buusdocst.mtsu.workers.dev`.
 
 Verify: Actions → **Deploy Cloudflare** → Run workflow (empty URL = pcpd default).
 

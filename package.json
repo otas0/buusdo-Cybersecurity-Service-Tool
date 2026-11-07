@@ -1,5 +1,5 @@
 {
-  "name": "preventive-cybersecurity-prototype",
+  "name": "buusdocst",
   "version": "0.1.0",
   "private": true,
   "engines": {
@@ -62,7 +62,7 @@
     "smoke:staging-magic-link": "node scripts/smoke-staging-magic-link.mjs",
     "assert:wrangler-prod-no-dev-return": "node scripts/assert-wrangler-prod-no-dev-return-link.mjs",
     "test:playwright:account": "playwright test playwright/account-sync.spec.ts",
-    "test:playwright:privacy": "PLAYWRIGHT_SKIP_WEBSERVER=1 PLAYWRIGHT_BASE_URL=${PLAYWRIGHT_BASE_URL:-https://pcpd.mtsu.workers.dev} playwright test playwright/privacy-prod.spec.ts",
+    "test:playwright:privacy": "PLAYWRIGHT_SKIP_WEBSERVER=1 PLAYWRIGHT_BASE_URL=${PLAYWRIGHT_BASE_URL:-https://buusdocst.mtsu.workers.dev} playwright test playwright/privacy-prod.spec.ts",
     "extension:validate": "node scripts/extension-validate.mjs",
     "pack:chrome-store": "node scripts/pack-chrome-webstore.mjs",
     "safari:build": "xcodebuild -project \"safari/Preventive Shield/Preventive Shield.xcodeproj\" -scheme \"Preventive Shield\" -configuration Debug -derivedDataPath \"${SAFARI_DERIVED_DATA:-/tmp/ps-safari-dd}\" build",

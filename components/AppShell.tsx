@@ -129,7 +129,7 @@ function Header({
         <h1 className="brand-lockup">
           <img
             className="brand-logo"
-            src="/brand/buusdo-wordmark.png"
+            src="/brand/buusdo-wordmark.svg"
             width={176}
             height={60}
             alt={t.prototype}

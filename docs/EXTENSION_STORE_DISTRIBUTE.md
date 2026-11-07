@@ -37,8 +37,8 @@ The zip:
 1. [Chrome Web Store Developer Dashboard](https://chrome.google.com/webstore/devconsole)
 2. **New item** → upload the zip
 3. Listing: EN + pt-PT descriptions, screenshots (popup Clear / Hold / Halt + Settings). Screenshot caption (EN): “Companion desktop app: no TLS decryption, no process kill, system folders report-only — see Privacy → Honest limits.” (pt-PT: “App de ambiente de trabalho: sem desencriptação TLS, sem terminar processos, pastas de sistema só reportadas — ver Privacidade → Limites honestos.”)
-4. **Single purpose** / privacy: first-party check only; link Privacy → `https://pcpd.mtsu.workers.dev/en/privacy`. One listing sentence: the companion desktop app does not decrypt TLS, does not kill processes, and only reports system directories (see Privacy → Honest limits).
-5. Host permission justification: Website API `pcpd.mtsu.workers.dev` + DNR tracker blocking
+4. **Single purpose** / privacy: first-party check only; link Privacy → `https://buusdocst.mtsu.workers.dev/en/privacy`. One listing sentence: the companion desktop app does not decrypt TLS, does not kill processes, and only reports system directories (see Privacy → Honest limits).
+5. Host permission justification: Website API `buusdocst.mtsu.workers.dev` + DNR tracker blocking
 6. Submit for review
 
 ### After approval
@@ -63,7 +63,7 @@ Wrapper: `safari/buusdo/` (bundle `pt.community.preventiveshield`).
 3. Scheme **buusdo** → **Any Mac** → **Product → Archive**
 4. Organizer → **Distribute App** → **App Store Connect**
 5. App Store Connect: listing screenshots, privacy nutrition labels, category Utilities / Productivity
-6. Privacy policy URL: `https://pcpd.mtsu.workers.dev/en/privacy` — note the companion desktop app’s honest limits (no TLS decrypt, no process kill, system dirs report-only).
+6. Privacy policy URL: `https://buusdocst.mtsu.workers.dev/en/privacy` — note the companion desktop app’s honest limits (no TLS decrypt, no process kill, system dirs report-only).
 7. Review notes: Safari Web Extension; after install user enables it under Safari → Settings → Extensions
 
 CLI (optional, after team is set):

@@ -10,14 +10,14 @@ on:
       url:
         description: "Origin (https://…)"
         required: false
-        default: "https://pcpd.mtsu.workers.dev"
+        default: "https://buusdocst.mtsu.workers.dev"
   workflow_call:
     inputs:
       url:
         description: "Origin (https://…)"
         required: false
         type: string
-        default: "https://pcpd.mtsu.workers.dev"
+        default: "https://buusdocst.mtsu.workers.dev"
 
 jobs:
   privacy:
@@ -35,7 +35,7 @@ jobs:
         run: |
           IN="${{ inputs.url }}"
           if [ -z "$IN" ]; then IN="${{ github.event.inputs.url }}"; fi
-          if [ -z "$IN" ]; then IN="https://pcpd.mtsu.workers.dev"; fi
+          if [ -z "$IN" ]; then IN="https://buusdocst.mtsu.workers.dev"; fi
           echo "url=$(echo "$IN" | sed 's:/*$::')" >> "$GITHUB_OUTPUT"
       - name: Playwright privacy
         env:

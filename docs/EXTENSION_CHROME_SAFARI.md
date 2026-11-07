@@ -1,6 +1,6 @@
 # Extension — Chrome + Safari (users + operators)
 
-Website MVP: `https://pcpd.mtsu.workers.dev`. Desktop app is out of scope here.
+Website MVP: `https://buusdocst.mtsu.workers.dev`. Desktop app is out of scope here.
 
 ## Users (public install)
 
@@ -24,7 +24,7 @@ Until a URL is set, the website Settings button shows “listing soon” and lin
 ### Chrome — Load unpacked (engineering)
 
 1. Chrome → `chrome://extensions` → Developer mode → **Load unpacked** → `extension/`.
-2. Confirm API base `https://pcpd.mtsu.workers.dev` → **Run** on an https tab.
+2. Confirm API base `https://buusdocst.mtsu.workers.dev` → **Run** on an https tab.
 3. Ship to users via **`npm run pack:chrome-store`** + Web Store upload — not unpacked.
 
 ### Safari — Xcode (engineering)

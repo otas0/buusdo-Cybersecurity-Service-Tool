@@ -8,19 +8,22 @@ export const LOCAL_DEV_ORIGIN = "http://localhost:3000";
  *   npm run production:origin -- https://…
  * Empty → DEFAULT_API_BASE is localhost.
  */
-export const PRODUCTION_ORIGIN = "https://pcpd.mtsu.workers.dev";
+export const PRODUCTION_ORIGIN = "https://buusdocst.mtsu.workers.dev";
 
 /** Prefer production origin after first deploy; otherwise local vinext. */
 export const DEFAULT_API_BASE = (PRODUCTION_ORIGIN || LOCAL_DEV_ORIGIN).replace(/\/$/, "");
 
 export const LEGACY_API_BASES = new Set([
   "http://127.0.0.1:3001",
-  "http://localhost:3001"
+  "http://localhost:3001",
+  // Prior workers.dev names — migrate stored popup base to current DEFAULT_API_BASE
+  "https://pcpd.mtsu.workers.dev",
+  "https://preventive-shield.mtsu.workers.dev"
 ]);
 
 /**
  * @param {string | null | undefined} raw
- * @returns {string} trimmed base without trailing slash; legacy :3001 → DEFAULT_API_BASE
+ * @returns {string} trimmed base without trailing slash; legacy → DEFAULT_API_BASE
  */
 export function migrateLegacyApiBase(raw) {
   const trimmed = String(raw || "")

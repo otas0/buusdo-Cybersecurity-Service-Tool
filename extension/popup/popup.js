@@ -21,6 +21,7 @@ import {
   retryAfterPreferenceDeltaSec
 } from "../shared/retry-after.mjs";
 import { DEFAULT_API_BASE, migrateLegacyApiBase } from "../shared/api-base-migrate.mjs";
+import { CHINA_PAGES_URL } from "../shared/china-entry.mjs";
 import {
   TRACKERS_ANNOUNCE_CLEAR_MS,
   createTrackersAnnounceClearScheduler,
@@ -642,7 +643,7 @@ async function runWebsiteApiCheck() {
         message
       );
     els.websiteApiStatus.textContent = looksCfTimeout
-      ? t(lang, "websiteApiCfUnreachable")
+      ? t(lang, "websiteApiCfUnreachable", { chinaEntry: CHINA_PAGES_URL })
       : t(lang, "websiteApiFail", { error: message });
   }
 }

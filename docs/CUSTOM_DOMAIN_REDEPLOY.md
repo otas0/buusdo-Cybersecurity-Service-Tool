@@ -1,6 +1,6 @@
 # Custom domain + second deploy (`NEXT_PUBLIC_SITE_URL`)
 
-First launch can stay on `https://pcpd.mtsu.workers.dev`.  
+First launch can stay on `https://buusdocst.mtsu.workers.dev`.  
 When you attach a real domain, do a **second** deploy so the client bundle knows the public origin.
 
 ## 1. Attach the domain

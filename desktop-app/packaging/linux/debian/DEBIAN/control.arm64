@@ -10,4 +10,4 @@ Description: buusdo Cybersecurity Service Tool desktop (browser shell)
  Does not enable autostart on install; open-at-login stays off until the user
  turns it on in the dashboard. CI packages against Node 22; postinst warns if
  the installed nodejs major differs.
-Homepage: https://pcpd.mtsu.workers.dev
+Homepage: https://buusdocst.mtsu.workers.dev

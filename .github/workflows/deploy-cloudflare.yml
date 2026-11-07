@@ -20,7 +20,7 @@ on:
   workflow_dispatch:
     inputs:
       target:
-        description: "Worker target (production = pcpd; staging = pcpd-staging)"
+        description: "Worker target (production = buusdocst; staging = buusdocst-staging)"
         required: true
         type: choice
         options:
@@ -66,7 +66,7 @@ jobs:
           VAR="${{ vars.NEXT_PUBLIC_SITE_URL }}"
           STAGING_VAR="${{ vars.STAGING_HEALTH_URL }}"
           # Default public origin until custom domain replaces it (docs/CUSTOM_DOMAIN_REDEPLOY.md).
-          DEFAULT="https://pcpd.mtsu.workers.dev"
+          DEFAULT="https://buusdocst.mtsu.workers.dev"
           if [ "$TARGET" = "staging" ]; then
             if [ -n "$OVERRIDE" ]; then
               URL="$OVERRIDE"
@@ -157,7 +157,7 @@ jobs:
             echo "| command | \`$CMD\` |"
             echo ""
             if [ "$TARGET" = "staging" ]; then
-              echo "After first staging deploy: paste the exact \`https://pcpd-staging.<subdomain>.workers.dev\` into docs/DEPLOY_SECRETS.md and \`gh variable set STAGING_HEALTH_URL\`."
+              echo "After first staging deploy: paste the exact \`https://buusdocst-staging.<subdomain>.workers.dev\` into docs/DEPLOY_SECRETS.md and \`gh variable set STAGING_HEALTH_URL\`."
               echo "Then STRICT smokes → docs/ACCOUNT_SYNC_GATE.md."
             else
               echo "Custom domain: **hold** until Account gate + docs/POST_LAUNCH_48H.md (docs/CUSTOM_DOMAIN_REDEPLOY.md)."

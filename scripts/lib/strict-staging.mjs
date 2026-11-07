@@ -7,7 +7,7 @@ export function stagingUrlOrExit(label = "staging-smoke") {
   const staging = String(process.env.STAGING_HEALTH_URL || process.env.STAGING_BASE_URL || "")
     .trim()
     .replace(/\/$/, "");
-  const prod = String(process.env.PRODUCTION_HEALTH_URL || "https://pcpd.mtsu.workers.dev")
+  const prod = String(process.env.PRODUCTION_HEALTH_URL || "https://buusdocst.mtsu.workers.dev")
     .trim()
     .replace(/\/$/, "");
   const strict = process.env.STRICT_STAGING === "1";

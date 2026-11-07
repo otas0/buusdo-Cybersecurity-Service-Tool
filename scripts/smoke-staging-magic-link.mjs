@@ -1,7 +1,7 @@
 /**
  * Staging magic-link smoke — requires ACCOUNT_SYNC + DEV_RETURN_LINK on staging only.
  *
- *   STAGING_HEALTH_URL=https://pcpd-staging….workers.dev npm run smoke:staging-magic-link
+ *   STAGING_HEALTH_URL=https://buusdocst-staging….workers.dev npm run smoke:staging-magic-link
  *   STRICT_STAGING=1 …  # fail instead of SKIP when unset / incomplete
  */
 import assert from "node:assert/strict";

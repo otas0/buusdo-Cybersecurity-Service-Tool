@@ -1,7 +1,7 @@
 /**
  * Production privacy smoke (EN + pt-PT).
  *
- *   PLAYWRIGHT_BASE_URL=https://pcpd.mtsu.workers.dev npm run test:playwright:privacy
+ *   PLAYWRIGHT_BASE_URL=https://buusdocst.mtsu.workers.dev npm run test:playwright:privacy
  *
  * Skips when the origin is unreachable (e.g. local CF timeout) so CI/laptops
  * without workers.dev access do not fail the suite falsely.

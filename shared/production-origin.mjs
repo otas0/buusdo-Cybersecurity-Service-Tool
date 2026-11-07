@@ -11,7 +11,7 @@ export const LOCAL_DEV_ORIGIN = "http://localhost:3000";
  * Canonical HTTPS origin with no trailing slash.
  * Updated by scripts/set-production-origin.mjs — do not hand-edit in PRs without running the script.
  */
-export const PRODUCTION_ORIGIN = "https://pcpd.mtsu.workers.dev";
+export const PRODUCTION_ORIGIN = "https://buusdocst.mtsu.workers.dev";
 
 export function normalizeOrigin(raw) {
   return String(raw || "")

@@ -1,4 +1,4 @@
-UTC=2026-11-01T07:24:00Z worker=pcpd origin=https://pcpd.mtsu.workers.dev
+UTC=2026-11-01T07:24:00Z worker=pcpd origin=https://buusdocst.mtsu.workers.dev
 status=PENDING_SCREENSHOTS
 reason=Cloudflare dashboard requires interactive sign-in; Metrics → errors + CPU PNGs not captured yet.
 next=After login: save 2026-11-01-pcpd-errors.png and 2026-11-01-pcpd-cpu.png beside this file; fill version= from Workers Deployments.

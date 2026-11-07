@@ -5,9 +5,9 @@ When `git fetch`/`git push` over HTTPS times out but `gh api` / `api.github.com`
 ## Status (this laptop)
 
 - Key: `~/.ssh/id_ed25519_shield` (+ `.pub`)
-- Deploy key on `otas0/preventive-cybersecurity-prototype`: **write**, title `preventive-shield-laptop`
+- Deploy key on `otas0/buusdocst`: **write**, title `buusdocst-laptop` (rename in Settings → Deploy keys if still labeled `preventive-shield-laptop`)
 - `~/.ssh/config` → `Host github.com` via `ssh.github.com:443` + that IdentityFile
-- `origin` → `git@github.com:otas0/preventive-cybersecurity-prototype.git` (`ssh -T` OK)
+- `origin` → `git@github.com:otas0/buusdocst.git` (`ssh -T` OK)
 
 ## One-time setup (other machines)
 
@@ -22,7 +22,7 @@ Host github.com
   IdentityFile ~/.ssh/id_ed25519_shield
   IdentitiesOnly yes
 EOF
-git remote set-url origin git@github.com:otas0/preventive-cybersecurity-prototype.git
+git remote set-url origin git@github.com:otas0/buusdocst.git
 ssh -T git@github.com && git fetch origin
 ```
 

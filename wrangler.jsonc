@@ -3,10 +3,10 @@
   // Preventive Shield — Cloudflare Workers (vinext).
   // Set CLOUDFLARE_ACCOUNT_ID in the environment, or uncomment account_id below.
   // "account_id": "YOUR_ACCOUNT_ID",
-  // workers.dev URL = https://pcpd.<account-subdomain>.workers.dev
-  // Staging: `npx wrangler deploy --env staging` (or vinext equivalent) → Worker name pcpd-staging.
+  // workers.dev URL = https://buusdocst.<account-subdomain>.workers.dev
+  // Staging: `npx wrangler deploy --env staging` (or vinext equivalent) → Worker name buusdocst-staging.
   // Never put ACCOUNT_SYNC_ENABLED=1 or ACCOUNT_SYNC_DEV_RETURN_LINK on the top-level (prod) vars.
-  "name": "pcpd",
+  "name": "buusdocst",
   "compatibility_date": "2025-10-01",
   // nodejs_compat comes from vite.config.ts cloudflare plugin (do not duplicate here — API 10021).
   // Main entry is provided by @cloudflare/vite-plugin + vinext at build/deploy time.
@@ -22,7 +22,7 @@
   "env": {
     "staging": {
       // Separate Worker — secrets via `wrangler secret put … --env staging`
-      "name": "pcpd-staging",
+      "name": "buusdocst-staging",
       "workers_dev": true,
       "preview_urls": true,
       "vars": {

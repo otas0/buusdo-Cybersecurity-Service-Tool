@@ -165,7 +165,7 @@ jobs:
           TAG: ${{ needs.resolve-tag.outputs.tag }}
           VER: ${{ needs.resolve-tag.outputs.version }}
         run: |
-          BASE="https://github.com/otas0/preventive-cybersecurity-prototype/releases/download/${TAG}"
+          BASE="https://github.com/otas0/buusdocst/releases/download/${TAG}"
           echo "windowsNsisUrl=${BASE}/PreventiveShield-Setup-User.exe"
           echo "macosAppZipUrl=${BASE}/PreventiveShield-macos-app-notarized.zip  # after desktop-notarize-macos"
           echo "macosAppZipUrlUnsigned=${BASE}/PreventiveShield-macos-app.zip"

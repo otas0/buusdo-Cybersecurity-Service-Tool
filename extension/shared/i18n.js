@@ -51,7 +51,7 @@ export const STRINGS = {
     websiteApiUserBlock: "Personal block list matched this host (read-only hint).",
     websiteApiFail: "API check failed: {error}",
     websiteApiCfUnreachable:
-      "This computer cannot reach the Cloudflare workers.dev API (timeout). The Worker may still be healthy — try another network, or open the API base in a browser. See docs/LOCAL_CF_CONNECTIVITY.md.",
+      "This computer cannot reach the Cloudflare workers.dev API (timeout). The Worker may still be healthy — try another network, open the API base in a browser, or use the China entry: {chinaEntry}",
     websiteApiSchemaFail: "Timing schema failed: {errors}",
 
     listsSupportBlob: "Support diagnostics JSON",
@@ -157,7 +157,7 @@ export const STRINGS = {
     websiteApiUserBlock: "A lista pessoal bloqueou este anfitrião (dica só de leitura).",
     websiteApiFail: "Falha na API: {error}",
     websiteApiCfUnreachable:
-      "Este computador não alcança a API Cloudflare workers.dev (timeout). O Worker pode estar saudável — tente outra rede, ou abra a base da API no browser. Ver docs/LOCAL_CF_CONNECTIVITY.md.",
+      "Este computador não alcança a API Cloudflare workers.dev (timeout). O Worker pode estar saudável — tente outra rede, abra a base da API no browser, ou use a entrada China: {chinaEntry}",
     websiteApiSchemaFail: "Schema de timing falhou: {errors}",
 
     listsSupportBlob: "JSON de diagnóstico para suporte",

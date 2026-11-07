@@ -4,7 +4,7 @@
   "short_name": "buusdo",
   "version": "0.1.0",
   "description": "buusdo Cybersecurity Service Tool. Block known trackers and flag phishing-like URLs. EN / pt-PT. Storage defaults to off.",
-  "homepage_url": "https://pcpd.mtsu.workers.dev",
+  "homepage_url": "https://buusdocst.mtsu.workers.dev",
   "permissions": [
     "declarativeNetRequest",
     "storage",
@@ -26,7 +26,7 @@
     "http://localhost:3000/*",
     "http://127.0.0.1:3001/*",
     "http://localhost:3001/*",
-    "https://pcpd.mtsu.workers.dev/*"
+    "https://buusdocst.mtsu.workers.dev/*"
   ],
   "background": {
     "service_worker": "background/service-worker.js"
