@@ -24,6 +24,39 @@ export function trackDocumentLoads(page: Page): { readonly count: number } {
 }
 
 /**
+ * Wait until React has hydrated `selector` (SSR markup is visible earlier).
+ * Without this, nav clicks and form submit are no-ops / native GET reloads.
+ */
+export async function waitForReactHydration(
+  page: Page,
+  selector: string,
+  timeoutMs = 15000
+) {
+  await page.waitForSelector(selector, { state: "attached", timeout: timeoutMs });
+  await page.waitForFunction(
+    (sel) => {
+      const el = document.querySelector(sel);
+      if (!el) return false;
+      return Object.keys(el).some(
+        (k) => k.startsWith("__reactFiber") || k.startsWith("__reactProps")
+      );
+    },
+    selector,
+    { timeout: timeoutMs }
+  );
+}
+
+/** Home check form: hydrate → fill → submit (avoids empty controlled state / native reload). */
+export async function submitHomeCheck(page: Page, url: string) {
+  const urlInput = page.locator("#url").first();
+  await waitForReactHydration(page, "#url");
+  await expect(urlInput).toBeVisible({ timeout: 15000 });
+  await urlInput.fill(url);
+  await expect(urlInput).toHaveValue(url);
+  await page.locator('button[type="submit"]').first().click();
+}
+
+/**
  * Hash section scrolled into view (Settings block-lists, desktop, …).
  * Prefer over local toBeInViewport copies in narrow/honest-limits.
  * Polls bounding rect (AppShell scrollIntoView is often rAF-deferred).

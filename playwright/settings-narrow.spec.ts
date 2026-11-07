@@ -16,7 +16,9 @@ import {
 } from "../components/rate-limit-announce";
 import {
   assertHashSectionInView,
-  assertLocaleToggleKeepsSettingsDesktop
+  assertLocaleToggleKeepsSettingsDesktop,
+  submitHomeCheck,
+  waitForReactHydration
 } from "./helpers/spa-settings-nav";
 
 const playwrightDir = dirname(fileURLToPath(import.meta.url));
@@ -371,10 +373,7 @@ test.describe("Settings narrow pt-PT", () => {
     }
     await page.setViewportSize({ width: 390, height: 844 });
     await page.goto(`${base}/en`, { waitUntil: "domcontentloaded" });
-    const urlInput = page.locator('input[name="url"], #url, input[type="url"]').first();
-    await urlInput.waitFor({ state: "visible", timeout: 15000 });
-    await urlInput.fill("https://example.com");
-    await page.locator('button[type="submit"]').first().click();
+    await submitHomeCheck(page, "https://example.com");
     await page.waitForSelector(".log-action, .result-details, [class*='Risk']", { timeout: 20000 }).catch(() => null);
     await expect(page.getByRole("button", { name: /Block this domain/i })).toHaveCount(0);
     await expect(page.getByRole("button", { name: /^Block$/i })).toHaveCount(0);
@@ -411,8 +410,7 @@ test.describe("Settings narrow pt-PT", () => {
     } catch {
       /* older Playwright — fall through to real-time soft poll */
     }
-    await urlInput.fill("https://rate-limit-soft.example/");
-    await page.locator('button[type="submit"]').first().click();
+    await submitHomeCheck(page, "https://rate-limit-soft.example/");
     const live = page.getByTestId("rate-limit-live");
     if (!(await live.isVisible().catch(() => false))) {
       console.warn("[playwright] rate-limit live region missing after 429 (soft)");
@@ -512,12 +510,13 @@ test.describe("Settings narrow pt-PT", () => {
     // Land on Settings first (avoids home→settings click flake), then nav click scrolls block-lists.
     await page.goto(`${base}/en/settings`, { waitUntil: "load" });
     await page.waitForSelector("#settings-privacy, .settings-stage", { timeout: 15000 });
-    // Client hydrate marker — Data select only wires after AppShell mounts.
-    await expect(page.locator("#settings-data-select")).toBeVisible({ timeout: 15000 });
+    // SSR shows Data select before React attaches onClick — wait for hydration.
+    await waitForReactHydration(page, "#settings-data-select");
     const settingsNav = page.getByRole("navigation").getByRole("button", {
       name: /Settings|Definições/i
     });
     await expect(settingsNav).toBeVisible();
+    await waitForReactHydration(page, "nav.top-nav button.nav-link.is-active");
     // Already on Settings → navigate() uses #settings-block-lists + scrollIntoView.
     await settingsNav.click();
     // SPA replaceState — use toHaveURL (waitForURL + waitUntil load never settles).
@@ -542,10 +541,7 @@ test.describe("Settings narrow pt-PT", () => {
     }
     await page.setViewportSize({ width: 390, height: 844 });
     await page.goto(`${base}/en`, { waitUntil: "domcontentloaded" });
-    const urlInput = page.locator('input[name="url"], #url, input[type="url"]').first();
-    await urlInput.waitFor({ state: "visible", timeout: 15000 });
-    await urlInput.fill(fixture.url);
-    await page.locator('button[type="submit"]').first().click();
+    await submitHomeCheck(page, fixture.url);
     await page.waitForSelector(".log-action", { timeout: 20000 });
     const cta = page.getByTestId("leave-and-block-settings");
     if ((await cta.count()) === 0) {
@@ -585,10 +581,7 @@ test.describe("Settings narrow pt-PT", () => {
     }
     await page.setViewportSize({ width: 390, height: 844 });
     await page.goto(`${base}/en`, { waitUntil: "domcontentloaded" });
-    const urlInput = page.locator('input[name="url"], #url, input[type="url"]').first();
-    await urlInput.waitFor({ state: "visible", timeout: 15000 });
-    await urlInput.fill(fixture.url);
-    await page.locator('button[type="submit"]').first().click();
+    await submitHomeCheck(page, fixture.url);
     await page.waitForSelector(".log-action", { timeout: 20000 });
     const link = page.getByTestId("result-block-lists-settings");
     if ((await link.count()) === 0) {
@@ -608,14 +601,11 @@ test.describe("Settings narrow pt-PT", () => {
     }
     await page.setViewportSize({ width: 390, height: 844 });
     await page.goto(`${base}/en`, { waitUntil: "domcontentloaded" });
-    const urlInput = page.locator('input[name="url"], #url, input[type="url"]').first();
-    await urlInput.waitFor({ state: "visible", timeout: 15000 });
-    await urlInput.fill("https://example.com/");
     const reqPromise = page.waitForRequest(
       (req) => req.url().includes("/api/check") && req.method() === "POST",
       { timeout: 20000 }
     );
-    await page.locator('button[type="submit"]').first().click();
+    await submitHomeCheck(page, "https://example.com/");
     const req = await reqPromise;
     const checkBody = req.postData() || "";
     expect(checkBody).not.toMatch(/personalListBlocked/);
@@ -697,16 +687,16 @@ test.describe("Settings narrow pt-PT", () => {
         })
       });
     });
-    const urlInput = page.locator('input[name="url"], #url, input[type="url"]').first();
-    await urlInput.waitFor({ state: "visible", timeout: 15000 });
-    await urlInput.fill("https://blocked-hint.example/");
     const checkWait = page.waitForResponse(
       (r) => r.url().includes("/api/check") && r.request().method() === "POST",
       { timeout: 20000 }
     );
-    await page.locator('button[type="submit"]').first().click();
+    await submitHomeCheck(page, "https://blocked-hint.example/");
     await checkWait;
-    await expect(page.locator(".result-layout, .result-verdict")).toBeVisible({ timeout: 15000 });
+    await expect(page.locator(".result-layout").first()).toBeVisible({ timeout: 15000 });
+    await expect(page.getByText(/Limited risk evidence|Provas de risco limitadas/i).first()).toBeVisible({
+      timeout: 10000
+    });
     await expect(page.getByTestId("user-block-evidence")).toBeVisible({ timeout: 10000 });
     // Banner owns the user-block copy — why-list must not duplicate it.
     await expect(page.locator(".why-list")).not.toContainText(/Personal block list|Lista pessoal de bloqueio/i);
@@ -820,10 +810,7 @@ test.describe("Settings narrow pt-PT", () => {
       });
     });
     await page.goto(`${base}/pt-PT`, { waitUntil: "domcontentloaded" });
-    const ptUrl = page.locator('input[name="url"], #url, input[type="url"]').first();
-    await ptUrl.waitFor({ state: "visible", timeout: 15000 });
-    await ptUrl.fill("https://blocked-hint.example/");
-    await page.locator('button[type="submit"]').first().click();
+    await submitHomeCheck(page, "https://blocked-hint.example/");
     const ptLeave = page.getByRole("button", { name: /Leave|Sair/i }).first();
     await expect(ptLeave).toBeVisible({ timeout: 15000 });
     await expect(ptLeave).toHaveAttribute(
@@ -930,19 +917,14 @@ test.describe("Settings narrow pt-PT", () => {
         })
       });
     });
-    const urlInput = page.locator('input[name="url"], #url, input[type="url"]').first();
-    await urlInput.waitFor({ state: "visible", timeout: 15000 });
-    await urlInput.fill("https://bot-blocked.example/");
     const checkWait = page.waitForResponse(
       (r) => r.url().includes("/api/check") && r.request().method() === "POST",
       { timeout: 20000 }
     );
-    await page.locator('button[type="submit"]').first().click();
+    await submitHomeCheck(page, "https://bot-blocked.example/");
     await checkWait;
-    await expect(page.locator(".result-layout, .result-verdict, [data-testid='result-danger-level']")).toBeVisible({
-      timeout: 20000
-    });
-    await expect(page.getByText(/Limited risk evidence|Provas de risco limitadas/i)).toBeVisible({
+    await expect(page.getByTestId("result-danger-level")).toBeVisible({ timeout: 20000 });
+    await expect(page.getByText(/Limited risk evidence|Provas de risco limitadas/i).first()).toBeVisible({
       timeout: 10000
     });
     const progressAmbiguous = page
@@ -975,14 +957,9 @@ test.describe("Settings narrow pt-PT", () => {
       /ambiguous-probe-not-phishing/
     );
     await page.goto(`${base}/pt-PT`, { waitUntil: "domcontentloaded" });
-    const ptUrl = page.locator('input[name="url"], #url, input[type="url"]').first();
-    await ptUrl.waitFor({ state: "visible", timeout: 15000 });
-    await ptUrl.fill("https://bot-blocked.example/");
-    await page.locator('button[type="submit"]').first().click();
-    await expect(page.locator(".result-layout, .result-verdict, [data-testid='result-danger-level']")).toBeVisible({
-      timeout: 20000
-    });
-    await expect(page.getByText(/Provas de risco limitadas|Limited risk evidence/i)).toBeVisible({
+    await submitHomeCheck(page, "https://bot-blocked.example/");
+    await expect(page.getByTestId("result-danger-level")).toBeVisible({ timeout: 20000 });
+    await expect(page.getByText(/Provas de risco limitadas|Limited risk evidence/i).first()).toBeVisible({
       timeout: 10000
     });
     const ptLeaveChip = page.getByTestId("leave-ambiguous-probe-chip");
