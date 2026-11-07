@@ -31,6 +31,15 @@ rsync -a --delete \
   --exclude node_modules --exclude dist --exclude data \
   "$ROOT/" "$STAGE/usr/lib/preventive-shield/"
 rsync -a --delete "$REPO/shared/" "$STAGE/usr/share/preventive-shield/shared/"
+# Production deps must ship in the .deb (rsync excludes host node_modules).
+(
+  cd "$STAGE/usr/lib/preventive-shield"
+  npm ci --omit=dev --no-fund --no-audit
+)
+if [[ ! -d "$STAGE/usr/lib/preventive-shield/node_modules/express" ]]; then
+  echo "pack:linux missing express after npm ci — refuse empty runtime" >&2
+  exit 1
+fi
 
 cat > "$STAGE/usr/bin/preventive-shield" <<'EOF'
 #!/bin/sh

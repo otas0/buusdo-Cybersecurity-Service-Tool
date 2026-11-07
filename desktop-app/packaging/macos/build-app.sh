@@ -35,6 +35,15 @@ rsync -a --delete \
   --exclude node_modules --exclude dist --exclude data --exclude '*.log' \
   "$ROOT/" "$RES/app/"
 rsync -a --delete "$REPO/shared/" "$RES/shared/"
+# Production deps must ship inside the .app (rsync excludes host node_modules).
+(
+  cd "$RES/app"
+  npm ci --omit=dev --no-fund --no-audit
+)
+if [[ ! -d "$RES/app/node_modules/express" ]]; then
+  echo "pack:macos missing express after npm ci — refuse empty runtime" >&2
+  exit 1
+fi
 
 if [[ "${EMBED_SYSTEM_NODE:-0}" == "1" ]]; then
   NODE_BIN="${NODE_BIN:-$(command -v node)}"

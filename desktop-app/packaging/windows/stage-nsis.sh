@@ -69,6 +69,15 @@ stage_tree "$ROOT/" "$STAGE/app/" \
   node_modules dist data packaging/windows/stage '*.log'
 mkdir -p "$STAGE/shared"
 stage_tree "$REPO/shared/" "$STAGE/shared/"
+# Production deps must ship in the NSIS stage (stage_tree excludes host node_modules).
+(
+  cd "$STAGE/app"
+  npm ci --omit=dev --no-fund --no-audit
+)
+if [[ ! -d "$STAGE/app/node_modules/express" ]]; then
+  echo "pack:windows-stage missing express after npm ci — refuse empty runtime" >&2
+  exit 1
+fi
 
 cat > "$STAGE/run.cmd" <<'EOF'
 @echo off
