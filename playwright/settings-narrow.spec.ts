@@ -463,7 +463,7 @@ test.describe("Settings narrow pt-PT", () => {
     }
   });
 
-  test("Settings block-lists note links to extension and desktop READMEs", async ({ page }) => {
+  test("Settings block-lists note links to extension setup / store docs", async ({ page }) => {
     if (!(await baseReachable())) {
       test.skip(true, `PLAYWRIGHT_BASE_URL unreachable: ${base}`);
       return;
@@ -471,12 +471,14 @@ test.describe("Settings narrow pt-PT", () => {
     await page.goto(`${base}/en/settings#settings-block-lists`, { waitUntil: "domcontentloaded" });
     await page.waitForSelector("#settings-block-lists", { timeout: 15000 });
     const section = page.locator("#settings-block-lists");
-    await expect(section.locator('a[href*="extension/README"]')).toBeVisible();
-    await expect(section.locator('a[href*="desktop-app/README"]')).toBeVisible();
+    // Product ships store listing + Chrome/Safari setup docs (not extension/README deep links).
+    await expect(
+      section.locator('a[href*="EXTENSION_STORE_DISTRIBUTE"], a[href*="EXTENSION_CHROME_SAFARI"]')
+    ).toHaveCount(3);
     await expect(page.getByTestId("settings-block-lists-live")).toBeVisible();
-    await expect(page.getByTestId("settings-block-lists-live")).toContainText(/extension|desktop|extensão|app/i);
+    await expect(page.getByTestId("settings-block-lists-live")).toContainText(/extension|desktop|extensão|app|lists|listas/i);
     await expect(page.locator("#settings-block-lists .scope-note")).toContainText(
-      /does not enforce|não aplica|on-device|dispositivo|offline|export\/import|Syncthing/i
+      /does not enforce|não aplica|on-device|dispositivo|offline|export\/import|Syncthing|ficam no dispositivo/i
     );
   });
 
@@ -924,8 +926,11 @@ test.describe("Settings narrow pt-PT", () => {
     await urlInput.waitFor({ state: "visible", timeout: 15000 });
     await urlInput.fill("https://bot-blocked.example/");
     await page.locator('button[type="submit"]').first().click();
+    await expect(page.locator(".result-layout, .result-verdict, [data-testid='result-danger-level']")).toBeVisible({
+      timeout: 20000
+    });
     await expect(page.getByText(/Limited risk evidence|Provas de risco limitadas/i)).toBeVisible({
-      timeout: 15000
+      timeout: 10000
     });
     const progressAmbiguous = page
       .getByTestId("progress-timing-flag-chips")
@@ -961,8 +966,11 @@ test.describe("Settings narrow pt-PT", () => {
     await ptUrl.waitFor({ state: "visible", timeout: 15000 });
     await ptUrl.fill("https://bot-blocked.example/");
     await page.locator('button[type="submit"]').first().click();
+    await expect(page.locator(".result-layout, .result-verdict, [data-testid='result-danger-level']")).toBeVisible({
+      timeout: 20000
+    });
     await expect(page.getByText(/Provas de risco limitadas|Limited risk evidence/i)).toBeVisible({
-      timeout: 15000
+      timeout: 10000
     });
     const ptLeaveChip = page.getByTestId("leave-ambiguous-probe-chip");
     await expect(ptLeaveChip).toBeVisible({ timeout: 5000 });

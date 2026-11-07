@@ -33,7 +33,7 @@ export const messages = {
       "buusdo does not offer a cloud account or cross-device list sync. Personal block/trust lists stay on this device. Move them with export/import of shield-lists-v1 JSON or QR, or sync the desktop shield-backup.json file yourself (USB, Drive, Syncthing).",
     privacyPolicyContactTitle: "Questions",
     privacyPolicyContactBody:
-      "For privacy questions, contact the operator of your buusdo deployment (the person or organisation that runs the Cloudflare Worker). Do not paste sensitive check results into public channels.",
+      "For privacy or product questions, contact the operator of your buusdo deployment through their official email or support channel (the person or organisation that runs the Cloudflare Worker). Prefer that known official address — not a phone or email printed on a site you are checking. Do not paste sensitive check results into public channels.",
     privacyPolicyLimitsTitle: "Honest limits (desktop + proxy)",
     privacyPolicyLimitsBody:
       "No TLS decryption — HTTPS CONNECT is hostname-only; there is no MITM certificate. No process kill — running programs keep running. System directories are report-only — /usr, /etc, Windows system paths, and Program Files are never moved or edited. There is no AV / signature engine and no credential or browsing-history capture.",
@@ -73,6 +73,31 @@ export const messages = {
     actions: "Recommended protective action",
     leave: "Leave this check",
     block: "Block in extension / desktop",
+    dangerLevelLabel: "Danger level",
+    ignoreRiskTitle: "If you ignore this warning",
+    ignoreRiskBody:
+      "You may hand over passwords, payment details, or other personal data to whoever controls this address. Close the tab before typing or paying anything.",
+    nextStepsTitle: "What to do next — step by step",
+    nextStepLeave: "Leave this page now — do not continue on the address you checked.",
+    nextStepNoCredentials:
+      "Do not enter passwords, card numbers, codes from SMS/email, or other personal data on this site.",
+    nextStepVerifyOfficial:
+      "Verify independently: open the organisation’s official domain or app you already trust (bookmark, bank card, known app store). Do not use phone numbers or emails shown on the suspect page.",
+    nextStepReport:
+      "Optional: save a local report draft below so an operator can review the host for the curated threat list.",
+    nextStepBlock:
+      "Optional: block the host in the buusdo extension or desktop app so it is harder to reopen by mistake.",
+    nextStepLooksReal:
+      "Scam pages often look polished and use HTTPS. Visual quality is not proof the site is legitimate.",
+    honestLimitsTitle: "Honest limits of this tool",
+    honestLimitNoWipe:
+      "buusdo cannot erase personal information a website already collected from you. Change passwords on the real official site if you entered anything, and watch bank/email alerts.",
+    honestLimitNoCrowd:
+      "Results come from buusdo’s curated list and address signals — not a public vote count of how many people flagged the site.",
+    honestLimitNoAv:
+      "This is not an antivirus product. Closing the tab stops further entry of data here; it does not scan or clean your device.",
+    actionSensitiveNote:
+      "Do not enter sensitive information unless you can confirm the address through an independent source.",
     // EVAL surface-copy keys (no website block UI): protection, blockedInPrototype, removed, currentlyBlocked
     verified: "Open the listed domain",
     protection: "Use the extension or desktop app to update protection lists.",
@@ -297,8 +322,9 @@ export const messages = {
     intelProbeFormula: "See shared probe-budget formula.",
     feedbackPrompt: "Wrong result?",
     feedbackHint: "Save a local draft (domain + risk level + mark only). Export a batches/*.json file from Settings for operator review — nothing is uploaded.",
-    feedbackReport: "Missed threat — draft report",
+    feedbackReport: "Report this website (local draft)",
     feedbackFalsePositive: "Wrong flag — draft false positive",
+    feedbackReportHaltCta: "Report this website",
     feedbackSaved: "Saved on this device.",
     feedbackNeedLocal: "Choose This device only or Diagnostics in Settings to keep feedback drafts.",
     feedbackAlready: "Already in local drafts.",
@@ -347,7 +373,7 @@ export const messages = {
       "O buusdo não oferece conta na nuvem nem sincronização de listas entre dispositivos. As listas pessoais de bloqueio/confiança ficam neste dispositivo. Transfira-as com exportar/importar JSON shield-lists-v1 ou QR, ou sincronize o ficheiro shield-backup.json da app (USB, Drive, Syncthing).",
     privacyPolicyContactTitle: "Contacto",
     privacyPolicyContactBody:
-      "Para questões de privacidade, contacte o operador da sua instalação do buusdo (quem gere o Worker na Cloudflare). Não cole resultados sensíveis de verificações em canais públicos.",
+      "Para questões de privacidade ou do produto, contacte o operador da sua instalação do buusdo pelo email ou canal de suporte oficial (quem gere o Worker na Cloudflare). Prefira esse endereço oficial conhecido — não um telefone ou email impresso no site que está a verificar. Não cole resultados sensíveis de verificações em canais públicos.",
     privacyPolicyLimitsTitle: "Limites honestos (app + proxy)",
     privacyPolicyLimitsBody:
       "Sem desencriptação TLS — o HTTPS CONNECT usa só o nome do anfitrião; não há certificado MITM. Sem terminar processos — os programas em execução continuam. Pastas de sistema só são reportadas — /usr, /etc, caminhos de sistema Windows e Program Files nunca são movidos nem editados. Não há motor AV / de assinaturas nem captura de credenciais ou histórico de navegação.",
@@ -387,6 +413,31 @@ export const messages = {
     actions: "Ação de proteção recomendada",
     leave: "Sair desta verificação",
     block: "Bloquear na extensão / app",
+    dangerLevelLabel: "Nível de perigo",
+    ignoreRiskTitle: "Se ignorar este aviso",
+    ignoreRiskBody:
+      "Pode entregar palavras-passe, dados de pagamento ou outra informação pessoal a quem controla este endereço. Feche o separador antes de escrever ou pagar o que quer que seja.",
+    nextStepsTitle: "O que fazer a seguir — passo a passo",
+    nextStepLeave: "Saia já desta página — não continue no endereço que verificou.",
+    nextStepNoCredentials:
+      "Não introduza palavras-passe, números de cartão, códigos de SMS/email ou outros dados pessoais neste site.",
+    nextStepVerifyOfficial:
+      "Verifique de forma independente: abra o domínio ou a app oficial da organização em que já confia (marcador, cartão do banco, loja de apps conhecida). Não use telefones nem emails mostrados na página suspeita.",
+    nextStepReport:
+      "Opcional: guarde abaixo um rascunho de denúncia local para um operador rever o anfitrião na lista curada de ameaças.",
+    nextStepBlock:
+      "Opcional: bloqueie o anfitrião na extensão ou app desktop buusdo para ser mais difícil reabri-lo por engano.",
+    nextStepLooksReal:
+      "Páginas de fraude costumam parecer cuidadas e usar HTTPS. Qualidade visual não prova que o site seja legítimo.",
+    honestLimitsTitle: "Limites honestos desta ferramenta",
+    honestLimitNoWipe:
+      "O buusdo não consegue apagar informação pessoal que um site já tenha recolhido. Se introduziu dados, altere palavras-passe no site oficial verdadeiro e acompanhe alertas do banco/email.",
+    honestLimitNoCrowd:
+      "Os resultados vêm da lista curada do buusdo e de sinais do endereço — não de um contador público de quantas pessoas denunciaram o site.",
+    honestLimitNoAv:
+      "Isto não é um produto antivírus. Fechar o separador impede que continue a introduzir dados aqui; não analisa nem limpa o dispositivo.",
+    actionSensitiveNote:
+      "Não introduza informação sensível sem confirmar o endereço através de uma fonte independente.",
     verified: "Abrir o domínio listado",
     protection: "Use a extensão ou a app para atualizar as listas de proteção.",
     currentlyBlocked: "fica bloqueado na extensão ou na app quando o adicionar aí.",
@@ -610,8 +661,9 @@ export const messages = {
     intelProbeFormula: "Ver fórmula partilhada da sonda.",
     feedbackPrompt: "Resultado incorreto?",
     feedbackHint: "Guarde um rascunho local (só domínio + nível de risco + marca). Exporte um ficheiro batches/*.json nas Definições para revisão — nada é enviado.",
-    feedbackReport: "Ameaça falhada — rascunho de denúncia",
+    feedbackReport: "Denunciar este site (rascunho local)",
     feedbackFalsePositive: "Alerta errado — rascunho de falso positivo",
+    feedbackReportHaltCta: "Denunciar este site",
     feedbackSaved: "Guardado neste dispositivo.",
     feedbackNeedLocal: "Escolha «Só neste dispositivo» ou «Diagnóstico» nas Definições para guardar rascunhos.",
     feedbackAlready: "Já está nos rascunhos locais.",

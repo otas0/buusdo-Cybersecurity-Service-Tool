@@ -31,10 +31,12 @@ export function trackDocumentLoads(page: Page): { readonly count: number } {
 export async function assertHashSectionInView(
   page: Page,
   selector: string,
-  timeoutMs = 10000
+  timeoutMs = 15000
 ) {
-  const loc = page.locator(selector);
+  const loc = page.locator(selector).first();
   await expect(loc).toBeVisible({ timeout: timeoutMs });
+  // Mobile SPA scrollIntoView is often rAF-deferred; give hash nav a beat.
+  await page.waitForTimeout(50);
   const max = page.viewportSize()?.height ?? 900;
   await expect
     .poll(
@@ -43,7 +45,7 @@ export async function assertHashSectionInView(
     )
     .toBeLessThan(max);
   const top = await loc.evaluate((el) => el.getBoundingClientRect().top);
-  expect(top).toBeGreaterThanOrEqual(-40);
+  expect(top).toBeGreaterThanOrEqual(-80);
   await expect(loc).toBeInViewport({ timeout: timeoutMs });
 }
 

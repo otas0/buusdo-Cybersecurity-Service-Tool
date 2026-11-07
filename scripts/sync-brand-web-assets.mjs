@@ -28,6 +28,11 @@ const HALT = "#ff4d00";
 const MUTED = "#8d897f";
 const label = "buusdo Cybersecurity Service Tool";
 
+/** Light-plate Halt accent (u-card / mark parallelogram) — do not invert to cyan. */
+function isHaltAccent(r, g, b) {
+  return r >= 160 && g <= 120 && b <= 60 && r > g + 40 && r > b + 80;
+}
+
 async function toDarkTransparent(pngBuf) {
   const { data, info } = await sharp(pngBuf)
     .ensureAlpha()
@@ -42,6 +47,14 @@ async function toDarkTransparent(pngBuf) {
     const lum = 0.299 * r + 0.587 * g + 0.114 * b;
     if (lum >= 235) {
       out[j] = out[j + 1] = out[j + 2] = out[j + 3] = 0;
+      continue;
+    }
+    // Preserve Halt orange on the u-card (light plate ships #ff4d00).
+    if (isHaltAccent(r, g, b)) {
+      out[j] = 0xff;
+      out[j + 1] = 0x4d;
+      out[j + 2] = 0x00;
+      out[j + 3] = Math.round(Math.min(255, ((255 - Math.min(lum, 180)) / 255) * 255 * 1.15));
       continue;
     }
     const ir = 255 - r;
@@ -67,14 +80,23 @@ async function toLightTransparent(pngBuf) {
     const g = data[i + 1];
     const b = data[i + 2];
     const lum = 0.299 * r + 0.587 * g + 0.114 * b;
-    if (lum >= 235) {
+    // Drop paper only. Keep ink (including charcoal u-card #545454) fully opaque —
+    // do not scale alpha by luminance (that washed the u-card to a lighter gray).
+    if (lum >= 250) {
       out[j] = out[j + 1] = out[j + 2] = out[j + 3] = 0;
+      continue;
+    }
+    if (lum >= 235) {
+      out[j] = r;
+      out[j + 1] = g;
+      out[j + 2] = b;
+      out[j + 3] = Math.round(((250 - lum) / 15) * 255);
       continue;
     }
     out[j] = r;
     out[j + 1] = g;
     out[j + 2] = b;
-    out[j + 3] = Math.round(Math.min(255, ((255 - lum) / 255) * 255 * 1.05));
+    out[j + 3] = 255;
   }
   return sharp(out, { raw: { width: w, height: h, channels: 4 } }).png().toBuffer();
 }

@@ -98,7 +98,12 @@ jobs:
         run: |
           HIT="${{ steps.pw_quality_cache.outputs.cache-hit }}"
           echo "Playwright browser cache-hit=${HIT:-false}"
-          npx playwright install --with-deps chromium
+          # Cache covers chromium + headless-shell under ~/.cache/ms-playwright (avoid laptop CDN).
+          if [ "${HIT:-false}" = "true" ] && ls "$HOME/.cache/ms-playwright"/chromium_headless_shell-*/chrome-headless-shell-*/chrome-headless-shell >/dev/null 2>&1; then
+            echo "Reusing cached Chromium + headless-shell"
+          else
+            npx playwright install --with-deps chromium
+          fi
           npm run capture:store-halt-frame:playwright
           npm run test:playwright:china-soft-fail
 

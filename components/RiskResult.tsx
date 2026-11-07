@@ -192,11 +192,34 @@ export function RiskResult({ analysis, t, onReset }: { analysis: Analysis; t: Re
     ...(pt ? limitationsPt : [...risk.limitations, "URLs are not sent to Google Safe Browsing or other third-party reputation services."]).map((item) => ({ kind: pt ? "Limite" : "Limit", display: item })),
   ];
 
+  const showIgnoreRisk = risk.level === "CRITICAL" || risk.level === "HIGH";
+  const showNextSteps =
+    risk.recommendation === "LEAVE" ||
+    risk.recommendation === "LEAVE_AND_BLOCK" ||
+    risk.recommendation === "VERIFY_INDEPENDENTLY" ||
+    risk.level === "CRITICAL" ||
+    risk.level === "HIGH" ||
+    risk.level === "CAUTION";
+  const showHaltReport =
+    risk.level === "CRITICAL" || risk.level === "HIGH" || risk.level === "CAUTION";
+
   return (
     <div className="result-layout" aria-live="polite">
       <TrafficLights level={levelToLight(risk.level)} standby={t.lightStandby} safe={t.lightSafe} caution={t.lightCaution} danger={t.lightDanger} />
       <p className="result-verdict">{copy.label}</p>
+      <p className="result-danger-level" data-testid="result-danger-level">
+        <span className="danger-level-label">{t.dangerLevelLabel}</span>
+        {": "}
+        <strong>{copy.label}</strong>
+      </p>
       <p className="light-note">{levelToLight(risk.level) === "safe" ? t.lightLimited : copy.note}</p>
+
+      {showIgnoreRisk ? (
+        <section className="result-ignore-risk halt-accent" data-testid="result-ignore-risk" aria-label={t.ignoreRiskTitle}>
+          <p className="kicker">{t.ignoreRiskTitle}</p>
+          <p>{t.ignoreRiskBody}</p>
+        </section>
+      ) : null}
 
       <section className="result-why">
         <p className="kicker">{t.whyTitle}</p>
@@ -251,7 +274,22 @@ export function RiskResult({ analysis, t, onReset }: { analysis: Analysis; t: Re
       <section className="log-action">
         <p className="kicker">{t.actions}</p>
         <h2>{recommendation}</h2>
-        <p>{pt ? "Não introduza informação sensível sem confirmar o endereço através de uma fonte independente." : "Do not enter sensitive information unless you can confirm the address through an independent source."}</p>
+        <p>{t.actionSensitiveNote}</p>
+        {showNextSteps ? (
+          <div className="result-next-steps" data-testid="result-next-steps">
+            <p className="kicker">{t.nextStepsTitle}</p>
+            <ol className="next-steps-list">
+              <li>{t.nextStepLeave}</li>
+              <li>{t.nextStepNoCredentials}</li>
+              <li>{t.nextStepVerifyOfficial}</li>
+              {(risk.recommendation === "LEAVE_AND_BLOCK" ||
+                risk.level === "CRITICAL" ||
+                risk.level === "HIGH") && <li>{t.nextStepBlock}</li>}
+              <li>{t.nextStepReport}</li>
+              <li>{t.nextStepLooksReal}</li>
+            </ol>
+          </div>
+        ) : null}
         {risk.recommendation === "LEAVE" &&
           risk.level === "LOW_EVIDENCE" &&
           Boolean(userBlockEv) && (
@@ -296,6 +334,17 @@ export function RiskResult({ analysis, t, onReset }: { analysis: Analysis; t: Re
           >
             {t.leave}
           </button>
+          {showHaltReport ? (
+            <button
+              type="button"
+              className="text-button"
+              data-testid="result-report-website"
+              disabled={draftMarks.includes("report")}
+              onClick={() => saveFeedback("report")}
+            >
+              {draftMarks.includes("report") ? t.feedbackAlready : t.feedbackReportHaltCta}
+            </button>
+          ) : null}
           {(risk.recommendation === "LEAVE_AND_BLOCK" ||
             risk.level === "CRITICAL" ||
             risk.level === "HIGH") && (
@@ -348,6 +397,14 @@ export function RiskResult({ analysis, t, onReset }: { analysis: Analysis; t: Re
             {t.blockListsSettingsLink}
           </a>
         </p>
+        <section className="result-honest-limits" data-testid="result-honest-limits" aria-label={t.honestLimitsTitle}>
+          <p className="kicker">{t.honestLimitsTitle}</p>
+          <ul className="honest-limits-list">
+            <li>{t.honestLimitNoWipe}</li>
+            <li>{t.honestLimitNoCrowd}</li>
+            <li>{t.honestLimitNoAv}</li>
+          </ul>
+        </section>
       </section>
 
       <section className="result-details">

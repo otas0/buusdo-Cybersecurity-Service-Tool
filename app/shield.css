@@ -650,6 +650,63 @@
   letter-spacing: -0.03em;
 }
 
+.shell .result-danger-level {
+  margin: 6px 0 0;
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.shell .result-danger-level strong {
+  color: var(--text);
+  font-weight: 500;
+}
+
+.shell .result-ignore-risk {
+  margin-top: 18px;
+  max-width: 48ch;
+}
+
+.shell .result-ignore-risk p:last-child {
+  margin: 6px 0 0;
+  font-size: 13px;
+  line-height: 1.45;
+  color: var(--text);
+}
+
+.shell .result-next-steps {
+  margin-top: 16px;
+  max-width: 52ch;
+}
+
+.shell .next-steps-list {
+  margin: 8px 0 0;
+  padding-left: 1.25rem;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--text);
+}
+
+.shell .next-steps-list li {
+  margin: 0 0 8px;
+}
+
+.shell .result-honest-limits {
+  margin-top: 20px;
+  max-width: 52ch;
+}
+
+.shell .honest-limits-list {
+  margin: 8px 0 0;
+  padding-left: 1.15rem;
+  font-size: 12px;
+  line-height: 1.45;
+  color: var(--muted);
+}
+
+.shell .honest-limits-list li {
+  margin: 0 0 6px;
+}
+
 .shell .result-why {
   margin-top: 22px;
 }
