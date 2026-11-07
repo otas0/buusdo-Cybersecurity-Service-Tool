@@ -140,18 +140,13 @@ jobs:
             if [ "$notarized_ok" = "0" ] || [ "$notarized_kind" = "missing" ]; then
               echo ""
               if [ "$notarized_kind" = "missing" ]; then
-                echo "> **Notarized URL missing** — annotated only; job stays green."
-                echo "::notice::Notarized desktop download URL missing — soft; health job continues"
+                echo "> **Notarized URL missing** — expected for **unsigned** GitHub ship ([DESKTOP_SETUP_GUIDE.md](../docs/DESKTOP_SETUP_GUIDE.md)); annotated only; job stays green."
+                echo "::notice::Notarized desktop download URL missing (unsigned ship) — soft; health job continues"
               elif [ "$notarized_kind" = "http-404" ]; then
-                echo "> **Notarized HEAD 404** — annotated only; job stays green."
-                echo ">"
-                echo "> Next: [desktop-app/RELEASE.md](../desktop-app/RELEASE.md) **Notarized macOS zip** checklist **steps 2–3**"
-                echo "> (desktop-notarize-macos attach → soft HEAD \`NOTARIZED_HEAD_OK=1\`), then **desktop-promote-macos-url**."
-                echo "::notice::Notarized desktop download HEAD 404 — soft; see RELEASE.md notarized checklist steps 2–3"
+                echo "> **Notarized HEAD 404** — expected while ship channel is **unsigned** ([DESKTOP_SETUP_GUIDE.md](../docs/DESKTOP_SETUP_GUIDE.md)); annotated only; job stays green."
+                echo "::notice::Notarized desktop download HEAD 404 (unsigned ship) — soft; see DESKTOP_SETUP_GUIDE"
               else
-                echo "> **Notarized HEAD ≠ 200** (kind \`${notarized_kind}\`, status \`${notarized_status:-?}\`) — annotated only; job stays green."
-                echo ">"
-                echo "> See [desktop-app/RELEASE.md](../desktop-app/RELEASE.md) notarized checklist steps 2–3 when kind is http-404 / unreachable."
+                echo "> **Notarized HEAD ≠ 200** (kind \`${notarized_kind}\`, status \`${notarized_status:-?}\`) — unsigned ship; see [DESKTOP_SETUP_GUIDE.md](../docs/DESKTOP_SETUP_GUIDE.md)."
                 echo "::notice::Notarized desktop download HEAD ≠ 200 (kind ${notarized_kind}, status ${notarized_status:-?}) — soft; health job continues"
               fi
             fi
@@ -233,17 +228,17 @@ jobs:
           KIND="${{ steps.downloads.outputs.notarized_kind }}"
           RELEASE_HINT=""
           if [ "$KIND" = "missing" ]; then
-            NOTARY_LINE="Notarized: URL missing (not published yet)"
+            NOTARY_LINE="Notarized: URL missing (unsigned GitHub ship — expected)"
           elif [ "$KIND" = "http-404" ]; then
-            NOTARY_LINE="Notarized: HEAD 404 (asset not on Release yet)"
-            RELEASE_HINT=" Next: desktop-app/RELEASE.md Notarized macOS zip checklist steps 2-3 (notarize attach -> soft HEAD OK), then desktop-promote-macos-url."
+            NOTARY_LINE="Notarized: HEAD 404 (unsigned ship — expected)"
+            RELEASE_HINT=" See docs/DESKTOP_SETUP_GUIDE.md (Gatekeeper / SmartScreen)."
           elif [ "$KIND" = "ok" ]; then
             NOTARY_LINE="Notarized: HEAD 200"
           else
             NOTARY_LINE="Notarized: kind=$KIND status=${{ steps.downloads.outputs.notarized_status }}"
-            RELEASE_HINT=" See desktop-app/RELEASE.md notarized checklist steps 2-3 when kind is http-404 / unreachable."
+            RELEASE_HINT=" See docs/DESKTOP_SETUP_GUIDE.md (unsigned GitHub ship)."
           fi
-          # Notice-only (not a failure / not a page). Soft HEAD lag is expected pre-publish.
+          # Notice-only (not a failure / not a page). Soft HEAD lag is expected for unsigned ship.
           curl -sS -X POST -H 'Content-type: application/json' \
             --data "{\"text\":\":information_source: buusdo download HEAD soft warnings (${SOFT})\\nservice=buusdocst\\n${NOTARY_LINE}\\nRun: ${{ steps.target.outputs.run_url }}\\n(notice-only - health job stayed green)${RELEASE_HINT}\"}" \
             "$SLACK_WEBHOOK_URL"

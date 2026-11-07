@@ -49,6 +49,7 @@ buusdo Cybersecurity Service Tool（Buusdo 产品线）。
 - Always show **Workers product** and **China Pages entry** as two distinct surfaces (API vs static explain/privacy/install).
 - Link **only** the canonical origin + privacy page(s) + China entry above.
 - Always include privacy before asking people to use the product.
+- Desktop downloads are **unsigned** GitHub Release builds — say Gatekeeper / SmartScreen warnings are expected; point to [DESKTOP_SETUP_GUIDE.md](DESKTOP_SETUP_GUIDE.md) (never imply Apple notarization or Authenticode).
 
 ## Do not
 

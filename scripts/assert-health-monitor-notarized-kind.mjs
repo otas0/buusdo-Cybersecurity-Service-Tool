@@ -1,5 +1,6 @@
 /**
  * health-monitor.yml must soft-parse NOTARIZED_HEAD_KIND (and soft warn / rate limit).
+ * Unsigned GitHub ship: missing / http-404 notarized HEAD is expected — point at DESKTOP_SETUP_GUIDE.
  *
  *   node scripts/assert-health-monitor-notarized-kind.mjs
  */
@@ -31,14 +32,17 @@ for (const needle of [
 if (!yml.includes("http-404")) {
   fail("health-monitor.yml must mention notarized http-404 annotate path");
 }
-if (!yml.includes("RELEASE.md") || (!yml.includes("steps 2–3") && !yml.includes("steps 2-3"))) {
-  fail("health-monitor.yml http-404 soft_warn must link RELEASE.md notarized checklist steps 2–3");
+if (!yml.includes('notarized_kind" = "missing"') && !yml.includes("[ \"$notarized_kind\" = \"missing\" ]")) {
+  fail("health-monitor.yml must soft-accept NOTARIZED_HEAD_KIND=missing (unsigned ship)");
+}
+if (!yml.includes("unsigned") || !yml.includes("DESKTOP_SETUP_GUIDE")) {
+  fail("health-monitor.yml must mention unsigned ship + DESKTOP_SETUP_GUIDE");
 }
 if (!yml.includes("gate pending")) {
   fail("health-monitor.yml must summarize gate pending when STAGING_HEALTH_URL unset");
 }
-if (!yml.includes("RELEASE_HINT") || !yml.includes("steps 2–3")) {
-  fail("health-monitor.yml soft Slack must include RELEASE_HINT / RELEASE steps 2–3");
+if (!yml.includes("RELEASE_HINT") || !yml.includes("DESKTOP_SETUP_GUIDE")) {
+  fail("health-monitor.yml soft Slack RELEASE_HINT must point at DESKTOP_SETUP_GUIDE");
 }
 if (!yml.includes("service=buusdocst")) {
   fail("health-monitor.yml Slack alert text must include service=buusdocst");

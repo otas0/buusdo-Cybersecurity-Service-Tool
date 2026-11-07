@@ -981,7 +981,9 @@ test.describe("Settings narrow pt-PT", () => {
     }
     await page.goto(`${base}/pt-PT/settings#settings-block-lists`, { waitUntil: "domcontentloaded" });
     await page.waitForSelector("#settings-block-lists", { timeout: 15000 });
-    await expect(page.locator("#settings-block-lists .scope-note")).toContainText(/nunca saem do dispositivo/i);
+    await expect(page.locator("#settings-block-lists .scope-note")).toContainText(
+      /listas ficam no dispositivo|nunca saem do dispositivo/i
+    );
   });
 
   test("website has no Clear ring control (desktop-only)", async ({ page }) => {

@@ -29,6 +29,7 @@
 
 ## Install / first open
 
+- **Unsigned ship:** Gatekeeper / SmartScreen steps → [`docs/DESKTOP_SETUP_GUIDE.md`](../docs/DESKTOP_SETUP_GUIDE.md) (also linked from website Settings → Setup guide).
 - Silent install does **not** enable open-at-login.
 - First open shows an **honest limits** confirm (ack → scan, skip → idle, reversible via “Show honest limits again”). Smokes may set `SHIELD_HONEST_LIMITS=0`.
 - Dashboard explains how to point OS/browser HTTP proxy at `127.0.0.1:8080` (otherwise the block log stays quiet).
