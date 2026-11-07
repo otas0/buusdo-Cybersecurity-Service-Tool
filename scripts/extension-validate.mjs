@@ -61,10 +61,10 @@ const { DEFAULT_API_BASE, PRODUCTION_ORIGIN } = await import(
   join(root, "shared/api-base-migrate.mjs")
 );
 if (!String(DEFAULT_API_BASE).startsWith("https://buusdocst.mtsu.workers.dev")) {
-  fail(`DEFAULT_API_BASE expected pcpd, got ${DEFAULT_API_BASE}`);
+  fail(`DEFAULT_API_BASE expected buusdocst, got ${DEFAULT_API_BASE}`);
 }
 if (PRODUCTION_ORIGIN !== "https://buusdocst.mtsu.workers.dev") {
-  fail(`PRODUCTION_ORIGIN expected pcpd, got ${PRODUCTION_ORIGIN}`);
+  fail(`PRODUCTION_ORIGIN expected buusdocst, got ${PRODUCTION_ORIGIN}`);
 }
 
 // DNR rules parse

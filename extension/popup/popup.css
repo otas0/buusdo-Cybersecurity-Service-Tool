@@ -89,9 +89,9 @@ h1 {
 
 .brand-logo {
   display: block;
-  height: 28px;
+  height: 32px;
   width: auto;
-  max-width: 150px;
+  max-width: 180px;
   background: transparent;
   border: 0;
 }

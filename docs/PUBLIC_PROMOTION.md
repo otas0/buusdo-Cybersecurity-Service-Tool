@@ -45,6 +45,7 @@ Privacidade: https://buusdocst.mtsu.workers.dev/pt-PT/privacy
 - Call this product just “Buusdo” (that is the line, not this product)
 - Use short **“buusdo”** alone as the product name in posts, store titles, or press — always **buusdo Cybersecurity Service Tool** (shortName is UI chrome only)
 - Advertise both `www` and apex
-- Link localhost, preview URLs, or alternate workers.dev hostnames
-- Promote Account sync while it is off ([ACCOUNT_SYNC_GATE.md](ACCOUNT_SYNC_GATE.md))
+- Link localhost, preview URLs, or alternate workers.dev hostnames (`pcpd`, `preventive-shield` — those Workers are deleted)
+- Republish or advertise any hostname other than `buusdocst.mtsu.workers.dev` / `otas0.github.io/buusdocst`
+- Promote Account sync — product cancelled ([ACCOUNT_SYNC_GATE.md](ACCOUNT_SYNC_GATE.md))
 - Publish check results or sample “risky” URLs that still work as phish bait

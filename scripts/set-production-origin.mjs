@@ -2,7 +2,7 @@
 /**
  * Record the live Cloudflare origin after first successful deploy.
  *
- *   npm run production:origin -- https://preventive-shield.xxx.workers.dev
+ *   npm run production:origin -- https://buusdocst.mtsu.workers.dev
  *   npm run production:origin -- https://shield.example.com
  *
  * Updates: shared/production-origin.mjs, shared/production-site.json, README.md production block.
@@ -18,7 +18,7 @@ const origin = String(urlArg)
 
 if (!/^https:\/\/[^\s/]+/i.test(origin)) {
   console.error(
-    "Usage: npm run production:origin -- https://preventive-shield.<account>.workers.dev"
+    "Usage: npm run production:origin -- https://buusdocst.mtsu.workers.dev"
   );
   process.exit(1);
 }

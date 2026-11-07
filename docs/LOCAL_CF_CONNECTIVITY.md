@@ -20,7 +20,7 @@ At the same time:
 ## How to confirm the Worker is alive
 
 1. Phone hotspot / travel VPN / GitHub Actions `ubuntu-latest` (Production health / Deploy workflows).
-2. Cloudflare dashboard → Workers → **pcpd** → Metrics (requests rising).
+2. Cloudflare dashboard → Workers → **buusdocst** → Metrics (requests rising).
 3. From a reachable host:
    ```bash
    npm run health:prod -- --url https://buusdocst.mtsu.workers.dev

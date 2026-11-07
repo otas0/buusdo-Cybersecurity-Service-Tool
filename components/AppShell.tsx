@@ -129,9 +129,10 @@ function Header({
         <h1 className="brand-lockup">
           <img
             className="brand-logo"
-            src="/brand/buusdo-wordmark.svg"
-            width={176}
-            height={60}
+            src="/brand/buusdo-wordmark.png"
+            width={117}
+            height={40}
+            decoding="async"
             alt={t.prototype}
           />
           <span className="visually-hidden">{t.prototype}</span>

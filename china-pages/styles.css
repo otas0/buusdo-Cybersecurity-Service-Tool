@@ -246,6 +246,11 @@ a {
     padding: 22px 18px 40px;
   }
 
+  .shell .brand-logo {
+    height: 40px;
+    max-width: min(220px, 70vw);
+  }
+
   .shell h2 {
     font-size: 22px;
   }

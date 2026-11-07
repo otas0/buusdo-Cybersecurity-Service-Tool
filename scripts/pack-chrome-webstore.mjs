@@ -65,7 +65,7 @@ const hosts = Array.isArray(manifest.host_permissions)
 manifest.host_permissions = hosts.filter(
   (h) => !/localhost|127\.0\.0\.1/i.test(String(h))
 );
-if (!manifest.host_permissions.some((h) => /pcpd\.mtsu\.workers\.dev/i.test(String(h)))) {
+if (!manifest.host_permissions.some((h) => /buusdocst\.mtsu\.workers\.dev/i.test(String(h)))) {
   console.error("[pack:chrome-store] production host_permissions missing — run production:origin");
   process.exit(1);
 }

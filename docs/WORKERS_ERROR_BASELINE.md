@@ -4,16 +4,16 @@ After go-live, capture a **baseline** so the first 48h alerts have a reference.
 
 ## Capture
 
-1. Cloudflare dashboard → Workers → **`pcpd`** → **Metrics**.
+1. Cloudflare dashboard → Workers → **`buusdocst`** → **Metrics**.
 2. Set range to last 24h (or since first deploy).
 3. Screenshot: errors and CPU (full chart area). Optional third shot for requests.
 4. Save under `ops/workers-baselines/` using **UTC date** and this **exact** naming:
 
 ```
-YYYY-MM-DD-pcpd-errors.png
-YYYY-MM-DD-pcpd-cpu.png
-YYYY-MM-DD-pcpd-requests.png   # optional
-YYYY-MM-DD-pcpd-NOTES.txt      # Version ID + UTC time + dashboard range
+YYYY-MM-DD-buusdocst-errors.png
+YYYY-MM-DD-buusdocst-cpu.png
+YYYY-MM-DD-buusdocst-requests.png   # optional
+YYYY-MM-DD-buusdocst-NOTES.txt      # Version ID + UTC time + dashboard range
 ```
 
 Example:

@@ -17,8 +17,9 @@
             <img
               class="brand-logo"
               src="/brand/buusdo-wordmark.png"
-              width="160"
-              height="54"
+              width="117"
+              height="40"
+              decoding="async"
               alt="buusdo Cybersecurity Service Tool"
             />
             <span class="visually-hidden">buusdo Cybersecurity Service Tool</span>
@@ -79,7 +80,6 @@
           <nav class="primary-path" id="primaryPath" aria-label="Primary path" data-testid="primary-path">
             <button type="button" id="pathScanMachine" class="text-button" data-testid="path-scan-machine">Scan this computer</button>
             <button type="button" id="pathCheckWeb" class="text-button" data-testid="path-check-web">Check a website</button>
-            <button type="button" id="pathSyncAccount" class="text-button" data-testid="path-sync-account">Sync lists</button>
           </nav>
 
           <section class="threat-summary" id="threatSummary" aria-labelledby="threatSummaryTitle" data-testid="threat-summary">
@@ -203,34 +203,10 @@
             </div>
           </details>
 
-          <section class="account" id="accountSection" aria-labelledby="accountTitle">
-            <h2 id="accountTitle">Account</h2>
-            <p id="accountHint" class="hint">Optional list sync via the website API. Offline file/Syncthing stays below.</p>
-            <p id="accountStatus" class="hint" role="status" aria-live="polite"></p>
-            <form id="accountSignInForm" class="list-add account-row">
-              <label class="visually-hidden" for="accountEmail">Email</label>
-              <input id="accountEmail" class="field-input" type="email" autocomplete="email" placeholder="you@example.com" />
-              <button type="submit" id="accountSendBtn">Send link</button>
-            </form>
-            <div class="list-add account-row">
-              <label class="visually-hidden" for="accountDeviceCode">Device code</label>
-              <input id="accountDeviceCode" class="field-input" type="text" autocomplete="off" spellcheck="false" placeholder="Device code" />
-              <button type="button" id="accountExchangeBtn">Exchange code</button>
-            </div>
-            <label class="history-filter">
-              <input type="checkbox" id="accountSyncToggle" />
-              <span id="accountSyncLabel">Sync lists</span>
-            </label>
-            <div class="list-actions">
-              <button type="button" id="accountSyncNowBtn" class="text-button">Sync now</button>
-              <button type="button" id="accountSignOutBtn" class="text-button">Sign out</button>
-            </div>
-          </section>
-
           <section class="lists" id="listsSection" aria-labelledby="listsTitle">
             <h2 id="listsTitle">Personal lists</h2>
-            <p id="listsHint" class="hint">Block/trust on this device. Export JSON (shield-lists-v1) to sync for free — USB, Drive, or Syncthing on shield-backup.json.</p>
-            <p id="listsOfflineBackup" class="hint">Offline backup: file path / Syncthing / QR (no account required).</p>
+            <p id="listsHint" class="hint">Block/trust on this device. Export JSON (shield-lists-v1) — USB, Drive, or Syncthing on shield-backup.json.</p>
+            <p id="listsOfflineBackup" class="hint">Offline backup: file path / Syncthing / QR (no cloud account).</p>
             <p id="listsOperatorHint" class="hint lists-operator" hidden></p>
             <form id="listAddForm" class="list-add">
               <label class="visually-hidden" id="listDomainLabel" for="listDomain">Domain</label>

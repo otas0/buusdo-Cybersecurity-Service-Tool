@@ -104,8 +104,12 @@
 }
 
 .shell .readout[data-level="danger"] .mark {
-  background: var(--accent);
-  border-color: var(--accent);
+  width: 10px;
+  height: 10px;
+  border: 0;
+  background-color: var(--halt);
+  -webkit-mask: url("/brand/buusdo-mark-halt.svg") center / contain no-repeat;
+  mask: url("/brand/buusdo-mark-halt.svg") center / contain no-repeat;
 }
 
 .shell .readout .word {

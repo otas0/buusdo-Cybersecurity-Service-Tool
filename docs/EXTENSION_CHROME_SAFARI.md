@@ -17,7 +17,7 @@ Until a URL is set, the website Settings button shows “listing soon” and lin
 
 ### Preconditions
 
-- [x] Website health + `check:prod` on pcpd
+- [x] Website health + `check:prod` on buusdocst
 - [x] `npm run extension:validate`
 - [x] `npm run safari:build` (Debug)
 

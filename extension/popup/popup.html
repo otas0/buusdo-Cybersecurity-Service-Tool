@@ -13,9 +13,10 @@
       <h1 id="appTitle" class="brand-lockup">
         <img
           class="brand-logo"
-          src="../icons/buusdo-wordmark.svg"
-          width="140"
-          height="48"
+          src="../icons/buusdo-wordmark.png"
+          width="117"
+          height="40"
+          decoding="async"
           alt="buusdo Cybersecurity Service Tool"
         />
         <span class="visually-hidden">buusdo Cybersecurity Service Tool</span>
@@ -77,29 +78,7 @@
         <time id="lastScanValue">—</time>
       </p>
 
-      <section class="account" id="accountSection" aria-labelledby="accountTitle">
-        <h2 id="accountTitle">Account</h2>
-        <p id="accountHint" class="hint">Optional list sync (block/trust only). Offline backup stays below.</p>
-        <p id="accountStatus" class="hint" role="status" aria-live="polite"></p>
-        <form id="accountSignInForm" class="list-add account-row">
-          <label class="visually-hidden" id="accountEmailLabel" for="accountEmail">Email</label>
-          <input id="accountEmail" class="field-input" type="email" autocomplete="email" placeholder="you@example.com" />
-          <button type="submit" id="accountSendBtn">Send link</button>
-        </form>
-        <div class="list-add account-row">
-          <label class="visually-hidden" id="accountDeviceLabel" for="accountDeviceCode">Device code</label>
-          <input id="accountDeviceCode" class="field-input" type="text" autocomplete="off" spellcheck="false" placeholder="Device code" />
-          <button type="button" id="accountExchangeBtn">Exchange code</button>
-        </div>
-        <label class="api-toggle">
-          <input type="checkbox" id="accountSyncToggle" />
-          <span id="accountSyncLabel">Sync lists</span>
-        </label>
-        <div class="list-actions">
-          <button type="button" id="accountSyncNowBtn" class="text-button">Sync now</button>
-          <button type="button" id="accountSignOutBtn" class="text-button">Sign out</button>
-        </div>
-      </section>
+      <!-- Account sync product cancelled — UI removed; offline lists/export remain below. -->
 
       <section class="lists" id="listsSection" aria-labelledby="listsTitle">
         <h2 id="listsTitle">Personal lists</h2>

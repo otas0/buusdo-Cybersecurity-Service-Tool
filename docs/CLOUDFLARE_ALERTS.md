@@ -4,8 +4,8 @@ Turn these on in the Cloudflare dashboard **before** public traffic. Email notif
 
 ## Enable
 
-1. Open [dash.cloudflare.com](https://dash.cloudflare.com) → select the account that owns Worker **`pcpd`** (`wrangler.jsonc` `name`).
-2. **Workers & Pages** → **pcpd** (legacy name `preventive-shield` only if an old Worker still exists — do not alert the wrong script).
+1. Open [dash.cloudflare.com](https://dash.cloudflare.com) → select the account that owns Worker **`buusdocst`** (`wrangler.jsonc` `name`).
+2. **Workers & Pages** → **buusdocst** only (legacy `pcpd` / `preventive-shield` Workers are deleted — do not recreate them).
 3. Open **Settings** → **Notifications** (or account-level **Notifications** in the sidebar).
 4. Create / enable:
    - **Worker error rate** (or “Errors”) — email when exceptions spike

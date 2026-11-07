@@ -2,7 +2,7 @@
 
 Do these once after website MVP. Not product blockers; needed for 48h watch and CI redeploys.
 
-**Worker product name (dashboard):** set the Workers console description / notes to **buusdo Cybersecurity Service Tool**. Live script name: **`buusdocst`** → `https://buusdocst.mtsu.workers.dev`. Legacy `pcpd` may still exist until deleted.
+**Worker product name (dashboard):** set the Workers console description / notes to **buusdo Cybersecurity Service Tool**. Live script name: **`buusdocst`** → `https://buusdocst.mtsu.workers.dev`. Legacy Workers **`pcpd`** and **`preventive-shield`** were deleted (2026-11-07) so those `*.workers.dev` URLs cannot confuse users.
 
 ## 1. `CLOUDFLARE_API_TOKEN` (GitHub Actions Deploy)
 

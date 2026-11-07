@@ -63,24 +63,18 @@ Recorded via `npm run production:origin` → README + `shared/production-site.js
 - [x] Actions → **Production health** run is green — [41285063357](https://github.com/otas0/buusdo-Cybersecurity-Service-Tool/actions/runs/41285063357) (`check:prod` on ubuntu). Full checklist bot write awaits next push of local `health-monitor.yml`.
 - [x] Watch repo (otas0 subscribed 2026-11-01); enable Actions failure email in GitHub notification settings if not already; optional secret `SLACK_WEBHOOK_URL` (unset)
 - [ ] Cloudflare Workers error + CPU alert emails — enable then **send a test** ([CLOUDFLARE_ALERTS.md](CLOUDFLARE_ALERTS.md)) — needs signed-in CF dashboard (GitHub OAuth login started; complete in browser)
-- [ ] Capture Workers error/CPU baseline screenshots ([WORKERS_ERROR_BASELINE.md](WORKERS_ERROR_BASELINE.md) → `ops/workers-baselines/`) — needs CF Metrics (worker **pcpd**)
-- [ ] Actions → **Deploy Cloudflare** secrets: `CLOUDFLARE_ACCOUNT_ID` **set**; `CLOUDFLARE_API_TOKEN` **still needed** ([DEPLOY_SECRETS.md](DEPLOY_SECRETS.md)); `NEXT_PUBLIC_SITE_URL` set to pcpd
+- [ ] Capture Workers error/CPU baseline screenshots ([WORKERS_ERROR_BASELINE.md](WORKERS_ERROR_BASELINE.md) → `ops/workers-baselines/`) — needs CF Metrics (worker **buusdocst**)
+- [ ] Actions → **Deploy Cloudflare** secrets: `CLOUDFLARE_ACCOUNT_ID` **set**; `CLOUDFLARE_API_TOKEN` **still needed** ([DEPLOY_SECRETS.md](DEPLOY_SECRETS.md)); `NEXT_PUBLIC_SITE_URL` set to `https://buusdocst.mtsu.workers.dev`
 
 
 ## D. Product defaults (first launch)
 
-- [x] `ACCOUNT_SYNC_ENABLED=0`; `ACCOUNT_SYNC_REQUIRE_TURSO=1` in `wrangler.jsonc` — **keep sync off** until Turso + mailer ([ACCOUNT_SYNC_GATE.md](ACCOUNT_SYNC_GATE.md))
-- [ ] **Staging Account gate:** Turso + Resend/Postmark + `ACCOUNT_SYNC_ENABLED=1` on a non-prod Worker → health `accountSyncEnabled: true` + desktop device-exchange smoke ([ACCOUNT_SYNC_GATE.md](ACCOUNT_SYNC_GATE.md)) — then flip prod
-- [ ] **OPS — staging smoke run URL:** after **Health monitor** / **Production health smoke** job `staging health (account sync on)` is green (`vars.STAGING_HEALTH_URL` set; asserts `accountSyncEnabled: true` **only** on that staging URL), paste Actions run here → `_pending_` — secrets template: [DEPLOY_SECRETS.md](DEPLOY_SECRETS.md) § Staging Account sync.
-  - **STRICT smokes (magic-link → exchange → lists → toast):** scripts ready (`STRICT_STAGING=1` hard-fails SKIP). Order in [ACCOUNT_SYNC_GATE.md](ACCOUNT_SYNC_GATE.md). Not run green yet — no staging origin. Soft SKIP (exit 0) until `STAGING_HEALTH_URL` exists.
-  - **Staging job fail-closed:** when `STAGING_HEALTH_URL` is set, `scripts/assert-staging-health.mjs` requires `accountSyncEnabled` **and** `accountSyncTursoConfigured` (Health monitor + Production health smoke).
-  - **Blocker (2026-11-07):** Actions secrets still only `CLOUDFLARE_ACCOUNT_ID` (no `CLOUDFLARE_API_TOKEN`, no Slack). Deploy Cloudflare `target=staging` failed — [42347266206](https://github.com/otas0/buusdo-Cybersecurity-Service-Tool/actions/runs/42347266206). Staging STRICT “success” = soft gate pending only (e.g. [42345341870](https://github.com/otas0/buusdo-Cybersecurity-Service-Tool/actions/runs/42345341870)). Need operator: CF token → Turso `DATABASE_*` + mailer/auth secrets on `--env staging` → Deploy staging → exact URL in DEPLOY_SECRETS + `STAGING_HEALTH_URL` → real STRICT → § D. Do not invent a staging URL.
-  - **Operator sequence:** `gh secret set CLOUDFLARE_API_TOKEN` → Turso + mailer → `wrangler secret put … --env staging` → Actions **Deploy Cloudflare** `target=staging` (or `npm run deploy:cloudflare:staging`) → paste **exact** `https://buusdocst-staging.<subdomain>.workers.dev` into [DEPLOY_SECRETS.md](DEPLOY_SECRETS.md) **Staging URL (live)** + `gh variable set STAGING_HEALTH_URL` → STRICT magic-link → exchange → lists → `smoke:desktop-auto-sync-toast` → extension unpacked toast on real Chrome → paste green staging job run URL here.
-  - **Holds (unchanged):** custom domain until this gate + [POST_LAUNCH_48H.md](POST_LAUNCH_48H.md); notarized promote until HEAD 200 + `NOTARIZED_HEAD_OK=1`; live Settings ready-to-promote PW only after HEAD 200; `RUN_PLAYWRIGHT_SETTINGS=false` until Settings narrow offline green; laptop CF timeouts → Actions only (no local curl as outage). Product: **buusdo Cybersecurity Service Tool** (Buusdo **line**, separate product — not conflated with other Buusdo apps).
-  - **Actions:** staging job summary links [ACCOUNT_SYNC_GATE.md](ACCOUNT_SYNC_GATE.md) ordered smokes; scheduled **Staging STRICT smokes** soft-skips until `STAGING_HEALTH_URL` is set.
-  - **Desktop CI (unblocked):** [41440440022](https://github.com/otas0/buusdo-Cybersecurity-Service-Tool/actions/runs/41440440022) (`6b5ac83`) — `desktop-linux`, `desktop-macos`, `desktop-windows` all green.
+- [x] **Account sync cancelled** — `ACCOUNT_SYNC_PRODUCT_CANCELLED` + UI removed; prod/staging `ACCOUNT_SYNC_ENABLED=0` ([ACCOUNT_SYNC_GATE.md](ACCOUNT_SYNC_GATE.md))
+- [x] No Turso / Resend / Postmark Account-sync secrets — do not add them
+- [x] Staging STRICT Account smokes retired (workflow notice only)
 - [x] **Local CF timeout:** when the laptop cannot reach `*.workers.dev`, use GitHub Actions **Production health** only ([LOCAL_CF_CONNECTIVITY.md](LOCAL_CF_CONNECTIVITY.md)) — do not treat laptop curl timeout as an outage
-- [x] No mailer / Turso secrets required yet on **production** — do **not** enable Account sync / Turso / Resend until gate checklist is complete
+- [x] Holds (unchanged): custom domain + [POST_LAUNCH_48H.md](POST_LAUNCH_48H.md); notarized promote until HEAD 200 + `NOTARIZED_HEAD_OK=1`; `RUN_PLAYWRIGHT_SETTINGS=false` until Settings narrow offline green; laptop CF → Actions only. Product: **buusdo Cybersecurity Service Tool** (Buusdo **line**, separate product).
+- [x] **Desktop CI (unblocked):** [41440440022](https://github.com/otas0/buusdo-Cybersecurity-Service-Tool/actions/runs/41440440022) (`6b5ac83`) — `desktop-linux`, `desktop-macos`, `desktop-windows` all green.
 - [x] Privacy pages live: `/en/privacy`, `/pt-PT/privacy` — redeploy after copy edits, then `npm run test:playwright:privacy` on a CF-reachable machine
 - [x] Extension / desktop defaults follow `production:origin` (`DEFAULT_API_BASE=https://buusdocst.mtsu.workers.dev`)
 - [ ] Extension: load unpacked → confirm Website API base is production → one **Run** — no Chrome/Chromium on this Mac; `DEFAULT_API_BASE` + manifest host `https://buusdocst.mtsu.workers.dev/*` verified; website Run already proved same API
@@ -98,7 +92,7 @@ Recorded via `npm run production:origin` → README + `shared/production-site.js
 | Locales | `/en`, `/pt-PT`, privacy pages load |
 | Secrets | Only in Wrangler secrets / CI — not in git |
 | Canonical | Single public origin |
-| Sync | Off until Turso + production mailer |
+| Sync | Cancelled — on-device lists + offline export only |
 
 **Website MVP verdict (2026-11-01): GO** for public check on workers.dev. Remaining CF alert/Metrics/`CLOUDFLARE_API_TOKEN` items are ops hygiene, not product blockers.
 
@@ -111,7 +105,7 @@ Recorded via `npm run production:origin` → README + `shared/production-site.js
 - [x] Follow [POST_LAUNCH_48H.md](POST_LAUNCH_48H.md) — health + check only; no large new features (freeze **on**)
 - [ ] Watch health-monitor + Workers metrics (errors, CPU) — health green; Metrics screenshots still pending CF login
 - [ ] Spot-check rate limits under light load
-- [x] Do **not** enable account sync until Turso (`DATABASE_URL`) + mailer are ready
+- [x] Account sync cancelled — do not re-enable without a new product decision
 
 ## G. Optional / later
 
