@@ -37,7 +37,7 @@ Default **off**. `settings.json` → `openAtLogin: false`. Enabling writes:
 
 - macOS: `~/Library/LaunchAgents/pt.preventiveshield.desktop.plist`
 - Linux: `~/.config/autostart/preventive-shield.desktop`
-- Windows: `HKCU\Software\Microsoft\Windows\CurrentVersion\Run` value `Preventive Shield`
+- Windows: `HKCU\Software\Microsoft\Windows\CurrentVersion\Run` value `busdo`
 
 Disabling removes that entry. Installers must **not** create login items.
 

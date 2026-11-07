@@ -4,5 +4,5 @@
  */
 var api = globalThis.browser || globalThis.chrome;
 if (!api) {
-  throw new Error("Preventive Shield needs the WebExtension API (Chrome or Safari).");
+  throw new Error("busdo needs the WebExtension API (Chrome or Safari).");
 }

@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "Preventive Shield",
+  "name": "busdo",
   "version": "0.1.0",
-  "description": "Block known trackers and flag phishing-like URLs. English and European Portuguese. Data storage defaults to off.",
+  "description": "busdo — Cybersecurity Service Tool. Block known trackers and flag phishing-like URLs. EN / pt-PT. Storage defaults to off.",
   "homepage_url": "https://pcpd.mtsu.workers.dev",
   "permissions": [
     "declarativeNetRequest",
@@ -32,7 +32,7 @@
   },
   "action": {
     "default_popup": "popup/popup.html",
-    "default_title": "Preventive Shield — Scan",
+    "default_title": "busdo — Scan",
     "default_icon": {
       "16": "icons/icon16.png",
       "48": "icons/icon48.png",

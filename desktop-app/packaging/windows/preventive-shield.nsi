@@ -9,8 +9,9 @@
 !include "MUI2.nsh"
 !include "LogicLib.nsh"
 
-Name "Preventive Shield"
+Name "busdo"
 OutFile "..\..\dist\windows\PreventiveShield-Setup-User.exe"
+; InstallDir keeps legacy path so upgrades find the prior tree; brand is busdo.
 InstallDir "$LOCALAPPDATA\Preventive Shield"
 RequestExecutionLevel user
 Unicode true
@@ -40,10 +41,10 @@ Section "Install"
   nsExec::ExecToLog '"$INSTDIR\node.exe" "$INSTDIR\app\src\launcher.js" --install'
   Pop $0
 
-  CreateDirectory "$SMPROGRAMS\Preventive Shield"
-  CreateShortCut "$SMPROGRAMS\Preventive Shield\Preventive Shield.lnk" \
+  CreateDirectory "$SMPROGRAMS\busdo"
+  CreateShortCut "$SMPROGRAMS\busdo\busdo.lnk" \
     "$INSTDIR\node.exe" '"$INSTDIR\app\src\launcher.js"' "$INSTDIR\app\public\favicon.ico" 0
-  CreateShortCut "$DESKTOP\Preventive Shield.lnk" \
+  CreateShortCut "$DESKTOP\busdo.lnk" \
     "$INSTDIR\node.exe" '"$INSTDIR\app\src\launcher.js"'
 
   ; Explicitly do not touch HKCU Run.
@@ -51,6 +52,10 @@ Section "Install"
 SectionEnd
 
 Section "Uninstall"
+  Delete "$SMPROGRAMS\busdo\busdo.lnk"
+  Delete "$DESKTOP\busdo.lnk"
+  RMDir "$SMPROGRAMS\busdo"
+  ; Also remove legacy shortcuts if present
   Delete "$SMPROGRAMS\Preventive Shield\Preventive Shield.lnk"
   Delete "$DESKTOP\Preventive Shield.lnk"
   RMDir "$SMPROGRAMS\Preventive Shield"

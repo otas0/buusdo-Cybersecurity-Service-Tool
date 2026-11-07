@@ -143,7 +143,12 @@ async function restoreFallbackNoticeFromStorage() {
 let lang = "en";
 
 function applyI18n() {
-  els.appTitle.textContent = t(lang, "appTitle");
+  const titleHidden = els.appTitle?.querySelector?.(".visually-hidden");
+  if (titleHidden) titleHidden.textContent = t(lang, "appTitle");
+  else if (els.appTitle && !els.appTitle.querySelector?.("img")) {
+    els.appTitle.textContent = t(lang, "appTitle");
+  }
+  if (document.title !== undefined) document.title = t(lang, "appTitle");
   els.langLabel.textContent = t(lang, "langLabel");
   els.scanLabel.textContent = t(lang, "scan");
   els.trackersLabel.textContent = t(lang, "trackersBlocked");

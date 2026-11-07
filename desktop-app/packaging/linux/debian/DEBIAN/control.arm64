@@ -4,8 +4,8 @@ Section: utils
 Priority: optional
 Architecture: arm64
 Depends: nodejs (>= 18), xdg-utils
-Maintainer: Preventive Shield <shield@localhost>
-Description: Preventive Shield desktop (browser shell)
+Maintainer: busdo <shield@localhost>
+Description: busdo desktop — Cybersecurity Service Tool (browser shell)
  Local dashboard and HTTP proxy. Opens the system browser via xdg-open.
  Does not enable autostart on install; open-at-login stays off until the user
  turns it on in the dashboard. CI packages against Node 22; postinst warns if

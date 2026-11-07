@@ -42,11 +42,11 @@ chmod 755 "$STAGE/usr/bin/preventive-shield"
 cat > "$STAGE/usr/share/applications/preventive-shield.desktop" <<'EOF'
 [Desktop Entry]
 Type=Application
-Name=Preventive Shield
+Name=busdo
 Exec=preventive-shield
 Terminal=false
 Categories=Utility;Security;
-Comment=Local shield dashboard (system browser)
+Comment=busdo — Cybersecurity Service Tool (system browser)
 EOF
 
 # No X-GNOME-Autostart / no copy into ~/.config/autostart on install.

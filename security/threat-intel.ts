@@ -78,7 +78,7 @@ function liveEvidence(reason: string | null) {
  * URLs are never sent to Google Safe Browsing or other third-party reputation APIs.
  */
 export class OwnThreatIntelProvider implements ThreatIntelProvider {
-  providerName = "Preventive Shield own threat list";
+  providerName = "busdo own threat list";
 
   private lookup(domain: string): ThreatResult {
     const hosts = mergedHosts();
@@ -99,8 +99,8 @@ export class OwnThreatIntelProvider implements ThreatIntelProvider {
       providerName: this.providerName,
       checkedAt: new Date().toISOString(),
       evidence: resolved.startsWith("KNOWN_")
-        ? [`${matched} is listed in the Preventive Shield curated threat list.`]
-        : ["No matching entry exists in the Preventive Shield curated threat list."]
+        ? [`${matched} is listed in the busdo curated threat list.`]
+        : ["No matching entry exists in the busdo curated threat list."]
     };
   }
 
@@ -159,7 +159,7 @@ export async function checkThreat(parsed: ParsedUrl): Promise<ThreatResult> {
   if (live.kind === "phishing") {
     const result: ThreatResult = {
       state: "KNOWN_PHISHING",
-      providerName: "Preventive Shield address signals",
+      providerName: "busdo address signals",
       checkedAt: new Date().toISOString(),
       evidence: [liveEvidence(live.reason)]
     };

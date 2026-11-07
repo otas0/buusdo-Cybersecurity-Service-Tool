@@ -5,7 +5,7 @@
 
 export const STRINGS = {
   en: {
-    appTitle: "Preventive Shield",
+    appTitle: "busdo",
     statusKicker: "Status",
     scan: "Run",
     scanning: "Wait",
@@ -64,7 +64,7 @@ export const STRINGS = {
     honestLimitsKicker: "Honest limits",
     honestLimitsTitle: "Before this computer is scanned",
     honestLimitsBody:
-      "Preventive Shield will read what this signed-in user can read, then ask before any maximum block. You can skip this scan for now and run Scan again later. You can show this screen again anytime.",
+      "busdo will read what this signed-in user can read, then ask before any maximum block. You can skip this scan for now and run Scan again later. You can show this screen again anytime.",
     honestLimitsItemTls: "No TLS decryption — HTTPS CONNECT is hostname-only.",
     honestLimitsItemKill: "No process kill — running programs keep running.",
     honestLimitsItemSystem: "System folders are report-only — never moved or edited.",
@@ -247,7 +247,7 @@ export const STRINGS = {
     "machineReason_dropped-file": "File in Downloads or Desktop"
   },
   "pt-PT": {
-    appTitle: "Escudo Preventivo",
+    appTitle: "busdo",
     statusKicker: "Estado",
     scan: "Ir",
     scanning: "Espere",
@@ -306,7 +306,7 @@ export const STRINGS = {
     honestLimitsKicker: "Limites honestos",
     honestLimitsTitle: "Antes de analisar este computador",
     honestLimitsBody:
-      "O Escudo Preventivo lê o que este utilizador pode ler e pergunta antes de qualquer bloqueio máximo. Pode saltar esta análise agora e usar Analisar outra vez depois. Pode voltar a ver este ecrã a qualquer momento.",
+      "O busdo lê o que este utilizador pode ler e pergunta antes de qualquer bloqueio máximo. Pode saltar esta análise agora e usar Analisar outra vez depois. Pode voltar a ver este ecrã a qualquer momento.",
     honestLimitsItemTls: "Sem desencriptação TLS — o HTTPS CONNECT é só pelo nome.",
     honestLimitsItemKill: "Sem terminar processos — os programas em execução continuam.",
     honestLimitsItemSystem: "Pastas de sistema só reportadas — nunca movidas nem editadas.",

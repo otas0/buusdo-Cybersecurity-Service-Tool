@@ -2,6 +2,7 @@
  * Writable product data under the signed-in user's home — never the app bundle
  * and never Electron app.getPath("userData").
  *
+ * Brand is busdo; folder names stay legacy so existing installs keep lists:
  *   macOS:  ~/Library/Application Support/Preventive Shield
  *   Windows: %APPDATA%\\Preventive Shield
  *   Linux:  ~/.config/preventive-shield
@@ -13,6 +14,7 @@ const fs = require("fs");
 const os = require("os");
 const path = require("path");
 
+/** Legacy on-disk product folder (do not rename without a migrate path). */
 const PRODUCT = "Preventive Shield";
 const PRODUCT_SLUG = "preventive-shield";
 

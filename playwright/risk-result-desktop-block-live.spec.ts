@@ -51,7 +51,7 @@ function leaveAndBlockCheckBody(fixture: { host: string; url: string }) {
       },
       threat: {
         state: "KNOWN_PHISHING",
-        providerName: "Preventive Shield own threat list",
+        providerName: "busdo own threat list",
         checkedAt: new Date().toISOString(),
         evidence: ["known-threat"]
       },

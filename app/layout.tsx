@@ -9,17 +9,21 @@ const siteUrl = explicitSiteUrl || (vercelHost ? `https://${vercelHost}` : 'http
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
-  title: 'Preventive Shield',
-  description: 'Check a website before you trust it.',
+  title: 'busdo',
+  description: 'busdo — Cybersecurity Service Tool. Check a website before you trust it.',
+  icons: {
+    icon: [{ url: '/favicon.png', type: 'image/png' }],
+    apple: [{ url: '/brand/apple-touch-icon.png' }],
+  },
   openGraph: {
-    title: 'Preventive Shield',
-    description: 'Check a website before you trust it using deterministic, explainable signals.',
-    images: [{ url: '/og.png', width: 1672, height: 941, alt: 'Check a website before you trust it' }],
+    title: 'busdo',
+    description: 'Cybersecurity Service Tool — check a website before you trust it.',
+    images: [{ url: '/og.png', width: 1200, height: 630, alt: 'busdo — Cybersecurity Service Tool' }],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Preventive Shield',
-    description: 'Check a website before you trust it using deterministic, explainable signals.',
+    title: 'busdo',
+    description: 'Cybersecurity Service Tool — check a website before you trust it.',
     images: ['/og.png'],
   },
 };

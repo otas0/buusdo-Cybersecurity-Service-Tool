@@ -1,4 +1,4 @@
-# Preventive Shield desktop — release notes (MVP)
+# busdo desktop — release notes (MVP)
 
 **TOC:** [Verify before ship](#verify-before-ship)
 - [First-open DOM smoke](#first-open-dom-smoke)

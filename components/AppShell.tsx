@@ -126,7 +126,16 @@ function Header({
   return (
     <header className="top">
       <div className="brand">
-        <h1>{t.prototype}</h1>
+        <h1 className="brand-lockup">
+          <img
+            className="brand-logo"
+            src="/brand/buusdo-wordmark.png"
+            width={176}
+            height={60}
+            alt={t.prototype}
+          />
+          <span className="visually-hidden">{t.prototype}</span>
+        </h1>
       </div>
       <nav className="top-nav" aria-label={locale === "pt-PT" ? "Navegação" : "Navigation"}>
         <button

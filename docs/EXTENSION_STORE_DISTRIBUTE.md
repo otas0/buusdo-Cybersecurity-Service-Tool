@@ -4,8 +4,8 @@
 
 | Browser | How users get it |
 |---------|------------------|
-| **Safari (macOS)** | **Mac App Store** — search **Preventive Shield**, install the wrapper app, enable the extension in Safari → Settings → Extensions |
-| **Chrome** | **Chrome Web Store** — search **Preventive Shield** (or open the listing URL), **Add to Chrome** |
+| **Safari (macOS)** | **Mac App Store** — search **busdo**, install the wrapper app, enable the extension in Safari → Settings → Extensions |
+| **Chrome** | **Chrome Web Store** — search **busdo** (or open the listing URL), **Add to Chrome** |
 
 Developer Load unpacked / unsigned Xcode builds stay for engineering only — not the public install story.
 
@@ -54,13 +54,13 @@ Redeploy the website so Settings shows **Get for Chrome**.
 
 ## Safari — Mac App Store
 
-Wrapper: `safari/Preventive Shield/` (bundle `pt.community.preventiveshield`).
+Wrapper: `safari/busdo/` (bundle `pt.community.preventiveshield`).
 
 ### Archive (operator Mac)
 
-1. Xcode → open `safari/Preventive Shield/Preventive Shield.xcodeproj`
+1. Xcode → open `safari/busdo/busdo.xcodeproj`
 2. Signing & Capabilities → your **Apple Developer Team** (Automatic)
-3. Scheme **Preventive Shield** → **Any Mac** → **Product → Archive**
+3. Scheme **busdo** → **Any Mac** → **Product → Archive**
 4. Organizer → **Distribute App** → **App Store Connect**
 5. App Store Connect: listing screenshots, privacy nutrition labels, category Utilities / Productivity
 6. Privacy policy URL: `https://pcpd.mtsu.workers.dev/en/privacy` — note the companion desktop app’s honest limits (no TLS decrypt, no process kill, system dirs report-only).
@@ -82,9 +82,9 @@ Redeploy website → Settings **Get on Mac App Store**.
 
 ### User steps (public copy)
 
-1. Open the **Mac App Store** → search **Preventive Shield** → Get.
+1. Open the **Mac App Store** → search **busdo** → Get.
 2. Open the app once if prompted.
-3. Safari → **Settings → Extensions** → enable **Preventive Shield**.
+3. Safari → **Settings → Extensions** → enable **busdo**.
 4. Pin the toolbar button → open an https page → **Run**.
 
 ---

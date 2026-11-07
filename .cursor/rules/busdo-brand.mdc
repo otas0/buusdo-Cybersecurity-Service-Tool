@@ -1,0 +1,14 @@
+---
+description: busdo is the user-facing brand for this Buusdo-line product
+alwaysApply: true
+---
+
+# busdo brand (Buusdo product line)
+
+This repository **is** the busdo Cybersecurity Service Tool product (member of the Buusdo line). Do not treat Buusdo as an external product to exclude.
+
+- User-facing name: **busdo** (EN + pt-PT). Tagline: **Cybersecurity Service Tool**.
+- Logo: `public/brand/busdo-logo.png` (full mark + tagline), `public/brand/busdo-wordmark.png` (header lockup). Keep both in sync under `shared/brand/`, `extension/icons/`, `desktop-app/public/brand/` as needed.
+- Prefer completing website brand surfaces before extension/desktop polish.
+- Legacy on-disk paths may still use `Preventive Shield` / `preventive-shield` (Application Support, deb package id, Safari Xcode project). Do **not** rename those without an explicit migrate plan — display strings and UI brand are busdo.
+- Other Buusdo products stay in separate workspaces; do not mix unrelated apps into this PR.

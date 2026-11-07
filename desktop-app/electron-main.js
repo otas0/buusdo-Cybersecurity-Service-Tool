@@ -1,5 +1,5 @@
 /**
- * Preventive Shield desktop shell.
+ * busdo desktop shell.
  * One instance owns the dashboard and proxy. Closing the window stops both.
  *
  *   cd desktop-app && npm install

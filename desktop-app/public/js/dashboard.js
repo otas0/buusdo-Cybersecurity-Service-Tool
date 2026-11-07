@@ -279,7 +279,12 @@ let machinePollTimer = null;
 let lastOperatorHint = null;
 
 function applyI18n() {
-  els.appTitle.textContent = t(lang, "appTitle");
+  const titleHidden = els.appTitle?.querySelector?.(".visually-hidden");
+  if (titleHidden) titleHidden.textContent = t(lang, "appTitle");
+  else if (els.appTitle && !els.appTitle.querySelector?.("img")) {
+    els.appTitle.textContent = t(lang, "appTitle");
+  }
+  if (typeof document !== "undefined") document.title = t(lang, "appTitle");
   els.statusKicker.textContent = t(lang, "statusKicker");
   els.langLabel.textContent = t(lang, "langLabel");
   els.scanLabel.textContent = t(lang, "scan");

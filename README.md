@@ -1,6 +1,6 @@
-# Preventive Shield
+# busdo
 
-Bilingual English / European Portuguese product that helps non-expert users check a website before they trust it.
+**Buusdo product line** — Cybersecurity Service Tool. Bilingual English / European Portuguese product that helps non-expert users check a website before they trust it.
 
 **Detect → Explain → Prevent / Block → Act → Verify**
 

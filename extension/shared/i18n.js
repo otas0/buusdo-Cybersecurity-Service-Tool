@@ -7,7 +7,7 @@
 
 export const STRINGS = {
   en: {
-    appTitle: "Preventive Shield",
+    appTitle: "busdo",
     scan: "Run",
     scanning: "Wait",
     statusStandby: "Standby",
@@ -113,7 +113,7 @@ export const STRINGS = {
     listsRemove: "Remove"
   },
   "pt-PT": {
-    appTitle: "Escudo Preventivo",
+    appTitle: "busdo",
     scan: "Ir",
     scanning: "Espere",
     statusStandby: "Pronto",

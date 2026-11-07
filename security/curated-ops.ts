@@ -128,7 +128,7 @@ export function readCuratedFile(filePath = curatedPath()): CuratedThreatFile {
   }
   return {
     updatedAt: raw.updatedAt || "",
-    source: raw.source || "Preventive Shield curated list (first-party).",
+    source: raw.source || "busdo curated list (first-party).",
     hosts: { ...raw.hosts },
     changelog: Array.isArray(raw.changelog) ? [...raw.changelog] : []
   };

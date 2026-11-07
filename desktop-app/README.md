@@ -1,4 +1,4 @@
-# Preventive Shield — Desktop App (MVP)
+# busdo — Desktop App (MVP)
 
 On launch it scans this computer as far as the signed-in user can read. If it finds something actionable, it asks whether to block all of it. **Yes** adds hosts to the personal block list and quarantines allowed user-owned files. **No** leaves them in place. System folders are not edited, processes are not killed, HTTPS is not decrypted. Restore undoes this scan’s hosts and quarantined files.
 

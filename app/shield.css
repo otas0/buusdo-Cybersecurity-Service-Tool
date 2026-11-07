@@ -1,5 +1,5 @@
 /**
- * Preventive Shield — website product UI.
+ * buusdo Cybersecurity Service Tool — website product UI.
  * Single instrument language from shared/tokens.css.
  */
 
@@ -20,8 +20,23 @@
 
 .shell .brand {
   display: flex;
-  align-items: baseline;
+  align-items: center;
   gap: 12px;
+}
+
+.shell .brand-lockup {
+  display: flex;
+  align-items: center;
+  margin: 0;
+}
+
+.shell .brand-logo {
+  display: block;
+  height: 40px;
+  width: auto;
+  max-width: min(220px, 55vw);
+  background: #fff;
+  border: 1px solid var(--line);
 }
 
 .shell .kicker,

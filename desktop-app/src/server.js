@@ -1,5 +1,5 @@
 /**
- * Preventive Shield — Desktop App (Part 2)
+ * busdo — Desktop App (Part 2)
  * -----------------------------------------
  * - Express dashboard UI on http://localhost:3010 (UI_PORT; website uses :3000)
  * - Educational HTTP proxy on http://127.0.0.1:8080
@@ -980,7 +980,7 @@ loadDetector()
     uiServer.on("error", (err) => {
       if (err && err.code === "EADDRINUSE") {
         console.error(
-          `[desktop] localhost:${UI_PORT} is already in use. Close the other Preventive Shield window.`
+          `[desktop] localhost:${UI_PORT} is already in use. Close the other busdo window.`
         );
         process.exit(1);
       }
@@ -1000,7 +1000,7 @@ loadDetector()
       proxyServer.on("error", (err) => {
         if (err && err.code === "EADDRINUSE") {
           console.error(
-            `[desktop] 127.0.0.1:${PROXY_PORT} is already in use. Close the other Preventive Shield window.`
+            `[desktop] 127.0.0.1:${PROXY_PORT} is already in use. Close the other busdo window.`
           );
           void shutdown().finally(() => process.exit(1));
           return;

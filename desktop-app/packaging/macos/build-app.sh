@@ -8,7 +8,7 @@
 set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
 REPO="$(cd "$ROOT/.." && pwd)"
-APP_NAME="Preventive Shield"
+APP_NAME="Preventive Shield"  # legacy .app basename; UI brand is busdo
 APP_OUT="${APP_OUT:-$ROOT/dist/macos/${APP_NAME}.app}"
 NODE_EMBED_VERSION="${NODE_EMBED_VERSION:-22.13.0}"
 CONTENTS="$APP_OUT/Contents"
@@ -62,7 +62,7 @@ else
   fi
   rsync -a --delete "$EXTRACTED/" "$NODE_RES/"
   cat > "$NODE_RES/README.txt" <<EOF
-Official Node.js runtime embedded for Preventive Shield.
+Official Node.js runtime embedded for busdo.
   version: v${NODE_EMBED_VERSION}
   arch: darwin-${NODE_ARCH}
   source: ${URL}

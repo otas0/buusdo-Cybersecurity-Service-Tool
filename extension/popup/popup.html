@@ -3,14 +3,23 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Preventive Shield</title>
+    <title>busdo</title>
     <link rel="stylesheet" href="../shared/tokens.css" />
     <link rel="stylesheet" href="popup.css" />
   </head>
   <body>
     <div id="toastHost" class="toast-host" aria-live="polite"></div>
     <header class="top">
-      <h1 id="appTitle">Preventive Shield</h1>
+      <h1 id="appTitle" class="brand-lockup">
+        <img
+          class="brand-logo"
+          src="../icons/busdo-wordmark.png"
+          width="140"
+          height="48"
+          alt="busdo"
+        />
+        <span class="visually-hidden">busdo</span>
+      </h1>
       <label class="lang">
         <span class="visually-hidden" id="langLabel">Language</span>
         <select id="langSelect" aria-label="Language">

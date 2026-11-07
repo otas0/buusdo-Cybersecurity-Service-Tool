@@ -180,11 +180,25 @@ button:disabled.log-filter-reset {
 
 .brand {
   display: flex;
-  align-items: baseline;
+  align-items: center;
   gap: 12px;
 }
 
-.index, .kicker, .counts dt, .lang, .block-log .meta {
+.brand-lockup {
+  display: flex;
+  align-items: center;
+  margin: 0;
+}
+
+.brand-logo {
+  display: block;
+  height: 36px;
+  width: auto;
+  max-width: 200px;
+  background: #fff;
+}
+
+.kicker, .counts dt, .lang, .block-log .meta {
   font-family: var(--mono);
   font-size: 11px;
   letter-spacing: 0.14em;
