@@ -1,0 +1,41 @@
+# GitHub Pages — China-facing static entry (china-pages/)
+# Enable: Settings → Pages → Source = GitHub Actions
+name: Pages China
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "china-pages/**"
+      - ".github/workflows/pages-china.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages-china
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: china-pages
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
