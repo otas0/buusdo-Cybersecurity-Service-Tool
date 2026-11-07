@@ -2,8 +2,8 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="buusdo">
   <title>buusdo</title>
   <rect width="64" height="64" fill="#ffffff"/>
-  <!-- back / left (black) -->
-  <polygon fill="#000000" points="18,11 35,11 27,53 10,53"/>
-  <!-- front / right (gray) -->
-  <polygon fill="#585858" points="29,11 46,11 38,53 21,53"/>
+  <!-- black bar (back): offset down-left so the step reads at small sizes -->
+  <polygon fill="#000000" points="12,16 31,16 23,54 4,54"/>
+  <!-- gray bar (front/right) -->
+  <polygon fill="#585858" points="24,10 43,10 35,48 16,48"/>
 </svg>

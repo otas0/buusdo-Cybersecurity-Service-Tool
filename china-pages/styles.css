@@ -51,7 +51,10 @@ h1 {
   display: block;
   height: 44px;
   width: auto;
+  aspect-ratio: 405 / 138;
   max-width: min(240px, 60vw);
+  object-fit: contain;
+  object-position: left center;
   background: #fff;
   border: 1px solid var(--line);
 }

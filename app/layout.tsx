@@ -14,8 +14,11 @@ export const metadata: Metadata = {
   title: FORMAL,
   description: `${FORMAL}. Check a website before you trust it.`,
   icons: {
-    icon: [{ url: '/favicon.png', type: 'image/png' }],
-    apple: [{ url: '/brand/apple-touch-icon.png' }],
+    icon: [
+      { url: '/favicon.svg', type: 'image/svg+xml' },
+      { url: '/favicon.png', type: 'image/png', sizes: '32x32' },
+    ],
+    apple: [{ url: '/brand/apple-touch-icon.png', sizes: '180x180' }],
   },
   openGraph: {
     title: FORMAL,

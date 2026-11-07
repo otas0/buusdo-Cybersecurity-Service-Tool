@@ -34,7 +34,10 @@
   display: block;
   height: 40px;
   width: auto;
+  aspect-ratio: 405 / 138;
   max-width: min(220px, 55vw);
+  object-fit: contain;
+  object-position: left center;
   background: #fff;
   border: 1px solid var(--line);
 }
