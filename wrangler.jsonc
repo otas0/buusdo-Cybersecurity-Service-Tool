@@ -15,8 +15,8 @@
   "preview_urls": true,
   "vars": {
     // Non-secret defaults only. Secrets → `wrangler secret put NAME`
+    // Account sync product cancelled — keep off on every Worker (see security/account-sync/enabled.ts).
     "ACCOUNT_SYNC_ENABLED": "0",
-    // When enabling sync, also set DATABASE_URL (+ AUTH_TOKEN) secrets — never file store on Workers.
     "ACCOUNT_SYNC_REQUIRE_TURSO": "1"
   },
   "env": {
@@ -26,10 +26,9 @@
       "workers_dev": true,
       "preview_urls": true,
       "vars": {
-        "ACCOUNT_SYNC_ENABLED": "1",
-        "ACCOUNT_SYNC_REQUIRE_TURSO": "1",
-        // Staging-only: magic JSON may include devLink for smoke (never on prod top-level vars).
-        "ACCOUNT_SYNC_DEV_RETURN_LINK": "1"
+        // Same as prod — Account sync cancelled (no DEV_RETURN_LINK).
+        "ACCOUNT_SYNC_ENABLED": "0",
+        "ACCOUNT_SYNC_REQUIRE_TURSO": "1"
       }
     }
   }

@@ -111,7 +111,7 @@ Liveness + probe budget + HEAD-skip snapshot (no third-party calls).
 ```json
 {
   "ok": true,
-  "service": "preventive-shield",
+  "service": "buusdocst",
   "threatIntel": "own",
   "thirdPartyReputation": false,
   "ownThreatMergePt": true,

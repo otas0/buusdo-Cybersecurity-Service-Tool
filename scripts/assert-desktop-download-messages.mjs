@@ -130,7 +130,7 @@ if (!rowParagraph) {
   failed += 1;
 }
 
-// settings-desktop-heading must stay unique (AccountSettings must not reuse the id).
+// settings-desktop-heading must stay unique page-wide.
 const headingHits = [...settingsPanel.matchAll(/id="settings-desktop-heading"/g)];
 if (headingHits.length !== 1) {
   console.error(
@@ -138,9 +138,10 @@ if (headingHits.length !== 1) {
   );
   failed += 1;
 }
-const accountSettings = readFileSync(path.join(root, "components/AccountSettings.tsx"), "utf8");
-if (accountSettings.includes("settings-desktop-heading")) {
-  console.error("AccountSettings must not reuse settings-desktop-heading (keep id unique for SR)");
+if (settingsPanel.includes("AccountSettings") || settingsPanel.includes("settings-account")) {
+  console.error(
+    "SettingsPanel must not import AccountSettings / settings-account (Account sync cancelled)"
+  );
   failed += 1;
 }
 

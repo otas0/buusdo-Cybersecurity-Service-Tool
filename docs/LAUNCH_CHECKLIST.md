@@ -100,7 +100,7 @@ Recorded via `npm run production:origin` → README + `shared/production-site.js
 
 ## F. After go-live (first 48h)
 
-**Freeze window started:** 2026-11-01T07:30Z (first green Production health on pcpd). Ends ~**2026-11-03T07:30Z**.
+**Freeze window started:** 2026-11-01T07:30Z (first green Production health on buusdocst). Ends ~**2026-11-03T07:30Z**.
 
 - [x] Follow [POST_LAUNCH_48H.md](POST_LAUNCH_48H.md) — health + check only; no large new features (freeze **on**)
 - [ ] Watch health-monitor + Workers metrics (errors, CPU) — health green; Metrics screenshots still pending CF login
@@ -111,4 +111,4 @@ Recorded via `npm run production:origin` → README + `shared/production-site.js
 
 - [ ] After 48h: `git checkout -b chore/vinext-1-4-eval` ([VINEXT_UPGRADE_1_4.md](VINEXT_UPGRADE_1_4.md))
 - [ ] Custom domain: follow [CUSTOM_DOMAIN_REDEPLOY.md](CUSTOM_DOMAIN_REDEPLOY.md) then refresh public promotion URLs
-- [x] Playwright prod privacy (browser/CDP 2026-11-01): `/en/privacy` + `/pt-PT/privacy` headings + `data-testid=privacy-policy` OK on pcpd — full `npm run test:playwright:privacy` when Chromium install works
+- [x] Playwright prod privacy (browser/CDP 2026-11-01): `/en/privacy` + `/pt-PT/privacy` headings + `data-testid=privacy-policy` OK on buusdocst — full `npm run test:playwright:privacy` when Chromium install works

@@ -53,8 +53,6 @@ import {
 import { probeBudgetCopy, PROBE_TIMEOUT_ENV_KEY } from "../shared/probe-budget-copy.mjs";
 import { formatTimingFlagChips, timingLabels } from "./timing-copy";
 import type { CheckTiming } from "../security/analyse";
-import { AccountSettings } from "./AccountSettings";
-
 const CHROME_STORE_URL = String(extensionStores.chromeWebStoreUrl || "").trim();
 const SAFARI_STORE_URL = String(extensionStores.safariAppStoreUrl || "").trim();
 const STORE_DOCS_URL =
@@ -643,15 +641,13 @@ export function SettingsPanel({
         )}
       </section>
 
-      <AccountSettings locale={locale} />
-
       <section
         className="settings-block"
         id="settings-desktop"
         data-testid="settings-desktop-downloads"
         aria-labelledby="settings-desktop-heading"
       >
-        {/* id must stay unique page-wide — do not reuse in AccountSettings (assert-desktop-download-messages). */}
+        {/* id must stay unique page-wide (assert-desktop-download-messages). */}
         <h2 id="settings-desktop-heading">{t.desktopDownloadsTitle}</h2>
         <p className="hint">{t.desktopDownloadsIntro}</p>
         <p className="hint" data-testid="settings-desktop-download-row">

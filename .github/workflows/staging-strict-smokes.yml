@@ -1,60 +1,24 @@
-# Thin STRICT staging Account-sync smokes (magic-link + exchange + lists).
-# Soft gate pending when STAGING_HEALTH_URL unset (exit 0).
-# When set: STRICT_STAGING=1 — fail closed on SKIP / Turso / sync off.
-# Does not replace Health monitor soft_warn / Slack (see health-monitor.yml).
+# Account sync product cancelled — workflow retained so old bookmarks/cron stay green.
+# No magic-link / exchange / lists STRICT smokes.
 name: Staging STRICT smokes
 
 on:
   schedule:
-    # Every 6h — only meaningful after STAGING_HEALTH_URL is set
     - cron: "20 */6 * * *"
   workflow_dispatch:
 
 jobs:
   strict-smokes:
-    name: STRICT magic-link + exchange + lists
+    name: Account sync cancelled (no STRICT)
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: "22"
-          cache: npm
-      - name: Install
-        run: npm ci || npm install --no-fund --no-audit
-      - name: Staging health (fail-closed Turso when URL set)
-        env:
-          STAGING_HEALTH_URL: ${{ vars.STAGING_HEALTH_URL }}
-          PRODUCTION_HEALTH_URL: ${{ vars.PRODUCTION_HEALTH_URL }}
-          GITHUB_RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
-        run: node scripts/assert-staging-health.mjs
-      - name: STRICT smokes
-        env:
-          STAGING_HEALTH_URL: ${{ vars.STAGING_HEALTH_URL }}
-          PRODUCTION_HEALTH_URL: ${{ vars.PRODUCTION_HEALTH_URL }}
-          STRICT_STAGING: "1"
+      - name: Notice — product cancelled
         run: |
-          set -euo pipefail
-          URL=$(echo "${STAGING_HEALTH_URL:-}" | tr -d '[:space:]')
-          if [ -z "$URL" ]; then
-            {
-              echo "### Staging STRICT smokes"
-              echo ""
-              echo "**gate pending** — \`STAGING_HEALTH_URL\` unset; soft exit 0."
-              echo "Ordered commands: [ACCOUNT_SYNC_GATE.md](https://github.com/${{ github.repository }}/blob/main/docs/ACCOUNT_SYNC_GATE.md)"
-            } >> "$GITHUB_STEP_SUMMARY"
-            echo "::notice::STAGING_HEALTH_URL unset — STRICT smokes skipped (not a failure)"
-            exit 0
-          fi
-          npm run smoke:staging-magic-link
-          npm run smoke:account-exchange-e2e
-          npm run smoke:account-lists-bidirectional
           {
-            echo "### Staging STRICT smokes — green"
+            echo "### Staging STRICT smokes"
             echo ""
-            echo "- Origin: \`$URL\`"
-            echo "- Run: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
-            echo "- Paste into docs/LAUNCH_CHECKLIST.md § D"
-            echo "- Next: npm run smoke:desktop-auto-sync-toast + Chrome unpacked toast"
-            echo "- Gate doc: [ACCOUNT_SYNC_GATE.md](https://github.com/${{ github.repository }}/blob/main/docs/ACCOUNT_SYNC_GATE.md)"
+            echo "**cancelled** — Account sync is not shipping."
+            echo "Gate doc: [ACCOUNT_SYNC_GATE.md](https://github.com/${{ github.repository }}/blob/main/docs/ACCOUNT_SYNC_GATE.md)"
           } >> "$GITHUB_STEP_SUMMARY"
+          echo "::notice::Account sync product cancelled — STRICT smokes not run"

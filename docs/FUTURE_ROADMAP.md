@@ -5,7 +5,7 @@
 - **V0.4:** sensitive-interaction interception.
 - **V0.5:** privacy, tracker, fingerprinting, third-party request, and permission protection.
 - **V0.6:** known-breach exposure monitoring.
-- **V0.65:** optional account for personal **list sync** only (magic link; see [`ACCOUNT_SYNC_V1.md`](ACCOUNT_SYNC_V1.md)) — separate from remediation.
+- **V0.65:** Account sync **cancelled** — on-device lists + offline export only ([`ACCOUNT_SYNC_GATE.md`](ACCOUNT_SYNC_GATE.md)).
 - **V0.7:** account remediation workflows (breach / takeover help — not list sync).
 - **V1:** Personal Cyber Defense Layer.
 

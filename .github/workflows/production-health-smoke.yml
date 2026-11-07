@@ -47,7 +47,7 @@ jobs:
   # Thin CF smoke only — no soft_warn / Slack / notarized HEAD (see health-monitor.yml).
   # When STAGING_HEALTH_URL is set: fail closed unless Turso health flag is true.
   staging-account-sync:
-    name: staging health (account sync on)
+    name: staging health (account sync off)
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4

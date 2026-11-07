@@ -20,8 +20,8 @@ afterEach(() => {
   else env.DATABASE_URL = prevDb;
 });
 
-describe("account sync Turso gate", () => {
-  it("stays off when REQUIRE_TURSO=1 without DATABASE_URL", async () => {
+describe("account sync product cancelled", () => {
+  it("stays off with REQUIRE_TURSO=1 and no DATABASE_URL", async () => {
     env.ACCOUNT_SYNC_ENABLED = "1";
     env.ACCOUNT_SYNC_REQUIRE_TURSO = "1";
     delete env.DATABASE_URL;
@@ -32,19 +32,19 @@ describe("account sync Turso gate", () => {
     assert.equal(isAccountSyncEnabled(), false);
   });
 
-  it("opens when REQUIRE_TURSO=1 and DATABASE_URL is set", async () => {
+  it("stays off even when DATABASE_URL is set (product cancelled)", async () => {
     env.ACCOUNT_SYNC_ENABLED = "1";
     env.ACCOUNT_SYNC_REQUIRE_TURSO = "1";
     env.DATABASE_URL = "libsql://example.turso.io";
     const { isAccountSyncEnabled } = await import("../security/account-sync/enabled");
-    assert.equal(isAccountSyncEnabled(), true);
+    assert.equal(isAccountSyncEnabled(), false);
   });
 
-  it("allows file-store path when REQUIRE_TURSO unset", async () => {
+  it("stays off when REQUIRE_TURSO unset (product cancelled)", async () => {
     env.ACCOUNT_SYNC_ENABLED = "1";
     delete env.ACCOUNT_SYNC_REQUIRE_TURSO;
     delete env.DATABASE_URL;
     const { isAccountSyncEnabled } = await import("../security/account-sync/enabled");
-    assert.equal(isAccountSyncEnabled(), true);
+    assert.equal(isAccountSyncEnabled(), false);
   });
 });

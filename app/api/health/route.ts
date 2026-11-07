@@ -56,7 +56,7 @@ export async function GET(request: Request) {
   return NextResponse.json(
     {
       ok: true,
-      service: "preventive-shield",
+      service: "buusdocst",
       threatIntel: "own",
       thirdPartyReputation: false,
       /** Static JSON import — true on Workers when curated-threats.json is in the bundle. */
@@ -74,7 +74,7 @@ export async function GET(request: Request) {
       /** Soft notice on POST /api/check when personalListBlocked:true (no URL). */
       personalHintLogEnabled,
       personalHintLogEnv: "CHECK_PERSONAL_HINT_LOG",
-      /** Optional account sync for personal block/trust lists only (ACCOUNT_SYNC_ENABLED=1 + Turso on Workers). */
+      /** Account sync product cancelled — always false via ACCOUNT_SYNC_PRODUCT_CANCELLED. */
       accountSyncEnabled,
       accountSyncEnabledEnv: ACCOUNT_SYNC_ENABLED_ENV,
       accountSyncRequireTurso: isAccountSyncRequireTurso(),

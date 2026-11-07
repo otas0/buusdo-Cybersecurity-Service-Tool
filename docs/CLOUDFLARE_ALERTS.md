@@ -14,7 +14,11 @@ Turn these on in the Cloudflare dashboard **before** public traffic. Email notif
 
 Exact menu labels move occasionally; search the dashboard for “Notifications” + “Workers” if the path differs.
 
-**Operator note (2026-11-01):** dashboard login is required — automation cannot enable alerts without an interactive Cloudflare session.
+### Remove legacy Metrics / notifications (do this once)
+
+Account-level **Notifications** may still list policies scoped to deleted Workers `pcpd` or `preventive-shield`. Delete those policies so email/alerts cannot fire on dead script names. Keep only **`buusdocst`** (and later `buusdocst-staging` if you deploy staging). Wrangler cannot manage notification policies — this step is dashboard-only.
+
+**Operator note:** dashboard login is required — automation cannot enable or delete alerts without an interactive Cloudflare session.
 
 ## Test one email (required before public promotion)
 

@@ -597,8 +597,6 @@ jobs:
           exit 0
         env:
           PLAYWRIGHT_BASE_URL: ${{ vars.PLAYWRIGHT_BASE_URL || 'http://localhost:3000' }}
-          ACCOUNT_SYNC_ENABLED: "1"
-          ACCOUNT_SYNC_DEV_RETURN_LINK: "1"
           AUTH_MAGIC_SECRET: "ci-playwright-magic"
           LISTS_ENC_KEY: "ci-playwright-lists-enc"
 
@@ -616,16 +614,10 @@ jobs:
           STRICT_LEAVE_AND_BLOCK: "1"
           RUN_PLAYWRIGHT_SETTINGS: "true"
 
-      - name: Account sync signed-in (hard assert when enabled)
+      - name: Account sync (cancelled — soft skip)
         id: pw_account
         if: steps.pw_install.outcome == 'success'
-        run: |
-          BASE="${PLAYWRIGHT_BASE_URL:-http://localhost:3000}"
-          export PLAYWRIGHT_BASE_URL="$BASE"
-          npx playwright test playwright/account-sync.spec.ts
-        env:
-          PLAYWRIGHT_BASE_URL: ${{ vars.PLAYWRIGHT_BASE_URL || 'http://localhost:3000' }}
-          ACCOUNT_SYNC_ENABLED: "1"
+        run: npx playwright test playwright/account-sync.spec.ts
 
       # Optional live website components (vinext). Soft-skip inside specs if base unreachable.
       - name: Live RiskResult Block-on-desktop (optional)

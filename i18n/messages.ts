@@ -83,7 +83,7 @@ export const messages = {
     blocked: "Block / trust lists (extension / desktop)",
     trusted: "Lists elsewhere (extension / desktop)",
     blockListsWebsiteNote:
-      "This website does not enforce block/trust lists (extension and desktop do). By default lists stay on-device; optional Account sync (when enabled) stores only shield-lists-v1 in your buusdo account. Export/import JSON or QR remains the free offline path.",
+      "This website does not enforce block/trust lists (extension and desktop do). Lists stay on-device. Export/import JSON or QR is the offline backup path — cloud Account sync is not offered.",
     accountTitle: "Account",
     accountHint:
       "Optional. Sync personal block/trust lists only across website, extension, and desktop. Never check history or full URLs.",
@@ -379,7 +379,7 @@ export const messages = {
     blocked: "Listas de bloqueio / confiança (extensão / app)",
     trusted: "Listas noutro sítio (extensão / app)",
     blockListsWebsiteNote:
-      "Este site não aplica listas de bloqueio/confiança (a extensão e a app sim). Por predefinição as listas ficam no dispositivo; a Conta opcional (quando ativa) guarda só shield-lists-v1 na conta buusdo. Exportar/importar JSON ou QR continua o caminho offline gratuito.",
+      "Este site não aplica listas de bloqueio/confiança (a extensão e a app sim). As listas ficam no dispositivo. Exportar/importar JSON ou QR é o caminho de cópia offline — a sincronização de Conta na nuvem não é oferecida.",
     accountTitle: "Conta",
     accountHint:
       "Opcional. Sincroniza só listas pessoais de bloqueio/confiança entre site, extensão e app. Nunca histórico de verificações nem URLs completos.",

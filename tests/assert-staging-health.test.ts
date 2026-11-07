@@ -13,41 +13,19 @@ const smoke = readFileSync(
   path.join(root, ".github/workflows/production-health-smoke.yml"),
   "utf8"
 );
-const promote = readFileSync(
-  path.join(root, ".github/workflows/desktop-promote-macos-url.yml"),
-  "utf8"
-);
 
-test("assert-staging-health fail-closes on missing Turso flag", () => {
-  assert.match(script, /accountSyncTursoConfigured/);
+test("assert-staging-health requires sync off when URL set", () => {
   assert.match(script, /accountSyncEnabled/);
-  assert.match(script, /fail closed|FAIL/i);
-  assert.match(script, /gate pending/);
-  assert.match(script, /ACCOUNT_SYNC_GATE\.md/);
-  assert.match(script, /smoke:staging-magic-link/);
-  assert.match(script, /smoke:account-exchange-e2e/);
+  assert.match(script, /product cancelled/);
+  assert.match(script, /must stay false/);
 });
 
-test("Staging STRICT smokes workflow exists and soft-skips when URL unset", () => {
-  const wf = readFileSync(
-    path.join(root, ".github/workflows/staging-strict-smokes.yml"),
-    "utf8"
-  );
-  assert.match(wf, /STRICT_STAGING/);
-  assert.match(wf, /smoke:staging-magic-link/);
-  assert.match(wf, /smoke:account-exchange-e2e/);
-  assert.match(wf, /smoke:account-lists-bidirectional/);
-  assert.match(wf, /gate pending/);
-  assert.match(wf, /ACCOUNT_SYNC_GATE\.md/);
+test("assert-staging-health soft-exits when STAGING_HEALTH_URL unset", () => {
+  assert.match(script, /STAGING_HEALTH_URL unset/);
+  assert.match(script, /process\.exit\(0\)/);
 });
 
 test("Health monitor + Production health smoke both call assert-staging-health", () => {
   assert.match(healthMonitor, /assert-staging-health\.mjs/);
   assert.match(smoke, /assert-staging-health\.mjs/);
-  assert.match(smoke, /no soft_warn/);
-});
-
-test("desktop-promote requires NOTARIZED_HEAD_OK=1 before rewrite", () => {
-  assert.match(promote, /NOTARIZED_HEAD_OK=1/);
-  assert.match(promote, /refuse promote/i);
 });

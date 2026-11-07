@@ -124,7 +124,7 @@ jobs:
         run: |
           set -euo pipefail
           if [ "$TARGET" = "staging" ]; then
-            # Fail closed on Turso when STAGING_HEALTH_URL is the smoke origin.
+            # Account sync cancelled — require accountSyncEnabled false on staging.
             STAGING_HEALTH_URL="$HEALTH_BASE_URL" \
               PRODUCTION_HEALTH_URL="${{ vars.PRODUCTION_HEALTH_URL }}" \
               GITHUB_RUN_URL="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}" \
@@ -157,10 +157,9 @@ jobs:
             echo "| command | \`$CMD\` |"
             echo ""
             if [ "$TARGET" = "staging" ]; then
-              echo "After first staging deploy: paste the exact \`https://buusdocst-staging.<subdomain>.workers.dev\` into docs/DEPLOY_SECRETS.md and \`gh variable set STAGING_HEALTH_URL\`."
-              echo "Then STRICT smokes → docs/ACCOUNT_SYNC_GATE.md."
+              echo "Staging: Account sync is **cancelled** (\`accountSyncEnabled\` must stay false). Optional: paste URL into docs/DEPLOY_SECRETS.md."
             else
-              echo "Custom domain: **hold** until Account gate + docs/POST_LAUNCH_48H.md (docs/CUSTOM_DOMAIN_REDEPLOY.md)."
+              echo "Custom domain: **hold** until docs/POST_LAUNCH_48H.md (docs/CUSTOM_DOMAIN_REDEPLOY.md)."
             fi
           } >> "$GITHUB_STEP_SUMMARY"
 

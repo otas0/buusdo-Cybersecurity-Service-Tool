@@ -65,7 +65,7 @@ ${fragment}
     await page.goto(`http://127.0.0.1:${port}/`);
     await expect(page.getByTestId("path-scan-machine")).toHaveText("Analisar este computador");
     await expect(page.getByTestId("path-check-web")).toHaveText("Verificar um site");
-    await expect(page.getByTestId("path-sync-account")).toHaveText("Sincronizar listas");
+    await expect(page.getByTestId("path-sync-account")).toHaveCount(0);
   } finally {
     await new Promise<void>((resolve, reject) =>
       server.close((err) => (err ? reject(err) : resolve()))

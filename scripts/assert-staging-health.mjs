@@ -1,14 +1,12 @@
 #!/usr/bin/env node
 /**
- * Staging Account-sync gate for Actions (Health monitor / Production health smoke).
+ * Staging health for Actions (Health monitor / Production health smoke).
  *
- * STAGING_HEALTH_URL unset → gate pending (exit 0, summary notice).
- * Set → fail closed unless GET /api/health has:
- *   ok: true, accountSyncEnabled: true, accountSyncTursoConfigured: true
+ * Account sync product cancelled — when STAGING_HEALTH_URL is set, fail closed
+ * unless GET /api/health has ok: true and accountSyncEnabled: false.
  * Must not equal PRODUCTION_HEALTH_URL.
  *
  *   STAGING_HEALTH_URL=… node scripts/assert-staging-health.mjs
- *   STAGING_HEALTH_URL=… PRODUCTION_HEALTH_URL=… node scripts/assert-staging-health.mjs
  */
 import { appendFileSync } from "node:fs";
 
@@ -28,32 +26,17 @@ function writeSummary(lines) {
 
 const GATE_DOC =
   "https://github.com/otas0/buusdo-Cybersecurity-Service-Tool/blob/main/docs/ACCOUNT_SYNC_GATE.md";
-const SECRETS_DOC =
-  "https://github.com/otas0/buusdo-Cybersecurity-Service-Tool/blob/main/docs/DEPLOY_SECRETS.md";
-const ORDERED_SMOKES = [
-  "STRICT_STAGING=1 STAGING_HEALTH_URL=… npm run smoke:staging-magic-link",
-  "STRICT_STAGING=1 STAGING_HEALTH_URL=… npm run smoke:account-exchange-e2e",
-  "STRICT_STAGING=1 STAGING_HEALTH_URL=… npm run smoke:account-lists-bidirectional",
-  "npm run smoke:desktop-auto-sync-toast",
-];
 
 if (!staging) {
   writeSummary([
-    "### Staging Account sync",
+    "### Staging health",
     "",
-    "**gate pending** — set repository variable `STAGING_HEALTH_URL` to a non-prod Worker",
-    "(Turso + mailer + `ACCOUNT_SYNC_ENABLED=1` via `wrangler --env staging`).",
+    "**optional** — `STAGING_HEALTH_URL` unset (not a failure).",
+    "Account sync product is **cancelled** — no Turso/mailer staging gate.",
     "",
-    `- Secrets template: [DEPLOY_SECRETS.md](${SECRETS_DOC})`,
-    `- Ordered STRICT smokes: [ACCOUNT_SYNC_GATE.md](${GATE_DOC})`,
-    "",
-    "```bash",
-    ...ORDERED_SMOKES,
-    "```",
-    "",
-    "Production stays `accountSyncEnabled: false` until the gate checklist is complete.",
+    `See [ACCOUNT_SYNC_GATE.md](${GATE_DOC}).`,
   ]);
-  console.log("STAGING_HEALTH_URL unset — Account sync gate pending (not a failure)");
+  console.log("STAGING_HEALTH_URL unset — staging health optional (not a failure)");
   process.exit(0);
 }
 
@@ -73,54 +56,36 @@ if (!res.ok) {
 const body = await res.json();
 const ok = body?.ok === true;
 const syncOn = body?.accountSyncEnabled === true;
-const turso = body?.accountSyncTursoConfigured === true;
 
 console.log(JSON.stringify(body));
 
 const fails = [];
 if (!ok) fails.push("ok !== true");
-if (!syncOn) fails.push("accountSyncEnabled !== true");
-if (!turso) fails.push("accountSyncTursoConfigured !== true");
+if (syncOn) fails.push("accountSyncEnabled must stay false (product cancelled)");
 
 if (fails.length) {
   writeSummary([
-    "### Staging Account sync health — FAIL",
+    "### Staging health — FAIL",
     "",
     `- URL: \`${staging}\``,
-    `- Flags: ok=\`${body?.ok}\` accountSyncEnabled=\`${body?.accountSyncEnabled}\` accountSyncTursoConfigured=\`${body?.accountSyncTursoConfigured}\``,
+    `- Flags: ok=\`${body?.ok}\` accountSyncEnabled=\`${body?.accountSyncEnabled}\``,
     `- Fail closed: ${fails.map((f) => `\`${f}\``).join(", ")}`,
     runUrl ? `- Run: ${runUrl}` : "",
     "",
-    "Fix Turso secrets (`DATABASE_URL` / `DATABASE_AUTH_TOKEN`) on `buusdocst-staging`, redeploy `--env staging`.",
+    "Account sync is cancelled — set ACCOUNT_SYNC_ENABLED=0 on staging and redeploy.",
     "",
-    `Ordered STRICT smokes after green health: [ACCOUNT_SYNC_GATE.md](${GATE_DOC})`,
-    "",
-    "```bash",
-    ...ORDERED_SMOKES,
-    "```",
+    `Doc: [ACCOUNT_SYNC_GATE.md](${GATE_DOC})`,
   ].filter(Boolean));
-  console.error(
-    `assert-staging-health FAIL — ${fails.join("; ")} (STAGING_HEALTH_URL set → require Turso configured)`
-  );
+  console.error(`assert-staging-health FAIL — ${fails.join("; ")}`);
   process.exit(1);
 }
 
 writeSummary([
-  "### Staging Account sync health",
+  "### Staging health",
   "",
   `- URL: \`${staging}\``,
-  "- Assert: `accountSyncEnabled: true` + `accountSyncTursoConfigured: true` (staging only)",
+  "- Assert: `ok: true` + `accountSyncEnabled: false` (Account sync cancelled)",
   runUrl ? `- Run: ${runUrl}` : "",
-  "",
-  "Paste into docs/LAUNCH_CHECKLIST.md § D after green STRICT smokes.",
-  "",
-  `Next — ordered STRICT smokes: [ACCOUNT_SYNC_GATE.md](${GATE_DOC})`,
-  "",
-  "```bash",
-  ...ORDERED_SMOKES.map((c) => c.replace("STAGING_HEALTH_URL=…", `STAGING_HEALTH_URL=${staging}`)),
-  "```",
 ].filter(Boolean));
 
-console.log(
-  `assert-staging-health ok — ${staging} (sync+Turso)`
-);
+console.log(`assert-staging-health ok — ${staging} (sync cancelled / off)`);

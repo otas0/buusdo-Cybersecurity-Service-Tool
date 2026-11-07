@@ -3,9 +3,16 @@ import '../shared/tokens.css';
 import './globals.css';
 import './shield.css';
 
+import productionSite from '../shared/production-site.json';
+
 const explicitSiteUrl = process.env.NEXT_PUBLIC_SITE_URL?.trim();
 const vercelHost = process.env.VERCEL_PROJECT_PRODUCTION_URL ?? process.env.VERCEL_URL;
-const siteUrl = explicitSiteUrl || (vercelHost ? `https://${vercelHost}` : 'http://localhost:3000');
+/** Prefer deploy env, then committed production origin (custom domain after `production:origin`). */
+const siteUrl =
+  explicitSiteUrl ||
+  (vercelHost ? `https://${vercelHost}` : '') ||
+  String(productionSite.productionOrigin || '').replace(/\/$/, '') ||
+  'http://localhost:3000';
 
 const FORMAL = 'buusdo Cybersecurity Service Tool';
 

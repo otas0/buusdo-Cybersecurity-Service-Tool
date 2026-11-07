@@ -54,9 +54,9 @@ After upgrade to vinext ≥1.4 + React ≥19.3 you may switch to `npx @vinext/cl
 First success prints a `*.workers.dev` URL. Smoke:
 
 ```bash
-npm run health:prod -- --url https://preventive-shield.<account>.workers.dev
-npm run check:prod -- --url https://preventive-shield.<account>.workers.dev
-npm run production:origin -- https://preventive-shield.<account>.workers.dev
+npm run health:prod -- --url https://buusdocst.mtsu.workers.dev
+npm run check:prod -- --url https://buusdocst.mtsu.workers.dev
+npm run production:origin -- https://buusdocst.mtsu.workers.dev
 ```
 
 Expect health: `ok: true`, `threatIntel: "own"`, `curatedListPresent: true`, `accountSyncEnabled: false`.  
@@ -112,7 +112,7 @@ Prefer one canonical host (apex **or** `www`), matching `NEXT_PUBLIC_SITE_URL` �
 | Production | `npm run health:prod -- --url https://…` |
 | Scheduled | GitHub Action [health-monitor.yml](../.github/workflows/health-monitor.yml) — set `PRODUCTION_HEALTH_URL` |
 
-Healthy JSON: `ok`, `service: preventive-shield`, `threatIntel: own`, `thirdPartyReputation: false`, `curatedListPresent: true`.
+Healthy JSON: `ok`, `service: buusdocst`, `threatIntel: own`, `thirdPartyReputation: false`, `curatedListPresent: true`.
 
 ## 6. Post-deploy smoke
 

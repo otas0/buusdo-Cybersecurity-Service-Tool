@@ -49,3 +49,7 @@ Privacidade: https://buusdocst.mtsu.workers.dev/pt-PT/privacy
 - Republish or advertise any hostname other than `buusdocst.mtsu.workers.dev` / `otas0.github.io/buusdocst`
 - Promote Account sync — product cancelled ([ACCOUNT_SYNC_GATE.md](ACCOUNT_SYNC_GATE.md))
 - Publish check results or sample “risky” URLs that still work as phish bait
+
+## Spot-check (before each external post)
+
+Paste-ready blocks above must contain **zero** of: `pcpd.`, `preventive-shield.`, `localhost`, `127.0.0.1`. Allowed hosts only: `buusdocst.mtsu.workers.dev`, `otas0.github.io/buusdocst`.

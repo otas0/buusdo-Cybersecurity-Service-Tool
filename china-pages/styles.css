@@ -226,6 +226,43 @@ a {
   border: 1px solid var(--halt);
 }
 
+.shell .reach {
+  margin-top: 22px;
+  padding: 14px 0 0;
+  border-top: 1px solid var(--line);
+}
+
+.shell .reach-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 10px 16px;
+  margin: 0;
+}
+
+.shell .reach-status {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.shell .reach[data-state="ok"] .reach-status {
+  color: var(--text);
+}
+
+.shell .reach[data-state="fail"] .reach-status {
+  color: var(--halt);
+}
+
+.shell .reach-detail {
+  margin: 6px 0 0;
+  font-size: 13px;
+  color: var(--muted);
+  max-width: 42rem;
+}
+
 .shell .foot {
   margin-top: 48px;
   padding-top: 16px;

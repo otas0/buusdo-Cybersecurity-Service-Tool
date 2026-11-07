@@ -22,8 +22,8 @@ after(() => {
   resetAccountStoreForTests();
 });
 
-test("ACCOUNT_SYNC_ENABLED gate", () => {
-  assert.equal(isAccountSyncEnabled(), true);
+test("ACCOUNT_SYNC product cancelled — gate stays off", () => {
+  assert.equal(isAccountSyncEnabled(), false);
 });
 
 test("magic link create + consume web sets session", () => {

@@ -18,20 +18,12 @@ Workflow: [.github/workflows/deploy-cloudflare.yml](../.github/workflows/deploy-
 3. Account resources → include the account that owns Worker **`buusdocst`** (and later **`buusdocst-staging`**).
 4. Create → copy once → paste into GitHub `CLOUDFLARE_API_TOKEN` (**never** paste the token into chat).
 
-**Status (2026-11-07):** `CLOUDFLARE_ACCOUNT_ID` is set on `otas0/buusdo-Cybersecurity-Service-Tool`. **`CLOUDFLARE_API_TOKEN` is still missing** — Deploy Cloudflare (prod + staging) cannot run from Actions until **you** paste a dashboard token (this agent cannot invent or retrieve it). Turso / mailer / `STAGING_HEALTH_URL` / `SLACK_WEBHOOK_URL` also unset:
+**Status:** Account sync is **cancelled** — do **not** add Turso / Resend / Postmark / magic-link secrets. Deploy still needs `CLOUDFLARE_API_TOKEN` + `CLOUDFLARE_ACCOUNT_ID` for the website Worker.
 
 ```bash
 # dash.cloudflare.com/profile/api-tokens → Edit Cloudflare Workers → create → copy once
 gh secret set CLOUDFLARE_API_TOKEN --repo otas0/buusdo-Cybersecurity-Service-Tool
-# paste token, then put Turso/mailer on staging BEFORE first health assert:
-#   npx wrangler secret put DATABASE_URL --env staging
-#   npx wrangler secret put DATABASE_AUTH_TOKEN --env staging
-#   npx wrangler secret put AUTH_MAGIC_SECRET --env staging
-#   npx wrangler secret put LISTS_ENC_KEY --env staging
-#   npx wrangler secret put AUTH_FROM_EMAIL --env staging
-#   npx wrangler secret put RESEND_API_KEY --env staging   # or POSTMARK_SERVER_TOKEN
-gh workflow run "Deploy Cloudflare" --repo otas0/buusdo-Cybersecurity-Service-Tool -f target=staging
-# After URL known → set STAGING_HEALTH_URL → workflow "Staging STRICT smokes"
+gh workflow run "Deploy Cloudflare" --repo otas0/buusdo-Cybersecurity-Service-Tool -f target=production
 ```
 
 Wrangler OAuth / `wrangler login` cannot be copied into GH secrets — use an API token.
@@ -40,87 +32,19 @@ Wrangler OAuth / `wrangler login` cannot be copied into GH secrets — use an AP
 
 | Variable | Purpose |
 |----------|---------|
-| `NEXT_PUBLIC_SITE_URL` | Deploy build public origin. **If unset**, Deploy workflow defaults to `https://buusdocst.mtsu.workers.dev`. Override when the custom domain is live (**custom domain hold** until Account gate + [POST_LAUNCH_48H.md](POST_LAUNCH_48H.md)). |
+| `NEXT_PUBLIC_SITE_URL` | Deploy build public origin. **If unset**, Deploy workflow defaults to `https://buusdocst.mtsu.workers.dev`. Override when the custom domain is live (**custom domain hold** + [POST_LAUNCH_48H.md](POST_LAUNCH_48H.md)). |
 | `PRODUCTION_HEALTH_URL` | Same origin for [health-monitor.yml](../.github/workflows/health-monitor.yml) (also defaults to workers.dev if unset) |
-| `STAGING_HEALTH_URL` | **Non-prod** Worker origin for Account-sync gate. Must **not** equal `PRODUCTION_HEALTH_URL`. When set, job `staging-account-sync` **fail-closes** unless `accountSyncEnabled` **and** `accountSyncTursoConfigured` are both `true` (`scripts/assert-staging-health.mjs`). Unset → summary **gate pending** (exit 0). |
+| `STAGING_HEALTH_URL` | Optional non-prod Worker origin. When set, `assert-staging-health` requires `ok: true` and **`accountSyncEnabled: false`** (product cancelled). Must **not** equal `PRODUCTION_HEALTH_URL`. |
 | `CHECKLIST_CI_WRITE` | Set to `0` to disable bot commits that append check:prod rows to LAUNCH_CHECKLIST |
 | `RUN_PLAYWRIGHT_SETTINGS` | Optional CI job `playwright-settings`. Keep **`false`** until offline Settings narrow (`npm run test:playwright:settings`) is green; only then `gh variable set RUN_PLAYWRIGHT_SETTINGS --body true`. |
 
-## Staging Account sync (Turso + mailer) — before prod flip
+## Account sync — cancelled
 
-Do **not** enable sync on production workers.dev. Use a separate staging Worker / preview. Gate checklist: [ACCOUNT_SYNC_GATE.md](ACCOUNT_SYNC_GATE.md). Record the green Actions run in [LAUNCH_CHECKLIST.md](LAUNCH_CHECKLIST.md) § D.
+Cloud Account sync is **not shipping**. See [ACCOUNT_SYNC_GATE.md](ACCOUNT_SYNC_GATE.md).
 
-### Wrangler vars (staging Worker)
-
-| Var | Value |
-|-----|--------|
-| `ACCOUNT_SYNC_ENABLED` | `1` |
-| `ACCOUNT_SYNC_REQUIRE_TURSO` | `1` (keep; never file store on Workers) |
-
-Use the **staging** env in `wrangler.jsonc` (Worker name `buusdocst-staging`, `ACCOUNT_SYNC_ENABLED=1`, `ACCOUNT_SYNC_DEV_RETURN_LINK=1`). Never copy those vars onto the top-level (prod) block.
-
-```bash
-# Deploy staging (after vinext/wrangler build — same pipeline as prod, different --env)
-# npx wrangler deploy --env staging
-
-npx wrangler secret put DATABASE_URL --env staging
-npx wrangler secret put DATABASE_AUTH_TOKEN --env staging
-npx wrangler secret put AUTH_MAGIC_SECRET --env staging
-npx wrangler secret put LISTS_ENC_KEY --env staging
-npx wrangler secret put AUTH_FROM_EMAIL --env staging
-# Mailer — pick one:
-npx wrangler secret put RESEND_API_KEY --env staging
-# OR
-# npx wrangler secret put POSTMARK_SERVER_TOKEN --env staging
-
-# Smoke (devLink JSON — staging only):
-# STAGING_HEALTH_URL=https://buusdocst-staging.<subdomain>.workers.dev npm run smoke:staging-magic-link
-# STRICT_STAGING=1 …  → hard-fail SKIP (unset URL / no Turso / no DEV_RETURN)
-```
-
-**STRICT_STAGING=1:** `smoke:staging-magic-link`, `smoke:account-exchange-e2e`, and `smoke:account-lists-bidirectional` exit **1** on SKIP (missing `STAGING_HEALTH_URL`, sync off, or no `devLink`). Default (unset) stays soft SKIP exit 0 so `check:desktop` stays green before the gate opens.
-
-| Secret | Purpose |
-|--------|---------|
-| `DATABASE_URL` | Turso / libsql URL |
-| `DATABASE_AUTH_TOKEN` | Turso auth token (if required by URL) |
-| `AUTH_MAGIC_SECRET` | Magic-link HMAC / signing |
-| `LISTS_ENC_KEY` | Encrypt list backups at rest |
-| `AUTH_FROM_EMAIL` | From address for magic links |
-| `RESEND_API_KEY` **or** `POSTMARK_SERVER_TOKEN` | Mailer |
-
-After deploy (Actions: **Deploy Cloudflare** → `target=staging`, or local `npm run deploy:cloudflare:staging`):
-
-1. Copy the exact workers.dev URL from the deploy log (form `https://buusdocst-staging.<subdomain>.workers.dev`) — **no placeholders**.
-2. Paste that exact URL into this doc under **Staging URL (live)** below, then:
-   ```bash
-   gh variable set STAGING_HEALTH_URL --repo otas0/buusdo-Cybersecurity-Service-Tool -b 'https://buusdocst-staging.<exact-subdomain>.workers.dev'
-   ```
-3. Actions → **Health monitor** or **Production health smoke** → job **staging health (account sync on)** green (`accountSyncEnabled` + `accountSyncTursoConfigured`).
-4. Paste the run URL into LAUNCH_CHECKLIST § D.
-5. STRICT + Exchange + toast sequence ([ACCOUNT_SYNC_GATE.md](ACCOUNT_SYNC_GATE.md)).
-
-### Staging URL (live)
-
-_Pending first `buusdocst-staging` deploy._ Replace this line with the exact origin (no `<subdomain>` placeholders):
-
-`STAGING_HEALTH_URL=` _(unset — set after deploy)_
-
-**Prod remains** `ACCOUNT_SYNC_ENABLED=0` until that checklist is complete.
-
-**This workstation (2026-11-02):** `buusdocst-staging` does not exist yet; Turso CLI / Resend keys absent; cannot `wrangler secret put` without your credentials. Repo Actions secrets still only `CLOUDFLARE_ACCOUNT_ID` (no API token / Slack / Turso). Leave LAUNCH_CHECKLIST § D `_pending_` until you run the secret puts + deploy above, then:
-
-```bash
-# After deploy prints the exact URL — substitute it here (must ≠ PRODUCTION_HEALTH_URL):
-export STAGING_HEALTH_URL='https://buusdocst-staging.<exact-subdomain>.workers.dev'
-gh variable set STAGING_HEALTH_URL --repo otas0/buusdo-Cybersecurity-Service-Tool -b "$STAGING_HEALTH_URL"
-STRICT_STAGING=1 STAGING_HEALTH_URL="$STAGING_HEALTH_URL" npm run smoke:staging-magic-link
-STRICT_STAGING=1 STAGING_HEALTH_URL="$STAGING_HEALTH_URL" npm run smoke:account-exchange-e2e
-STRICT_STAGING=1 STAGING_HEALTH_URL="$STAGING_HEALTH_URL" npm run smoke:account-lists-bidirectional
-# Local desktop toast+blockHost (uses staging token from exchange when configured):
-npm run smoke:desktop-auto-sync-toast
-gh workflow run "Health monitor" --repo otas0/buusdo-Cybersecurity-Service-Tool
-```
+- Prod + staging `wrangler.jsonc`: `ACCOUNT_SYNC_ENABLED=0` (no `ACCOUNT_SYNC_DEV_RETURN_LINK`)
+- Do **not** create Turso / Resend / Postmark / `AUTH_MAGIC_SECRET` / `LISTS_ENC_KEY` for sync
+- Optional staging Worker still useful for website preview; health must report `accountSyncEnabled: false`
 
 **Slack soft_warn:** set `SLACK_WEBHOOK_URL` ([HEALTH_ALERTS.md](HEALTH_ALERTS.md)); drill rate-limit: first `force_soft_slack=true` → `rateLimited=false`; second dispatch within 1h (without force, same soft_warn) → summary `rateLimited=true`.
 
@@ -133,7 +57,7 @@ gh workflow run "Health monitor" --repo otas0/buusdo-Cybersecurity-Service-Tool
 2. Actions → **Deploy Cloudflare** → **Run workflow** → choose `target=production` or `target=staging`.
 3. Leave site URL empty to use repo vars, or paste an override.
 4. Job must not fail on “Set secrets CLOUDFLARE_API_TOKEN and CLOUDFLARE_ACCOUNT_ID”.
-5. Production: `health:prod` + optional `check:prod` on **ubuntu-latest**. Staging: `assert-staging-health` (Turso fail-closed) when `STAGING_HEALTH_URL` / smoke URL is set.
+5. Production: `health:prod` + optional `check:prod` on **ubuntu-latest**. Staging: `assert-staging-health` requires sync **off** when `STAGING_HEALTH_URL` / smoke URL is set.
 6. Laptop CF timeout → trust Actions only ([LOCAL_CF_CONNECTIVITY.md](LOCAL_CF_CONNECTIVITY.md)).
 
 ## After first CI deploy

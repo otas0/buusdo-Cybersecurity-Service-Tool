@@ -58,7 +58,7 @@ async function main() {
   }
 
   if (data?.ok !== true) fail("ok !== true", data);
-  if (data?.service !== "preventive-shield") fail("service mismatch", data?.service);
+  if (data?.service !== "buusdocst") fail("service mismatch", data?.service);
   if (data?.threatIntel !== "own") fail("threatIntel must be own", data?.threatIntel);
   if (data?.thirdPartyReputation !== false) fail("thirdPartyReputation must be false");
   if (data?.curatedListPresent !== true) {

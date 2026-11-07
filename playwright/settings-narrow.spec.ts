@@ -480,26 +480,16 @@ test.describe("Settings narrow pt-PT", () => {
     );
   });
 
-  test("Settings account section visible; soft-assert sign-in when sync enabled", async ({ page }) => {
+  test("Settings has no Account sync section (product cancelled)", async ({ page }) => {
     if (!(await baseReachable())) {
       test.skip(true, `PLAYWRIGHT_BASE_URL unreachable: ${base}`);
       return;
     }
-    await page.goto(`${base}/en/settings#settings-account`, { waitUntil: "domcontentloaded" });
-    await page.waitForSelector("#settings-account, [data-testid=settings-account]", {
-      timeout: 15000
-    });
-    const account = page.getByTestId("settings-account");
-    await expect(account).toBeVisible();
+    await page.goto(`${base}/en/settings`, { waitUntil: "domcontentloaded" });
+    await expect(page.getByTestId("settings-account")).toHaveCount(0);
+    await expect(page.locator("#settings-account")).toHaveCount(0);
     const health = await page.request.get(`${base}/api/health`).then((r) => r.json());
-    if (health?.accountSyncEnabled === true) {
-      await expect(page.getByTestId("settings-account-signin")).toBeVisible({ timeout: 10000 });
-      await expect(page.getByTestId("settings-account-email")).toBeVisible();
-      console.info("[playwright] account sync enabled — sign-in CTA visible");
-    } else {
-      await expect(page.getByTestId("settings-account-disabled")).toBeVisible({ timeout: 10000 });
-      console.info("[playwright] account sync disabled (default) — disabled copy visible");
-    }
+    expect(health?.accountSyncEnabled).toBeFalsy();
   });
 
   test("locale toggle from Settings keeps #settings-desktop (shared SPA helper)", async ({ page }) => {

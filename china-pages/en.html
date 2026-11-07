@@ -54,11 +54,23 @@
           <a class="ghost-button" href="./install.html">Install</a>
           <a class="ghost-button" href="./privacy.html">Privacy</a>
         </div>
+        <div
+          id="workers-reach"
+          class="reach"
+          data-state="checking"
+          aria-live="polite"
+        >
+          <p class="reach-row">
+            <span class="reach-status" data-reach-status>Checking Workers…</span>
+          </p>
+          <p class="reach-detail" data-reach-detail></p>
+        </div>
       </section>
 
       <footer class="foot">
         <p>buusdo Cybersecurity Service Tool · GitHub Pages</p>
       </footer>
     </main>
+    <script src="./reachability.js" defer></script>
   </body>
 </html>

@@ -4,10 +4,9 @@
   "formalName": "buusdo Cybersecurity Service Tool",
   "tagline": "Cybersecurity Service Tool",
   "wordmarkPath": "/brand/buusdo-wordmark.png",
-  "wordmarkVectorPath": "/brand/buusdo-wordmark-vector.svg",
   "logoPath": "/brand/buusdo-logo.png",
   "markPath": "/brand/buusdo-mark.svg",
   "markHaltPath": "/brand/buusdo-mark-halt.svg",
   "faviconPath": "/favicon.svg",
-  "notes": "Buusdo is the product LINE. This repo’s PRODUCT is formalName (always use formalName in GitHub About, store listings, and user-facing UI). shortName is only for tight UI chrome. Web UI uses transparent dark-field wordmark/logo PNG (page --bg shows through); wordmark-vector.svg is a crisp geometric+type companion (not a pixel-perfect custom-font path). *-on-light.png is for light print/store plates only. Do not wrap .brand-logo in a white CSS background. Canonical live Worker is buusdocst only — pcpd/preventive-shield Workers deleted. Legacy on-disk folders/executables may still say Preventive Shield — do not rename those without a migrate plan. Custom-domain OG absolute URLs wait until the domain is live."
+  "notes": "Buusdo is the product LINE. This repo’s PRODUCT is formalName (always use formalName in GitHub About, store listings, and user-facing UI). shortName is only for tight UI chrome. Web UI uses transparent dark-field wordmark/logo PNG from npm run sync:brand-web. Drop designer path SVG at shared/brand/source/buusdo-wordmark-paths.svg when available — do not ship geometric fake wordmarks. *-on-light.png is for light print/store plates only. metadataBase/OG follow NEXT_PUBLIC_SITE_URL or shared/production-site.json (run production:origin when custom domain is live). Canonical Worker is buusdocst only."
 }
