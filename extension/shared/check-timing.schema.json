@@ -1,8 +1,8 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://preventiveshield.local/schemas/check-timing.json",
-  "title": "Preventive Shield analysis.timing",
-  "description": "Stage timings from POST /api/check. First-party only — no third-party reputation fields. Aligned with OpenAPI Preventive Shield check API version 1.5 (ambiguousProbeStatus required).",
+  "title": "buusdo Cybersecurity Service Tool analysis.timing",
+  "description": "Stage timings from POST /api/check. First-party only — no third-party reputation fields. Aligned with OpenAPI buusdo Cybersecurity Service Tool check API version 1.5 (ambiguousProbeStatus required).",
   "$comment": "openapi-align: 1.5",
   "version": "1.5",
   "type": "object",

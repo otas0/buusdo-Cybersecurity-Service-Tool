@@ -6,7 +6,7 @@ When you attach a real domain, do a **second** deploy so the client bundle knows
 ## 1. Attach the domain
 
 1. Cloudflare DNS for the zone (orange-cloud or CNAME to workers as required).
-2. Workers → **preventive-shield** → **Triggers / Custom Domains** → add the host.
+2. Workers → **buusdocst** → **Triggers / Custom Domains** → add the host.
 3. Wait for TLS active.
 
 ## 2. Pick one canonical host

@@ -67,7 +67,7 @@ Regenerate wrapper after a major manifest change:
 ```bash
 xcrun safari-web-extension-converter "$(pwd)" \
   --project-location "../safari" \
-  --app-name "buusdo" \
+  --app-name "buusdo Cybersecurity Service Tool" \
   --bundle-identifier "pt.community.preventiveshield" \
   --macos-only --swift --force --no-open --no-prompt
 ```

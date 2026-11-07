@@ -2,7 +2,7 @@
   "name": "portugal-cp-desktop-app",
   "version": "0.2.0",
   "private": true,
-  "description": "buusdo desktop MVP — scan this computer, ask maximum block, enforce via personal list + local proxy. Launcher + system browser.",
+  "description": "buusdo Cybersecurity Service Tool desktop — scan this computer, ask maximum block, enforce via personal list + local proxy. Launcher + system browser.",
   "main": "src/launcher.js",
   "scripts": {
     "start": "node src/server.js",

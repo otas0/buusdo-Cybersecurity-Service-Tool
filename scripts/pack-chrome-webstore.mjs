@@ -4,7 +4,7 @@
  *
  *   npm run pack:chrome-store
  *
- * Output: dist/chrome-webstore/preventive-shield-<version>.zip
+ * Output: dist/chrome-webstore/buusdo-cybersecurity-service-tool-<version>.zip
  * Strips localhost host_permissions and README for the store package.
  * Dev Load unpacked still uses the live extension/ folder unchanged.
  */
@@ -73,7 +73,7 @@ if (!manifest.host_permissions.some((h) => /pcpd\.mtsu\.workers\.dev/i.test(Stri
 writeFileSync(manifestPath, `${JSON.stringify(manifest, null, 2)}\n`, "utf8");
 
 const version = String(manifest.version || "0.0.0");
-const zipName = `preventive-shield-${version}.zip`;
+const zipName = `buusdo-cybersecurity-service-tool-${version}.zip`;
 const zipPath = join(outDir, zipName);
 
 execFileSync("zip", ["-r", "-q", zipPath, "."], { cwd: stage, stdio: "inherit" });

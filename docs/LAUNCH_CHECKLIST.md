@@ -29,7 +29,6 @@ Recorded via `npm run production:origin` → README + `shared/production-site.js
 
 | When (UTC) | Runner | Result | Notes |
 |------------|--------|--------|-------|
-| 2026-11-07 | github-actions/42360592651 | **OK** | `https://buusdocst.mtsu.workers.dev` — health+check · softDownloadWarn=5 · notarized=http-404 · https://github.com/otas0/buusdocst/actions/runs/42360592651 |
 | 2026-11-07 | github-actions/42331730285 | **OK** | `https://buusdocst.mtsu.workers.dev` — health+check · softDownloadWarn=5 · notarized=http-404 · https://github.com/otas0/buusdocst/actions/runs/42331730285 |
 | 2026-11-06 | github-actions/42311307397 | **OK** | `https://buusdocst.mtsu.workers.dev` — health+check · softDownloadWarn=5 · notarized=http-404 · https://github.com/otas0/buusdocst/actions/runs/42311307397 |
 | 2026-11-06 | github-actions/42269066625 | **OK** | `https://buusdocst.mtsu.workers.dev` — health+check · softDownloadWarn=5 · notarized=http-404 · https://github.com/otas0/buusdocst/actions/runs/42269066625 |

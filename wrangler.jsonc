@@ -1,6 +1,6 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
-  // Preventive Shield — Cloudflare Workers (vinext).
+  // buusdo Cybersecurity Service Tool — Cloudflare Workers (vinext).
   // Set CLOUDFLARE_ACCOUNT_ID in the environment, or uncomment account_id below.
   // "account_id": "YOUR_ACCOUNT_ID",
   // workers.dev URL = https://buusdocst.<account-subdomain>.workers.dev

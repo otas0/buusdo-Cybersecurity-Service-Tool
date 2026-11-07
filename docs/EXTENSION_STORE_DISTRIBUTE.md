@@ -23,7 +23,7 @@ Listing copy + screenshot captions: [`CHROME_STORE_LISTING_DRAFT.md`](./CHROME_S
 ```bash
 npm run extension:validate
 npm run pack:chrome-store
-# → dist/chrome-webstore/preventive-shield-<version>.zip
+# → dist/chrome-webstore/buusdo-cybersecurity-service-tool-<version>.zip
 ```
 
 The zip:
@@ -82,9 +82,9 @@ Redeploy website → Settings **Get on Mac App Store**.
 
 ### User steps (public copy)
 
-1. Open the **Mac App Store** → search **buusdo** → Get.
+1. Open the **Mac App Store** → search **buusdo Cybersecurity Service Tool** → Get.
 2. Open the app once if prompted.
-3. Safari → **Settings → Extensions** → enable **buusdo**.
+3. Safari → **Settings → Extensions** → enable **buusdo Cybersecurity Service Tool**.
 4. Pin the toolbar button → open an https page → **Run**.
 
 ---

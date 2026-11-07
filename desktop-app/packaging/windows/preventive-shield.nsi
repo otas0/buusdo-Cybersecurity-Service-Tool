@@ -41,10 +41,10 @@ Section "Install"
   nsExec::ExecToLog '"$INSTDIR\node.exe" "$INSTDIR\app\src\launcher.js" --install'
   Pop $0
 
-  CreateDirectory "$SMPROGRAMS\buusdo"
-  CreateShortCut "$SMPROGRAMS\buusdo\buusdo.lnk" \
+  CreateDirectory "$SMPROGRAMS\buusdo Cybersecurity Service Tool"
+  CreateShortCut "$SMPROGRAMS\buusdo Cybersecurity Service Tool\buusdo Cybersecurity Service Tool.lnk" \
     "$INSTDIR\node.exe" '"$INSTDIR\app\src\launcher.js"' "$INSTDIR\app\public\favicon.ico" 0
-  CreateShortCut "$DESKTOP\buusdo.lnk" \
+  CreateShortCut "$DESKTOP\buusdo Cybersecurity Service Tool.lnk" \
     "$INSTDIR\node.exe" '"$INSTDIR\app\src\launcher.js"'
 
   ; Explicitly do not touch HKCU Run.
@@ -52,6 +52,10 @@ Section "Install"
 SectionEnd
 
 Section "Uninstall"
+  Delete "$SMPROGRAMS\buusdo Cybersecurity Service Tool\buusdo Cybersecurity Service Tool.lnk"
+  Delete "$DESKTOP\buusdo Cybersecurity Service Tool.lnk"
+  RMDir "$SMPROGRAMS\buusdo Cybersecurity Service Tool"
+  ; Also remove short-name shortcuts if present
   Delete "$SMPROGRAMS\buusdo\buusdo.lnk"
   Delete "$DESKTOP\buusdo.lnk"
   RMDir "$SMPROGRAMS\buusdo"
