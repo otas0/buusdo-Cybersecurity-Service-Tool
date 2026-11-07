@@ -8,7 +8,7 @@ Until a custom domain replaces workers.dev, the **only** public links are:
 |---------|-----|
 | Canonical product | `https://buusdocst.mtsu.workers.dev` |
 | Privacy (EN) | `https://buusdocst.mtsu.workers.dev/en/privacy` |
-| Privacy (pt-PT) | `https://buusdocst.mtsu.workers.dev/pt-PT/privacy` (optional second locale link) |
+| Privacy (optional locale) | `https://buusdocst.mtsu.workers.dev/pt-PT/privacy` |
 | China entry (GitHub Pages) | `https://otas0.github.io/buusdocst/` — explain/privacy/install when Workers is hard to reach ([CHINA_GITHUB_PAGES.md](CHINA_GITHUB_PAGES.md)) |
 
 After a custom domain, `npm run production:origin -- https://YOUR_CANONICAL` rewrites this table. Also set GitHub `NEXT_PUBLIC_SITE_URL` + `PRODUCTION_HEALTH_URL` ([CUSTOM_DOMAIN_REDEPLOY.md](CUSTOM_DOMAIN_REDEPLOY.md)).
@@ -23,14 +23,24 @@ China entry (GitHub Pages): https://otas0.github.io/buusdocst/
 Privacy: https://buusdocst.mtsu.workers.dev/en/privacy
 ```
 
-## Ready-to-paste (pt-PT)
+## Ready-to-paste (alternate locale)
 
 ```
 buusdo Cybersecurity Service Tool (linha Buusdo).
 Verifique um site antes de confiar.
 Produto (Workers): https://buusdocst.mtsu.workers.dev
 Entrada China (GitHub Pages): https://otas0.github.io/buusdocst/
-Privacidade: https://buusdocst.mtsu.workers.dev/pt-PT/privacy
+Privacidade: https://buusdocst.mtsu.workers.dev/en/privacy
+```
+
+## Ready-to-paste (中文)
+
+```
+buusdo Cybersecurity Service Tool（Buusdo 产品线）。
+访问网站前先核查地址。
+产品（Workers）：https://buusdocst.mtsu.workers.dev
+中国入口（GitHub Pages）：https://otas0.github.io/buusdocst/
+隐私：https://buusdocst.mtsu.workers.dev/en/privacy
 ```
 
 ## Do

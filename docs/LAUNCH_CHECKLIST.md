@@ -19,6 +19,7 @@ Recorded via `npm run production:origin` → README + `shared/production-site.js
 - [x] Health (remote): `ok`, **`curatedListPresent: true`**, `accountSyncEnabled: false` (2026-11-01)
 - [x] **`check:prod`** against the origin — **OK** via GitHub ubuntu ([41285063357](https://github.com/otas0/buusdo-Cybersecurity-Service-Tool/actions/runs/41285063357)) + CF-reachable browser. Local laptop still TCP-timeouts `*.workers.dev` ([LOCAL_CF_CONNECTIVITY.md](LOCAL_CF_CONNECTIVITY.md)). Log below.
 - [x] `npm run production:origin -- https://buusdocst.mtsu.workers.dev` committed
+- [x] OG / social: Facebook Sharing Debugger + Twitter Card Validator on `https://buusdocst.mtsu.workers.dev` — `og:image` → `https://buusdocst.mtsu.workers.dev/og.png` (2026-11-07)
 - [ ] Custom domain attached on the Worker + TLS green ([CUSTOM_DOMAIN_REDEPLOY.md](CUSTOM_DOMAIN_REDEPLOY.md))
 - [ ] One canonical host only ([CANONICAL_HOST.md](CANONICAL_HOST.md)) — when custom domain exists
 - [ ] `NEXT_PUBLIC_SITE_URL=https://YOUR_DOMAIN` set for the **second** deploy build
@@ -64,7 +65,7 @@ Recorded via `npm run production:origin` → README + `shared/production-site.js
 - [x] Watch repo (otas0 subscribed 2026-11-01); enable Actions failure email in GitHub notification settings if not already; optional secret `SLACK_WEBHOOK_URL` (unset)
 - [ ] Cloudflare Workers error + CPU alert emails — enable then **send a test** ([CLOUDFLARE_ALERTS.md](CLOUDFLARE_ALERTS.md)) — needs signed-in CF dashboard (GitHub OAuth login started; complete in browser)
 - [ ] Capture Workers error/CPU baseline screenshots ([WORKERS_ERROR_BASELINE.md](WORKERS_ERROR_BASELINE.md) → `ops/workers-baselines/`) — needs CF Metrics (worker **buusdocst**)
-- [ ] Actions → **Deploy Cloudflare** secrets: `CLOUDFLARE_ACCOUNT_ID` **set**; `CLOUDFLARE_API_TOKEN` **still needed** ([DEPLOY_SECRETS.md](DEPLOY_SECRETS.md)); `NEXT_PUBLIC_SITE_URL` set to `https://buusdocst.mtsu.workers.dev`
+- [x] Actions → **Deploy Cloudflare** secrets: `CLOUDFLARE_ACCOUNT_ID` **set**; `CLOUDFLARE_API_TOKEN` **set** (2026-11-07) ([DEPLOY_SECRETS.md](DEPLOY_SECRETS.md)); `NEXT_PUBLIC_SITE_URL` set to `https://buusdocst.mtsu.workers.dev` — run **Deploy Cloudflare** once to confirm token scopes
 
 
 ## D. Product defaults (first launch)

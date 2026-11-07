@@ -144,6 +144,12 @@ app.use(express.static(path.join(ROOT, "public"), staticHeaders));
 
 app.get("/api/state", async (_req, res) => {
   const lists = await listsStore.getLists();
+  let version = null;
+  try {
+    version = String(require(path.join(ROOT, "package.json")).version || "") || null;
+  } catch {
+    version = null;
+  }
   res.json({
     ok: true,
     state: state.snapshot(),
@@ -158,6 +164,7 @@ app.get("/api/state", async (_req, res) => {
     platform: process.platform,
     trayAvailable: trayAvailable(),
     quitGraceMs: quitGraceMs(),
+    version,
     lists
   });
 });

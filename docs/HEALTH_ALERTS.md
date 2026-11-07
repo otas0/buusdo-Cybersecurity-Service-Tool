@@ -20,8 +20,8 @@ When **Health monitor** fails, GitHub emails subscribed watchers. No extra secre
    # paste webhook URL, then:
    gh workflow run "Health monitor" --repo otas0/buusdo-Cybersecurity-Service-Tool -f force_soft_slack=true
    ```
-3. On **health/check failure** the workflow POSTs a short text payload with the run URL (failure alert).
-4. On **soft desktop download HEAD warnings** (count > 0, including notarized HEAD ≠ 200) the workflow POSTs an **information notice only** — the job stays green; this is not a page. Body includes RELEASE promote hint when notarized kind is `http-404` (`desktop-app/RELEASE.md` steps 2-3). Notices are **rate-limited to once per hour** when `soft_warn` is unchanged (cache key); a changed warn count always notifies. When skipped, the job summary includes `rateLimited=true`. Workflow_dispatch **force_soft_slack** bypasses the rate limit for ops drills. If `SLACK_WEBHOOK_URL` is unset, the summary still records `rateLimited=false|skipped-no-webhook`.
+3. On **health/check failure** the workflow POSTs a short text payload with the run URL (failure alert). Body always includes `service=buusdocst` (Worker name).
+4. On **soft desktop download HEAD warnings** (count > 0, including notarized HEAD ≠ 200) the workflow POSTs an **information notice only** — the job stays green; this is not a page. Body includes `service=buusdocst` + RELEASE promote hint when notarized kind is `http-404` (`desktop-app/RELEASE.md` steps 2-3). Notices are **rate-limited to once per hour** when `soft_warn` is unchanged (cache key); a changed warn count always notifies. When skipped, the job summary includes `rateLimited=true`. Workflow_dispatch **force_soft_slack** bypasses the rate limit for ops drills. If `SLACK_WEBHOOK_URL` is unset, the summary still records `rateLimited=false|skipped-no-webhook`.
 
 ### Soft_warn rate-limit drill (after webhook is set)
 

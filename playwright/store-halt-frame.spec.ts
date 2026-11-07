@@ -1,12 +1,18 @@
 /**
- * Capture a Halt readout frame for Chrome Web Store screenshots.
+ * Cross-check Halt readout fixture (Chromium) vs committed Sharp FRAME.
+ * Structural hash floors — never overwrites Sharp FRAME unless STORE_HALT_OVERWRITE=1.
  *
  *   PLAYWRIGHT_SKIP_WEBSERVER=1 npx playwright test playwright/store-halt-frame.spec.ts
  */
 import { createServer } from "node:http";
-import { readFileSync, mkdirSync } from "node:fs";
+import { readFileSync, mkdirSync, existsSync, statSync } from "node:fs";
 import { join } from "node:path";
 import { expect, test } from "@playwright/test";
+import {
+  haltFrameStats,
+  assertHaltFrameFloors,
+  assertHaltFrameRelativeFloor,
+} from "../scripts/store-halt-frame-stats.mjs";
 
 const root = process.cwd();
 const wordmark = readFileSync(
@@ -90,7 +96,17 @@ const html = `<!doctype html>
 </body>
 </html>`;
 
-test("capture Chrome store Halt FRAME", async ({ page }) => {
+test("cross-check Chrome store Halt FRAME (Playwright vs Sharp floors)", async ({
+  page,
+}) => {
+  const committed = join(root, "docs/store-screenshots/FRAME-formal-name.png");
+  expect(existsSync(committed), "committed Sharp FRAME-formal-name.png missing").toBeTruthy();
+  expect(statSync(committed).size).toBeGreaterThan(8_000);
+
+  const sharpStats = await haltFrameStats(committed);
+  const sharpFails = assertHaltFrameFloors(sharpStats, "sharp");
+  expect(sharpFails, sharpFails.join("; ")).toEqual([]);
+
   const server = createServer((_req, res) => {
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8" });
     res.end(html);
@@ -99,13 +115,26 @@ test("capture Chrome store Halt FRAME", async ({ page }) => {
   const { port } = server.address() as { port: number };
   const outDir = join(root, "docs/store-screenshots");
   mkdirSync(outDir, { recursive: true });
-  const outPath = join(outDir, "FRAME-formal-name.png");
+  const crossPath = join(outDir, "FRAME-formal-name.playwright.png");
+  const overwrite = process.env.STORE_HALT_OVERWRITE === "1";
   try {
     await page.setViewportSize({ width: 1280, height: 800 });
     await page.goto(`http://127.0.0.1:${port}/`);
     await expect(page.getByTestId("store-halt-frame")).toBeVisible();
     await expect(page.getByText("Halt")).toBeVisible();
-    await page.screenshot({ path: outPath, type: "png" });
+    await expect(page.getByText("buusdo Cybersecurity Service Tool")).toBeVisible();
+    const bg = await page.evaluate(() => getComputedStyle(document.body).backgroundColor);
+    expect(bg).toMatch(/rgb\(\s*14,\s*14,\s*14\s*\)|#0e0e0e/i);
+    await page.screenshot({ path: crossPath, type: "png" });
+    if (overwrite) {
+      await page.screenshot({ path: committed, type: "png" });
+    }
+
+    const pwStats = await haltFrameStats(crossPath);
+    const pwFails = assertHaltFrameFloors(pwStats, "playwright");
+    expect(pwFails, pwFails.join("; ")).toEqual([]);
+    const relFails = assertHaltFrameRelativeFloor(sharpStats, pwStats);
+    expect(relFails, relFails.join("; ")).toEqual([]);
   } finally {
     await new Promise<void>((resolve, reject) =>
       server.close((err) => (err ? reject(err) : resolve())),

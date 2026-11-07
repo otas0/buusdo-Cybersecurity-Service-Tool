@@ -48,6 +48,8 @@ yarn-error.log*
 /playwright/report/
 /test-results/
 /playwright-report/
+# Playwright Halt cross-check artifact (Sharp FRAME-*.png stay committed)
+/docs/store-screenshots/FRAME-formal-name.playwright.png
 
 # TypeScript incremental cache
 *.tsbuildinfo

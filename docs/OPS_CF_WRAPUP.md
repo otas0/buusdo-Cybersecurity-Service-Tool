@@ -44,7 +44,7 @@ PNGs stay local (gitignored). Update NOTES with Deployments version id.
 | Item | Status |
 |------|--------|
 | `CLOUDFLARE_ACCOUNT_ID` (GH) | Set earlier (verify with `gh secret list`) |
-| `CLOUDFLARE_API_TOKEN` (GH) | Operator paste required |
+| `CLOUDFLARE_API_TOKEN` (GH) | **Set** 2026-11-07 (`gh secret list`) — run **Deploy Cloudflare** once to confirm scopes |
 | Error/CPU emails | Operator dashboard |
 | Metrics PNGs | Operator dashboard |
 | China Pages | [CHINA_GITHUB_PAGES.md](CHINA_GITHUB_PAGES.md) |

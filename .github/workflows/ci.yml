@@ -73,6 +73,20 @@ jobs:
       - name: Formal product name (README + brand.json)
         run: npm run assert:formal-name
 
+      - name: Store Halt/Clear/Hold FRAME (Sharp drift guard)
+        run: |
+          npm run capture:store-halt-frame
+          if ! git diff --quiet -- \
+            docs/store-screenshots/FRAME-formal-name.png \
+            docs/store-screenshots/FRAME-clear.png \
+            docs/store-screenshots/FRAME-hold.png; then
+            echo "::error::Committed FRAME PNGs drifted from capture:store-halt-frame — regenerate and commit"
+            git status --short -- docs/store-screenshots/FRAME-*.png
+            git diff --stat -- docs/store-screenshots/FRAME-*.png
+            exit 1
+          fi
+          echo "::notice::FRAME Halt/Clear/Hold match capture:store-halt-frame"
+
       - name: Typecheck
         run: npm run typecheck
 
@@ -407,6 +421,8 @@ jobs:
         run: npm ci || npm install --no-fund --no-audit
       - name: Install Playwright Chromium (DOM Standby in proxy smoke)
         run: npx playwright install --with-deps chromium
+      - name: Store Halt FRAME Playwright cross-check
+        run: npm run capture:store-halt-frame:playwright
       - name: quarantine focus-visible Tab smoke
         run: npm run test:playwright:quarantine-focus
       - name: npm run mvp
@@ -613,6 +629,10 @@ jobs:
           PLAYWRIGHT_BASE_URL: ${{ vars.PLAYWRIGHT_BASE_URL || 'http://localhost:3000' }}
           STRICT_LEAVE_AND_BLOCK: "1"
           RUN_PLAYWRIGHT_SETTINGS: "true"
+
+      - name: Store Halt FRAME Playwright cross-check
+        if: steps.pw_install.outcome == 'success'
+        run: npm run capture:store-halt-frame:playwright
 
       - name: Account sync (cancelled — soft skip)
         id: pw_account

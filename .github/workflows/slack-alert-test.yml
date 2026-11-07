@@ -9,7 +9,7 @@ on:
       message:
         description: "Optional custom text"
         required: false
-        default: "Preventive Shield Slack test — health alerts wired."
+        default: "buusdo Cybersecurity Service Tool Slack test — service=buusdocst health alerts wired."
 
 jobs:
   ping:

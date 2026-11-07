@@ -1,5 +1,7 @@
-UTC=pending
-operator=pending
+UTC=2026-11-07
+operator=pending-dashboard
 action=Delete any Cloudflare Notification policies still scoped to Workers pcpd or preventive-shield.
 keep=buusdocst error rate + CPU only.
 screenshot=add buusdocst-notifications.png + no-pcpd-policies.png after dashboard cleanup.
+status=Workers pcpd + preventive-shield already deleted (2026-11-07). Notification policies are dashboard-only (no Wrangler API) — open Account → Notifications, filter pcpd / preventive-shield, delete leftovers, then drop screenshots here.
+blockers=Requires interactive Cloudflare session (GitHub OAuth / email). Automation cannot purge policies.

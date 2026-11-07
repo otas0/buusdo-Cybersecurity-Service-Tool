@@ -43,6 +43,7 @@ const els = {
   dataDirHint: document.getElementById("dataDirHint"),
   dataDirCopy: document.getElementById("dataDirCopy"),
   trayHint: document.getElementById("trayHint"),
+  footAboutText: document.getElementById("footAboutText"),
   logTitle: document.getElementById("logTitle"),
   logHint: document.getElementById("logHint"),
   blockLog: document.getElementById("blockLog"),
@@ -254,6 +255,8 @@ let websiteCheckHost = "localhost:3000";
 
 /** @type {'en'|'pt-PT'} */
 let lang = "en";
+/** Desktop package version from /api/state (footer about line). */
+let desktopAppVersion = "";
 /** @type {object|null} */
 let currentState = null;
 /** @type {object|null} */
@@ -296,6 +299,11 @@ function applyI18n() {
   }
   if (els.trayHint && !els.trayHint.hidden) {
     els.trayHint.textContent = t(lang, "trayHintMissing");
+  }
+  if (els.footAboutText) {
+    els.footAboutText.textContent = desktopAppVersion
+      ? t(lang, "footAboutVersion", { version: desktopAppVersion })
+      : t(lang, "footAbout");
   }
   els.logTitle.textContent = t(lang, "logTitle");
   els.logHint.textContent = t(lang, "logHint");
@@ -703,6 +711,14 @@ async function fetchState() {
     const missing = data.trayAvailable === false;
     els.trayHint.hidden = !missing;
     if (missing) els.trayHint.textContent = t(lang, "trayHintMissing");
+  }
+  if (typeof data.version === "string" && data.version) {
+    desktopAppVersion = data.version;
+  }
+  if (els.footAboutText) {
+    els.footAboutText.textContent = desktopAppVersion
+      ? t(lang, "footAboutVersion", { version: desktopAppVersion })
+      : t(lang, "footAbout");
   }
   if (typeof data.websiteHealthPollMs === "number" && data.websiteHealthPollMs >= 5000) {
     websiteHealthPollMs = data.websiteHealthPollMs;

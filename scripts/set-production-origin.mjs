@@ -3,22 +3,92 @@
  * Record the live Cloudflare origin after first successful deploy.
  *
  *   npm run production:origin -- https://buusdocst.mtsu.workers.dev
- *   npm run production:origin -- https://shield.example.com
+ *   npm run production:origin -- https://buusdocst.mtsu.workers.dev --check-github-vars
+ *   npm run production:origin -- --check-github-vars
  *
  * Updates: shared/production-origin.mjs, shared/production-site.json, README.md production block.
+ * Optional --check-github-vars: gh variable list vs NEXT_PUBLIC_SITE_URL + PRODUCTION_HEALTH_URL.
  */
 import { readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 
 const root = process.cwd();
-const urlArg = process.argv[2] || process.env.PRODUCTION_ORIGIN || "";
+const argv = process.argv.slice(2);
+const checkGithubVars = argv.includes("--check-github-vars");
+const urlArg =
+  argv.find((a) => a !== "--check-github-vars") ||
+  process.env.PRODUCTION_ORIGIN ||
+  "";
 const origin = String(urlArg)
   .trim()
   .replace(/\/$/, "");
 
+async function checkGithubActionVars(expectedOrigin) {
+  const { execFile } = await import("node:child_process");
+  const { promisify } = await import("node:util");
+  const execFileAsync = promisify(execFile);
+  const want = String(expectedOrigin || "").replace(/\/$/, "");
+  if (!want) {
+    console.error("[production:origin] --check-github-vars needs an origin URL");
+    process.exit(1);
+  }
+  try {
+    const { stdout } = await execFileAsync(
+      "gh",
+      ["variable", "list", "--json", "name,value"],
+      { cwd: root, timeout: 20_000 },
+    );
+    const rows = JSON.parse(stdout || "[]");
+    const map = Object.fromEntries(
+      (Array.isArray(rows) ? rows : []).map((r) => [r.name, String(r.value || "").replace(/\/$/, "")]),
+    );
+    let failed = false;
+    for (const key of ["NEXT_PUBLIC_SITE_URL", "PRODUCTION_HEALTH_URL"]) {
+      const got = map[key] || "";
+      if (!got) {
+        console.error(`[production:origin] GitHub var ${key} is unset — set to ${want}`);
+        failed = true;
+      } else if (got !== want) {
+        console.error(
+          `[production:origin] GitHub var ${key}=${got} ≠ expected ${want}`,
+        );
+        failed = true;
+      } else {
+        console.info(`[production:origin] GitHub var ${key} OK (${got})`);
+      }
+    }
+    if (failed) process.exit(1);
+  } catch (err) {
+    console.error(
+      "[production:origin] gh variable list failed:",
+      err instanceof Error ? err.message : err,
+    );
+    process.exit(1);
+  }
+}
+
+if (checkGithubVars && !origin) {
+  // Allow: npm run production:origin -- --check-github-vars  (uses production-site.json)
+  try {
+    const site = JSON.parse(
+      readFileSync(join(root, "shared/production-site.json"), "utf8"),
+    );
+    const fromSite = String(site.productionOrigin || "").replace(/\/$/, "");
+    if (!fromSite) throw new Error("productionOrigin empty");
+    await checkGithubActionVars(fromSite);
+    process.exit(0);
+  } catch (err) {
+    console.error(
+      "[production:origin] --check-github-vars without URL needs shared/production-site.json",
+      err instanceof Error ? err.message : err,
+    );
+    process.exit(1);
+  }
+}
+
 if (!/^https:\/\/[^\s/]+/i.test(origin)) {
   console.error(
-    "Usage: npm run production:origin -- https://buusdocst.mtsu.workers.dev"
+    "Usage: npm run production:origin -- https://buusdocst.mtsu.workers.dev [--check-github-vars]"
   );
   process.exit(1);
 }
@@ -141,4 +211,13 @@ console.info("[production:origin] GitHub Actions — set BOTH repo variables (Se
 console.info(`  NEXT_PUBLIC_SITE_URL=${origin}`);
 console.info(`  PRODUCTION_HEALTH_URL=${origin}`);
 console.info("Then Actions → Deploy Cloudflare (production) so OG/metadataBase bake the canonical host.");
-console.info("After deploy: Facebook Sharing Debugger / Twitter Card Validator on ${origin}/og.png");
+console.info(
+  `After deploy: Facebook Sharing Debugger / Twitter Card Validator on ${origin}/og.png`,
+);
+console.info(
+  `Verify vars: npm run production:origin -- ${origin} --check-github-vars`,
+);
+
+if (checkGithubVars) {
+  await checkGithubActionVars(origin);
+}

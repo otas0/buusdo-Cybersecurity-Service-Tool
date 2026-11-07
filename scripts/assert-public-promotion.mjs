@@ -1,6 +1,6 @@
 /**
  * Assert docs/PUBLIC_PROMOTION.md paste-ready fenced blocks never advertise
- * legacy or local hosts.
+ * legacy or local hosts, and include China Pages entry.
  */
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
@@ -40,9 +40,15 @@ for (let i = 0; i < blocks.length; i += 1) {
     );
     failed = true;
   }
+  if (!/otas0\.github\.io\/buusdocst/.test(block)) {
+    console.error(
+      `[assert-public-promotion] paste block #${i + 1} missing China Pages otas0.github.io/buusdocst`,
+    );
+    failed = true;
+  }
 }
 
 if (failed) process.exit(1);
 console.info(
-  `[assert-public-promotion] OK ${blocks.length} paste blocks (no illegal hosts)`,
+  `[assert-public-promotion] OK ${blocks.length} paste blocks (canonical + China Pages)`,
 );

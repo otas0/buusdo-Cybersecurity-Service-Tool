@@ -1,5 +1,5 @@
 /**
- * Bilingual strings — EN / European Portuguese.
+ * UI strings — locale packs (en, pt-PT).
  * Kept aligned with extension/shared/i18n.js (desktop-specific keys added).
  */
 
@@ -33,6 +33,8 @@ export const STRINGS = {
     dataDirCopiedClipboard: "Data folder path copied (clipboard).",
     dataDirCopiedPrompt: "Data folder path ready (manual copy).",
     trayHintMissing: "Optional tray not installed — run npm i systray2 in desktop-app, or use Quit here.",
+    footAbout: "buusdo Cybersecurity Service Tool",
+    footAboutVersion: "buusdo Cybersecurity Service Tool · v{version}",
     privacyHint:
       "Default: nothing is stored. Diagnostics only help fix technical problems — never the address, and never for public release. Open at login stays off until you turn it on.",
     lastScan: "Last",
@@ -156,10 +158,11 @@ export const STRINGS = {
     accountSyncMerged: "Lists merged with cloud.",
     accountSyncFail: "Sync failed: {error}",
     accountDisabled: "Account sync off on website server.",
-    accountOfflineBackup: "Offline backup: file path / Syncthing / QR (no account required).",
+    accountOfflineBackup:
+      "Offline: export JSON/QR, or sync shield-backup.json (USB / Drive / Syncthing). One writer at a time — if both devices edit, re-export from the copy you trust.",
     listsTitle: "Personal lists",
     listsHint:
-      "Block/trust on this device. Export JSON (shield-lists-v1) or Account sync — USB, Drive, or Syncthing watching data/shield-backup.json.",
+      "Block/trust on this device. Export JSON (shield-lists-v1) or sync data/shield-backup.json via USB, Drive, or Syncthing (one writer at a time).",
     listsBlocked: "Blocked",
     listsTrusted: "Trusted",
     listsEmpty: "Empty.",
@@ -275,6 +278,8 @@ export const STRINGS = {
     dataDirCopiedClipboard: "Caminho da pasta de dados copiado (área de transferência).",
     dataDirCopiedPrompt: "Caminho da pasta de dados pronto (cópia manual).",
     trayHintMissing: "Tabuleiro opcional em falta — em desktop-app execute npm i systray2, ou use Sair aqui.",
+    footAbout: "buusdo Cybersecurity Service Tool",
+    footAboutVersion: "buusdo Cybersecurity Service Tool · v{version}",
     privacyHint:
       "Predefinição: nada é guardado. O diagnóstico só ajuda a corrigir problemas técnicos — nunca o endereço, e nunca para divulgação pública. Abrir no início de sessão fica desligado até o ativar.",
     lastScan: "Última",
@@ -398,10 +403,11 @@ export const STRINGS = {
     accountSyncMerged: "Listas fundidas com a nuvem.",
     accountSyncFail: "Falha na sincronização: {error}",
     accountDisabled: "Sincronização de conta desligada no servidor do site.",
-    accountOfflineBackup: "Cópia offline: caminho / Syncthing / QR (sem conta).",
+    accountOfflineBackup:
+      "Offline: exportar JSON/QR, ou sincronizar shield-backup.json (USB / Drive / Syncthing). Um escritor de cada vez — se ambos editarem, volte a exportar a cópia em que confia.",
     listsTitle: "Listas pessoais",
     listsHint:
-      "Bloquear/confiar neste dispositivo. Exporte JSON (shield-lists-v1) ou Conta — USB, Drive ou Syncthing em data/shield-backup.json.",
+      "Bloquear/confiar neste dispositivo. Exporte JSON (shield-lists-v1) ou sincronize data/shield-backup.json via USB, Drive ou Syncthing (um escritor de cada vez).",
     listsBlocked: "Bloqueados",
     listsTrusted: "Confiança",
     listsEmpty: "Vazio.",

@@ -194,6 +194,13 @@ a {
   color: var(--bg);
 }
 
+.shell .primary-button.is-disabled,
+.shell a.primary-button.is-disabled {
+  opacity: 0.45;
+  pointer-events: none;
+  cursor: not-allowed;
+}
+
 .shell .ghost-button {
   display: inline-flex;
   align-items: center;
@@ -246,6 +253,10 @@ a {
   letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--muted);
+}
+
+.shell .reach[data-state="soft-fail"] .reach-status {
+  color: #d4a574; /* caution — reachable but wrong service */
 }
 
 .shell .reach[data-state="ok"] .reach-status {

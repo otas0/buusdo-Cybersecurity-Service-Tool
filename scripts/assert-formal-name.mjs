@@ -57,4 +57,52 @@ if (!pack.includes("buusdo-cybersecurity-service-tool-")) {
   process.exit(1);
 }
 
+const shortDesc = listing.match(/## Short description \(EN\)\s*\n\n([\s\S]*?)\n\n##/);
+if (shortDesc && /\bsync\b/i.test(shortDesc[1])) {
+  console.error("[assert-formal-name] Chrome short description must not mention sync");
+  process.exit(1);
+}
+
+/** Optional: GitHub About must not say "(separate product)" when gh is available. */
+async function checkGithubDescription() {
+  if (process.env.ASSERT_SKIP_GITHUB_DESCRIPTION === "1") {
+    console.info("[assert-formal-name] skip GitHub description (ASSERT_SKIP_GITHUB_DESCRIPTION=1)");
+    return;
+  }
+  const { execFile } = await import("node:child_process");
+  const { promisify } = await import("node:util");
+  const execFileAsync = promisify(execFile);
+  try {
+    const { stdout } = await execFileAsync(
+      "gh",
+      ["repo", "view", "--json", "description", "-q", ".description"],
+      { cwd: root, timeout: 15_000 },
+    );
+    const desc = String(stdout || "").trim();
+    if (!desc) {
+      console.info("[assert-formal-name] GitHub description empty — skip");
+      return;
+    }
+    if (/separate\s+product/i.test(desc)) {
+      console.error(
+        '[assert-formal-name] GitHub repo description still contains "separate product" — remove it',
+      );
+      process.exit(1);
+    }
+    if (!desc.includes(formal) && !desc.toLowerCase().includes("buusdo cybersecurity service tool")) {
+      console.error(
+        `[assert-formal-name] GitHub description should mention formalName; got: ${desc.slice(0, 120)}`,
+      );
+      process.exit(1);
+    }
+    console.info("[assert-formal-name] GitHub description OK");
+  } catch (err) {
+    console.info(
+      "[assert-formal-name] gh unavailable — skip GitHub description check",
+      err instanceof Error ? err.message.split("\n")[0] : err,
+    );
+  }
+}
+
+await checkGithubDescription();
 console.info(`[assert-formal-name] OK formalName=${JSON.stringify(formal)}`);

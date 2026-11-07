@@ -78,7 +78,32 @@ const zipPath = join(outDir, zipName);
 
 execFileSync("zip", ["-r", "-q", zipPath, "."], { cwd: stage, stdio: "inherit" });
 
+// Listing shot bundle (not inside the extension zip) — Halt + Clear/Hold shot 2 pair.
+const shotDir = join(outDir, "listing-screenshots");
+mkdirSync(shotDir, { recursive: true });
+const frames = [
+  "FRAME-formal-name.png",
+  "FRAME-clear.png",
+  "FRAME-hold.png",
+];
+for (const name of frames) {
+  const from = join(root, "docs", "store-screenshots", name);
+  if (!existsSync(from)) {
+    console.error(`[pack:chrome-store] missing store FRAME ${name} — run npm run capture:store-halt-frame`);
+    process.exit(1);
+  }
+  cpSync(from, join(shotDir, name));
+}
+{
+  const draft = readFileSync(join(root, "docs", "CHROME_STORE_LISTING_DRAFT.md"), "utf8");
+  const chunk =
+    draft.split("## Screenshot captions")[1]?.split("## Privacy policy URL")[0]?.trim() ||
+    "See docs/CHROME_STORE_LISTING_DRAFT.md";
+  writeFileSync(join(shotDir, "CAPTIONS.txt"), `${chunk}\n`, "utf8");
+}
+
 console.info(`[pack:chrome-store] OK ${zipPath}`);
+console.info(`[pack:chrome-store] listing shots → ${shotDir} (Halt + Clear/Hold shot 2)`);
 console.info(
   "[pack:chrome-store] Upload in Chrome Web Store Developer Dashboard → new item / package"
 );

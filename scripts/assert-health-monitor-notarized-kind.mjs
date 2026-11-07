@@ -40,5 +40,8 @@ if (!yml.includes("gate pending")) {
 if (!yml.includes("RELEASE_HINT") || !yml.includes("steps 2–3")) {
   fail("health-monitor.yml soft Slack must include RELEASE_HINT / RELEASE steps 2–3");
 }
+if (!yml.includes("service=buusdocst")) {
+  fail("health-monitor.yml Slack alert text must include service=buusdocst");
+}
 
 console.log("assert-health-monitor-notarized-kind ok");
