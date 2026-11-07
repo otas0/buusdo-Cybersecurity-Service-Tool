@@ -2,6 +2,12 @@
 
 Use with `npm run pack:chrome-store` and [EXTENSION_STORE_DISTRIBUTE.md](./EXTENSION_STORE_DISTRIBUTE.md).
 
+## Store name (required)
+
+**buusdo Cybersecurity Service Tool**
+
+Do not list the item as only “buusdo”. Zip artifact: `buusdo-cybersecurity-service-tool-<version>.zip`.
+
 ## Short description (EN)
 
 Check a website before you trust it — first-party threat list, EN / Portuguese (Portugal).

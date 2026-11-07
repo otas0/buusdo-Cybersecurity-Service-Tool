@@ -43,6 +43,7 @@ Privacidade: https://buusdocst.mtsu.workers.dev/pt-PT/privacy
 ## Do not
 
 - Call this product just “Buusdo” (that is the line, not this product)
+- Use short **“buusdo”** alone as the product name in posts, store titles, or press — always **buusdo Cybersecurity Service Tool** (shortName is UI chrome only)
 - Advertise both `www` and apex
 - Link localhost, preview URLs, or alternate workers.dev hostnames
 - Promote Account sync while it is off ([ACCOUNT_SYNC_GATE.md](ACCOUNT_SYNC_GATE.md))

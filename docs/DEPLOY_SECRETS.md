@@ -15,8 +15,8 @@ Workflow: [.github/workflows/deploy-cloudflare.yml](../.github/workflows/deploy-
 2. Use template **Edit Cloudflare Workers**, or custom:
    - Account → Workers Scripts → Edit
    - Account → Account Settings → Read (often needed)
-3. Account resources → include the account that owns Worker **`pcpd`**.
-4. Create → copy once → paste into GitHub `CLOUDFLARE_API_TOKEN`.
+3. Account resources → include the account that owns Worker **`buusdocst`** (and later **`buusdocst-staging`**).
+4. Create → copy once → paste into GitHub `CLOUDFLARE_API_TOKEN` (**never** paste the token into chat).
 
 **Status (2026-11-07):** `CLOUDFLARE_ACCOUNT_ID` is set on `otas0/buusdocst`. **`CLOUDFLARE_API_TOKEN` is still missing** — Deploy Cloudflare (prod + staging) cannot run from Actions until **you** paste a dashboard token (this agent cannot invent or retrieve it). Turso / mailer / `STAGING_HEALTH_URL` / `SLACK_WEBHOOK_URL` also unset:
 

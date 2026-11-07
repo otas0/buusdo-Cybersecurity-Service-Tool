@@ -56,10 +56,16 @@ jobs:
           cd desktop-app && ARCH=amd64 npm run pack:linux
           test -f dist/linux/preventive-shield_${{ needs.resolve-tag.outputs.version }}_amd64.deb \
             || test -f dist/linux/preventive-shield_0.2.0_amd64.deb
+          # Gradual rename: publish buusdo-prefixed copy alongside legacy build output
+          VER="${{ needs.resolve-tag.outputs.version }}"
+          src=$(ls dist/linux/preventive-shield_*_amd64.deb | head -1)
+          cp -f "$src" "dist/linux/buusdo-cybersecurity-service-tool_${VER}_amd64.deb"
       - uses: actions/upload-artifact@v4
         with:
           name: release-linux-deb
-          path: desktop-app/dist/linux/preventive-shield_*_amd64.deb
+          path: |
+            desktop-app/dist/linux/buusdo-cybersecurity-service-tool_*_amd64.deb
+            desktop-app/dist/linux/preventive-shield_*_amd64.deb
 
   windows:
     needs: resolve-tag
@@ -81,6 +87,8 @@ jobs:
           mkdir -p dist/windows
           makensis packaging/windows/preventive-shield.nsi
           test -f dist/windows/PreventiveShield-Setup-User.exe
+          cp -f dist/windows/PreventiveShield-Setup-User.exe \
+            dist/windows/buusdo-cybersecurity-service-tool-Setup-User.exe
       - name: Sign Windows NSIS (Authenticode) when secrets present
         shell: pwsh
         env:
@@ -98,15 +106,20 @@ jobs:
           }
           $pfx = Join-Path $env:RUNNER_TEMP "shield-win.pfx"
           [IO.File]::WriteAllBytes($pfx, [Convert]::FromBase64String($env:WIN_CERT_PFX_BASE64))
-          & signtool sign /f $pfx /p $env:WIN_CERT_PFX_PASSWORD /fd SHA256 /tr http://timestamp.digicert.com /td SHA256 $exe
-          if ($LASTEXITCODE -ne 0) { throw "signtool failed" }
-          & signtool verify /pa $exe
-          if ($LASTEXITCODE -ne 0) { throw "signtool verify failed" }
-          Write-Host "Signed + verified $exe"
+          $exe2 = Join-Path $PWD "desktop-app/dist/windows/buusdo-cybersecurity-service-tool-Setup-User.exe"
+          foreach ($target in @($exe, $exe2)) {
+            & signtool sign /f $pfx /p $env:WIN_CERT_PFX_PASSWORD /fd SHA256 /tr http://timestamp.digicert.com /td SHA256 $target
+            if ($LASTEXITCODE -ne 0) { throw "signtool failed for $target" }
+            & signtool verify /pa $target
+            if ($LASTEXITCODE -ne 0) { throw "signtool verify failed for $target" }
+            Write-Host "Signed + verified $target"
+          }
       - uses: actions/upload-artifact@v4
         with:
           name: release-windows-nsis
-          path: desktop-app/dist/windows/PreventiveShield-Setup-User.exe
+          path: |
+            desktop-app/dist/windows/buusdo-cybersecurity-service-tool-Setup-User.exe
+            desktop-app/dist/windows/PreventiveShield-Setup-User.exe
 
   macos:
     needs: resolve-tag
@@ -126,11 +139,15 @@ jobs:
           ditto -c -k --sequesterRsrc --keepParent \
             "dist/macos/Preventive Shield.app" \
             "dist/macos/PreventiveShield-macos-app.zip"
-          test -f dist/macos/PreventiveShield-macos-app.zip
+          cp -f dist/macos/PreventiveShield-macos-app.zip \
+            dist/macos/buusdo-cybersecurity-service-tool-macos-app.zip
+          test -f dist/macos/buusdo-cybersecurity-service-tool-macos-app.zip
       - uses: actions/upload-artifact@v4
         with:
           name: release-macos-zip
-          path: desktop-app/dist/macos/PreventiveShield-macos-app.zip
+          path: |
+            desktop-app/dist/macos/buusdo-cybersecurity-service-tool-macos-app.zip
+            desktop-app/dist/macos/PreventiveShield-macos-app.zip
 
   publish:
     needs: [resolve-tag, linux, windows, macos]
@@ -166,8 +183,10 @@ jobs:
           VER: ${{ needs.resolve-tag.outputs.version }}
         run: |
           BASE="https://github.com/otas0/buusdocst/releases/download/${TAG}"
-          echo "windowsNsisUrl=${BASE}/PreventiveShield-Setup-User.exe"
-          echo "macosAppZipUrl=${BASE}/PreventiveShield-macos-app-notarized.zip  # after desktop-notarize-macos"
-          echo "macosAppZipUrlUnsigned=${BASE}/PreventiveShield-macos-app.zip"
-          echo "linuxDebAmd64Url=${BASE}/preventive-shield_${VER}_amd64.deb"
-          echo "Update shared/desktop-downloads.json on main if the tag/version changed."
+          echo "Preferred (formal prefix):"
+          echo "windowsNsisUrl=${BASE}/buusdo-cybersecurity-service-tool-Setup-User.exe"
+          echo "macosAppZipUrl=${BASE}/buusdo-cybersecurity-service-tool-macos-app-notarized.zip  # after notarize + rename"
+          echo "macosAppZipUrlUnsigned=${BASE}/buusdo-cybersecurity-service-tool-macos-app.zip"
+          echo "linuxDebAmd64Url=${BASE}/buusdo-cybersecurity-service-tool_${VER}_amd64.deb"
+          echo "Legacy filenames still uploaded this cycle for continuity."
+          echo "Update shared/desktop-downloads.json on main to the buusdo-cybersecurity-service-tool-* URLs when ready."

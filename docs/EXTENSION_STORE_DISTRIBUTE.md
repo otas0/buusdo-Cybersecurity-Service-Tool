@@ -16,7 +16,9 @@ Website Settings reads those URLs as primary buttons.
 
 ## Chrome Web Store
 
-Listing copy + screenshot captions: [`CHROME_STORE_LISTING_DRAFT.md`](./CHROME_STORE_LISTING_DRAFT.md).
+**Item name:** `buusdo Cybersecurity Service Tool` (never short “buusdo” alone).  
+Listing copy + screenshot captions: [`CHROME_STORE_LISTING_DRAFT.md`](./CHROME_STORE_LISTING_DRAFT.md).  
+Screenshot frames must show the formal name (see `docs/store-screenshots/`).
 
 ### Package
 
@@ -79,6 +81,11 @@ npm run safari:archive
 ```
 
 Redeploy website → Settings **Get on Mac App Store**.
+
+### App Store Connect display name
+
+**Name / subtitle:** `buusdo Cybersecurity Service Tool`  
+Xcode `INFOPLIST_KEY_CFBundleDisplayName` is already set to the same string (app + extension targets). On-disk project folders may still say `Preventive Shield` — do not rename without a migrate plan.
 
 ### User steps (public copy)
 

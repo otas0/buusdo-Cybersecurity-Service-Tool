@@ -1,38 +1,46 @@
-# GitHub SSH (avoid github.com:443 git timeouts)
+# GitHub SSH (stable push when HTTPS :443 times out)
 
-When `git fetch`/`git push` over HTTPS times out but `gh api` / `api.github.com` works, switch the repo remote to SSH.
+`github.com:443` HTTPS git often times out on this laptop. Prefer **SSH via `ssh.github.com:443`** with the **buusdocst deploy key** — not the whole-tree Contents API push.
 
 ## Status (this laptop)
 
-- Key: `~/.ssh/id_ed25519_shield` (+ `.pub`)
-- Deploy key on `otas0/buusdocst`: **write**, title `buusdocst-laptop` (rename in Settings → Deploy keys if still labeled `preventive-shield-laptop`)
-- `~/.ssh/config` → `Host github.com` via `ssh.github.com:443` + that IdentityFile
-- `origin` → `git@github.com:otas0/buusdocst.git` (`ssh -T` OK)
+- Key: `~/.ssh/id_ed25519_shield` (comment `preventive-shield-laptop`; fingerprint authenticates as `otas0/buusdocst`, **write** enabled)
+- Deploy key on `otas0/buusdocst`: **Allow write access** — rename title in UI to `buusdocst-laptop` if still labeled `preventive-shield-laptop` (API rename may 404)
+- **Do not** put `id_ed25519_buusdo` first for this repo — that key is bound to **another** Buusdo-line repo and causes `Permission denied to deploy key`
+- Host alias + remote:
 
-## One-time setup (other machines)
-
-```bash
-ssh-keygen -t ed25519 -C "preventive-shield-laptop" -f ~/.ssh/id_ed25519_shield -N ""
-# Add .pub as a GitHub deploy key (Allow write) or user SSH key
-cat > ~/.ssh/config <<'EOF'
-Host github.com
+```text
+Host github.com-buusdocst
   HostName ssh.github.com
   User git
   Port 443
   IdentityFile ~/.ssh/id_ed25519_shield
   IdentitiesOnly yes
-EOF
-git remote set-url origin git@github.com:otas0/buusdocst.git
-ssh -T git@github.com && git fetch origin
+  IdentityAgent none
 ```
 
-**Note:** Port **443** to `ssh.github.com` often works when `github.com:443` git HTTPS is filtered. Deploy keys are **repo-scoped**.
+```bash
+git remote set-url origin git@github.com-buusdocst:otas0/buusdocst.git
+ssh -T git@github.com-buusdocst   # expect: Hi otas0/buusdocst!
+git fetch origin && git push origin HEAD
+```
+
+## One-time setup (other machines)
+
+```bash
+ssh-keygen -t ed25519 -C "buusdocst-laptop" -f ~/.ssh/id_ed25519_shield -N ""
+# GitHub → otas0/buusdocst → Settings → Deploy keys → Add (Allow write access)
+# Append the Host github.com-buusdocst block above to ~/.ssh/config
+git remote set-url origin git@github.com-buusdocst:otas0/buusdocst.git
+ssh -T git@github.com-buusdocst && git fetch origin
+```
 
 ## Hold
 
-Do **not** generate keys or rewrite remotes from CI. Operator laptop only.
+- Do **not** generate keys or rewrite remotes from CI.
+- Prefer `git push` over SSH. Use `node scripts/push-via-github-api.mjs` **only** as last resort (slow whole-tree upload).
 
 ## Related
 
-- Content sync without git: `node scripts/push-via-github-api.mjs` (API)
-- Local CF timeout ≠ outage: [LOCAL_CF_CONNECTIVITY.md](LOCAL_CF_CONNECTIVITY.md) — use Actions **Production health**
+- Local CF timeout ≠ outage: [LOCAL_CF_CONNECTIVITY.md](LOCAL_CF_CONNECTIVITY.md)
+- Workers formal name note: [OPS_CF_WRAPUP.md](OPS_CF_WRAPUP.md)

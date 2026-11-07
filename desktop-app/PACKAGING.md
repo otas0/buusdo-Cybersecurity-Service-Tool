@@ -31,6 +31,8 @@ Optional later: system WebView wrapper (e.g. WebviewJS). Electron remains an exp
 
 Contains `shield-backup.json`, `quarantine/`, `machine-decision.json`, `settings.json`, `instance.lock`. Override with `SHIELD_DATA_DIR` / `SHIELD_LISTS_PATH`.
 
+User-facing product name is **buusdo Cybersecurity Service Tool**; the folder names above are **legacy on-disk paths**. Optional rename plan: [DESKTOP_DATA_DIR_MIGRATE.md](../docs/DESKTOP_DATA_DIR_MIGRATE.md).
+
 ## Open at login
 
 Default **off**. `settings.json` → `openAtLogin: false`. Enabling writes:

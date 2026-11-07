@@ -70,6 +70,9 @@ jobs:
           fi
           echo "::notice::Playwright LEAVE_AND_BLOCK fixture host present in curated-threats.json ($host)"
 
+      - name: Formal product name (README + brand.json)
+        run: npm run assert:formal-name
+
       - name: Typecheck
         run: npm run typecheck
 
