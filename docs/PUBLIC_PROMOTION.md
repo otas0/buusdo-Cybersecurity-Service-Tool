@@ -7,6 +7,7 @@ Until a custom domain replaces workers.dev, the **only** public links are:
 | Canonical product | `https://pcpd.mtsu.workers.dev` |
 | Privacy (EN) | `https://pcpd.mtsu.workers.dev/en/privacy` |
 | Privacy (pt-PT) | `https://pcpd.mtsu.workers.dev/pt-PT/privacy` (optional second locale link) |
+| China entry (GitHub Pages) | `https://otas0.github.io/preventive-cybersecurity-prototype/` — explain/privacy/install when Workers is hard to reach ([CHINA_GITHUB_PAGES.md](CHINA_GITHUB_PAGES.md)) |
 
 After a custom domain, `npm run production:origin -- https://YOUR_CANONICAL` rewrites this table. Also set GitHub `NEXT_PUBLIC_SITE_URL` + `PRODUCTION_HEALTH_URL` ([CUSTOM_DOMAIN_REDEPLOY.md](CUSTOM_DOMAIN_REDEPLOY.md)).
 
