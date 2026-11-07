@@ -11,29 +11,13 @@ When **Health monitor** fails, GitHub emails subscribed watchers. No extra secre
 
 **Status (2026-11-01):** Repo subscription for `otas0` is **on** (`subscribed: true`). Confirm the account’s **Settings → Notifications → Actions** still includes workflow failures (cannot set that toggle via API without `user` scope).
 
-## Slack (optional)
+## Slack — skipped
 
-1. Create an Incoming Webhook for your ops channel.
-2. Repo → Settings → Secrets → Actions → `SLACK_WEBHOOK_URL` (**still unset** 2026-11-07 — Slack alert test run 42370269849 failed Require webhook; soft_warn exits `skipped-no-webhook`).
-   ```bash
-   gh secret set SLACK_WEBHOOK_URL --repo otas0/buusdo-Cybersecurity-Service-Tool
-   # paste Incoming Webhook URL (operator-created; automation cannot invent it), then:
-   gh workflow run "Slack alert test" --repo otas0/buusdo-Cybersecurity-Service-Tool
-   gh workflow run "Health monitor" --repo otas0/buusdo-Cybersecurity-Service-Tool -f force_soft_slack=true
-   ```
-3. On **health/check failure** the workflow POSTs a short text payload with the run URL (failure alert). Body always includes `service=buusdocst` (Worker name).
-4. On **soft desktop download HEAD warnings** (count > 0, including notarized HEAD ≠ 200) the workflow POSTs an **information notice only** — the job stays green; this is not a page. Body includes `service=buusdocst` + RELEASE promote hint when notarized kind is `http-404` (`desktop-app/RELEASE.md` steps 2-3). Notices are **rate-limited to once per hour** when `soft_warn` is unchanged (cache key); a changed warn count always notifies. When skipped, the job summary includes `rateLimited=true`. Workflow_dispatch **force_soft_slack** bypasses the rate limit for ops drills. If `SLACK_WEBHOOK_URL` is unset, the summary still records `rateLimited=false|skipped-no-webhook`.
+**Decision (2026-11-07):** do **not** configure `SLACK_WEBHOOK_URL`. Product ops uses GitHub Actions email / repository Watch only. Soft_warn jobs exit `skipped-no-webhook` — that is expected, not a launch blocker.
 
-### Soft_warn rate-limit drill (after webhook is set)
+Notarized HEAD soft_warns are also expected while the ship channel stays on the **unsigned** GitHub zip ([DESKTOP_SETUP_GUIDE.md](DESKTOP_SETUP_GUIDE.md)).
 
-```bash
-# 1) Force a notice (bypasses 1h gate) — expect summary rateLimited=false
-gh workflow run "Health monitor" --repo otas0/buusdo-Cybersecurity-Service-Tool -f force_soft_slack=true
-# 2) Within 1h, dispatch again WITHOUT force — expect summary rateLimited=true (same soft_warn)
-gh workflow run "Health monitor" --repo otas0/buusdo-Cybersecurity-Service-Tool
-```
-
-**Do not confuse workflows:** **Health monitor** = soft_warn + Slack + notarized HEAD + checklist write-back. **Production health smoke** = thin `/api/health` + `/api/check` only (no soft_warn Slack path).
+**Do not confuse workflows:** **Health monitor** = soft_warn + optional Slack + download HEAD + checklist write-back. **Production health smoke** = thin `/api/health` + `/api/check` only.
 
 ## Checklist write-back
 

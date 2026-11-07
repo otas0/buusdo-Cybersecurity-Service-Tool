@@ -20,6 +20,7 @@ const REQUIRED = [
   "desktopDownloadLinux",
   "desktopDownloadSoon",
   "desktopDownloadPackaging",
+  "desktopDownloadSetupGuide",
   "desktopDownloadRelease",
   "desktopDownloadReleaseTag",
   "desktopDownloadSourceCdn",
@@ -41,6 +42,7 @@ for (const key of [
   "macosAppZipUrlNotarized",
   "linuxDebAmd64Url",
   "packagingDocsUrl",
+  "setupGuideUrl",
   "releaseNotesUrl",
   "releaseTag",
   "mirrors"
@@ -85,6 +87,14 @@ for (const key of REQUIRED) {
 const settingsPanel = readFileSync(path.join(root, "components/SettingsPanel.tsx"), "utf8");
 if (!settingsPanel.includes('data-testid="settings-desktop-mac-cdn-desc"')) {
   console.error("SettingsPanel missing settings-desktop-mac-cdn-desc (CDN SR hook)");
+  failed += 1;
+}
+if (!settingsPanel.includes('data-testid="settings-desktop-setup-guide"')) {
+  console.error("SettingsPanel missing settings-desktop-setup-guide (unsigned setup guide)");
+  failed += 1;
+}
+if (!String(downloads.setupGuideUrl || "").includes("DESKTOP_SETUP_GUIDE")) {
+  console.error("shared/desktop-downloads.json setupGuideUrl must point at DESKTOP_SETUP_GUIDE.md");
   failed += 1;
 }
 

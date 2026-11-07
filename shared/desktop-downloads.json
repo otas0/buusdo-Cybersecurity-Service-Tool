@@ -1,10 +1,11 @@
 {
   "windowsNsisUrl": "https://github.com/otas0/buusdo-Cybersecurity-Service-Tool/releases/download/desktop-v0.2.0/buusdo-cybersecurity-service-tool-Setup-User.exe",
   "macosAppZipUrl": "https://github.com/otas0/buusdo-Cybersecurity-Service-Tool/releases/download/desktop-v0.2.0/buusdo-cybersecurity-service-tool-macos-app.zip",
-  "macosAppZipUrlNotarized": "https://github.com/otas0/buusdo-Cybersecurity-Service-Tool/releases/download/desktop-v0.2.0/buusdo-cybersecurity-service-tool-macos-app-notarized.zip",
+  "macosAppZipUrlNotarized": "",
   "macosAppZipUrlUnsigned": "https://github.com/otas0/buusdo-Cybersecurity-Service-Tool/releases/download/desktop-v0.2.0/buusdo-cybersecurity-service-tool-macos-app.zip",
   "linuxDebAmd64Url": "https://github.com/otas0/buusdo-Cybersecurity-Service-Tool/releases/download/desktop-v0.2.0/buusdo-cybersecurity-service-tool_0.2.0_amd64.deb",
   "packagingDocsUrl": "https://github.com/otas0/buusdo-Cybersecurity-Service-Tool/blob/main/desktop-app/PACKAGING.md",
+  "setupGuideUrl": "https://github.com/otas0/buusdo-Cybersecurity-Service-Tool/blob/main/docs/DESKTOP_SETUP_GUIDE.md",
   "releaseNotesUrl": "https://github.com/otas0/buusdo-Cybersecurity-Service-Tool/blob/main/desktop-app/RELEASE.md",
   "releaseTag": "desktop-v0.2.0",
   "mirrors": {
@@ -12,5 +13,5 @@
     "macosAppZipUrl": "",
     "linuxDebAmd64Url": ""
   },
-  "notes": "macosAppZipUrl is the Settings primary link (GitHub Release). Prefer the notarized asset only after HEAD 200 for macosAppZipUrlNotarized (Actions → desktop-promote-macos-url, or: node scripts/verify-desktop-download-urls.mjs --write-effective). Until then primary stays on the unsigned zip. Set mirrors.macosAppZipUrl only when a CDN (or other durable mirror) should be HEAD-checked and offered first; leave GitHub macosAppZipUrl as the fallback primary in this file — never clear the GitHub URL when adding a mirror. Leave other mirrors.* empty unless GitHub rate limits require a CDN."
+  "notes": "Ship unsigned GitHub Release assets as Settings primary. macosAppZipUrlNotarized stays empty — notarization / desktop-promote-macos-url are out of scope. Point users at setupGuideUrl (Gatekeeper / SmartScreen). Leave mirrors.* empty unless a CDN is required."
 }

@@ -40,21 +40,22 @@ export const messages = {
     privacyPolicyUpdated: "Last reviewed: 2026-11-07 · website launch",
     desktopDownloadsTitle: "Desktop app downloads",
     desktopDownloadsIntro:
-      "Install buusdo on this computer (browser shell + tray). Open-at-login stays off until you enable it.",
+      "Install buusdo on this computer from the GitHub Release (browser shell + tray). Builds are unsigned — see the setup guide. Open-at-login stays off until you enable it.",
     desktopDownloadWindows: "Windows installer (NSIS)",
     desktopDownloadMac: "macOS app (zip)",
     desktopDownloadLinux: "Linux amd64 (.deb)",
     desktopDownloadSoon: "Build from Actions (artifact soon)",
     desktopDownloadPackaging: "Packaging docs",
+    desktopDownloadSetupGuide: "Setup guide (unsigned)",
     desktopDownloadRelease: "Desktop release notes",
     desktopDownloadReleaseTag: "Release {tag}",
     desktopDownloadSourceCdn: "CDN mirror",
     desktopDownloadSourceGithub: "GitHub",
     desktopDownloadMacSource: "macOS source: {source}",
     desktopDownloadUnsignedUntilPromote:
-      "macOS zip is unsigned until notarized HEAD 200 — then promote Settings primary (desktop-promote-macos-url).",
+      "Unsigned build (not notarized). macOS may block the first open — follow the setup guide (xattr / Privacy & Security). Windows SmartScreen may warn Unknown publisher.",
     desktopDownloadReadyToPromote:
-      "Notarized zip is live (HEAD 200) but Settings still points at the unsigned primary — run desktop-promote-macos-url.",
+      "Legacy note: notarized promote is not used on this ship path — keep the unsigned GitHub zip as primary.",
     desktopHonestLimitsLink: "Desktop honest limits",
     privacyDesktopMirrorNote:
       "Desktop macOS download: CDN mirror is live; GitHub Release remains the documented fallback.",
@@ -353,21 +354,22 @@ export const messages = {
     privacyPolicyUpdated: "Última revisão: 2026-11-07 · lançamento do site",
     desktopDownloadsTitle: "Transferências da app de ambiente de trabalho",
     desktopDownloadsIntro:
-      "Instale o buusdo neste computador (browser + tabuleiro). Abrir ao iniciar sessão fica desligado até o ativar.",
+      "Instale o buusdo neste computador a partir do GitHub Release (browser + tabuleiro). As builds não estão assinadas — veja o guia de instalação. Abrir ao iniciar sessão fica desligado até o ativar.",
     desktopDownloadWindows: "Instalador Windows (NSIS)",
     desktopDownloadMac: "App macOS (zip)",
     desktopDownloadLinux: "Linux amd64 (.deb)",
     desktopDownloadSoon: "Compilar a partir do Actions (artefacto em breve)",
     desktopDownloadPackaging: "Documentação de empacotamento",
+    desktopDownloadSetupGuide: "Guia de instalação (não assinado)",
     desktopDownloadRelease: "Notas de lançamento da app",
     desktopDownloadReleaseTag: "Lançamento {tag}",
     desktopDownloadSourceCdn: "Espelho CDN",
     desktopDownloadSourceGithub: "GitHub",
     desktopDownloadMacSource: "Origem macOS: {source}",
     desktopDownloadUnsignedUntilPromote:
-      "O zip macOS não está notarizado até HEAD 200 — depois promova a ligação principal em Definições (desktop-promote-macos-url).",
+      "Build não assinada (sem notarização). No macOS o primeiro open pode ser bloqueado — siga o guia (xattr / Privacidade e segurança). No Windows o SmartScreen pode avisar de editor desconhecido.",
     desktopDownloadReadyToPromote:
-      "O zip notarizado está disponível (HEAD 200), mas Definições ainda aponta para o primário não assinado — execute desktop-promote-macos-url.",
+      "Nota legada: a promoção notarizada não é usada neste canal — mantenha o zip não assinado do GitHub como primário.",
     desktopHonestLimitsLink: "Limites honestos da app",
     privacyDesktopMirrorNote:
       "Transferência macOS: o espelho CDN está ativo; o GitHub Release continua a ser o fallback documentado.",

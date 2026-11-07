@@ -78,7 +78,7 @@ Scripts: `packaging/macos/build-app.sh`, `sign-notarize.sh`, `entitlements.plist
 4. Gatekeeper: clean VM, non-admin account — first launch scans, no LaunchAgent unless the user enabled open-at-login.
 5. No `com.apple.security.get-task-allow` in release entitlements.
 
-Do not ship unsigned downloads as the production channel.
+**Public ship channel (current):** unsigned GitHub Release zips/installers. User Gatekeeper / SmartScreen steps: [`docs/DESKTOP_SETUP_GUIDE.md`](../docs/DESKTOP_SETUP_GUIDE.md). Apple notarization / Developer ID are **out of scope** for this path — do not block website launch on `NOTARIZED_HEAD_OK`.
 
 ## Windows — NSIS / MSIX and WebView2
 

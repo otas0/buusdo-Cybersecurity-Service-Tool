@@ -71,6 +71,7 @@ const DESKTOP_WIN_URL = desktopUrl(desktopDownloads.windowsNsisUrl, "windowsNsis
 const DESKTOP_MAC_URL = desktopUrl(desktopDownloads.macosAppZipUrl, "macosAppZipUrl");
 const DESKTOP_LINUX_URL = desktopUrl(desktopDownloads.linuxDebAmd64Url, "linuxDebAmd64Url");
 const DESKTOP_PACKAGING_URL = String(desktopDownloads.packagingDocsUrl || STORE_DOCS_URL).trim();
+const DESKTOP_SETUP_GUIDE_URL = String(desktopDownloads.setupGuideUrl || DESKTOP_PACKAGING_URL).trim();
 const DESKTOP_RELEASE_URL = String(desktopDownloads.releaseNotesUrl || DESKTOP_PACKAGING_URL).trim();
 const DESKTOP_RELEASE_TAG = String(desktopDownloads.releaseTag || "").trim();
 
@@ -213,11 +214,12 @@ export function SettingsPanel({
     const primary = String(downloads.macosAppZipUrl || "").trim();
     const notarized = String(downloads.macosAppZipUrlNotarized || "").trim();
     const unsigned = String(downloads.macosAppZipUrlUnsigned || "").trim();
+    const primaryIsNotarized = Boolean(notarized && primary === notarized);
     const notPromoted =
       Boolean(notarized) &&
       ((unsigned && primary === unsigned) || (primary && primary !== notarized));
-    // Optimistic static note; soft HEAD below may upgrade to ready-to-promote.
-    setMacPromoteNote(notPromoted ? "unsigned-until-promote" : "none");
+    // Unsigned GitHub ship: show Gatekeeper/SmartScreen note whenever primary is not notarized.
+    setMacPromoteNote(primary && !primaryIsNotarized ? "unsigned-until-promote" : "none");
     let cancelled = false;
     void fetch("/api/desktop-downloads/status")
       .then((r) => r.json())
@@ -227,7 +229,7 @@ export function SettingsPanel({
           raw && typeof raw === "object" ? (raw as { macNote?: string }) : null;
         if (data?.macNote === "ready-to-promote" || data?.macNote === "unsigned-until-promote") {
           setMacPromoteNote(data.macNote);
-        } else if (!notPromoted) {
+        } else if (!(primary && !primaryIsNotarized) && !notPromoted) {
           setMacPromoteNote("none");
         }
       })
@@ -722,6 +724,16 @@ export function SettingsPanel({
           </p>
         ) : null}
         <p className="hint">
+          <a
+            className="text-button"
+            href={DESKTOP_SETUP_GUIDE_URL}
+            target="_blank"
+            rel="noreferrer"
+            data-testid="settings-desktop-setup-guide"
+          >
+            {t.desktopDownloadSetupGuide}
+          </a>
+          {" · "}
           <a className="text-button" href={DESKTOP_PACKAGING_URL} target="_blank" rel="noreferrer">
             {t.desktopDownloadPackaging}
           </a>

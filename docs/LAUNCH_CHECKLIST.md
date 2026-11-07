@@ -64,7 +64,7 @@ Recorded via `npm run production:origin` → README + `shared/production-site.js
 
 - [x] Repo variable `PRODUCTION_HEALTH_URL=https://buusdocst.mtsu.workers.dev` (otas0/buusdo-Cybersecurity-Service-Tool)
 - [x] Actions → **Production health** run is green — [41285063357](https://github.com/otas0/buusdo-Cybersecurity-Service-Tool/actions/runs/41285063357) (`check:prod` on ubuntu). Full checklist bot write awaits next push of local `health-monitor.yml`.
-- [x] Watch repo (otas0 subscribed 2026-11-01); enable Actions failure email in GitHub notification settings if not already; optional secret `SLACK_WEBHOOK_URL` (unset)
+- [x] Watch repo (otas0 subscribed 2026-11-01); enable Actions failure email in GitHub notification settings if not already; Slack webhook **skipped** (do not set)
 - [ ] Cloudflare Workers error + CPU alert emails — enable then **send a test** ([CLOUDFLARE_ALERTS.md](CLOUDFLARE_ALERTS.md)) — needs signed-in CF dashboard (GitHub OAuth login started; complete in browser)
 - [ ] Capture Workers error/CPU baseline screenshots ([WORKERS_ERROR_BASELINE.md](WORKERS_ERROR_BASELINE.md) → `ops/workers-baselines/`) — needs CF Metrics (worker **buusdocst**)
 - [x] Actions → **Deploy Cloudflare** secrets: `CLOUDFLARE_ACCOUNT_ID` **set**; `CLOUDFLARE_API_TOKEN` **set** (2026-11-07) ([DEPLOY_SECRETS.md](DEPLOY_SECRETS.md)); `NEXT_PUBLIC_SITE_URL` set to `https://buusdocst.mtsu.workers.dev` — token scopes confirmed green ([42369768115](https://github.com/otas0/buusdo-Cybersecurity-Service-Tool/actions/runs/42369768115))
@@ -76,7 +76,7 @@ Recorded via `npm run production:origin` → README + `shared/production-site.js
 - [x] No Turso / Resend / Postmark Account-sync secrets — do not add them
 - [x] Staging STRICT Account smokes retired (workflow notice only)
 - [x] **Local CF timeout:** when the laptop cannot reach `*.workers.dev`, use GitHub Actions **Production health** only ([LOCAL_CF_CONNECTIVITY.md](LOCAL_CF_CONNECTIVITY.md)) — do not treat laptop curl timeout as an outage
-- [x] Holds: custom domain **independent of Account sync** ([CUSTOM_DOMAIN_REDEPLOY.md](CUSTOM_DOMAIN_REDEPLOY.md) + [POST_LAUNCH_48H.md](POST_LAUNCH_48H.md)); notarized promote until HEAD 200 + `NOTARIZED_HEAD_OK=1`; `RUN_PLAYWRIGHT_SETTINGS=false` until Settings narrow offline green; laptop CF → Actions only. Product: **buusdo Cybersecurity Service Tool** (Buusdo **line**, separate product).
+- [x] Holds: custom domain **independent of Account sync** ([CUSTOM_DOMAIN_REDEPLOY.md](CUSTOM_DOMAIN_REDEPLOY.md) + [POST_LAUNCH_48H.md](POST_LAUNCH_48H.md)); desktop ship = **unsigned** GitHub Release ([DESKTOP_SETUP_GUIDE.md](DESKTOP_SETUP_GUIDE.md)) — notarize/promote out of scope; Slack skipped; laptop CF → Actions only. Product: **buusdo Cybersecurity Service Tool** (Buusdo **line**, separate product).
 - [x] Offline list path documented: [OFFLINE_LIST_SYNC.md](OFFLINE_LIST_SYNC.md)
 - [x] **Desktop CI (unblocked):** [41440440022](https://github.com/otas0/buusdo-Cybersecurity-Service-Tool/actions/runs/41440440022) (`6b5ac83`) — `desktop-linux`, `desktop-macos`, `desktop-windows` all green.
 - [x] Privacy pages live: `/en/privacy`, `/pt-PT/privacy` — redeploy after copy edits, then `npm run test:playwright:privacy` on a CF-reachable machine

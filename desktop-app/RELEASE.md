@@ -136,7 +136,7 @@ Or edit three places: shared TS, `ops/home-continue-stamp.browser.js`, `tests/fi
 
 CI sets a dynamic `run-name` from the event / PR label only. **Mid-job rename is impossible** in GitHub Actions — when `STRICT_MAC_SOURCE_TITLE` is missing from Playwright `--list`, the failure is surfaced via annotations and a follow-up step named `STRICT_MAC_SOURCE_TITLE missing: …`, not by rewriting `run-name`.
 
-Website Settings → Desktop downloads: `shared/desktop-downloads.json` (GitHub Release `desktop-v0.2.0` via workflow `desktop-release`). Prefer `buusdo-cybersecurity-service-tool-macos-app-notarized.zip` from `desktop-notarize-macos` on the same Release. After attach (HEAD 200), promote Settings primary with Actions → **desktop-promote-macos-url** (`--write-effective` + PR). Optional CDN mirrors live under `mirrors.*` after first publish if GitHub rate-limits. Privacy mirrors honest limits.
+Website Settings → Desktop downloads: `shared/desktop-downloads.json` (GitHub Release `desktop-v0.2.0` via workflow `desktop-release`). **Ship channel = unsigned** `buusdo-cybersecurity-service-tool-*` assets. User install steps (Gatekeeper / SmartScreen): [`docs/DESKTOP_SETUP_GUIDE.md`](../docs/DESKTOP_SETUP_GUIDE.md). `macosAppZipUrlNotarized` stays empty — do not run notarize / promote for this path. Optional CDN mirrors under `mirrors.*` only if GitHub rate-limits. Privacy mirrors honest limits.
 
 **Windows Authenticode:** once the org PFX is in GitHub secrets, set repo variable **`WIN_CERT_REQUIRE=1`** so CI `desktop-windows` and `desktop-release` refuse unsigned / skipped `signtool verify` (see `docs/DEPLOY_SECRETS.md`). Local check when a built installer exists: `WIN_CERT_REQUIRE=1 signtool verify /pa desktop-app/dist/windows/PreventiveShield-Setup-User.exe`.
 
@@ -147,32 +147,12 @@ Quarantine restore-error rows (dashboard): keyboard-only a11y — Tab to a resto
 | Platform | Command / workflow |
 |----------|--------------------|
 | Publish all | Actions → `desktop-release` (tag `desktop-v*` or dispatch) → GitHub Release assets |
-| macOS `.app` + notarize | `npm run pack:macos` then workflow `desktop-notarize-macos` (`APP_ONLY=1`) with signing secrets; then **desktop-promote-macos-url** once notarized HEAD is 200 |
-| Windows NSIS | CI `desktop-windows` stages `node.exe` and runs `makensis` |
-| Linux amd64 `.deb` | CI `desktop-linux` uploads `preventive-shield_0.2.0_amd64.deb` |
+| macOS `.app` (unsigned) | `npm run pack:macos` / `desktop-release` → GitHub Release `*-macos-app.zip` (primary). Notarize workflow exists but is **not** required for ship. |
+| Windows NSIS | CI `desktop-windows` stages `node.exe` and runs `makensis` (unsigned OK) |
+| Linux amd64 `.deb` | CI `desktop-linux` uploads the amd64 `.deb` |
 
-### Notarized macOS zip — upload + promote checklist
+### Ship channel — unsigned GitHub (current)
 
-Asset name in `shared/desktop-downloads.json`: `macosAppZipUrlNotarized` → `buusdo-cybersecurity-service-tool-macos-app-notarized.zip` on Release tag `releaseTag`.
-
-1. [ ] Build macOS app (`npm run pack:macos` / CI artifact).
-2. [ ] Actions → **desktop-notarize-macos** attaches notarized zip to the same GitHub Release (tag = `releaseTag`).
-3. [ ] Soft HEAD: `npm run verify:desktop-downloads` → `NOTARIZED_HEAD_OK=1` (or wait until GitHub CDN propagates).
-4. [ ] Actions → **desktop-promote-macos-url** (`release_tag` = `releaseTag`) → PR sets `macosAppZipUrl` = notarized URL.
-5. [ ] Merge PR → Website Settings macOS link + desktop `GET /api/update-check` (`preferNotarized` / `downloadUrl`) agree on the notarized zip.
-6. [ ] Until step 4, Settings shows **unsigned until promote** (`data-testid=settings-desktop-mac-unsigned-note`).
-
-Promote Settings primary macOS URL after notarized HEAD 200 (tag from `shared/desktop-downloads.json`):
-
-```bash
-gh workflow run desktop-promote-macos-url.yml -f release_tag="$(node -e "process.stdout.write(require('./shared/desktop-downloads.json').releaseTag||'')")"
-```
-
-When the promote workflow falls back to a commit comment, it uploads a PR-named diff artifact. If Actions does not expose `artifact-url`, the job summary still prints `ARTIFACT_ID=` on its own line plus a copy-paste download hint:
-
-```bash
-# summary also prints: ARTIFACT_ID=<id>
-gh api repos/<owner>/<repo>/actions/artifacts/<ARTIFACT_ID>/zip > desktop-downloads-promote-diff-pr-<N>.zip
-```
+Notarization / `desktop-promote-macos-url` are **out of scope**. Keep `macosAppZipUrl` on the unsigned zip. User Gatekeeper / SmartScreen: [`docs/DESKTOP_SETUP_GUIDE.md`](../docs/DESKTOP_SETUP_GUIDE.md). Settings shows `settings-desktop-mac-unsigned-note` + Setup guide link.
 
 Nightly / manual: Actions → CI → Run workflow → enable **run_mvp** and **run_desktop_check** (mvp installs Playwright Chromium for DOM Standby and uploads `smoke-currentDir-timeline.json`).

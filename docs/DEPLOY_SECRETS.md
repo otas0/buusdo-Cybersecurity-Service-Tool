@@ -46,9 +46,9 @@ Cloud Account sync is **not shipping**. See [ACCOUNT_SYNC_GATE.md](ACCOUNT_SYNC_
 - Do **not** create Turso / Resend / Postmark / `AUTH_MAGIC_SECRET` / `LISTS_ENC_KEY` for sync
 - Optional staging Worker still useful for website preview; health must report `accountSyncEnabled: false`
 
-**Slack soft_warn (ops hygiene only — not a product blocker):** optional `SLACK_WEBHOOK_URL` ([HEALTH_ALERTS.md](HEALTH_ALERTS.md)); drill rate-limit: first `force_soft_slack=true` → `rateLimited=false`; second dispatch within 1h (without force, same soft_warn) → summary `rateLimited=true`.
+**Slack:** **skipped** — do not set `SLACK_WEBHOOK_URL`. Health failures use GitHub Actions email / watch ([HEALTH_ALERTS.md](HEALTH_ALERTS.md)). Soft_warn without webhook stays `skipped-no-webhook`.
 
-**Notarized promote:** `desktop-promote-macos-url` refuses unless notarized asset HEAD is **200** and verify prints `NOTARIZED_HEAD_OK=1`. Fixture/`verify:desktop-downloads:fixture:notarized-404` still shows `NOTARIZED_HEAD_OK=0` until a real notarized zip is published. After HEAD 200: live Settings `PLAYWRIGHT_BASE_URL=https://buusdocst.mtsu.workers.dev npm run test:playwright:settings-mac-ready-to-promote-live`. Keep `RUN_PLAYWRIGHT_SETTINGS=false` until offline Settings narrow is green. Custom domain is independent — [CUSTOM_DOMAIN_REDEPLOY.md](CUSTOM_DOMAIN_REDEPLOY.md). Store URLs stay empty in `shared/extension-stores.json` until approval.
+**Desktop ship = unsigned GitHub Release** (not notarized). Settings + [DESKTOP_SETUP_GUIDE.md](DESKTOP_SETUP_GUIDE.md) tell users Gatekeeper / SmartScreen is expected. Do **not** run `desktop-promote-macos-url` or wait on `NOTARIZED_HEAD_OK`. Fixture `notarized-404` soft-warn is noise for this path. Custom domain independent — [CUSTOM_DOMAIN_REDEPLOY.md](CUSTOM_DOMAIN_REDEPLOY.md). Store URLs empty until approval.
 
 
 ## Verify

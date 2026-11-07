@@ -17,8 +17,8 @@ async function softHead(url: string) {
 }
 
 /**
- * Settings soft status for macOS primary vs notarized (no secrets).
- * Distinguishes unsigned-until-notarize vs ready-to-promote.
+ * Settings soft status for macOS downloads (no secrets).
+ * Shipping channel is unsigned GitHub Release; notarized promote is optional/out of scope.
  */
 export async function GET() {
   const primary = String(desktopDownloads.macosAppZipUrl || "").trim();
@@ -28,10 +28,13 @@ export async function GET() {
   const notPromoted =
     Boolean(notarized) &&
     ((unsigned && primary === unsigned) || (primary && primary !== notarized));
-  const head = await softHead(notarized);
+  const head = notarized ? await softHead(notarized) : { ok: false, status: 0 };
   let macNote: "none" | "unsigned-until-promote" | "ready-to-promote" = "none";
   if (notPromoted && !primaryIsNotarized) {
     macNote = head.ok ? "ready-to-promote" : "unsigned-until-promote";
+  } else if (primary && !primaryIsNotarized) {
+    // Unsigned ship: always surface Gatekeeper / SmartScreen guidance.
+    macNote = "unsigned-until-promote";
   }
   return Response.json({
     ok: true,
