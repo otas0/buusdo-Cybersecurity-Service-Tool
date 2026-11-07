@@ -4,8 +4,8 @@
 
 | Browser | How users get it |
 |---------|------------------|
-| **Safari (macOS)** | **Mac App Store** — search **buusdo**, install the wrapper app, enable the extension in Safari → Settings → Extensions |
-| **Chrome** | **Chrome Web Store** — search **buusdo** (or open the listing URL), **Add to Chrome** |
+| **Safari (macOS)** | **Mac App Store** — search **buusdo Cybersecurity Service Tool**, install the wrapper app, enable the extension in Safari → Settings → Extensions |
+| **Chrome** | **Chrome Web Store** — search **buusdo Cybersecurity Service Tool** (or open the listing URL), **Add to Chrome** |
 
 Developer Load unpacked / unsigned Xcode builds stay for engineering only — not the public install story.
 

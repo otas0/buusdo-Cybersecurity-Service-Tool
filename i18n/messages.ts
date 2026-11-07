@@ -20,7 +20,7 @@ export const messages = {
     navPrivacy: "Privacy",
     privacyPolicyTitle: "Privacy policy",
     privacyPolicyIntro:
-      "buusdo helps you check a website address before you trust it. Checks use first-party signals and our curated threat list. This page is the product privacy notice for the website, browser extension, and desktop app.",
+      "buusdo Cybersecurity Service Tool (Buusdo product line — separate product) helps you check a website address before you trust it. Checks use first-party signals and our curated threat list. This page is the product privacy notice for the website, browser extension, and desktop app.",
     privacyPolicyWhatTitle: "What a check uses",
     privacyPolicyWhatBody:
       "When you run a check, the address you enter is processed on the buusdo server to parse structure, match our own threat list, and optionally probe live reachability (DNS / HTTP). We do not send checked URLs to Google Safe Browsing or other third-party reputation APIs, and we do not sell check data.",
@@ -317,7 +317,7 @@ export const messages = {
     navPrivacy: "Privacidade",
     privacyPolicyTitle: "Política de privacidade",
     privacyPolicyIntro:
-      "O buusdo ajuda a verificar um endereço de site antes de confiar nele. As verificações usam sinais próprios e a nossa lista curada de ameaças. Esta página é o aviso de privacidade do site, da extensão e da aplicação de ambiente de trabalho.",
+      "O buusdo Cybersecurity Service Tool (linha Buusdo — produto distinto) ajuda a verificar um endereço de site antes de confiar nele. As verificações usam sinais próprios e a nossa lista curada de ameaças. Esta página é o aviso de privacidade do site, da extensão e da aplicação de ambiente de trabalho.",
     privacyPolicyWhatTitle: "O que uma verificação usa",
     privacyPolicyWhatBody:
       "Quando corre uma verificação, o endereço que introduz é processado no servidor do buusdo para analisar a estrutura, confrontar a lista própria de ameaças e, opcionalmente, sondar a acessibilidade em direto (DNS / HTTP). Não enviamos URLs a Google Safe Browsing nem a outras APIs de reputação de terceiros, e não vendemos dados de verificação.",

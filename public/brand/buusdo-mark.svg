@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="buusdo">
+  <title>buusdo</title>
+  <rect width="64" height="64" fill="#ffffff"/>
+  <!-- back / left (black) -->
+  <polygon fill="#000000" points="18,11 35,11 27,53 10,53"/>
+  <!-- front / right (gray) -->
+  <polygon fill="#585858" points="29,11 46,11 38,53 21,53"/>
+</svg>

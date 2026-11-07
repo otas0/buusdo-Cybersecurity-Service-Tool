@@ -449,7 +449,7 @@
 				ENABLE_USER_SELECTED_FILES = readonly;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Preventive Shield Extension/Info.plist";
-				INFOPLIST_KEY_CFBundleDisplayName = "Preventive Shield Extension";
+				INFOPLIST_KEY_CFBundleDisplayName = "buusdo Cybersecurity Service Tool";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -483,7 +483,7 @@
 				ENABLE_USER_SELECTED_FILES = readonly;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Preventive Shield Extension/Info.plist";
-				INFOPLIST_KEY_CFBundleDisplayName = "Preventive Shield Extension";
+				INFOPLIST_KEY_CFBundleDisplayName = "buusdo Cybersecurity Service Tool";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -521,7 +521,7 @@
 				ENABLE_USER_SELECTED_FILES = readonly;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Preventive Shield/Info.plist";
-				INFOPLIST_KEY_CFBundleDisplayName = "Preventive Shield";
+				INFOPLIST_KEY_CFBundleDisplayName = "buusdo Cybersecurity Service Tool";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				INFOPLIST_KEY_NSMainStoryboardFile = Main;
 				INFOPLIST_KEY_NSPrincipalClass = NSApplication;
@@ -562,7 +562,7 @@
 				ENABLE_USER_SELECTED_FILES = readonly;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Preventive Shield/Info.plist";
-				INFOPLIST_KEY_CFBundleDisplayName = "Preventive Shield";
+				INFOPLIST_KEY_CFBundleDisplayName = "buusdo Cybersecurity Service Tool";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				INFOPLIST_KEY_NSMainStoryboardFile = Main;
 				INFOPLIST_KEY_NSPrincipalClass = NSApplication;

@@ -12,7 +12,7 @@ Verifique um site antes de confiar — lista própria de ameaças, EN / portugu�
 
 ## Detailed description (EN)
 
-buusdo helps you check a website address before you enter sensitive information. Checks use our own curated threat list and live reachability — not third-party reputation APIs.
+buusdo Cybersecurity Service Tool (Buusdo product line — separate product) helps you check a website address before you enter sensitive information. Checks use our own curated threat list and live reachability — not third-party reputation APIs.
 
 Privacy default: nothing is stored. Optional this-device-only lists stay on your computer.
 
@@ -20,7 +20,7 @@ Companion desktop app (optional): no TLS decryption, no process kill, system fol
 
 ## Detailed description (pt-PT)
 
-O buusdo ajuda a verificar um endereço de site antes de introduzir informação sensível. As verificações usam a nossa lista curada de ameaças e acessibilidade em direto — não APIs de reputação de terceiros.
+O buusdo Cybersecurity Service Tool (linha Buusdo — produto distinto) ajuda a verificar um endereço de site antes de introduzir informação sensível. As verificações usam a nossa lista curada de ameaças e acessibilidade em direto — não APIs de reputação de terceiros.
 
 Predefinição de privacidade: nada é guardado. Listas opcionais só neste dispositivo ficam no seu computador.
 

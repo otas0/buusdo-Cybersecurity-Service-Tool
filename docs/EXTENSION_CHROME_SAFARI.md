@@ -6,8 +6,8 @@ Website MVP: `https://pcpd.mtsu.workers.dev`. Desktop app is out of scope here.
 
 | Browser | Download |
 |---------|----------|
-| **Safari** | **Mac App Store** — install **buusdo**, then enable under Safari → Settings → Extensions |
-| **Chrome** | **Chrome Web Store** — **Add to Chrome** |
+| **Safari** | **Mac App Store** — install **buusdo Cybersecurity Service Tool**, then enable under Safari → Settings → Extensions |
+| **Chrome** | **Chrome Web Store** — **Add to Chrome** (listing name: **buusdo Cybersecurity Service Tool**) |
 
 Store URLs live in [`shared/extension-stores.json`](../shared/extension-stores.json) (filled after each store approves). Full submit steps: [EXTENSION_STORE_DISTRIBUTE.md](EXTENSION_STORE_DISTRIBUTE.md).
 
