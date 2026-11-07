@@ -630,6 +630,8 @@ test.describe("Settings narrow pt-PT", () => {
       return;
     }
     await page.setViewportSize({ width: 390, height: 844 });
+    await page.goto(`${base}/en`, { waitUntil: "domcontentloaded" });
+    await page.unroute("**/api/check").catch(() => {});
     await page.route("**/api/check", async (route) => {
       await route.fulfill({
         status: 200,
@@ -695,12 +697,17 @@ test.describe("Settings narrow pt-PT", () => {
         })
       });
     });
-    await page.goto(`${base}/en`, { waitUntil: "domcontentloaded" });
     const urlInput = page.locator('input[name="url"], #url, input[type="url"]').first();
     await urlInput.waitFor({ state: "visible", timeout: 15000 });
     await urlInput.fill("https://blocked-hint.example/");
+    const checkWait = page.waitForResponse(
+      (r) => r.url().includes("/api/check") && r.request().method() === "POST",
+      { timeout: 20000 }
+    );
     await page.locator('button[type="submit"]').first().click();
-    await expect(page.getByTestId("user-block-evidence")).toBeVisible({ timeout: 15000 });
+    await checkWait;
+    await expect(page.locator(".result-layout, .result-verdict")).toBeVisible({ timeout: 15000 });
+    await expect(page.getByTestId("user-block-evidence")).toBeVisible({ timeout: 10000 });
     // Banner owns the user-block copy — why-list must not duplicate it.
     await expect(page.locator(".why-list")).not.toContainText(/Personal block list|Lista pessoal de bloqueio/i);
     const leaveNote = page.getByTestId("personal-list-leave-note");
@@ -853,6 +860,8 @@ test.describe("Settings narrow pt-PT", () => {
       return;
     }
     await page.setViewportSize({ width: 390, height: 844 });
+    await page.goto(`${base}/en`, { waitUntil: "domcontentloaded" });
+    await page.unroute("**/api/check").catch(() => {});
     await page.route("**/api/check", async (route) => {
       await route.fulfill({
         status: 200,
@@ -921,11 +930,15 @@ test.describe("Settings narrow pt-PT", () => {
         })
       });
     });
-    await page.goto(`${base}/en`, { waitUntil: "domcontentloaded" });
     const urlInput = page.locator('input[name="url"], #url, input[type="url"]').first();
     await urlInput.waitFor({ state: "visible", timeout: 15000 });
     await urlInput.fill("https://bot-blocked.example/");
+    const checkWait = page.waitForResponse(
+      (r) => r.url().includes("/api/check") && r.request().method() === "POST",
+      { timeout: 20000 }
+    );
     await page.locator('button[type="submit"]').first().click();
+    await checkWait;
     await expect(page.locator(".result-layout, .result-verdict, [data-testid='result-danger-level']")).toBeVisible({
       timeout: 20000
     });

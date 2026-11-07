@@ -35,8 +35,6 @@ export async function assertHashSectionInView(
 ) {
   const loc = page.locator(selector).first();
   await expect(loc).toBeVisible({ timeout: timeoutMs });
-  // Mobile SPA scrollIntoView is often rAF-deferred; give hash nav a beat.
-  await page.waitForTimeout(50);
   const max = page.viewportSize()?.height ?? 900;
   await expect
     .poll(
@@ -46,7 +44,8 @@ export async function assertHashSectionInView(
     .toBeLessThan(max);
   const top = await loc.evaluate((el) => el.getBoundingClientRect().top);
   expect(top).toBeGreaterThanOrEqual(-80);
-  await expect(loc).toBeInViewport({ timeout: timeoutMs });
+  // Partial visibility is enough on short mobile viewports (section taller than screen).
+  await expect(loc).toBeInViewport({ ratio: 0.05, timeout: timeoutMs });
 }
 
 export async function assertSettingsDesktopInView(page: Page) {
