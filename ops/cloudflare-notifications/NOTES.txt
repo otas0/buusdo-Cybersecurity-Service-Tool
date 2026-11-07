@@ -2,7 +2,10 @@ UTC=2026-11-07
 operator=pending-dashboard
 action=Delete any Cloudflare Notification policies still scoped to Workers pcpd or preventive-shield.
 keep=buusdocst error rate + CPU only.
-screenshot=add buusdocst-notifications.png + no-pcpd-policies.png after dashboard cleanup.
-status=Workers pcpd + preventive-shield already deleted (2026-11-07). Notification policies are dashboard-only (no Wrangler API) — open Account → Notifications, filter pcpd / preventive-shield, delete leftovers, then drop screenshots here.
-blockers=Requires interactive Cloudflare session. Attempted dash.cloudflare.com from automation → login wall (2026-11-07). Cannot capture screenshots or purge until operator signs in.
-alert_email_checklist=Do NOT tick LAUNCH_CHECKLIST CF alert email until a real test notification is received.
+screenshot=
+  buusdocst-notifications.png   — NOT YET CAPTURED
+  no-pcpd-policies.png           — NOT YET CAPTURED
+status=Workers pcpd + preventive-shield already deleted (2026-11-07). Notification policies are dashboard-only (no Wrangler API).
+blockers=dash.cloudflare.com → login wall from automation (2026-11-07). Sign in → Account Notifications → delete leftover pcpd/preventive-shield policies → drop screenshots here.
+alert_email_checklist=Do NOT tick LAUNCH_CHECKLIST §C CF alert email until a real test notification arrives in inbox.
+slack=SLACK_WEBHOOK_URL still unset — operator must create Incoming Webhook then: gh secret set SLACK_WEBHOOK_URL

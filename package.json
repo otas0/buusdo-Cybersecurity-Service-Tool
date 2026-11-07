@@ -35,6 +35,7 @@
     "assert:staging-health": "node scripts/assert-staging-health.mjs",
     "assert:staging-wrangler-name": "node scripts/assert-staging-wrangler-name.mjs",
     "assert:prod-wrangler-name": "node scripts/assert-prod-wrangler-name.mjs",
+    "assert:prod-auth-gone": "node scripts/assert-prod-auth-gone.mjs",
     "start": "vinext start",
     "lint": "eslint . --ignore-pattern dist --ignore-pattern .next",
     "assert:formal-name": "node scripts/assert-formal-name.mjs",

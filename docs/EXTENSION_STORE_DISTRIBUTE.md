@@ -37,7 +37,10 @@ The zip:
 ### Dashboard
 
 1. [Chrome Web Store Developer Dashboard](https://chrome.google.com/webstore/devconsole)
-2. **New item** → upload the zip
+2. Paste **Short description** from [`CHROME_STORE_LISTING_DRAFT.md`](./CHROME_STORE_LISTING_DRAFT.md) (must not contain the word “sync” — CI `assert:formal-name` enforces this)
+3. Upload screenshot order: Halt (`FRAME-formal-name.png`) → Clear + Hold shot 2 (`FRAME-clear.png`, `FRAME-hold.png`) from `dist/chrome-webstore/listing-screenshots/` (or `docs/store-screenshots/`) with captions from the draft
+4. **New item** → upload the zip
+5. After approval only: set `chromeWebStoreUrl` + `chromeWebStoreItemId` in [`shared/extension-stores.json`](../shared/extension-stores.json) — never invent URLs
 3. Listing: EN + pt-PT descriptions, screenshots (popup Clear / Hold / Halt + Settings). Screenshot caption (EN): “Companion desktop app: no TLS decryption, no process kill, system folders report-only — see Privacy → Honest limits.” (pt-PT: “App de ambiente de trabalho: sem desencriptação TLS, sem terminar processos, pastas de sistema só reportadas — ver Privacidade → Limites honestos.”)
 4. **Single purpose** / privacy: first-party check only; link Privacy → `https://buusdocst.mtsu.workers.dev/en/privacy`. One listing sentence: the companion desktop app does not decrypt TLS, does not kill processes, and only reports system directories (see Privacy → Honest limits).
 5. Host permission justification: Website API `buusdocst.mtsu.workers.dev` + DNR tracker blocking

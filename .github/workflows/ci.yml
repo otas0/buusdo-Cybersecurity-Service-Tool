@@ -85,8 +85,19 @@ jobs:
             docs/store-screenshots/FRAME-hold.png
           echo "::notice::FRAME Halt/Clear/Hold structural floors OK (working tree restored)"
 
+      - name: Cache Playwright browsers (quality Chromium)
+        id: pw_quality_cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
+          restore-keys: |
+            playwright-${{ runner.os }}-
+
       - name: Store Halt FRAME Playwright cross-check (Chromium)
         run: |
+          HIT="${{ steps.pw_quality_cache.outputs.cache-hit }}"
+          echo "Playwright browser cache-hit=${HIT:-false}"
           npx playwright install --with-deps chromium
           npm run capture:store-halt-frame:playwright
           npm run test:playwright:china-soft-fail

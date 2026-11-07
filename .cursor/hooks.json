@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "hooks": {
+    "beforeShellExecution": [
+      {
+        "command": ".cursor/hooks/openapi-check.sh",
+        "matcher": "git commit"
+      }
+    ]
+  }
+}

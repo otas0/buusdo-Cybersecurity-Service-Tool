@@ -6,10 +6,10 @@ range=last 24h (operator to confirm when capturing PNGs)
 version_id=4cc3e254-45a2-4771-b04f-f29e2b5b7dc9
 deploy_run=https://github.com/otas0/buusdo-Cybersecurity-Service-Tool/actions/runs/42369768115
 files=
-  2026-11-07-buusdocst-errors.png  (gitignored — capture from Metrics → Errors)
-  2026-11-07-buusdocst-cpu.png     (gitignored — capture from Metrics → CPU time)
+  2026-11-07-buusdocst-errors.png  (gitignored — NOT YET CAPTURED)
+  2026-11-07-buusdocst-cpu.png     (gitignored — NOT YET CAPTURED)
 notes=
   Legacy 2026-11-01-pcpd-NOTES.txt is archived label only (Worker pcpd deleted).
-  PNGs are local-only per ops/workers-baselines/.gitignore — drop screenshots beside this NOTES file after CF login.
-  version_id from Deploy Cloudflare wrangler output "Current Version ID".
-status=version_id recorded; PNG capture still needs signed-in CF Metrics session
+  PNGs are local-only per ops/workers-baselines/.gitignore.
+  Automation hit dash.cloudflare.com login wall (2026-11-07) — operator must sign in, open Metrics for buusdocst, screenshot Errors + CPU, drop files beside this NOTES.
+status=version_id recorded; PNG capture blocked on CF dashboard login

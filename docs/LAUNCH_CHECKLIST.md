@@ -112,6 +112,7 @@ Recorded via `npm run production:origin` → README + `shared/production-site.js
 
 ## G. Optional / later
 
-- [ ] After 48h: `git checkout -b chore/vinext-1-4-eval` ([VINEXT_UPGRADE_1_4.md](VINEXT_UPGRADE_1_4.md))
-- [ ] Custom domain: follow [CUSTOM_DOMAIN_REDEPLOY.md](CUSTOM_DOMAIN_REDEPLOY.md) then refresh public promotion URLs
+- [ ] **Hold:** After ops hygiene (CF Metrics baselines + alert email test + Notifications cleanup): `git checkout -b chore/vinext-1-4-eval` ([VINEXT_UPGRADE_1_4.md](VINEXT_UPGRADE_1_4.md)) — do not start vinext 1.4 eval while Metrics/Notifications screenshots are still pending
+- [ ] **Hold:** Custom domain cutover — [CUSTOM_DOMAIN_REDEPLOY.md](CUSTOM_DOMAIN_REDEPLOY.md) + `npm run production:origin -- https://YOUR_DOMAIN --check-github-vars` before second deploy; refresh [PUBLIC_PROMOTION.md](PUBLIC_PROMOTION.md) after
 - [x] Playwright prod privacy (browser/CDP 2026-11-01): `/en/privacy` + `/pt-PT/privacy` headings + `data-testid=privacy-policy` OK on buusdocst — full `npm run test:playwright:privacy` when Chromium install works
+- [x] Prod Account-sync routes Gone (2026-11-07 browser/CDP): `GET/POST` magic+session+refresh+device+logout, `GET/DELETE` account, `GET/PUT` sync/lists → **410** `account-sync-cancelled` (`npm run assert:prod-auth-gone` from a CF-reachable host)
