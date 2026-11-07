@@ -14,7 +14,7 @@
       "batchId": "2026-10-21-split-pt",
       "added": [],
       "removed": [],
-      "notes": "Moved Portugal-oriented .example seeds to curated-threats.pt.json (merged unless OWN_THREAT_MERGE_PT=0)."
+      "notes": "Extra .example seeds live in curated-threats.pt.json (merged unless OWN_THREAT_MERGE_PT=0)."
     }
   ]
 }

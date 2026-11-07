@@ -29,7 +29,7 @@ Support only: a successful paste writes ISO timestamp `shieldListsLastPasteAt` t
 - **Page toasts** when a tracker or phishing pattern is blocked. Optional **Dismiss**: popup toggle **Toast dismiss button** (default off) writes `chrome.storage.local.shieldToastDismiss` and announces via `role="status"`. The service worker reads that flag and passes `dismiss: true|false` on every `SHIELD_TOAST`; the content script trusts that boolean only (no storage read). Button via `appendToastAction` under `data-testid="result-action-row"`.
 - **Popup** with one status word (Standby / Clear / Hold / Halt) and **Run**.
 - **Website API mute announce** — when the popup level comes from `/api/check`, Trackers is muted and `aria-live` announces once; clear delay is `TRACKERS_ANNOUNCE_CLEAR_MS` in `shared/trackers-announce.mjs` (so a later API scan can re-announce).
-- **Bilingual** English / European Portuguese.
+- Local UI strings for the supported locales.
 - **Privacy modes** — default never store; optional this-device log or diagnostics for support.
 
 ## Users — install from stores
@@ -68,7 +68,7 @@ Regenerate wrapper after a major manifest change:
 xcrun safari-web-extension-converter "$(pwd)" \
   --project-location "../safari" \
   --app-name "buusdo Cybersecurity Service Tool" \
-  --bundle-identifier "pt.community.preventiveshield" \
+  --bundle-identifier "com.buusdo.cst" \
   --macos-only --swift --force --no-open --no-prompt
 ```
 

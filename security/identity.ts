@@ -28,7 +28,7 @@ export const organisations: Organisation[] = [
 export const testOrganisations: Organisation[] = [
   { id: "lusitania-bank", name: "Lusitania Bank", domains: ["lusitaniabank.test"], fictional: true },
   { id: "atlantic-parcel", name: "Atlantic Parcel", domains: ["atlanticparcel.test"], fictional: true },
-  { id: "portuguese-services", name: "Portuguese Services", domains: ["servicesportugal.test"], fictional: true }
+  { id: "generic-services", name: "Generic Services", domains: ["services-example.test"], fictional: true }
 ];
 
 function findOrganisation(organisationId: string): Organisation | undefined {

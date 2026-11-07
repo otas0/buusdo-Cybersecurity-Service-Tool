@@ -70,7 +70,7 @@ Controlled EVAL trio for diff reviewers: [EVAL-034 / 035 / 036](../evaluation/fi
 
 ### Operators note — PT merge lookalikes
 
-When `OWN_THREAT_MERGE_PT=1`, curated Portugal seeds (`.example` hosts in `security/data/curated-threats.pt.json`) contribute `known-threat`. Diff reviewers: host / MERGE on-off map for **EVAL-045–048**, **EVAL-049–056**, and **EVAL-057–064** (full **EVAL-037–064** table) lives in [evaluation/fixtures/README.md](../evaluation/fixtures/README.md). Insurance/IRS batch source: [`security/data/batches/`](../security/data/batches/) (`pending-pt-insurance-irs` → `applied/` after `threat:apply --target=pt`).
+When `OWN_THREAT_MERGE_PT=1`, extra curated seeds (`.example` hosts in `security/data/curated-threats.pt.json`, filename legacy) contribute `known-threat`. Diff reviewers: host / MERGE on-off map for **EVAL-045–048**, **EVAL-049–056**, and **EVAL-057–064** (full **EVAL-037–064** table) lives in [evaluation/fixtures/README.md](../evaluation/fixtures/README.md). Batch source: [`security/data/batches/`](../security/data/batches/) (`pending-pt-insurance-irs` → `applied/` after `threat:apply --target=pt`).
 
 When `POST /api/check` returns `500` `timing-schema-invalid` during a schema bump, the body may include `diagnostic.ambiguousProbeStatus` (`true` / `false` / `"absent"`) plus a short `hint` — mid-migration only; success responses do not add this field.
 

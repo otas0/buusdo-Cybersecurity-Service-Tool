@@ -2,7 +2,7 @@
 
 Pending operator batches live here. After `npm run threat:apply`, the JSON file is moved to `applied/`.
 
-Copy `_template.json` (core) or `_template.pt.json` (Portugal seeds), fill `add` / `remove`, then. **Same-PR rule:** EVAL MERGE on/off rows for new hosts must land with `threat:apply` (scenarios + fixtures README + CI `min` bump) — see template `notes`.
+Copy `_template.json` (core) or `_template.pt.json` (extra seeds; filename legacy), fill `add` / `remove`, then. **Same-PR rule:** EVAL MERGE on/off rows for new hosts must land with `threat:apply` (scenarios + fixtures README + CI `min` bump) — see template `notes`.
 
 ```bash
 npm run threat:apply -- security/data/batches/your-batch.json
@@ -12,7 +12,7 @@ npm run threat:apply -- security/data/batches/your-batch.json
 
 That command **writes `curated-threats.json` and runs `npm run regression`**. Do not commit a list change without a green regression.
 
-### Portugal seeds (`curated-threats.pt.json`)
+### Extra seeds (`curated-threats.pt.json`, filename legacy)
 
 ```bash
 npm run threat:apply -- security/data/batches/your-pt-batch.json --target=pt

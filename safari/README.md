@@ -2,7 +2,7 @@
 
 Xcode macOS app that hosts the shared WebExtension in `../extension/`.
 
-Bundle IDs (legacy on-disk): app `pt.community.preventiveshield`, extension `pt.community.preventiveshield.Extension`.  
+Bundle IDs: prefer `com.buusdo.cst` / `com.buusdo.cst.Extension` (legacy on-disk may still say `pt.community.*` until Xcode migrate). 
 User-facing display name: **buusdo Cybersecurity Service Tool**.
 
 ## Users

@@ -7,7 +7,7 @@ buusdo does **not** call Google Safe Browsing or other third-party reputation AP
 | File | Role |
 |------|------|
 | `curated-threats.json` | Core first-party host list (KNOWN_PHISHING / KNOWN_MALICIOUS) |
-| `curated-threats.pt.json` | Portugal-oriented `.example` seeds — merged by default (`OWN_THREAT_MERGE_PT=0` to disable) |
+| `curated-threats.pt.json` | Extra `.example` seeds (filename legacy) — merged by default (`OWN_THREAT_MERGE_PT=0` to disable) |
 | `test-threats.json` | `.test` fixtures for automated tests only — not a public product pitch |
 | `batches/` | Operator report / false-positive batches waiting to apply |
 | `batches/applied/` | Archived batches after a successful apply |

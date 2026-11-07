@@ -46,9 +46,9 @@ Cloud Account sync is **not shipping**. See [ACCOUNT_SYNC_GATE.md](ACCOUNT_SYNC_
 - Do **not** create Turso / Resend / Postmark / `AUTH_MAGIC_SECRET` / `LISTS_ENC_KEY` for sync
 - Optional staging Worker still useful for website preview; health must report `accountSyncEnabled: false`
 
-**Slack soft_warn:** set `SLACK_WEBHOOK_URL` ([HEALTH_ALERTS.md](HEALTH_ALERTS.md)); drill rate-limit: first `force_soft_slack=true` → `rateLimited=false`; second dispatch within 1h (without force, same soft_warn) → summary `rateLimited=true`.
+**Slack soft_warn (ops hygiene only — not a product blocker):** optional `SLACK_WEBHOOK_URL` ([HEALTH_ALERTS.md](HEALTH_ALERTS.md)); drill rate-limit: first `force_soft_slack=true` → `rateLimited=false`; second dispatch within 1h (without force, same soft_warn) → summary `rateLimited=true`.
 
-**Notarized promote:** `desktop-promote-macos-url` refuses unless notarized asset HEAD is **200** and verify prints `NOTARIZED_HEAD_OK=1`. After that: live Settings `PLAYWRIGHT_BASE_URL=https://buusdocst.mtsu.workers.dev npm run test:playwright:settings-mac-ready-to-promote-live`. Keep `RUN_PLAYWRIGHT_SETTINGS=false` until offline Settings narrow is green.
+**Notarized promote:** `desktop-promote-macos-url` refuses unless notarized asset HEAD is **200** and verify prints `NOTARIZED_HEAD_OK=1`. After that: live Settings `PLAYWRIGHT_BASE_URL=https://buusdocst.mtsu.workers.dev npm run test:playwright:settings-mac-ready-to-promote-live`. Keep `RUN_PLAYWRIGHT_SETTINGS=false` until offline Settings narrow is green. Custom domain is independent — [CUSTOM_DOMAIN_REDEPLOY.md](CUSTOM_DOMAIN_REDEPLOY.md).
 
 
 ## Verify

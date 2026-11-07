@@ -8,6 +8,7 @@ import { RiskResult } from "./RiskResult";
 import { TrafficLights } from "./TrafficLights";
 import { SettingsPanel } from "./SettingsPanel";
 import { PrivacyPanel } from "./PrivacyPanel";
+import { ListsOfflinePanel } from "./ListsOfflinePanel";
 import { reportAnalysis } from "./report-analysis";
 import {
   listCheckHistory,
@@ -36,17 +37,19 @@ import {
 import { PROBE_TIMEOUT_ENV_KEY } from "../shared/probe-budget-copy.mjs";
 import { replaceStateMaybeHashchange } from "../shared/spa-replace-state";
 
-type ShellView = "check" | "settings" | "privacy";
+type ShellView = "check" | "settings" | "privacy" | "lists-offline";
 
 function viewFromSlug(slug: string[]): ShellView {
   if (slug[0] === "settings") return "settings";
   if (slug[0] === "privacy") return "privacy";
+  if (slug[0] === "lists-offline") return "lists-offline";
   return "check";
 }
 
 function pathForView(locale: Locale, next: ShellView, hash = ""): string {
   if (next === "settings") return `/${locale}/settings${hash}`;
   if (next === "privacy") return `/${locale}/privacy${hash}`;
+  if (next === "lists-offline") return `/${locale}/lists-offline${hash}`;
   return `/${locale}${hash}`;
 }
 
@@ -165,7 +168,7 @@ function Header({
           className="lang"
           href={otherPath}
           data-testid="locale-toggle"
-          aria-label={other === "pt-PT" ? "Mudar para português europeu" : "Switch to English"}
+          aria-label={other === "pt-PT" ? "Mudar idioma" : "Switch language"}
         >
           {locale === "en" ? "PT" : "EN"}
         </a>
@@ -674,6 +677,12 @@ export function AppShell({ locale, slug }: { locale: Locale; slug: string[] }) {
           locale={locale}
           onBack={() => navigate("check")}
           onOpenDesktopDownloads={() => navigate("settings", "#settings-desktop")}
+        />
+      ) : view === "lists-offline" ? (
+        <ListsOfflinePanel
+          locale={locale}
+          onBack={() => navigate("check")}
+          onOpenSettingsLists={() => navigate("settings", "#settings-block-lists")}
         />
       ) : (
         <Home locale={locale} />

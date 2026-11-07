@@ -51,7 +51,7 @@ export function curatedPath(cwd = process.cwd()): string {
   return resolve(cwd, "security", "data", "curated-threats.json");
 }
 
-/** Portugal-oriented seed list (OWN_THREAT_MERGE_PT). */
+/** Extra seed list file (OWN_THREAT_MERGE_PT; filename legacy). */
 export function curatedPtPath(cwd = process.cwd()): string {
   return resolve(cwd, "security", "data", "curated-threats.pt.json");
 }

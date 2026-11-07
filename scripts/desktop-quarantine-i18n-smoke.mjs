@@ -65,27 +65,18 @@ if (!STRINGS.en.proxyGuideShow || !STRINGS["pt-PT"].proxyGuideShow) {
 }
 
 const indexHtml = await readFile(path.join(root, "desktop-app/public/index.html"), "utf8");
-if (!indexHtml.includes('class="list-add account-row"') && !indexHtml.includes("account-row")) {
-  fail("index.html Account rows need .account-row (email + device code)");
-}
-if (!indexHtml.includes('id="accountDeviceCode"') || !indexHtml.includes("field-input")) {
-  fail("index.html Account device code must use .field-input (shared with #listDomain)");
+// Account sync cancelled — UI must not reintroduce account sign-in rows.
+if (indexHtml.includes('id="accountSection"') || indexHtml.includes("path-sync-account")) {
+  fail("index.html must not include Account sync UI (product cancelled)");
 }
 if (!indexHtml.includes('id="listDomain"') || !indexHtml.includes('id="listDomain" class="field-input"')) {
-  fail("#listDomain must share .field-input with Account fields");
-}
-if (t("en", "accountExchange") !== "Exchange code") {
-  fail(`EN accountExchange: got ${JSON.stringify(t("en", "accountExchange"))}`);
-}
-if (t("pt-PT", "accountExchange") !== "Trocar código") {
-  fail(`pt-PT accountExchange: got ${JSON.stringify(t("pt-PT", "accountExchange"))}`);
+  fail("#listDomain must use .field-input");
 }
 
-// Primary-path CTAs (machine / web / account) — EN + pt-PT required.
+// Primary-path CTAs (machine / web) — EN + pt-PT required.
 for (const [key, en, pt] of [
   ["pathScanMachine", "Scan this computer", "Analisar este computador"],
   ["pathCheckWeb", "Check a website", "Verificar um site"],
-  ["pathSyncAccount", "Sync lists", "Sincronizar listas"],
   ["checkOnWebsite", "Check on website", "Verificar no site"],
   ["websiteBlockOnDevice", "Block on this device", "Bloquear neste dispositivo"],
   ["threatSummaryTitle", "Threat summary", "Resumo de ameaças"]
@@ -96,12 +87,6 @@ for (const [key, en, pt] of [
 
 if (!indexHtml.includes('data-testid="primary-path"') || !indexHtml.includes('data-testid="threat-summary"')) {
   fail("index.html must expose primary-path + threat-summary test ids");
-}
-if (t("en", "accountDevicePlaceholder") !== "Device code from magic link") {
-  fail(`EN accountDevicePlaceholder: got ${JSON.stringify(t("en", "accountDevicePlaceholder"))}`);
-}
-if (!STRINGS["pt-PT"].accountDevicePlaceholder) {
-  fail("pt-PT accountDevicePlaceholder missing");
 }
 
 const dash = await readFile(path.join(root, "desktop-app/public/js/dashboard.js"), "utf8");
@@ -125,9 +110,6 @@ if (!dash.includes("/api/proxy/macos-clear") || !dash.includes("proxyMacClear"))
 }
 if (!dash.includes("updateCheckNotarizedHead") || !dash.includes("notarizedHeadStatus")) {
   fail("update-check UI must show notarizedHeadStatus");
-}
-if (!dash.includes('account-auto-sync-toast') || !dash.includes("setAccountStatusQuiet")) {
-  fail("auto-sync toast must use data-testid=account-auto-sync-toast and quiet status aria");
 }
 if (!dash.includes("Press Enter to check") && !dash.includes("press Enter to check")) {
   fail("threat host aria-label must mention Press Enter to check");

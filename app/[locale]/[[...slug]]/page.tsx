@@ -7,8 +7,8 @@ export async function generateMetadata({params}:{params:Promise<{locale:string}>
   const pt=locale==="pt-PT";
   const title = "buusdo Cybersecurity Service Tool";
   const description = pt
-    ? "buusdo Cybersecurity Service Tool. Verifique um site antes de confiar. Inglês e português europeu."
-    : "buusdo Cybersecurity Service Tool. Check a website before you trust it. English and European Portuguese.";
+    ? "buusdo Cybersecurity Service Tool. Verifique um site antes de confiar."
+    : "buusdo Cybersecurity Service Tool. Check a website before you trust it.";
   return {title,description,openGraph:{title,description,images:[{url:"/og.png",width:1672,height:941,alt:title}]},twitter:{card:"summary_large_image",title,description,images:["/og.png"]}};
 }
 

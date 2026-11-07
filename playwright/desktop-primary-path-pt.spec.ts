@@ -1,5 +1,5 @@
 /**
- * Primary-path CTA copy — EN defaults in HTML; switch lang to pt-PT via i18n module.
+ * Primary-path CTA copy — Scan + Check web (Account sync cancelled).
  *
  *   PLAYWRIGHT_SKIP_WEBSERVER=1 npx playwright test playwright/desktop-primary-path-pt.spec.ts
  */
@@ -13,7 +13,7 @@ const root = path.resolve(".");
 const indexPath = path.join(root, "desktop-app/public/index.html");
 const i18nPath = path.join(root, "desktop-app/public/js/i18n.js");
 
-test("pt-PT primary-path three CTAs", async ({ page }) => {
+test("pt-PT primary-path scan + check CTAs", async ({ page }) => {
   if (!existsSync(indexPath) || !existsSync(i18nPath)) {
     test.skip(true, "desktop index/i18n missing");
     return;
@@ -22,13 +22,11 @@ test("pt-PT primary-path three CTAs", async ({ page }) => {
   const { t } = await import(pathToFileURL(i18nPath).href);
   expect(t("pt-PT", "pathScanMachine")).toBe("Analisar este computador");
   expect(t("pt-PT", "pathCheckWeb")).toBe("Verificar um site");
-  expect(t("pt-PT", "pathSyncAccount")).toBe("Sincronizar listas");
 
   const indexHtml = readFileSync(indexPath, "utf8");
-  const fragment = indexHtml.match(
-    /<nav class="primary-path"[\s\S]*?<\/nav>/
-  )?.[0];
+  const fragment = indexHtml.match(/<nav class="primary-path"[\s\S]*?<\/nav>/)?.[0];
   expect(fragment).toBeTruthy();
+  expect(fragment).not.toMatch(/path-sync-account/);
 
   const html = `<!doctype html>
 <html lang="pt-PT">
@@ -39,8 +37,7 @@ ${fragment}
   import { t } from "/i18n.js";
   for (const [id, key] of [
     ["pathScanMachine", "pathScanMachine"],
-    ["pathCheckWeb", "pathCheckWeb"],
-    ["pathSyncAccount", "pathSyncAccount"]
+    ["pathCheckWeb", "pathCheckWeb"]
   ]) {
     const el = document.getElementById(id);
     if (el) el.textContent = t("pt-PT", key);

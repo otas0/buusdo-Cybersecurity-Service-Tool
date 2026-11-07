@@ -1,29 +1,15 @@
+/** @deprecated Account sync cancelled. */
 import {
-  clearSessionCookieHeader,
-  parseBearer,
-  parseCookieToken,
-  revokeSessionToken
-} from "../../../../security/account-sync/auth";
-import {
-  accountCors,
-  jsonOk,
-  requireAccountSync
-} from "../../../../security/account-sync/http";
+  accountSyncGoneOptions,
+  accountSyncGoneResponse
+} from "../../../../security/account-sync/gone";
 
 export const runtime = "nodejs";
 
-export async function OPTIONS(request: Request) {
-  return new Response(null, { status: 204, headers: accountCors(request) });
+export function OPTIONS(request: Request) {
+  return accountSyncGoneOptions(request);
 }
 
-export async function POST(request: Request) {
-  const gated = requireAccountSync(request);
-  if (gated) return gated;
-
-  const token = parseBearer(request) || parseCookieToken(request);
-  if (token) revokeSessionToken(token);
-
-  const res = jsonOk(request, { signedOut: true });
-  res.headers.set("Set-Cookie", clearSessionCookieHeader());
-  return res;
+export function POST(request: Request) {
+  return accountSyncGoneResponse(request);
 }

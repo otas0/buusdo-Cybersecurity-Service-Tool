@@ -3,7 +3,7 @@
  * --------------------------------------
  * Talks to the background service worker for scan + prefs.
  * Optional first-party website POST /api/check (no third-party reputation).
- * Bilingual EN / European Portuguese via shared/i18n.js.
+ * UI strings via shared/i18n.js.
  */
 
 import { t } from "../shared/i18n.js";

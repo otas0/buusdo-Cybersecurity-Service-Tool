@@ -2,7 +2,7 @@
 
 **Product (Workers):** https://buusdocst.mtsu.workers.dev/ · **China entry (GitHub Pages):** https://otas0.github.io/buusdocst/
 
-Official product name: **buusdo Cybersecurity Service Tool**. Part of the **Buusdo** product **line**, but a **separate** product (own content and name — not “Buusdo” itself, not other Buusdo-line apps). Bilingual English / European Portuguese; helps non-expert users check a website before they trust it.
+Official product name: **buusdo Cybersecurity Service Tool**. Part of the **Buusdo** product **line**, but a **separate** product (own content and name — not “Buusdo” itself, not other Buusdo-line apps). Helps non-expert users check a website before they trust it.
 
 **Detect → Explain → Prevent / Block → Act → Verify**
 
@@ -19,14 +19,14 @@ Data storage defaults to off. Users can choose never store, this device only, or
 - **First-party threat intel** — curated host list + address signals (no Google Safe Browsing / third-party reputation APIs; checked URLs stay on this server)
 - Deterministic risk classification with evidence for every check
 - Reversible browser-local block, trust, and optional check history (when storage is allowed)
-- English and European Portuguese
 - Automated security and scenario tests
 
 ## Website routes
 
-- `/en` and `/pt-PT` — check a website address
-- `/en/settings` and `/pt-PT/settings` — privacy mode, blocked and trusted lists, own-intel note
-- `/en/privacy` and `/pt-PT/privacy` — privacy policy (ship before public promotion)
+- `/en` (and `/pt-PT`) — check a website address
+- `/en/settings` — privacy mode, blocked and trusted lists, own-intel note
+- `/en/privacy` — privacy policy (ship before public promotion)
+- `/en/lists-offline` — move lists between devices without a cloud account
 - `/api/health` — service status (confirms first-party threat mode, exposes `probeTimeoutMs`, `curatedListPresent`)
 - `POST /api/check` — `{ ok, analysis }` where `analysis.timing` includes `parseMs`, `threatMs`, `probeMs`, `riskMs`, `totalMs`, `probeTimeoutMs`, `probeHeadFailed`, `headSkipped`
 

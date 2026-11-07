@@ -36,7 +36,7 @@ export const messages = {
     privacyPolicyLimitsTitle: "Honest limits (desktop + proxy)",
     privacyPolicyLimitsBody:
       "No TLS decryption — HTTPS CONNECT is hostname-only; there is no MITM certificate. No process kill — running programs keep running. System directories are report-only — /usr, /etc, Windows system paths, and Program Files are never moved or edited. There is no AV / signature engine and no credential or browsing-history capture.",
-    privacyPolicyUpdated: "Last reviewed: 2026-11-07 · EN / pt-PT · website launch",
+    privacyPolicyUpdated: "Last reviewed: 2026-11-07 · website launch",
     desktopDownloadsTitle: "Desktop app downloads",
     desktopDownloadsIntro:
       "Install buusdo on this computer (browser shell + tray). Open-at-login stays off until you enable it.",
@@ -86,6 +86,19 @@ export const messages = {
       "This website does not enforce block/trust lists (extension and desktop do). Lists stay on-device.",
     blockListsOfflinePath:
       "Cross-device path: export/import shield-lists-v1 JSON or QR in the extension or desktop app. Desktop can also sync shield-backup.json via USB, Drive, or Syncthing — no cloud account.",
+    blockListsOfflinePageLink: "Offline list move guide",
+    listsOfflineKicker: "Personal lists",
+    listsOfflineTitle: "Move lists without a cloud account",
+    listsOfflineIntro:
+      "Block and trust lists stay on each device. There is no buusdo cloud account. Use export/import or file sync.",
+    listsOfflineStepsTitle: "JSON or QR",
+    listsOfflineStepExport: "In the extension or desktop app, export shield-lists-v1 (JSON or QR).",
+    listsOfflineStepMove: "Copy the file or scan the QR on the other device (USB, Drive, message to yourself).",
+    listsOfflineStepImport: "Import on the other device. Prefer one writer at a time.",
+    listsOfflineDesktopTitle: "Desktop shield-backup.json",
+    listsOfflineDesktopBody:
+      "The desktop app stores lists as shield-backup.json in its data folder. You may sync that folder with Syncthing, Drive, or USB. If two devices write at once, re-export from the device you trust and import on the other.",
+    listsOfflineDocsLink: "Full offline sync notes (docs)",
     accountTitle: "Account",
     accountHint:
       "Optional. Sync personal block/trust lists only across website, extension, and desktop. Never check history or full URLs.",
@@ -210,7 +223,7 @@ export const messages = {
     idleProbeBudget: "Server probe budget",
     errorRateLimit: "Too many checks. Try again in {sec}s (of {total}s from Retry-After).",
     errorRateLimitShort: "Too many checks. Try again in {sec}s.",
-    intelMergePt: "Portugal threat seeds (OWN_THREAT_MERGE_PT)",
+    intelMergePt: "Extra threat seeds (OWN_THREAT_MERGE_PT)",
     intelMergePtOn: "Merged",
     intelMergePtOff: "Off",
     historyCsvFilterAll: "All checks",
@@ -335,7 +348,7 @@ export const messages = {
     privacyPolicyLimitsTitle: "Limites honestos (app + proxy)",
     privacyPolicyLimitsBody:
       "Sem desencriptação TLS — o HTTPS CONNECT usa só o nome do anfitrião; não há certificado MITM. Sem terminar processos — os programas em execução continuam. Pastas de sistema só são reportadas — /usr, /etc, caminhos de sistema Windows e Program Files nunca são movidos nem editados. Não há motor AV / de assinaturas nem captura de credenciais ou histórico de navegação.",
-    privacyPolicyUpdated: "Última revisão: 2026-11-07 · EN / pt-PT · lançamento do site",
+    privacyPolicyUpdated: "Última revisão: 2026-11-07 · lançamento do site",
     desktopDownloadsTitle: "Transferências da app de ambiente de trabalho",
     desktopDownloadsIntro:
       "Instale o buusdo neste computador (browser + tabuleiro). Abrir ao iniciar sessão fica desligado até o ativar.",
@@ -384,6 +397,19 @@ export const messages = {
       "Este site não aplica listas de bloqueio/confiança (a extensão e a app sim). As listas ficam no dispositivo.",
     blockListsOfflinePath:
       "Caminho entre dispositivos: exportar/importar JSON shield-lists-v1 ou QR na extensão ou na app. A app também pode sincronizar shield-backup.json via USB, Drive ou Syncthing — sem conta na nuvem.",
+    blockListsOfflinePageLink: "Guia de listas offline",
+    listsOfflineKicker: "Listas pessoais",
+    listsOfflineTitle: "Mover listas sem conta na nuvem",
+    listsOfflineIntro:
+      "As listas de bloqueio e confiança ficam em cada dispositivo. Não há conta buusdo na nuvem. Use exportar/importar ou sincronização de ficheiros.",
+    listsOfflineStepsTitle: "JSON ou QR",
+    listsOfflineStepExport: "Na extensão ou na app, exporte shield-lists-v1 (JSON ou QR).",
+    listsOfflineStepMove: "Copie o ficheiro ou leia o QR noutro dispositivo (USB, Drive, mensagem para si).",
+    listsOfflineStepImport: "Importe no outro dispositivo. Prefira um escritor de cada vez.",
+    listsOfflineDesktopTitle: "Desktop shield-backup.json",
+    listsOfflineDesktopBody:
+      "A app guarda as listas em shield-backup.json na pasta de dados. Pode sincronizar essa pasta com Syncthing, Drive ou USB. Se dois dispositivos escreverem ao mesmo tempo, volte a exportar no que confia e importe no outro.",
+    listsOfflineDocsLink: "Notas completas de sync offline (docs)",
     accountTitle: "Conta",
     accountHint:
       "Opcional. Sincroniza só listas pessoais de bloqueio/confiança entre site, extensão e app. Nunca histórico de verificações nem URLs completos.",
@@ -508,7 +534,7 @@ export const messages = {
     idleProbeBudget: "Orçamento da sonda no servidor",
     errorRateLimit: "Demasiados pedidos. Tente daqui a {sec}s (de {total}s via Retry-After).",
     errorRateLimitShort: "Demasiados pedidos. Tente daqui a {sec}s.",
-    intelMergePt: "Sementes PT de ameaças (OWN_THREAT_MERGE_PT)",
+    intelMergePt: "Sementes extra de ameaças (OWN_THREAT_MERGE_PT)",
     intelMergePtOn: "Fundido",
     intelMergePtOff: "Desligado",
     historyCsvFilterAll: "Todas as verificações",

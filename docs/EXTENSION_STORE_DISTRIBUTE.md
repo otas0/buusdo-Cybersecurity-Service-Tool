@@ -56,7 +56,7 @@ Redeploy the website so Settings shows **Get for Chrome**.
 
 ## Safari — Mac App Store
 
-Wrapper: `safari/buusdo/` (bundle `pt.community.preventiveshield`).
+Wrapper: `safari/buusdo/` (target bundle `com.buusdo.cst`; migrate off legacy `pt.community.*`).
 
 ### Archive (operator Mac)
 

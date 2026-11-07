@@ -52,6 +52,7 @@ test.describe("production privacy pages", () => {
     await expect(page.getByTestId("privacy-policy-updated")).toContainText(/2026/);
     await expect(page.getByTestId("privacy-honest-limits")).toBeVisible();
     await expect(page.getByTestId("privacy-honest-limits")).toContainText(/No TLS decryption/i);
+    await expect(page.getByRole("heading", { name: /No cloud account sync/i })).toBeVisible();
   });
 
   test("/en/privacy#privacy-honest-limits deep-link", async ({ page }) => {
@@ -66,6 +67,9 @@ test.describe("production privacy pages", () => {
     await expect(page.getByRole("heading", { name: /Política de privacidade/i })).toBeVisible();
     await expect(page.getByTestId("privacy-honest-limits")).toBeVisible();
     await expect(page.getByTestId("privacy-honest-limits")).toContainText(/Sem desencriptação TLS/i);
+    await expect(
+      page.getByRole("heading", { name: /Sem sincronização de conta na nuvem/i })
+    ).toBeVisible();
   });
 
   test("/en/settings shows desktop download slots", async ({ page }) => {

@@ -18,7 +18,7 @@ Cloud Account sync is **cancelled**. Cross-device personal block/trust lists use
 
 ## Website
 
-The website does **not** store lists. Settings → Block/trust explains the offline path and links to extension / desktop installs (`data-testid=settings-lists-offline-path`).
+The website does **not** store lists. Short guide: `/en/lists-offline`. Settings → Block/trust also links there (`data-testid=settings-lists-offline-path`).
 
 ## Do not
 

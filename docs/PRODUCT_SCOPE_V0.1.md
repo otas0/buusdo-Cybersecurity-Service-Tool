@@ -2,11 +2,11 @@
 
 ## Purpose
 
-The unnamed prototype demonstrates preventive protection before a deceptive website interaction exposes credentials or personal data. Portugal is the first community and research context; the technical architecture is reusable internationally.
+The product demonstrates preventive protection before a deceptive website interaction exposes credentials or personal data. The technical architecture is international — no single-country positioning.
 
 ## In scope
 
-- English and European Portuguese consumer experience.
+- Consumer website, extension, and desktop experience.
 - URL decomposition and controlling-domain explanation.
 - Deterministic fictional reputation provider.
 - Fictional verified-organisation registry and claimed-identity comparison.

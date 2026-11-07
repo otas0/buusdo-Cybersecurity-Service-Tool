@@ -35,7 +35,7 @@ const batchArg = args.find((a) => !a.startsWith("--"));
 if (!batchArg) {
   console.error(`Usage: npm run threat:apply -- <batch.json> [--target=pt|core] [--dry-run] [--keep] [--skip-regression]
 
---target=pt writes security/data/curated-threats.pt.json (Portugal seeds).
+--target=pt writes security/data/curated-threats.pt.json (extra seeds; filename legacy).
 Default / --target=core writes curated-threats.json.
 Batch JSON may also set "target": "curated-threats.pt.json".
 --dry-run prints target path + host diffs without writing or archiving.

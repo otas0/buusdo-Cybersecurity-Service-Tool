@@ -46,8 +46,8 @@ jobs:
   # Always report staging gate status — never silently skip when URL unset.
   # Thin CF smoke only — no soft_warn / Slack / notarized HEAD (see health-monitor.yml).
   # When STAGING_HEALTH_URL is set: require accountSyncEnabled false (product cancelled).
-  staging-account-sync:
-    name: staging health (account sync off)
+  staging-health:
+    name: staging health (optional)
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4

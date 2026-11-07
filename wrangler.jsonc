@@ -4,7 +4,9 @@
   // Set CLOUDFLARE_ACCOUNT_ID in the environment, or uncomment account_id below.
   // "account_id": "YOUR_ACCOUNT_ID",
   // workers.dev URL = https://buusdocst.<account-subdomain>.workers.dev
-  // Staging: `npx wrangler deploy --env staging` (or vinext equivalent) → Worker name buusdocst-staging.
+  // Staging (Cloudflare Vite): build WITH env, then deploy WITHOUT --env:
+  //   CLOUDFLARE_ENV=staging vinext build && wrangler deploy
+  // (--env staging alone after a prod build still uploads top-level name buusdocst.)
   // Never put ACCOUNT_SYNC_ENABLED=1 or ACCOUNT_SYNC_DEV_RETURN_LINK on the top-level (prod) vars.
   "name": "buusdocst",
   "compatibility_date": "2025-10-01",

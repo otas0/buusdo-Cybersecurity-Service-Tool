@@ -1,5 +1,5 @@
 /**
- * Bilingual strings — English (en) and European Portuguese (pt-PT).
+ * UI strings — locale packs (en, pt-PT).
  * Shared by the popup; content-script toasts use a tiny subset via messages.
  *
  * Privacy note: these are UI strings only. No browsing history is stored here.

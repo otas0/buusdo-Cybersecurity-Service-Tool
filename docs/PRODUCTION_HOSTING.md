@@ -10,7 +10,8 @@ GitHub Free stays the git + CI home; Cloudflare Free/Workers runs the website.
 | Piece | Role |
 |-------|------|
 | `vinext` + `@cloudflare/vite-plugin` | Dev/build for App Router on Workers (`nodejs_compat`) |
-| `npm run deploy:cloudflare` | `vinext build && wrangler deploy` |
+| `npm run deploy:cloudflare` | `vinext build` → assert name `buusdocst` → `wrangler deploy` |
+| `npm run deploy:cloudflare:staging` | `CLOUDFLARE_ENV=staging vinext build` → assert name `buusdocst-staging` → `wrangler deploy` (do **not** use `--env` alone) |
 | `wrangler.jsonc` | Worker name, compat flags, non-secret vars |
 | Custom domain | Cloudflare DNS (or CNAME from external DNS) |
 

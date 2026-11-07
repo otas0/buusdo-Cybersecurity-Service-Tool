@@ -67,7 +67,7 @@ CI caches Playwright browsers under `~/.cache/ms-playwright` (with `restore-keys
 ## Threat batches
 
 - Core list: `npm run threat:apply -- security/data/batches/….json` (template: `_template.json`)
-- Portugal seeds: `npm run threat:apply -- … --target=pt` (template: [`security/data/batches/_template.pt.json`](security/data/batches/_template.pt.json) with `"target": "curated-threats.pt.json"`)
+- Extra seeds (`--target=pt`, filename legacy): `npm run threat:apply -- … --target=pt` (template: [`security/data/batches/_template.pt.json`](security/data/batches/_template.pt.json))
 - Preview without write: `npm run threat:apply -- … --dry-run`  
   `--dry-run` **skips** the `readyToApply` / `reviewedBy` checklist on purpose so operators can preview diffs before sign-off. Validation failures still exit non-zero (same as a real apply).
 

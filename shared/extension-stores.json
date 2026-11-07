@@ -2,9 +2,9 @@
   "chromeWebStoreUrl": "",
   "safariAppStoreUrl": "",
   "chromeWebStoreItemId": "",
-  "safariBundleId": "pt.community.preventiveshield",
-  "safariExtensionBundleId": "pt.community.preventiveshield.Extension",
+  "safariBundleId": "com.buusdo.cst",
+  "safariExtensionBundleId": "com.buusdo.cst.Extension",
   "privacyPolicyUrl": "https://buusdocst.mtsu.workers.dev/en/privacy",
   "supportHomepageUrl": "https://buusdocst.mtsu.workers.dev",
-  "notes": "Fill chromeWebStoreUrl / safariAppStoreUrl after store approval. Website Settings uses these as primary install links. Empty = show ‘listing soon’ + developer docs fallback."
+  "notes": "Store listing URLs stay empty until Chrome Web Store / Mac App Store approval — do not invent URLs. After approval, paste chromeWebStoreUrl / safariAppStoreUrl here and sync Safari Xcode bundle IDs to com.buusdo.cst* (legacy pt.community.* retired). Website Settings uses these as primary install links; empty = ‘listing soon’ + docs fallback."
 }

@@ -1,6 +1,6 @@
 {
   "updatedAt": "2026-10-25",
-  "source": "Portugal-oriented first-party seeds (.example only). Merged when OWN_THREAT_MERGE_PT=1 (default) or always via threat-intel merge.",
+  "source": "Extra first-party seeds (.example only; filename legacy). Merged when OWN_THREAT_MERGE_PT=1 (default) or always via threat-intel merge.",
   "hosts": {
     "actividade-financas.example": "KNOWN_PHISHING",
     "activobank-secure.example": "KNOWN_PHISHING",
