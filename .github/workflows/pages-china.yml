@@ -20,6 +20,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Sync instrument tokens into china-pages
+        run: |
+          cp shared/tokens.css china-pages/assets/tokens.css
+          cmp -s shared/tokens.css china-pages/assets/tokens.css
+
       - name: Publish china-pages to otas0/buusdocst
         uses: peaceiris/actions-gh-pages@v4
         with:
