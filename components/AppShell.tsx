@@ -126,7 +126,6 @@ function Header({
   return (
     <header className="top">
       <div className="brand">
-        <span className="index">01</span>
         <h1>{t.prototype}</h1>
       </div>
       <nav className="top-nav" aria-label={locale === "pt-PT" ? "Navegação" : "Navigation"}>
