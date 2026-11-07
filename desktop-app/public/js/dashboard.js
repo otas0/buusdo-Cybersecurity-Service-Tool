@@ -59,7 +59,6 @@ const els = {
   websiteBlockOnDevice: document.getElementById("websiteBlockOnDevice"),
   pathScanMachine: document.getElementById("pathScanMachine"),
   pathCheckWeb: document.getElementById("pathCheckWeb"),
-  pathSyncAccount: document.getElementById("pathSyncAccount"),
   threatSummaryTitle: document.getElementById("threatSummaryTitle"),
   threatSummaryHint: document.getElementById("threatSummaryHint"),
   threatMachineTitle: document.getElementById("threatMachineTitle"),
@@ -106,18 +105,6 @@ const els = {
   diagnosticsReveal: document.getElementById("diagnosticsReveal"),
   diagnosticsExportStatus: document.getElementById("diagnosticsExportStatus"),
   toastHost: document.getElementById("toastHost"),
-  accountTitle: document.getElementById("accountTitle"),
-  accountHint: document.getElementById("accountHint"),
-  accountStatus: document.getElementById("accountStatus"),
-  accountEmail: document.getElementById("accountEmail"),
-  accountSendBtn: document.getElementById("accountSendBtn"),
-  accountDeviceCode: document.getElementById("accountDeviceCode"),
-  accountExchangeBtn: document.getElementById("accountExchangeBtn"),
-  accountSyncToggle: document.getElementById("accountSyncToggle"),
-  accountSyncLabel: document.getElementById("accountSyncLabel"),
-  accountSyncNowBtn: document.getElementById("accountSyncNowBtn"),
-  accountSignOutBtn: document.getElementById("accountSignOutBtn"),
-  accountSignInForm: document.getElementById("accountSignInForm"),
   listsOfflineBackup: document.getElementById("listsOfflineBackup"),
   listsTitle: document.getElementById("listsTitle"),
   listsHint: document.getElementById("listsHint"),
@@ -323,7 +310,6 @@ function applyI18n() {
   if (els.websiteBlockOnDevice) els.websiteBlockOnDevice.textContent = t(lang, "websiteBlockOnDevice");
   if (els.pathScanMachine) els.pathScanMachine.textContent = t(lang, "pathScanMachine");
   if (els.pathCheckWeb) els.pathCheckWeb.textContent = t(lang, "pathCheckWeb");
-  if (els.pathSyncAccount) els.pathSyncAccount.textContent = t(lang, "pathSyncAccount");
   if (els.threatSummaryTitle) els.threatSummaryTitle.textContent = t(lang, "threatSummaryTitle");
   if (els.threatSummaryHint) els.threatSummaryHint.textContent = t(lang, "threatSummaryHint");
   if (els.threatMachineTitle) els.threatMachineTitle.textContent = t(lang, "threatMachineTitle");
@@ -368,15 +354,6 @@ function applyI18n() {
   if (els.diagnosticsCopyPath) els.diagnosticsCopyPath.textContent = t(lang, "diagnosticsCopyPath");
   if (els.diagnosticsReveal) els.diagnosticsReveal.textContent = t(lang, "diagnosticsReveal");
   syncDiagnosticsExportStyle();
-  if (els.accountTitle) els.accountTitle.textContent = t(lang, "accountTitle");
-  if (els.accountHint) els.accountHint.textContent = t(lang, "accountHint");
-  if (els.accountEmail) els.accountEmail.placeholder = t(lang, "accountEmailPlaceholder");
-  if (els.accountSendBtn) els.accountSendBtn.textContent = t(lang, "accountSendLink");
-  if (els.accountDeviceCode) els.accountDeviceCode.placeholder = t(lang, "accountDevicePlaceholder");
-  if (els.accountExchangeBtn) els.accountExchangeBtn.textContent = t(lang, "accountExchange");
-  if (els.accountSyncLabel) els.accountSyncLabel.textContent = t(lang, "accountSyncToggle");
-  if (els.accountSyncNowBtn) els.accountSyncNowBtn.textContent = t(lang, "accountSyncNow");
-  if (els.accountSignOutBtn) els.accountSignOutBtn.textContent = t(lang, "accountSignOut");
   if (els.listsOfflineBackup) els.listsOfflineBackup.textContent = t(lang, "accountOfflineBackup");
   if (els.listsTitle) els.listsTitle.textContent = t(lang, "listsTitle");
   if (els.listsHint) els.listsHint.textContent = t(lang, "listsHint");
@@ -939,16 +916,6 @@ function showMessageToast(message, kind = "caution", opts = {}) {
   }, 3200);
 }
 
-/** Prefer toast live region; mute accountStatus while toast is up (avoid double SR). */
-function setAccountStatusQuiet(msg) {
-  if (!els.accountStatus) return;
-  els.accountStatus.setAttribute("aria-live", "off");
-  els.accountStatus.textContent = msg || "";
-  window.setTimeout(() => {
-    els.accountStatus?.setAttribute("aria-live", "polite");
-  }, 3400);
-}
-
 function forceProxyGuideOpen(reasonKey) {
   if (els.proxyQuietBanner) {
     els.proxyQuietBanner.hidden = false;
@@ -983,49 +950,6 @@ async function blockHostOnDevice(host) {
   forceProxyGuideOpen("proxyGuideAfterBlock");
   updateProxyQuietBanner();
   return true;
-}
-
-async function runAccountSync(opts = {}) {
-  const { auto = false } = opts;
-  try {
-    const res = await fetch("/api/account/sync", { method: "POST" }).then((r) => r.json());
-    if (!res?.ok) {
-      const msg = t(lang, auto ? "accountAutoSyncFail" : "accountSyncFail", {
-        error: res?.error || "fail"
-      });
-      if (auto) {
-        setAccountStatusQuiet(msg);
-        showMessageToast(msg, "danger", { testId: "account-auto-sync-toast" });
-      } else {
-        setAccountStatus(msg);
-      }
-      return false;
-    }
-    if (res.lists) renderLists(res.lists);
-    const okMsg = auto
-      ? t(lang, "accountAutoSyncOk")
-      : res.merged
-        ? t(lang, "accountSyncMerged")
-        : t(lang, "accountSyncOk");
-    if (auto) {
-      setAccountStatusQuiet(okMsg);
-      showMessageToast(okMsg, "caution", { testId: "account-auto-sync-toast" });
-    } else {
-      setAccountStatus(okMsg);
-    }
-    return true;
-  } catch (err) {
-    const msg = t(lang, auto ? "accountAutoSyncFail" : "accountSyncFail", {
-      error: err instanceof Error ? err.message : "fail"
-    });
-    if (auto) {
-      setAccountStatusQuiet(msg);
-      showMessageToast(msg, "danger", { testId: "account-auto-sync-toast" });
-    } else {
-      setAccountStatus(msg);
-    }
-    return false;
-  }
 }
 
 function renderThreatSummary() {
@@ -1505,121 +1429,6 @@ els.listsQrCopyBtn?.addEventListener("click", async () => {
   }
 });
 
-function setAccountStatus(msg) {
-  if (!els.accountStatus) return;
-  els.accountStatus.textContent = msg || "";
-}
-
-function syncAccountControlsSignedIn(signedIn) {
-  const on = Boolean(signedIn);
-  if (els.accountSyncToggle) {
-    els.accountSyncToggle.disabled = !on;
-    els.accountSyncToggle.title = on ? "" : t(lang, "accountSignedOut");
-  }
-  if (els.accountSyncNowBtn) els.accountSyncNowBtn.disabled = !on;
-  if (els.accountSignOutBtn) els.accountSignOutBtn.disabled = !on;
-}
-
-async function refreshAccountUi() {
-  try {
-    const data = await fetch("/api/account").then((r) => r.json());
-    if (!data?.ok) return;
-    const signedIn = Boolean(data.signedIn && data.email);
-    if (els.accountSyncToggle) els.accountSyncToggle.checked = data.syncEnabled === true;
-    if (els.accountEmail && data.email) els.accountEmail.value = data.email;
-    syncAccountControlsSignedIn(signedIn);
-    let status = signedIn
-      ? t(lang, "accountSignedIn", { email: data.email })
-      : t(lang, "accountSignedOut");
-    if (data.lastSyncError) {
-      status = `${status} · ${t(lang, "accountSyncFail", { error: data.lastSyncError })}`;
-    }
-    setAccountStatus(status);
-  } catch {
-    syncAccountControlsSignedIn(false);
-    setAccountStatus(t(lang, "accountSignedOut"));
-  }
-}
-
-els.accountSignInForm?.addEventListener("submit", async (e) => {
-  e.preventDefault();
-  const email = (els.accountEmail?.value || "").trim();
-  if (!email) return;
-  try {
-    const res = await fetch("/api/account/magic/request", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email })
-    }).then((r) => r.json());
-    if (!res?.ok) {
-      setAccountStatus(
-        res?.error === "account-sync-disabled"
-          ? t(lang, "accountDisabled")
-          : t(lang, "accountSyncFail", { error: res?.error || "fail" })
-      );
-      return;
-    }
-    setAccountStatus(t(lang, "accountMagicSent"));
-    if (res.devLink) {
-      try {
-        window.open(res.devLink, "_blank", "noopener");
-      } catch {
-        /* ignore */
-      }
-    }
-  } catch (err) {
-    setAccountStatus(t(lang, "accountSyncFail", { error: err instanceof Error ? err.message : "fail" }));
-  }
-});
-
-els.accountExchangeBtn?.addEventListener("click", async () => {
-  const deviceCode = (els.accountDeviceCode?.value || "").trim();
-  if (!deviceCode) return;
-  try {
-    const res = await fetch("/api/account/device/exchange", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ deviceCode })
-    }).then((r) => r.json());
-    if (!res?.ok) {
-      setAccountStatus(t(lang, "accountSyncFail", { error: res?.error || "fail" }));
-      return;
-    }
-    await refreshAccountUi();
-    // Prefer sync on after sign-in so auto-sync can run.
-    if (els.accountSyncToggle && !els.accountSyncToggle.checked) {
-      els.accountSyncToggle.checked = true;
-      await fetch("/api/account/prefs", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ syncEnabled: true })
-      });
-    }
-    await runAccountSync({ auto: true });
-  } catch (err) {
-    setAccountStatus(t(lang, "accountSyncFail", { error: err instanceof Error ? err.message : "fail" }));
-  }
-});
-
-els.accountSyncToggle?.addEventListener("change", async () => {
-  const syncEnabled = els.accountSyncToggle?.checked === true;
-  await fetch("/api/account/prefs", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ syncEnabled })
-  });
-  if (syncEnabled) await runAccountSync({ auto: true });
-});
-
-els.accountSignOutBtn?.addEventListener("click", async () => {
-  await fetch("/api/account/logout", { method: "POST" });
-  await refreshAccountUi();
-});
-
-els.accountSyncNowBtn?.addEventListener("click", async () => {
-  await runAccountSync({ auto: false });
-});
-
 els.websiteBlockOnDevice?.addEventListener("click", async () => {
   if (!lastWebsiteCheckHost) {
     showMessageToast(t(lang, "websiteBlockNeedHost"), "danger");
@@ -1639,11 +1448,6 @@ els.pathScanMachine?.addEventListener("click", () => {
 els.pathCheckWeb?.addEventListener("click", () => {
   els.checkUrl?.focus();
   document.getElementById("checkForm")?.scrollIntoView({ block: "center" });
-});
-
-els.pathSyncAccount?.addEventListener("click", () => {
-  document.getElementById("accountSection")?.scrollIntoView({ block: "start" });
-  if (!els.accountSyncToggle?.disabled) void runAccountSync({ auto: false });
 });
 
 els.updateCheckBtn?.addEventListener("click", async () => {
@@ -2374,18 +2178,11 @@ function consumeDeepLinkBlockHost() {
   }
 }
 
-/**
- * Smoke-only hook for scripts/smoke-desktop-auto-sync-toast.mjs (and Playwright).
- * Not a product API — do not call from UI; Exchange still uses runAccountSync directly.
- */
-window.__SHIELD_RUN_ACCOUNT_SYNC__ = (opts) => runAccountSync(opts || {});
-
 fetchState()
   .then(() => {
     connectSSE();
     void refreshMachine();
     void refreshLists();
-    void refreshAccountUi();
     void probeWebsiteHealth();
     renderThreatSummary();
     consumeDeepLinkBlockHost();

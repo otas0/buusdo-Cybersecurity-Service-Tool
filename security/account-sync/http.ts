@@ -1,3 +1,4 @@
+/** @deprecated Account sync cancelled — see DEPRECATED.md / enabled.ts. */
 import { NextResponse } from "next/server";
 import { isAccountSyncEnabled } from "./enabled";
 

@@ -1,3 +1,4 @@
+/** @deprecated Account sync cancelled — always 503 via requireAccountSync. */
 import { createHash } from "node:crypto";
 import { rateLimit } from "../../../../../security/rate-limit";
 import { createMagicChallenge } from "../../../../../security/account-sync/auth";

@@ -45,7 +45,7 @@ jobs:
 
   # Always report staging gate status — never silently skip when URL unset.
   # Thin CF smoke only — no soft_warn / Slack / notarized HEAD (see health-monitor.yml).
-  # When STAGING_HEALTH_URL is set: fail closed unless Turso health flag is true.
+  # When STAGING_HEALTH_URL is set: require accountSyncEnabled false (product cancelled).
   staging-account-sync:
     name: staging health (account sync off)
     runs-on: ubuntu-latest
@@ -54,7 +54,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: "22"
-      - name: Staging gate or health (fail-closed Turso)
+      - name: Staging health (require sync off when URL set)
         env:
           STAGING_HEALTH_URL: ${{ vars.STAGING_HEALTH_URL }}
           PRODUCTION_HEALTH_URL: ${{ vars.PRODUCTION_HEALTH_URL }}

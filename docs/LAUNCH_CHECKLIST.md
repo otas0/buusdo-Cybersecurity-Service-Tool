@@ -73,7 +73,8 @@ Recorded via `npm run production:origin` → README + `shared/production-site.js
 - [x] No Turso / Resend / Postmark Account-sync secrets — do not add them
 - [x] Staging STRICT Account smokes retired (workflow notice only)
 - [x] **Local CF timeout:** when the laptop cannot reach `*.workers.dev`, use GitHub Actions **Production health** only ([LOCAL_CF_CONNECTIVITY.md](LOCAL_CF_CONNECTIVITY.md)) — do not treat laptop curl timeout as an outage
-- [x] Holds (unchanged): custom domain + [POST_LAUNCH_48H.md](POST_LAUNCH_48H.md); notarized promote until HEAD 200 + `NOTARIZED_HEAD_OK=1`; `RUN_PLAYWRIGHT_SETTINGS=false` until Settings narrow offline green; laptop CF → Actions only. Product: **buusdo Cybersecurity Service Tool** (Buusdo **line**, separate product).
+- [x] Holds: custom domain **independent of Account sync** ([CUSTOM_DOMAIN_REDEPLOY.md](CUSTOM_DOMAIN_REDEPLOY.md) + [POST_LAUNCH_48H.md](POST_LAUNCH_48H.md)); notarized promote until HEAD 200 + `NOTARIZED_HEAD_OK=1`; `RUN_PLAYWRIGHT_SETTINGS=false` until Settings narrow offline green; laptop CF → Actions only. Product: **buusdo Cybersecurity Service Tool** (Buusdo **line**, separate product).
+- [x] Offline list path documented: [OFFLINE_LIST_SYNC.md](OFFLINE_LIST_SYNC.md)
 - [x] **Desktop CI (unblocked):** [41440440022](https://github.com/otas0/buusdo-Cybersecurity-Service-Tool/actions/runs/41440440022) (`6b5ac83`) — `desktop-linux`, `desktop-macos`, `desktop-windows` all green.
 - [x] Privacy pages live: `/en/privacy`, `/pt-PT/privacy` — redeploy after copy edits, then `npm run test:playwright:privacy` on a CF-reachable machine
 - [x] Extension / desktop defaults follow `production:origin` (`DEFAULT_API_BASE=https://buusdocst.mtsu.workers.dev`)

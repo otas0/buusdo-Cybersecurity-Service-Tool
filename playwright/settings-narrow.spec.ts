@@ -476,7 +476,7 @@ test.describe("Settings narrow pt-PT", () => {
     await expect(page.getByTestId("settings-block-lists-live")).toBeVisible();
     await expect(page.getByTestId("settings-block-lists-live")).toContainText(/extension|desktop|extensão|app/i);
     await expect(page.locator("#settings-block-lists .scope-note")).toContainText(
-      /does not enforce|não aplica|Account sync|Conta opcional|offline/i
+      /does not enforce|não aplica|on-device|dispositivo|offline|export\/import|Syncthing/i
     );
   });
 
@@ -488,6 +488,7 @@ test.describe("Settings narrow pt-PT", () => {
     await page.goto(`${base}/en/settings`, { waitUntil: "domcontentloaded" });
     await expect(page.getByTestId("settings-account")).toHaveCount(0);
     await expect(page.locator("#settings-account")).toHaveCount(0);
+    await expect(page.getByTestId("settings-lists-offline-path")).toBeVisible();
     const health = await page.request.get(`${base}/api/health`).then((r) => r.json());
     expect(health?.accountSyncEnabled).toBeFalsy();
   });

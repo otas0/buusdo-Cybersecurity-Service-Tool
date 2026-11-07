@@ -87,8 +87,10 @@ jobs:
           body=$(curl -fsS --max-time 30 "$HEALTH_BASE_URL/api/health")
           echo "$body" | tee /tmp/health.json
           echo "$body" | grep -q '"ok":true'
+          echo "$body" | grep -q '"service":"buusdocst"'
           echo "$body" | grep -q '"curatedListPresent":true'
           echo "$body" | grep -q '"accountSyncEnabled":false'
+          echo "::notice::health service=buusdocst (legacy preventive-shield / pcpd names must not appear)"
 
       - name: Check smoke
         id: check
@@ -358,8 +360,7 @@ jobs:
         run: |
           echo "::error::Production health or check:prod failed. Watchers receive GitHub workflow-failure email. Slack: secret SLACK_WEBHOOK_URL + workflow Slack alert test (docs/HEALTH_ALERTS.md)."
 
-  # Always report staging gate status — never silently skip when URL unset.
-  # When STAGING_HEALTH_URL is set: fail closed unless Turso health flag is true.
+  # Optional staging origin — when set, require accountSyncEnabled false (product cancelled).
   staging-account-sync:
     name: staging health (account sync off)
     runs-on: ubuntu-latest
@@ -368,7 +369,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: "22"
-      - name: Staging gate or health (fail-closed Turso)
+      - name: Staging health (require sync off when URL set)
         env:
           STAGING_HEALTH_URL: ${{ vars.STAGING_HEALTH_URL }}
           PRODUCTION_HEALTH_URL: ${{ vars.PRODUCTION_HEALTH_URL }}

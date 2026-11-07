@@ -26,8 +26,7 @@ Cloudflare Free / Workers free tier is usually enough for an early launch:
 
 Limits (CPU time, daily requests) apply — fine for beta; watch dashboard after go-live.
 
-**Not durable on Workers alone:** file-backed account sync (`data/account-sync/`). Keep **`ACCOUNT_SYNC_ENABLED` off** until Turso/libsql (`DATABASE_URL`) is wired.  
-`wrangler.jsonc` sets **`ACCOUNT_SYNC_REQUIRE_TURSO=1`** so enabling sync without Turso stays off (never open the file store on Workers).
+**Account sync cancelled:** do not wire Turso/mailer for lists. See [ACCOUNT_SYNC_GATE.md](ACCOUNT_SYNC_GATE.md) and [OFFLINE_LIST_SYNC.md](OFFLINE_LIST_SYNC.md).
 
 ## 1. One-time setup
 

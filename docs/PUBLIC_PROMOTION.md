@@ -1,6 +1,6 @@
 # Public promotion copy (canonical only)
 
-**Line vs product (always):** Buusdo = product **line**. This product = **buusdo Cybersecurity Service Tool** (separate product — not Buusdo itself, not other Buusdo-line apps).
+**Line vs product (always):** Buusdo = product **line**. This product = **buusdo Cybersecurity Service Tool** (not Buusdo itself, not other Buusdo-line apps).
 
 Until a custom domain replaces workers.dev, the **only** public links are:
 
@@ -16,7 +16,7 @@ After a custom domain, `npm run production:origin -- https://YOUR_CANONICAL` rew
 ## Ready-to-paste (EN)
 
 ```
-buusdo Cybersecurity Service Tool (Buusdo product line — separate product).
+buusdo Cybersecurity Service Tool (Buusdo product line).
 Check a website before you trust it.
 Product (Workers): https://buusdocst.mtsu.workers.dev
 China entry (GitHub Pages): https://otas0.github.io/buusdocst/
@@ -26,7 +26,7 @@ Privacy: https://buusdocst.mtsu.workers.dev/en/privacy
 ## Ready-to-paste (pt-PT)
 
 ```
-buusdo Cybersecurity Service Tool (linha Buusdo — produto distinto).
+buusdo Cybersecurity Service Tool (linha Buusdo).
 Verifique um site antes de confiar.
 Produto (Workers): https://buusdocst.mtsu.workers.dev
 Entrada China (GitHub Pages): https://otas0.github.io/buusdocst/
@@ -47,8 +47,12 @@ Privacidade: https://buusdocst.mtsu.workers.dev/pt-PT/privacy
 - Advertise both `www` and apex
 - Link localhost, preview URLs, or alternate workers.dev hostnames (`pcpd`, `preventive-shield` — those Workers are deleted)
 - Republish or advertise any hostname other than `buusdocst.mtsu.workers.dev` / `otas0.github.io/buusdocst`
-- Promote Account sync — product cancelled ([ACCOUNT_SYNC_GATE.md](ACCOUNT_SYNC_GATE.md))
+- Promise cloud Account sync, cross-device cloud lists, or magic-link sign-in ([ACCOUNT_SYNC_GATE.md](ACCOUNT_SYNC_GATE.md))
 - Publish check results or sample “risky” URLs that still work as phish bait
+
+## Cross-device lists (allowed wording)
+
+Say only: lists stay on-device; move them with **export/import JSON or QR**, or sync desktop **`shield-backup.json`** yourself (USB / Drive / Syncthing). See [OFFLINE_LIST_SYNC.md](OFFLINE_LIST_SYNC.md).
 
 ## Spot-check (before each external post)
 

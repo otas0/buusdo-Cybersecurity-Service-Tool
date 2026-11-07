@@ -428,148 +428,21 @@ app.post("/api/prefs", async (req, res) => {
   res.json({ ok: true, state: snap, listsCleared });
 });
 
-/** Account sync — tokens in data/account-tokens.json; upstream = WEBSITE_CHECK_URL. */
-app.get("/api/account", (_req, res) => {
-  const tokens = accountTokens.readTokens();
-  res.json({
-    ok: true,
-    email: tokens.email || null,
-    signedIn: Boolean(tokens.accessToken),
-    syncEnabled: tokens.syncEnabled === true,
-    website: WEBSITE_CHECK_URL,
-    lastSyncError: tokens.lastSyncError || null,
-    lastSyncErrorAt: tokens.lastSyncErrorAt || null
-  });
-});
-
-app.post("/api/account/prefs", (req, res) => {
-  const patch = {};
-  if (typeof req.body?.syncEnabled === "boolean") patch.syncEnabled = req.body.syncEnabled;
-  if (typeof req.body?.email === "string") patch.email = req.body.email.trim().toLowerCase();
-  const tokens = accountTokens.writeTokens(patch);
-  res.json({
-    ok: true,
-    email: tokens.email || null,
-    signedIn: Boolean(tokens.accessToken),
-    syncEnabled: tokens.syncEnabled === true
-  });
-});
-
-app.post("/api/account/magic/request", async (req, res) => {
-  try {
-    const response = await fetch(`${WEBSITE_CHECK_URL}/api/auth/magic/request`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        email: req.body?.email,
-        client: "desktop"
-      })
-    });
-    const data = await response.json();
-    if (typeof req.body?.email === "string") {
-      accountTokens.writeTokens({ email: String(req.body.email).trim().toLowerCase() });
-    }
-    return res.status(response.status).json(data);
-  } catch (err) {
-    return res.status(502).json({
-      ok: false,
-      error: err instanceof Error ? err.message : "magic-request-failed"
-    });
-  }
-});
-
-app.post("/api/account/device/exchange", async (req, res) => {
-  try {
-    const response = await fetch(`${WEBSITE_CHECK_URL}/api/auth/device/exchange`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ deviceCode: req.body?.deviceCode })
-    });
-    const data = await response.json();
-    if (!response.ok || !data?.ok) return res.status(response.status).json(data);
-    const tokens = accountTokens.writeTokens({
-      accessToken: data.accessToken,
-      refreshToken: data.refreshToken,
-      expiresAt: data.expiresAt || null
-    });
-    return res.json({
-      ok: true,
-      email: tokens.email || null,
-      signedIn: true,
-      syncEnabled: tokens.syncEnabled === true,
-      expiresAt: tokens.expiresAt
-    });
-  } catch (err) {
-    return res.status(502).json({
-      ok: false,
-      error: err instanceof Error ? err.message : "exchange-failed"
-    });
-  }
-});
-
-app.post("/api/account/logout", async (_req, res) => {
-  const tokens = accountTokens.readTokens();
-  try {
-    if (tokens.accessToken) {
-      await fetch(`${WEBSITE_CHECK_URL}/api/auth/logout`, {
-        method: "POST",
-        headers: { Authorization: `Bearer ${tokens.accessToken}` }
-      });
-    }
-  } catch {
-    /* ignore upstream */
-  }
+/** Account sync product cancelled — all /api/account* return 410. */
+function accountSyncGone(_req, res) {
   accountTokens.clearTokens();
-  res.json({ ok: true, signedOut: true });
-});
-
-app.post("/api/account/sync", async (_req, res) => {
-  const tokens = accountTokens.readTokens();
-  if (!tokens.accessToken) {
-    return res.status(401).json({ ok: false, error: "not-signed-in" });
-  }
-  if (!tokens.syncEnabled) {
-    return res.status(400).json({ ok: false, error: "sync-disabled" });
-  }
-  try {
-    const lists = await listsStore.getLists();
-    const putRes = await fetch(`${WEBSITE_CHECK_URL}/api/sync/lists`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${tokens.accessToken}`
-      },
-      body: JSON.stringify({
-        backup: lists,
-        client: "desktop",
-        baseUpdatedAt: lists?.updatedAt
-      })
-    });
-    const putData = await putRes.json();
-    if (!putRes.ok || !putData?.ok) {
-      return res.status(putRes.status).json(putData);
-    }
-    accountTokens.setLastSyncError(null);
-    if (putData.backup) {
-      const mod = await listsStore.loadMod();
-      const next = await listsStore.writeLists(mod.mergeBackups(lists, putData.backup));
-      emitListsUpdate(next);
-      return res.json({
-        ok: true,
-        lists: next,
-        merged: putData.merged === true
-      });
-    }
-    return res.json({ ok: true, lists, merged: putData.merged === true });
-  } catch (err) {
-    const msg = err instanceof Error ? err.message : "sync-failed";
-    accountTokens.setLastSyncError(msg);
-    return res.status(502).json({
-      ok: false,
-      error: msg
-    });
-  }
-});
+  res.status(410).json({
+    ok: false,
+    error: "account-sync-cancelled",
+    hint: "Use offline shield-lists-v1 export/import or Syncthing on shield-backup.json"
+  });
+}
+app.get("/api/account", accountSyncGone);
+app.post("/api/account/prefs", accountSyncGone);
+app.post("/api/account/magic/request", accountSyncGone);
+app.post("/api/account/device/exchange", accountSyncGone);
+app.post("/api/account/logout", accountSyncGone);
+app.post("/api/account/sync", accountSyncGone);
 
 app.post("/api/lists/clear", async (_req, res) => {
   const lists = await listsStore.clearListsFile();
@@ -918,41 +791,6 @@ loadDetector()
         meta?.path || listsStore.listsPath(),
         meta?.mtimeMs != null ? meta.mtimeMs : listsStore.listsMtimeMs()
       );
-      // Optional account push when signed in + Sync lists (debounced by lists watch).
-      const tokens = accountTokens.readTokens();
-      if (tokens.accessToken && tokens.syncEnabled) {
-        void fetch(`${WEBSITE_CHECK_URL}/api/sync/lists`, {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${tokens.accessToken}`
-          },
-          body: JSON.stringify({
-            backup: lists,
-            client: "desktop",
-            baseUpdatedAt: lists?.updatedAt
-          })
-        })
-          .then(async (r) => {
-            if (r.ok) {
-              accountTokens.setLastSyncError(null);
-              return;
-            }
-            let err = `HTTP ${r.status}`;
-            try {
-              const body = await r.json();
-              if (body?.error) err = String(body.error);
-            } catch {
-              /* ignore */
-            }
-            accountTokens.setLastSyncError(err);
-          })
-          .catch((err) => {
-            accountTokens.setLastSyncError(
-              err instanceof Error ? err.message : "sync-unreachable"
-            );
-          });
-      }
     });
     const listsMod = await listsStore.loadMod();
     const scanDeps = {

@@ -3,6 +3,8 @@
 First launch can stay on `https://buusdocst.mtsu.workers.dev`.  
 When you attach a real domain, do a **second** deploy so the client bundle knows the public origin.
 
+**Hold note:** Custom domain is **not** blocked on Account sync (that product is cancelled). Proceed when DNS + TLS + [POST_LAUNCH_48H.md](POST_LAUNCH_48H.md) hygiene are ready.
+
 ## 1. Attach the domain
 
 1. Cloudflare DNS for the zone (orange-cloud or CNAME to workers as required).
@@ -44,7 +46,17 @@ npm run check:prod -- --url https://YOUR_CANONICAL
 
 Commit those files. Confirm [PUBLIC_PROMOTION.md](PUBLIC_PROMOTION.md) shows **only** the new canonical + `/en/privacy` (and optional pt-PT).
 
-## 6. Checklist
+## 6. OG / social absolute URL check
+
+After DNS + second deploy:
+
+1. Open [Facebook Sharing Debugger](https://developers.facebook.com/tools/debug/) and [Twitter Card Validator](https://cards-dev.twitter.com/validator) (or equivalent).
+2. Paste `https://YOUR_CANONICAL/` and confirm `og:image` resolves to `https://YOUR_CANONICAL/og.png` (not a stale `*.workers.dev` URL).
+3. If the debugger still shows workers.dev, hard-refresh the scrape and verify GitHub var `NEXT_PUBLIC_SITE_URL` matched the deploy.
+
+`npm run production:origin` prints the same reminder.
+
+## 7. Checklist
 
 Mark the custom-domain rows in [LAUNCH_CHECKLIST.md](LAUNCH_CHECKLIST.md) § B.  
 Ops overview: [OPS_RUNBOOK.md](OPS_RUNBOOK.md).

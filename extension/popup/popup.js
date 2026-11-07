@@ -28,12 +28,7 @@ import {
   nextTrackersAnnounceReadyAt,
   shouldAnnounceTrackersMute
 } from "../shared/trackers-announce.mjs";
-import {
-  accountFetch,
-  clearAccountTokens,
-  persistAccountTokens,
-  readAccountTokens
-} from "../shared/account-sync.mjs";
+import { clearAccountTokens } from "../shared/account-sync.mjs";
 
 const API_BASE_KEY = "websiteApiBase";
 const TOAST_DISMISS_STORAGE_KEY = "shieldToastDismiss";
@@ -98,18 +93,6 @@ const els = {
   listsOfflineBackup: document.getElementById("listsOfflineBackup"),
   listAddForm: document.getElementById("listAddForm"),
   listCols: document.querySelector(".list-cols"),
-  accountTitle: document.getElementById("accountTitle"),
-  accountHint: document.getElementById("accountHint"),
-  accountStatus: document.getElementById("accountStatus"),
-  accountEmail: document.getElementById("accountEmail"),
-  accountSendBtn: document.getElementById("accountSendBtn"),
-  accountDeviceCode: document.getElementById("accountDeviceCode"),
-  accountExchangeBtn: document.getElementById("accountExchangeBtn"),
-  accountSyncToggle: document.getElementById("accountSyncToggle"),
-  accountSyncLabel: document.getElementById("accountSyncLabel"),
-  accountSyncNowBtn: document.getElementById("accountSyncNowBtn"),
-  accountSignOutBtn: document.getElementById("accountSignOutBtn"),
-  accountSignInForm: document.getElementById("accountSignInForm"),
   toastHost: document.getElementById("toastHost")
 };
 
@@ -177,15 +160,6 @@ function applyI18n() {
   if (els.websiteApiFallback && !els.websiteApiFallback.hidden) {
     els.websiteApiFallback.textContent = t(lang, "websiteApiBadBaseFallback");
   }
-  if (els.accountTitle) els.accountTitle.textContent = t(lang, "accountTitle");
-  if (els.accountHint) els.accountHint.textContent = t(lang, "accountHint");
-  if (els.accountEmail) els.accountEmail.placeholder = t(lang, "accountEmailPlaceholder");
-  if (els.accountSendBtn) els.accountSendBtn.textContent = t(lang, "accountSendLink");
-  if (els.accountDeviceCode) els.accountDeviceCode.placeholder = t(lang, "accountDevicePlaceholder");
-  if (els.accountExchangeBtn) els.accountExchangeBtn.textContent = t(lang, "accountExchange");
-  if (els.accountSyncLabel) els.accountSyncLabel.textContent = t(lang, "accountSyncToggle");
-  if (els.accountSyncNowBtn) els.accountSyncNowBtn.textContent = t(lang, "accountSyncNow");
-  if (els.accountSignOutBtn) els.accountSignOutBtn.textContent = t(lang, "accountSignOut");
   if (els.listsOfflineBackup) els.listsOfflineBackup.textContent = t(lang, "accountOfflineBackup");
   if (els.listsTitle) els.listsTitle.textContent = t(lang, "listsTitle");
   if (els.listsHint) els.listsHint.textContent = t(lang, "listsHint");
@@ -633,7 +607,6 @@ async function runWebsiteApiCheck() {
     els.websiteApiStatus.textContent = hasUserBlock
       ? `${okLine} · ${t(lang, "websiteApiUserBlock")}`
       : okLine;
-    scheduleAccountAutoPull(base);
   } catch (err) {
     const message = err instanceof Error ? err.message : "unreachable";
     const baseNow = apiBase();
@@ -645,59 +618,6 @@ async function runWebsiteApiCheck() {
     els.websiteApiStatus.textContent = looksCfTimeout
       ? t(lang, "websiteApiCfUnreachable", { chinaEntry: CHINA_PAGES_URL })
       : t(lang, "websiteApiFail", { error: message });
-  }
-}
-
-/** Debounced cloud pull after a successful Website API scan when Sync lists is on. */
-let accountAutoPullTimer = null;
-const ACCOUNT_AUTO_PULL_MS = 2500;
-
-function scheduleAccountAutoPull(base) {
-  if (accountAutoPullTimer) clearTimeout(accountAutoPullTimer);
-  accountAutoPullTimer = setTimeout(() => {
-    accountAutoPullTimer = null;
-    void maybeAccountAutoPull(base);
-  }, ACCOUNT_AUTO_PULL_MS);
-}
-
-async function maybeAccountAutoPull(base) {
-  const mode = normalizePrivacyMode(els.privacySelect?.value);
-  if (mode === "off") return;
-  const tokens = await readAccountTokens(api.storage.local);
-  if (!tokens.accessToken || !tokens.syncEnabled) return;
-  try {
-    let access = tokens.accessToken;
-    let get = await accountFetch(base, "/api/sync/lists", {
-      method: "GET",
-      token: access
-    });
-    if (get.status === 401 && tokens.refreshToken) {
-      const refreshed = await accountFetch(base, "/api/auth/refresh", {
-        method: "POST",
-        body: JSON.stringify({ refreshToken: tokens.refreshToken })
-      });
-      const refData = await refreshed.json();
-      if (refreshed.ok && refData.ok && refData.accessToken) {
-        await persistAccountTokens(
-          {
-            accessToken: refData.accessToken,
-            refreshToken: refData.refreshToken || tokens.refreshToken
-          },
-          api.storage.local
-        );
-        access = refData.accessToken;
-        get = await accountFetch(base, "/api/sync/lists", {
-          method: "GET",
-          token: access
-        });
-      }
-    }
-    const data = await get.json();
-    if (!get.ok || !data.ok || !data.backup) return;
-    await importBackupPayload(data.backup);
-    setAccountStatus(t(lang, "accountSyncOk"));
-  } catch {
-    /* ignore offline / sync errors on auto-pull */
   }
 }
 
@@ -841,25 +761,15 @@ async function refreshFromBackground() {
   }
   await restoreFallbackNoticeFromStorage();
   await refreshLists();
-  await refreshAccountUi();
+  // Account sync cancelled — drop any leftover tokens from older builds.
+  try {
+    await clearAccountTokens(api.storage.local);
+  } catch {
+    /* ignore */
+  }
 }
 
-function setAccountStatus(msg) {
-  if (!els.accountStatus) return;
-  els.accountStatus.textContent = msg || "";
-}
-
-/** Mute status live region while toast announces (avoid double SR). */
-function setAccountStatusQuiet(msg) {
-  if (!els.accountStatus) return;
-  els.accountStatus.setAttribute("aria-live", "off");
-  els.accountStatus.textContent = msg || "";
-  window.setTimeout(() => {
-    els.accountStatus?.setAttribute("aria-live", "polite");
-  }, 3400);
-}
-
-/** Match desktop dashboard toast (auto-sync success / fail). */
+/** Match desktop dashboard toast. */
 function showMessageToast(message, kind = "caution", opts = {}) {
   if (!els.toastHost || !message) return;
   const el = document.createElement("div");
@@ -873,215 +783,6 @@ function showMessageToast(message, kind = "caution", opts = {}) {
     setTimeout(() => el.remove(), 250);
   }, 3200);
 }
-
-function syncAccountControlsSignedIn(signedIn) {
-  const on = Boolean(signedIn);
-  if (els.accountSyncToggle) {
-    els.accountSyncToggle.disabled = !on;
-    els.accountSyncToggle.title = on ? "" : t(lang, "accountSignedOut");
-  }
-  if (els.accountSyncNowBtn) els.accountSyncNowBtn.disabled = !on;
-  if (els.accountSignOutBtn) els.accountSignOutBtn.disabled = !on;
-}
-
-async function refreshAccountUi() {
-  const tokens = await readAccountTokens(api.storage.local);
-  const signedIn = Boolean(tokens.email && tokens.accessToken);
-  if (els.accountSyncToggle) els.accountSyncToggle.checked = tokens.syncEnabled;
-  syncAccountControlsSignedIn(signedIn);
-  if (signedIn) {
-    setAccountStatus(t(lang, "accountSignedIn", { email: tokens.email }));
-  } else {
-    setAccountStatus(t(lang, "accountSignedOut"));
-  }
-}
-
-async function accountApiBase() {
-  return apiBase() || DEFAULT_API_BASE;
-}
-
-els.accountSignInForm?.addEventListener("submit", async (e) => {
-  e.preventDefault();
-  const mode = normalizePrivacyMode(els.privacySelect?.value);
-  if (mode === "off") {
-    setAccountStatus(t(lang, "accountNeedPrivacy"));
-    return;
-  }
-  const email = (els.accountEmail?.value || "").trim();
-  if (!email) return;
-  try {
-    const base = await accountApiBase();
-    const res = await accountFetch(base, "/api/auth/magic/request", {
-      method: "POST",
-      body: JSON.stringify({ email, client: "extension" })
-    });
-    const data = await res.json();
-    if (!res.ok || !data.ok) {
-      setAccountStatus(
-        data.error === "account-sync-disabled"
-          ? t(lang, "accountDisabled")
-          : t(lang, "accountSyncFail", { error: data.error || String(res.status) })
-      );
-      return;
-    }
-    setAccountStatus(t(lang, "accountMagicSent"));
-    if (data.devLink && els.accountDeviceCode) {
-      // Dev: open consume URL; popup may not follow redirect — user pastes deviceCode.
-      try {
-        await api.tabs.create({ url: data.devLink });
-      } catch {
-        /* ignore */
-      }
-    }
-  } catch (err) {
-    setAccountStatus(t(lang, "accountSyncFail", { error: err instanceof Error ? err.message : "fail" }));
-  }
-});
-
-async function runAccountSync({ auto = false } = {}) {
-  const mode = normalizePrivacyMode(els.privacySelect?.value);
-  if (mode === "off") {
-    const msg = t(lang, "accountNeedPrivacy");
-    setAccountStatus(msg);
-    return false;
-  }
-  const tokens = await readAccountTokens(api.storage.local);
-  if (!tokens.accessToken) {
-    setAccountStatus(t(lang, "accountSignedOut"));
-    return false;
-  }
-  if (!tokens.syncEnabled) {
-    if (!auto) setAccountStatus(t(lang, "accountSyncToggle"));
-    return false;
-  }
-  try {
-    const base = await accountApiBase();
-    const exportRes = await api.runtime.sendMessage({ type: "SHIELD_LISTS_EXPORT" });
-    if (!exportRes?.ok || !exportRes.backup) {
-      const msg = t(lang, auto ? "accountAutoSyncFail" : "accountSyncFail", {
-        error: "no-local-lists"
-      });
-      if (auto) {
-        setAccountStatusQuiet(msg);
-        showMessageToast(msg, "danger", { testId: "account-auto-sync-toast" });
-      } else {
-        setAccountStatus(msg);
-      }
-      return false;
-    }
-    const put = await accountFetch(base, "/api/sync/lists", {
-      method: "PUT",
-      token: tokens.accessToken,
-      body: JSON.stringify({
-        backup: exportRes.backup,
-        client: "extension",
-        baseUpdatedAt: exportRes.backup?.updatedAt
-      })
-    });
-    const putData = await put.json();
-    if (!put.ok || !putData.ok) {
-      const msg = t(lang, auto ? "accountAutoSyncFail" : "accountSyncFail", {
-        error: putData.error || String(put.status)
-      });
-      if (auto) {
-        setAccountStatusQuiet(msg);
-        showMessageToast(msg, "danger", { testId: "account-auto-sync-toast" });
-      } else {
-        setAccountStatus(msg);
-      }
-      return false;
-    }
-    if (putData.backup) {
-      await importBackupPayload(putData.backup);
-    }
-    const okMsg = auto
-      ? t(lang, "accountAutoSyncOk")
-      : putData.merged
-        ? t(lang, "accountSyncMerged")
-        : t(lang, "accountSyncOk");
-    if (auto) {
-      setAccountStatusQuiet(okMsg);
-      showMessageToast(okMsg, "caution", { testId: "account-auto-sync-toast" });
-    } else {
-      setAccountStatus(okMsg);
-    }
-    return true;
-  } catch (err) {
-    const msg = t(lang, auto ? "accountAutoSyncFail" : "accountSyncFail", {
-      error: err instanceof Error ? err.message : "fail"
-    });
-    if (auto) {
-      setAccountStatusQuiet(msg);
-      showMessageToast(msg, "danger", { testId: "account-auto-sync-toast" });
-    } else {
-      setAccountStatus(msg);
-    }
-    return false;
-  }
-}
-
-els.accountExchangeBtn?.addEventListener("click", async () => {
-  const mode = normalizePrivacyMode(els.privacySelect?.value);
-  if (mode === "off") {
-    setAccountStatus(t(lang, "accountNeedPrivacy"));
-    return;
-  }
-  const deviceCode = (els.accountDeviceCode?.value || "").trim();
-  if (!deviceCode) return;
-  try {
-    const base = await accountApiBase();
-    const res = await accountFetch(base, "/api/auth/device/exchange", {
-      method: "POST",
-      body: JSON.stringify({ deviceCode })
-    });
-    const data = await res.json();
-    if (!res.ok || !data.ok) {
-      setAccountStatus(t(lang, "accountSyncFail", { error: data.error || String(res.status) }));
-      return;
-    }
-    const syncOn = els.accountSyncToggle?.checked !== false;
-    await persistAccountTokens(
-      {
-        accessToken: data.accessToken,
-        refreshToken: data.refreshToken,
-        email: (els.accountEmail?.value || "").trim() || "signed-in",
-        syncEnabled: syncOn
-      },
-      api.storage.local
-    );
-    if (els.accountSyncToggle) els.accountSyncToggle.checked = syncOn;
-    await refreshAccountUi();
-    if (syncOn) await runAccountSync({ auto: true });
-  } catch (err) {
-    setAccountStatus(t(lang, "accountSyncFail", { error: err instanceof Error ? err.message : "fail" }));
-  }
-});
-
-els.accountSyncToggle?.addEventListener("change", async () => {
-  const on = els.accountSyncToggle?.checked === true;
-  await persistAccountTokens({ syncEnabled: on }, api.storage.local);
-});
-
-els.accountSignOutBtn?.addEventListener("click", async () => {
-  const tokens = await readAccountTokens(api.storage.local);
-  try {
-    if (tokens.accessToken) {
-      const base = await accountApiBase();
-      await accountFetch(base, "/api/auth/logout", {
-        method: "POST",
-        token: tokens.accessToken
-      });
-    }
-  } catch {
-    /* ignore */
-  }
-  await clearAccountTokens(api.storage.local);
-  await refreshAccountUi();
-});
-
-els.accountSyncNowBtn?.addEventListener("click", async () => {
-  await runAccountSync({ auto: false });
-});
 
 async function runScan() {
   els.scanBtn.classList.add("is-scanning");

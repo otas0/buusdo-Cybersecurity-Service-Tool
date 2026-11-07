@@ -16,12 +16,12 @@ After the first successful Cloudflare deploy that you treat as **live**:
 
 ## Do not (for 48h)
 
-- Enable account sync / Turso / mailer mid-incident window
 - Land large new product surfaces (new check modes, redesigns, extension-major features)
 - Parallel “nice to have” refactors that touch `/api/check` or probe budgets
+- Re-open Account sync (product cancelled — [ACCOUNT_SYNC_GATE.md](ACCOUNT_SYNC_GATE.md))
 
 Small hotfixes for health, check, or privacy copy are OK.
 
 ## After 48h
 
-Re-open the normal backlog (Turso gate for account sync, vinext 1.4 eval, extension polish) using [LAUNCH_CHECKLIST.md](LAUNCH_CHECKLIST.md) leftovers.
+Re-open the normal backlog (vinext 1.4 eval, extension polish, custom domain) using [LAUNCH_CHECKLIST.md](LAUNCH_CHECKLIST.md) leftovers. Custom domain is **independent** of Account sync — follow [CUSTOM_DOMAIN_REDEPLOY.md](CUSTOM_DOMAIN_REDEPLOY.md) when ready.

@@ -1,3 +1,4 @@
+/** @deprecated Account sync cancelled — always 503 via requireAccountSync. */
 import { rateLimit } from "../../../../security/rate-limit";
 import { sessionFromRequest } from "../../../../security/account-sync/auth";
 import {

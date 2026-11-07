@@ -27,16 +27,16 @@ export const messages = {
     privacyPolicyStoreTitle: "What is stored",
     privacyPolicyStoreBody:
       "Default: nothing is stored. You may choose this-device-only storage (block/trust lists, optional check history) in the browser, extension, or desktop app. Optional diagnostics for support include only source and threat type — never the full address, and never for public release or advertising.",
-    privacyPolicyAccountTitle: "Optional account sync",
+    privacyPolicyAccountTitle: "No cloud account sync",
     privacyPolicyAccountBody:
-      "Account sync is off on the public Workers launch until a durable store (Turso) and mailer are configured. When enabled later, signing in stores only your personal shield-lists-v1 block/trust snapshot — not check history or full URLs. You can export or delete that snapshot.",
+      "buusdo does not offer a cloud account or cross-device list sync. Personal block/trust lists stay on this device. Move them with export/import of shield-lists-v1 JSON or QR, or sync the desktop shield-backup.json file yourself (USB, Drive, Syncthing).",
     privacyPolicyContactTitle: "Questions",
     privacyPolicyContactBody:
       "For privacy questions, contact the operator of your buusdo deployment (the person or organisation that runs the Cloudflare Worker). Do not paste sensitive check results into public channels.",
     privacyPolicyLimitsTitle: "Honest limits (desktop + proxy)",
     privacyPolicyLimitsBody:
       "No TLS decryption — HTTPS CONNECT is hostname-only; there is no MITM certificate. No process kill — running programs keep running. System directories are report-only — /usr, /etc, Windows system paths, and Program Files are never moved or edited. There is no AV / signature engine and no credential or browsing-history capture.",
-    privacyPolicyUpdated: "Last reviewed: 2026-11-01 · EN / pt-PT · website launch",
+    privacyPolicyUpdated: "Last reviewed: 2026-11-07 · EN / pt-PT · website launch",
     desktopDownloadsTitle: "Desktop app downloads",
     desktopDownloadsIntro:
       "Install buusdo on this computer (browser shell + tray). Open-at-login stays off until you enable it.",
@@ -83,7 +83,9 @@ export const messages = {
     blocked: "Block / trust lists (extension / desktop)",
     trusted: "Lists elsewhere (extension / desktop)",
     blockListsWebsiteNote:
-      "This website does not enforce block/trust lists (extension and desktop do). Lists stay on-device. Export/import JSON or QR is the offline backup path — cloud Account sync is not offered.",
+      "This website does not enforce block/trust lists (extension and desktop do). Lists stay on-device.",
+    blockListsOfflinePath:
+      "Cross-device path: export/import shield-lists-v1 JSON or QR in the extension or desktop app. Desktop can also sync shield-backup.json via USB, Drive, or Syncthing — no cloud account.",
     accountTitle: "Account",
     accountHint:
       "Optional. Sync personal block/trust lists only across website, extension, and desktop. Never check history or full URLs.",
@@ -324,16 +326,16 @@ export const messages = {
     privacyPolicyStoreTitle: "O que é guardado",
     privacyPolicyStoreBody:
       "Predefinição: nada é guardado. Pode escolher armazenamento só neste dispositivo (listas de bloqueio/confiança, histórico opcional) no navegador, na extensão ou na app. O diagnóstico opcional para suporte inclui apenas origem e tipo de ameaça — nunca o endereço completo, e nunca para divulgação pública ou publicidade.",
-    privacyPolicyAccountTitle: "Sincronização de conta (opcional)",
+    privacyPolicyAccountTitle: "Sem sincronização de conta na nuvem",
     privacyPolicyAccountBody:
-      "A sincronização de conta está desligada no lançamento público em Workers até existir armazenamento durável (Turso) e envio de correio. Quando for ativada, o início de sessão guarda apenas o instantâneo shield-lists-v1 de bloqueio/confiança — não o histórico nem URLs completos. Pode exportar ou apagar esse instantâneo.",
+      "O buusdo não oferece conta na nuvem nem sincronização de listas entre dispositivos. As listas pessoais de bloqueio/confiança ficam neste dispositivo. Transfira-as com exportar/importar JSON shield-lists-v1 ou QR, ou sincronize o ficheiro shield-backup.json da app (USB, Drive, Syncthing).",
     privacyPolicyContactTitle: "Contacto",
     privacyPolicyContactBody:
       "Para questões de privacidade, contacte o operador da sua instalação do buusdo (quem gere o Worker na Cloudflare). Não cole resultados sensíveis de verificações em canais públicos.",
     privacyPolicyLimitsTitle: "Limites honestos (app + proxy)",
     privacyPolicyLimitsBody:
       "Sem desencriptação TLS — o HTTPS CONNECT usa só o nome do anfitrião; não há certificado MITM. Sem terminar processos — os programas em execução continuam. Pastas de sistema só são reportadas — /usr, /etc, caminhos de sistema Windows e Program Files nunca são movidos nem editados. Não há motor AV / de assinaturas nem captura de credenciais ou histórico de navegação.",
-    privacyPolicyUpdated: "Última revisão: 2026-11-01 · EN / pt-PT · lançamento do site",
+    privacyPolicyUpdated: "Última revisão: 2026-11-07 · EN / pt-PT · lançamento do site",
     desktopDownloadsTitle: "Transferências da app de ambiente de trabalho",
     desktopDownloadsIntro:
       "Instale o buusdo neste computador (browser + tabuleiro). Abrir ao iniciar sessão fica desligado até o ativar.",
@@ -379,7 +381,9 @@ export const messages = {
     blocked: "Listas de bloqueio / confiança (extensão / app)",
     trusted: "Listas noutro sítio (extensão / app)",
     blockListsWebsiteNote:
-      "Este site não aplica listas de bloqueio/confiança (a extensão e a app sim). As listas ficam no dispositivo. Exportar/importar JSON ou QR é o caminho de cópia offline — a sincronização de Conta na nuvem não é oferecida.",
+      "Este site não aplica listas de bloqueio/confiança (a extensão e a app sim). As listas ficam no dispositivo.",
+    blockListsOfflinePath:
+      "Caminho entre dispositivos: exportar/importar JSON shield-lists-v1 ou QR na extensão ou na app. A app também pode sincronizar shield-backup.json via USB, Drive ou Syncthing — sem conta na nuvem.",
     accountTitle: "Conta",
     accountHint:
       "Opcional. Sincroniza só listas pessoais de bloqueio/confiança entre site, extensão e app. Nunca histórico de verificações nem URLs completos.",

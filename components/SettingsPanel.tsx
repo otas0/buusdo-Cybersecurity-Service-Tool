@@ -757,6 +757,9 @@ export function SettingsPanel({
           </a>
         </p>
         <p className="scope-note">{t.blockListsWebsiteNote}</p>
+        <p className="hint" data-testid="settings-lists-offline-path">
+          {t.blockListsOfflinePath}
+        </p>
         <p className="hint">{t.blockOnSurfaces}</p>
         <p className="hint">{t.blockListsPrivacySurfaces}</p>
         <p
