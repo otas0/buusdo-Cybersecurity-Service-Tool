@@ -182,7 +182,7 @@ jobs:
           TAG: ${{ needs.resolve-tag.outputs.tag }}
           VER: ${{ needs.resolve-tag.outputs.version }}
         run: |
-          BASE="https://github.com/otas0/buusdocst/releases/download/${TAG}"
+          BASE="https://github.com/otas0/buusdo-Cybersecurity-Service-Tool/releases/download/${TAG}"
           echo "Preferred (formal prefix):"
           echo "windowsNsisUrl=${BASE}/buusdo-cybersecurity-service-tool-Setup-User.exe"
           echo "macosAppZipUrl=${BASE}/buusdo-cybersecurity-service-tool-macos-app-notarized.zip  # after notarize + rename"

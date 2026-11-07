@@ -18,11 +18,11 @@ Workflow: [.github/workflows/deploy-cloudflare.yml](../.github/workflows/deploy-
 3. Account resources → include the account that owns Worker **`buusdocst`** (and later **`buusdocst-staging`**).
 4. Create → copy once → paste into GitHub `CLOUDFLARE_API_TOKEN` (**never** paste the token into chat).
 
-**Status (2026-11-07):** `CLOUDFLARE_ACCOUNT_ID` is set on `otas0/buusdocst`. **`CLOUDFLARE_API_TOKEN` is still missing** — Deploy Cloudflare (prod + staging) cannot run from Actions until **you** paste a dashboard token (this agent cannot invent or retrieve it). Turso / mailer / `STAGING_HEALTH_URL` / `SLACK_WEBHOOK_URL` also unset:
+**Status (2026-11-07):** `CLOUDFLARE_ACCOUNT_ID` is set on `otas0/buusdo-Cybersecurity-Service-Tool`. **`CLOUDFLARE_API_TOKEN` is still missing** — Deploy Cloudflare (prod + staging) cannot run from Actions until **you** paste a dashboard token (this agent cannot invent or retrieve it). Turso / mailer / `STAGING_HEALTH_URL` / `SLACK_WEBHOOK_URL` also unset:
 
 ```bash
 # dash.cloudflare.com/profile/api-tokens → Edit Cloudflare Workers → create → copy once
-gh secret set CLOUDFLARE_API_TOKEN --repo otas0/buusdocst
+gh secret set CLOUDFLARE_API_TOKEN --repo otas0/buusdo-Cybersecurity-Service-Tool
 # paste token, then put Turso/mailer on staging BEFORE first health assert:
 #   npx wrangler secret put DATABASE_URL --env staging
 #   npx wrangler secret put DATABASE_AUTH_TOKEN --env staging
@@ -30,7 +30,7 @@ gh secret set CLOUDFLARE_API_TOKEN --repo otas0/buusdocst
 #   npx wrangler secret put LISTS_ENC_KEY --env staging
 #   npx wrangler secret put AUTH_FROM_EMAIL --env staging
 #   npx wrangler secret put RESEND_API_KEY --env staging   # or POSTMARK_SERVER_TOKEN
-gh workflow run "Deploy Cloudflare" --repo otas0/buusdocst -f target=staging
+gh workflow run "Deploy Cloudflare" --repo otas0/buusdo-Cybersecurity-Service-Tool -f target=staging
 # After URL known → set STAGING_HEALTH_URL → workflow "Staging STRICT smokes"
 ```
 
@@ -94,7 +94,7 @@ After deploy (Actions: **Deploy Cloudflare** → `target=staging`, or local `npm
 1. Copy the exact workers.dev URL from the deploy log (form `https://buusdocst-staging.<subdomain>.workers.dev`) — **no placeholders**.
 2. Paste that exact URL into this doc under **Staging URL (live)** below, then:
    ```bash
-   gh variable set STAGING_HEALTH_URL --repo otas0/buusdocst -b 'https://buusdocst-staging.<exact-subdomain>.workers.dev'
+   gh variable set STAGING_HEALTH_URL --repo otas0/buusdo-Cybersecurity-Service-Tool -b 'https://buusdocst-staging.<exact-subdomain>.workers.dev'
    ```
 3. Actions → **Health monitor** or **Production health smoke** → job **staging health (account sync on)** green (`accountSyncEnabled` + `accountSyncTursoConfigured`).
 4. Paste the run URL into LAUNCH_CHECKLIST § D.
@@ -113,13 +113,13 @@ _Pending first `buusdocst-staging` deploy._ Replace this line with the exact ori
 ```bash
 # After deploy prints the exact URL — substitute it here (must ≠ PRODUCTION_HEALTH_URL):
 export STAGING_HEALTH_URL='https://buusdocst-staging.<exact-subdomain>.workers.dev'
-gh variable set STAGING_HEALTH_URL --repo otas0/buusdocst -b "$STAGING_HEALTH_URL"
+gh variable set STAGING_HEALTH_URL --repo otas0/buusdo-Cybersecurity-Service-Tool -b "$STAGING_HEALTH_URL"
 STRICT_STAGING=1 STAGING_HEALTH_URL="$STAGING_HEALTH_URL" npm run smoke:staging-magic-link
 STRICT_STAGING=1 STAGING_HEALTH_URL="$STAGING_HEALTH_URL" npm run smoke:account-exchange-e2e
 STRICT_STAGING=1 STAGING_HEALTH_URL="$STAGING_HEALTH_URL" npm run smoke:account-lists-bidirectional
 # Local desktop toast+blockHost (uses staging token from exchange when configured):
 npm run smoke:desktop-auto-sync-toast
-gh workflow run "Health monitor" --repo otas0/buusdocst
+gh workflow run "Health monitor" --repo otas0/buusdo-Cybersecurity-Service-Tool
 ```
 
 **Slack soft_warn:** set `SLACK_WEBHOOK_URL` ([HEALTH_ALERTS.md](HEALTH_ALERTS.md)); drill rate-limit: first `force_soft_slack=true` → `rateLimited=false`; second dispatch within 1h (without force, same soft_warn) → summary `rateLimited=true`.

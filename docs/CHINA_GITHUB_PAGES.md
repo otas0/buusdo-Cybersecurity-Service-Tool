@@ -18,7 +18,7 @@ Workers（`*.workers.dev`）在部分大陆网络会 TCP 超时。产品检查 A
 1. Repo → **Settings → Pages → Build and deployment → Source: GitHub Actions**
 2. 推送 `china-pages/**` 或手动跑 Actions → **Pages China**
 3. 站点地址一般为：  
-   `https://otas0.github.io/buusdocst/`
+   `https://otas0.github.io/buusdo-Cybersecurity-Service-Tool/`
 
 ## 与 Workers 的关系
 
@@ -41,6 +41,6 @@ Pages **不能**替代 `POST /api/check`（无 Workers 出站 probe）。扩展�
 `https://otas0.github.io/preventive-cybersecurity-prototype/`
 由同名仓库的静态说明页跳转到本站（浏览器跳转；GitHub Pages 不提供真正的 HTTP 301）。
 
-自定义域名（可选）：在 `otas0/buusdocst` → Settings → Pages → Custom domain 绑定后，再跑
+自定义域名（可选）：在 `otas0/buusdo-Cybersecurity-Service-Tool` → Settings → Pages → Custom domain 绑定后，再跑
 `npm run production:origin -- https://YOUR_DOMAIN` 并更新 `NEXT_PUBLIC_SITE_URL` /
 `PRODUCTION_HEALTH_URL`（Workers 与 Pages 可分开绑域）。

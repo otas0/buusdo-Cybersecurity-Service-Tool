@@ -8,10 +8,10 @@ Do these once after website MVP. Not product blockers; needed for 48h watch and 
 
 1. [dash.cloudflare.com/profile/api-tokens](https://dash.cloudflare.com/profile/api-tokens) → **Create Token** → template **Edit Cloudflare Workers**
 2. Account = the one that owns Worker **`buusdocst`**
-3. Repo `otas0/buusdocst` → Settings → Secrets → Actions:
+3. Repo `otas0/buusdo-Cybersecurity-Service-Tool` → Settings → Secrets → Actions:
 
 ```bash
-gh secret set CLOUDFLARE_API_TOKEN --repo otas0/buusdocst
+gh secret set CLOUDFLARE_API_TOKEN --repo otas0/buusdo-Cybersecurity-Service-Tool
 # paste token
 ```
 

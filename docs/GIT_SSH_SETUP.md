@@ -4,8 +4,8 @@
 
 ## Status (this laptop)
 
-- Key: `~/.ssh/id_ed25519_shield` (comment `preventive-shield-laptop`; fingerprint authenticates as `otas0/buusdocst`, **write** enabled)
-- Deploy key on `otas0/buusdocst`: **Allow write access** — rename title in UI to `buusdocst-laptop` if still labeled `preventive-shield-laptop` (API rename may 404)
+- Key: `~/.ssh/id_ed25519_shield` (comment `preventive-shield-laptop`; fingerprint authenticates as `otas0/buusdo-Cybersecurity-Service-Tool`, **write** enabled)
+- Deploy key on `otas0/buusdo-Cybersecurity-Service-Tool`: **Allow write access** — rename title in UI to `buusdocst-laptop` if still labeled `preventive-shield-laptop` (API rename may 404)
 - **Do not** put `id_ed25519_buusdo` first for this repo — that key is bound to **another** Buusdo-line repo and causes `Permission denied to deploy key`
 - Host alias + remote:
 
@@ -20,8 +20,8 @@ Host github.com-buusdocst
 ```
 
 ```bash
-git remote set-url origin git@github.com-buusdocst:otas0/buusdocst.git
-ssh -T git@github.com-buusdocst   # expect: Hi otas0/buusdocst!
+git remote set-url origin git@github.com-buusdocst:otas0/buusdo-Cybersecurity-Service-Tool.git
+ssh -T git@github.com-buusdocst   # expect: Hi otas0/buusdo-Cybersecurity-Service-Tool!
 git fetch origin && git push origin HEAD
 ```
 
@@ -29,9 +29,9 @@ git fetch origin && git push origin HEAD
 
 ```bash
 ssh-keygen -t ed25519 -C "buusdocst-laptop" -f ~/.ssh/id_ed25519_shield -N ""
-# GitHub → otas0/buusdocst → Settings → Deploy keys → Add (Allow write access)
+# GitHub → otas0/buusdo-Cybersecurity-Service-Tool → Settings → Deploy keys → Add (Allow write access)
 # Append the Host github.com-buusdocst block above to ~/.ssh/config
-git remote set-url origin git@github.com-buusdocst:otas0/buusdocst.git
+git remote set-url origin git@github.com-buusdocst:otas0/buusdo-Cybersecurity-Service-Tool.git
 ssh -T git@github.com-buusdocst && git fetch origin
 ```
 

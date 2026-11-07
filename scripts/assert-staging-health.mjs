@@ -27,9 +27,9 @@ function writeSummary(lines) {
 }
 
 const GATE_DOC =
-  "https://github.com/otas0/buusdocst/blob/main/docs/ACCOUNT_SYNC_GATE.md";
+  "https://github.com/otas0/buusdo-Cybersecurity-Service-Tool/blob/main/docs/ACCOUNT_SYNC_GATE.md";
 const SECRETS_DOC =
-  "https://github.com/otas0/buusdocst/blob/main/docs/DEPLOY_SECRETS.md";
+  "https://github.com/otas0/buusdo-Cybersecurity-Service-Tool/blob/main/docs/DEPLOY_SECRETS.md";
 const ORDERED_SMOKES = [
   "STRICT_STAGING=1 STAGING_HEALTH_URL=… npm run smoke:staging-magic-link",
   "STRICT_STAGING=1 STAGING_HEALTH_URL=… npm run smoke:account-exchange-e2e",

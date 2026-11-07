@@ -58,9 +58,9 @@ import { AccountSettings } from "./AccountSettings";
 const CHROME_STORE_URL = String(extensionStores.chromeWebStoreUrl || "").trim();
 const SAFARI_STORE_URL = String(extensionStores.safariAppStoreUrl || "").trim();
 const STORE_DOCS_URL =
-  "https://github.com/otas0/buusdocst/blob/main/docs/EXTENSION_STORE_DISTRIBUTE.md";
+  "https://github.com/otas0/buusdo-Cybersecurity-Service-Tool/blob/main/docs/EXTENSION_STORE_DISTRIBUTE.md";
 const EXT_SETUP_DOCS_URL =
-  "https://github.com/otas0/buusdocst/blob/main/docs/EXTENSION_CHROME_SAFARI.md";
+  "https://github.com/otas0/buusdo-Cybersecurity-Service-Tool/blob/main/docs/EXTENSION_CHROME_SAFARI.md";
 const DESKTOP_MIRRORS =
   desktopDownloads.mirrors && typeof desktopDownloads.mirrors === "object"
     ? (desktopDownloads.mirrors as Record<string, string>)

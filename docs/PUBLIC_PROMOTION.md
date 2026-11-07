@@ -9,7 +9,7 @@ Until a custom domain replaces workers.dev, the **only** public links are:
 | Canonical product | `https://buusdocst.mtsu.workers.dev` |
 | Privacy (EN) | `https://buusdocst.mtsu.workers.dev/en/privacy` |
 | Privacy (pt-PT) | `https://buusdocst.mtsu.workers.dev/pt-PT/privacy` (optional second locale link) |
-| China entry (GitHub Pages) | `https://otas0.github.io/buusdocst/` — explain/privacy/install when Workers is hard to reach ([CHINA_GITHUB_PAGES.md](CHINA_GITHUB_PAGES.md)) |
+| China entry (GitHub Pages) | `https://otas0.github.io/buusdo-Cybersecurity-Service-Tool/` — explain/privacy/install when Workers is hard to reach ([CHINA_GITHUB_PAGES.md](CHINA_GITHUB_PAGES.md)) |
 
 After a custom domain, `npm run production:origin -- https://YOUR_CANONICAL` rewrites this table. Also set GitHub `NEXT_PUBLIC_SITE_URL` + `PRODUCTION_HEALTH_URL` ([CUSTOM_DOMAIN_REDEPLOY.md](CUSTOM_DOMAIN_REDEPLOY.md)).
 
@@ -19,7 +19,7 @@ After a custom domain, `npm run production:origin -- https://YOUR_CANONICAL` rew
 buusdo Cybersecurity Service Tool (Buusdo product line — separate product).
 Check a website before you trust it.
 Product (Workers): https://buusdocst.mtsu.workers.dev
-China entry (GitHub Pages): https://otas0.github.io/buusdocst/
+China entry (GitHub Pages): https://otas0.github.io/buusdo-Cybersecurity-Service-Tool/
 Privacy: https://buusdocst.mtsu.workers.dev/en/privacy
 ```
 
@@ -29,7 +29,7 @@ Privacy: https://buusdocst.mtsu.workers.dev/en/privacy
 buusdo Cybersecurity Service Tool (linha Buusdo — produto distinto).
 Verifique um site antes de confiar.
 Produto (Workers): https://buusdocst.mtsu.workers.dev
-Entrada China (GitHub Pages): https://otas0.github.io/buusdocst/
+Entrada China (GitHub Pages): https://otas0.github.io/buusdo-Cybersecurity-Service-Tool/
 Privacidade: https://buusdocst.mtsu.workers.dev/pt-PT/privacy
 ```
 

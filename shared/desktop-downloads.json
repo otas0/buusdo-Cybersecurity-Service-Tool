@@ -1,11 +1,11 @@
 {
-  "windowsNsisUrl": "https://github.com/otas0/buusdocst/releases/download/desktop-v0.2.0/PreventiveShield-Setup-User.exe",
-  "macosAppZipUrl": "https://github.com/otas0/buusdocst/releases/download/desktop-v0.2.0/PreventiveShield-macos-app.zip",
-  "macosAppZipUrlNotarized": "https://github.com/otas0/buusdocst/releases/download/desktop-v0.2.0/PreventiveShield-macos-app-notarized.zip",
-  "macosAppZipUrlUnsigned": "https://github.com/otas0/buusdocst/releases/download/desktop-v0.2.0/PreventiveShield-macos-app.zip",
-  "linuxDebAmd64Url": "https://github.com/otas0/buusdocst/releases/download/desktop-v0.2.0/preventive-shield_0.2.0_amd64.deb",
-  "packagingDocsUrl": "https://github.com/otas0/buusdocst/blob/main/desktop-app/PACKAGING.md",
-  "releaseNotesUrl": "https://github.com/otas0/buusdocst/blob/main/desktop-app/RELEASE.md",
+  "windowsNsisUrl": "https://github.com/otas0/buusdo-Cybersecurity-Service-Tool/releases/download/desktop-v0.2.0/PreventiveShield-Setup-User.exe",
+  "macosAppZipUrl": "https://github.com/otas0/buusdo-Cybersecurity-Service-Tool/releases/download/desktop-v0.2.0/PreventiveShield-macos-app.zip",
+  "macosAppZipUrlNotarized": "https://github.com/otas0/buusdo-Cybersecurity-Service-Tool/releases/download/desktop-v0.2.0/PreventiveShield-macos-app-notarized.zip",
+  "macosAppZipUrlUnsigned": "https://github.com/otas0/buusdo-Cybersecurity-Service-Tool/releases/download/desktop-v0.2.0/PreventiveShield-macos-app.zip",
+  "linuxDebAmd64Url": "https://github.com/otas0/buusdo-Cybersecurity-Service-Tool/releases/download/desktop-v0.2.0/preventive-shield_0.2.0_amd64.deb",
+  "packagingDocsUrl": "https://github.com/otas0/buusdo-Cybersecurity-Service-Tool/blob/main/desktop-app/PACKAGING.md",
+  "releaseNotesUrl": "https://github.com/otas0/buusdo-Cybersecurity-Service-Tool/blob/main/desktop-app/RELEASE.md",
   "releaseTag": "desktop-v0.2.0",
   "mirrors": {
     "windowsNsisUrl": "",

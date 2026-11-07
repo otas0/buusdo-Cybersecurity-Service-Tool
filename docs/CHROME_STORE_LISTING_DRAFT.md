@@ -50,4 +50,4 @@ App de ambiente de trabalho (opcional): sem desencriptação TLS, sem terminar p
 
 ## China entry (when Workers is hard to reach)
 
-`https://otas0.github.io/buusdocst/`
+`https://otas0.github.io/buusdo-Cybersecurity-Service-Tool/`
