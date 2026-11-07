@@ -53,11 +53,23 @@
         <div class="actions">
           <a
             class="primary-button"
+            data-full-check
             href="https://buusdocst.mtsu.workers.dev/en"
             rel="noreferrer"
             >打开完整检查</a
           >
           <a class="ghost-button" href="./index.html">返回入口</a>
+        </div>
+        <div
+          id="workers-reach"
+          class="reach"
+          data-state="checking"
+          aria-live="polite"
+        >
+          <p class="reach-row">
+            <span class="reach-status" data-reach-status>正在探测 Workers…</span>
+          </p>
+          <p class="reach-detail" data-reach-detail></p>
         </div>
       </section>
 
@@ -65,5 +77,6 @@
         <p>buusdo Cybersecurity Service Tool · GitHub Pages</p>
       </footer>
     </main>
+    <script src="./reachability.js" defer></script>
   </body>
 </html>

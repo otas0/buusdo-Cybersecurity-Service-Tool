@@ -1,0 +1,5 @@
+UTC=pending
+operator=pending
+action=Delete any Cloudflare Notification policies still scoped to Workers pcpd or preventive-shield.
+keep=buusdocst error rate + CPU only.
+screenshot=add buusdocst-notifications.png + no-pcpd-policies.png after dashboard cleanup.

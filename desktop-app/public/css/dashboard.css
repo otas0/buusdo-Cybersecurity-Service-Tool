@@ -199,6 +199,18 @@ button:disabled.log-filter-reset {
   border: 0;
 }
 
+.about-mark {
+  margin: 0 0 14px;
+}
+
+.about-mark img {
+  display: block;
+  width: 32px;
+  height: 32px;
+  background: transparent;
+  border: 0;
+}
+
 .kicker, .counts dt, .lang, .block-log .meta {
   font-family: var(--mono);
   font-size: 11px;

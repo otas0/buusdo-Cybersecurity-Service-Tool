@@ -19,9 +19,10 @@ YYYY-MM-DD-buusdocst-NOTES.txt      # Version ID + UTC time + dashboard range
 Example:
 
 ```
-ops/workers-baselines/2026-11-01-pcpd-errors.png
-ops/workers-baselines/2026-11-01-pcpd-cpu.png
-ops/workers-baselines/2026-11-01-pcpd-NOTES.txt
+ops/workers-baselines/2026-11-01-buusdocst-errors.png
+ops/workers-baselines/2026-11-01-buusdocst-cpu.png
+ops/workers-baselines/2026-11-01-buusdocst-NOTES.txt
+# Historical `*-pcpd-*` filenames are deprecated — see ops/workers-baselines/README.md
 ```
 
 `NOTES.txt` one-liner:

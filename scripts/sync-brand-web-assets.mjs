@@ -278,7 +278,36 @@ if (fs.existsSync(safariIconDir)) {
   );
 }
 
-// OG + store frame
+// Safari LargeIcon.imageset (toolbar / about chrome) — dark field + Halt
+const largeIconDir = path.join(
+  root,
+  "safari/Preventive Shield/Preventive Shield/Assets.xcassets/LargeIcon.imageset",
+);
+if (fs.existsSync(largeIconDir)) {
+  const large1 = await pngFromSvg(faviconSvg, 128);
+  const large2 = await pngFromSvg(faviconSvg, 256);
+  const large3 = await pngFromSvg(faviconSvg, 384);
+  fs.writeFileSync(path.join(largeIconDir, "LargeIcon.png"), large1);
+  fs.writeFileSync(path.join(largeIconDir, "LargeIcon@2x.png"), large2);
+  fs.writeFileSync(path.join(largeIconDir, "LargeIcon@3x.png"), large3);
+  fs.writeFileSync(
+    path.join(largeIconDir, "Contents.json"),
+    `${JSON.stringify(
+      {
+        images: [
+          { idiom: "universal", filename: "LargeIcon.png", scale: "1x" },
+          { idiom: "universal", filename: "LargeIcon@2x.png", scale: "2x" },
+          { idiom: "universal", filename: "LargeIcon@3x.png", scale: "3x" },
+        ],
+        info: { author: "xcode", version: 1 },
+      },
+      null,
+      2,
+    )}\n`,
+  );
+}
+
+// OG (always). Store FRAME is captured by Playwright Halt fixture — do not overwrite.
 const wordmarkOg = await sharp(wordDark)
   .resize({ width: 720, withoutEnlargement: true })
   .png()
@@ -297,26 +326,9 @@ await sharp({
   .png()
   .toFile(path.join(root, "public/og.png"));
 
-const frameWm = await sharp(wordDark).resize({ width: 900 }).png().toBuffer();
-const fm = await sharp(frameWm).metadata();
-const caption = Buffer.from(
-  `<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="48">
-  <text x="640" y="32" text-anchor="middle" fill="${TEXT}" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="22" font-weight="600">${label}</text>
-</svg>`,
+console.info(
+  "[sync:brand-web] Store FRAME left to Playwright: npm run capture:store-halt-frame",
 );
-await sharp({
-  create: { width: 1280, height: 800, channels: 3, background: BG },
-})
-  .composite([
-    {
-      input: frameWm,
-      left: Math.round((1280 - fm.width) / 2),
-      top: Math.round((800 - fm.height) / 2) - 48,
-    },
-    { input: await sharp(caption).png().toBuffer(), left: 0, top: 720 },
-  ])
-  .png()
-  .toFile(path.join(root, "docs/store-screenshots/FRAME-formal-name.png"));
 
 const designerPath = path.join(sourceDir, "buusdo-wordmark-paths.svg");
 if (!fs.existsSync(designerPath)) {

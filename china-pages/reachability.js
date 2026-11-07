@@ -14,6 +14,21 @@
   const detail = el.querySelector("[data-reach-detail]");
   if (!status || !detail) return;
 
+  /** Soften primary “open full check” CTAs when Workers is unreachable. */
+  function setFullCheckCta(reachable) {
+    const links = document.querySelectorAll("[data-full-check]");
+    for (let i = 0; i < links.length; i += 1) {
+      const a = links[i];
+      if (reachable) {
+        a.classList.add("primary-button");
+        a.classList.remove("ghost-button");
+      } else {
+        a.classList.remove("primary-button");
+        a.classList.add("ghost-button");
+      }
+    }
+  }
+
   const copy =
     document.documentElement.lang === "en"
       ? {
@@ -61,6 +76,7 @@
         el.dataset.state = "ok";
         status.textContent = copy.ok;
         detail.textContent = copy.okDetail + " (" + ms + " ms)";
+        setFullCheckCta(true);
       } else {
         throw new Error("unexpected health payload");
       }
@@ -70,5 +86,6 @@
       el.dataset.state = "fail";
       status.textContent = copy.fail;
       detail.textContent = copy.failDetail;
+      setFullCheckCta(false);
     });
 })();

@@ -136,3 +136,9 @@ console.info(
   `[production:origin] updated shared/production-origin.mjs + extension/shared/api-base-migrate.mjs + production-site.json + README.md`
 );
 console.info(`[production:origin] next: export NEXT_PUBLIC_SITE_URL=${origin} && npm run deploy:cloudflare`);
+console.info("");
+console.info("[production:origin] GitHub Actions — set BOTH repo variables (Settings → Variables):");
+console.info(`  NEXT_PUBLIC_SITE_URL=${origin}`);
+console.info(`  PRODUCTION_HEALTH_URL=${origin}`);
+console.info("Then Actions → Deploy Cloudflare (production) so OG/metadataBase bake the canonical host.");
+console.info("After deploy: Facebook Sharing Debugger / Twitter Card Validator on ${origin}/og.png");
