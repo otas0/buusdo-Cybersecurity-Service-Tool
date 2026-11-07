@@ -1,5 +1,5 @@
-# GitHub Pages — China-facing static entry (china-pages/)
-# Enable: Settings → Pages → Source = GitHub Actions
+# Publish china-pages/ to otas0/buusdocst → https://otas0.github.io/buusdocst/
+# Source of truth stays in this product repo; Pages URL stays on the short host repo.
 name: Pages China
 
 on:
@@ -10,32 +10,22 @@ on:
       - ".github/workflows/pages-china.yml"
   workflow_dispatch:
 
-permissions:
-  contents: read
-  pages: write
-  id-token: write
-
 concurrency:
   group: pages-china
   cancel-in-progress: true
 
 jobs:
   deploy:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
 
-      - name: Setup Pages
-        uses: actions/configure-pages@v5
-
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
+      - name: Publish china-pages to otas0/buusdocst
+        uses: peaceiris/actions-gh-pages@v4
         with:
-          path: china-pages
-
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+          deploy_key: ${{ secrets.BUUSDOCST_PAGES_DEPLOY_KEY }}
+          external_repository: otas0/buusdocst
+          publish_dir: ./china-pages
+          publish_branch: main
+          force_orphan: true
+          commit_message: "Publish China entry from buusdo-Cybersecurity-Service-Tool"
