@@ -89,6 +89,7 @@ jobs:
         run: |
           npx playwright install --with-deps chromium
           npm run capture:store-halt-frame:playwright
+          npm run test:playwright:china-soft-fail
 
       - name: Typecheck
         run: npm run typecheck

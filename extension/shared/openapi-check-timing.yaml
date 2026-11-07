@@ -1,7 +1,7 @@
-# Preventive Shield first-party check API (timing + health + head-skip)
+# buusdo Cybersecurity Service Tool first-party check API (timing + health + head-skip)
 openapi: 3.0.3
 info:
-  title: Preventive Shield check API
+  title: buusdo Cybersecurity Service Tool check API
   version: "1.5.2"
   description: >
     Never calls third-party reputation APIs.
