@@ -1,6 +1,6 @@
-# busdo
+# buusdo Cybersecurity Service Tool
 
-**Buusdo product line** — Cybersecurity Service Tool. Bilingual English / European Portuguese product that helps non-expert users check a website before they trust it.
+Official name: **buusdo Cybersecurity Service Tool** (Buusdo product line). Bilingual English / European Portuguese product that helps non-expert users check a website before they trust it.
 
 **Detect → Explain → Prevent / Block → Act → Verify**
 

@@ -1,5 +1,5 @@
 /**
- * Working address checks for busdo.
+ * Working address checks for buusdo.
  * Tracker hosts are third-party ad / analytics domains.
  * Phishing checks compare a host with the real domain of a named organisation.
  * The returned display is host + path only. Query strings are never kept.

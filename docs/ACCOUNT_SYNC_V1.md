@@ -1,6 +1,6 @@
 # Account sync V1 — personal lists only
 
-Optional busdo account so **block/trust lists** sync across website, extension, and desktop. Local-first; offline export/QR remains.
+Optional buusdo account so **block/trust lists** sync across website, extension, and desktop. Local-first; offline export/QR remains.
 
 ## Scope
 

@@ -2,7 +2,7 @@
  * Writable product data under the signed-in user's home — never the app bundle
  * and never Electron app.getPath("userData").
  *
- * Brand is busdo; folder names stay legacy so existing installs keep lists:
+ * Brand is buusdo; folder names stay legacy so existing installs keep lists:
  *   macOS:  ~/Library/Application Support/Preventive Shield
  *   Windows: %APPDATA%\\Preventive Shield
  *   Linux:  ~/.config/preventive-shield

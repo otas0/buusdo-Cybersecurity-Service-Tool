@@ -330,7 +330,7 @@ export function collectSiteSignals(parsed: ParsedUrl, live: LiveProbe | null = n
     id: "scope-limit",
     kind: "limitation",
     title: "What this check covers",
-    detail: "This product checks the address against busdo's own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
+    detail: "This product checks the address against buusdo's own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
   });
 
   return { evidence, sensitive, cautionCount, highCount };

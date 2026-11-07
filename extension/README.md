@@ -1,4 +1,4 @@
-# busdo — browser extension
+# buusdo — browser extension
 
 Chrome and Safari (macOS) share the same `extension/` folder: Manifest V3, vanilla JS / CSS / HTML.
 
@@ -37,7 +37,7 @@ Support only: a successful paste writes ISO timestamp `shieldListsLastPasteAt` t
 | Browser | Where |
 |---------|--------|
 | **Chrome** | [Chrome Web Store](https://chromewebstore.google.com/) — **Add to Chrome** (listing URL in [`shared/extension-stores.json`](../shared/extension-stores.json) after publish) |
-| **Safari (macOS)** | [Mac App Store](https://apps.apple.com/) — install **busdo**, then Safari → **Settings → Extensions** → enable |
+| **Safari (macOS)** | [Mac App Store](https://apps.apple.com/) — install **buusdo**, then Safari → **Settings → Extensions** → enable |
 
 Packaging / App Store Connect / Web Store upload: [docs/EXTENSION_STORE_DISTRIBUTE.md](../docs/EXTENSION_STORE_DISTRIBUTE.md).
 
@@ -67,7 +67,7 @@ Regenerate wrapper after a major manifest change:
 ```bash
 xcrun safari-web-extension-converter "$(pwd)" \
   --project-location "../safari" \
-  --app-name "busdo" \
+  --app-name "buusdo" \
   --bundle-identifier "pt.community.preventiveshield" \
   --macos-only --swift --force --no-open --no-prompt
 ```

@@ -1,8 +1,9 @@
 {
   "manifest_version": 3,
-  "name": "busdo",
+  "name": "buusdo Cybersecurity Service Tool",
+  "short_name": "buusdo",
   "version": "0.1.0",
-  "description": "busdo — Cybersecurity Service Tool. Block known trackers and flag phishing-like URLs. EN / pt-PT. Storage defaults to off.",
+  "description": "buusdo Cybersecurity Service Tool. Block known trackers and flag phishing-like URLs. EN / pt-PT. Storage defaults to off.",
   "homepage_url": "https://pcpd.mtsu.workers.dev",
   "permissions": [
     "declarativeNetRequest",
@@ -32,7 +33,7 @@
   },
   "action": {
     "default_popup": "popup/popup.html",
-    "default_title": "busdo — Scan",
+    "default_title": "buusdo Cybersecurity Service Tool",
     "default_icon": {
       "16": "icons/icon16.png",
       "48": "icons/icon48.png",

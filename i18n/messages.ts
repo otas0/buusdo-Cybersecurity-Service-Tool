@@ -1,6 +1,6 @@
 export const messages = {
   en: {
-    prototype: "busdo",
+    prototype: "buusdo Cybersecurity Service Tool",
     shieldSubtitle: "Cybersecurity Service Tool",
     go: "Run",
     lightStandby: "Standby",
@@ -20,10 +20,10 @@ export const messages = {
     navPrivacy: "Privacy",
     privacyPolicyTitle: "Privacy policy",
     privacyPolicyIntro:
-      "busdo helps you check a website address before you trust it. Checks use first-party signals and our curated threat list. This page is the product privacy notice for the website, browser extension, and desktop app.",
+      "buusdo helps you check a website address before you trust it. Checks use first-party signals and our curated threat list. This page is the product privacy notice for the website, browser extension, and desktop app.",
     privacyPolicyWhatTitle: "What a check uses",
     privacyPolicyWhatBody:
-      "When you run a check, the address you enter is processed on the busdo server to parse structure, match our own threat list, and optionally probe live reachability (DNS / HTTP). We do not send checked URLs to Google Safe Browsing or other third-party reputation APIs, and we do not sell check data.",
+      "When you run a check, the address you enter is processed on the buusdo server to parse structure, match our own threat list, and optionally probe live reachability (DNS / HTTP). We do not send checked URLs to Google Safe Browsing or other third-party reputation APIs, and we do not sell check data.",
     privacyPolicyStoreTitle: "What is stored",
     privacyPolicyStoreBody:
       "Default: nothing is stored. You may choose this-device-only storage (block/trust lists, optional check history) in the browser, extension, or desktop app. Optional diagnostics for support include only source and threat type — never the full address, and never for public release or advertising.",
@@ -32,14 +32,14 @@ export const messages = {
       "Account sync is off on the public Workers launch until a durable store (Turso) and mailer are configured. When enabled later, signing in stores only your personal shield-lists-v1 block/trust snapshot — not check history or full URLs. You can export or delete that snapshot.",
     privacyPolicyContactTitle: "Questions",
     privacyPolicyContactBody:
-      "For privacy questions, contact the operator of your busdo deployment (the person or organisation that runs the Cloudflare Worker). Do not paste sensitive check results into public channels.",
+      "For privacy questions, contact the operator of your buusdo deployment (the person or organisation that runs the Cloudflare Worker). Do not paste sensitive check results into public channels.",
     privacyPolicyLimitsTitle: "Honest limits (desktop + proxy)",
     privacyPolicyLimitsBody:
       "No TLS decryption — HTTPS CONNECT is hostname-only; there is no MITM certificate. No process kill — running programs keep running. System directories are report-only — /usr, /etc, Windows system paths, and Program Files are never moved or edited. There is no AV / signature engine and no credential or browsing-history capture.",
     privacyPolicyUpdated: "Last reviewed: 2026-11-01 · EN / pt-PT · website launch",
     desktopDownloadsTitle: "Desktop app downloads",
     desktopDownloadsIntro:
-      "Install busdo on this computer (browser shell + tray). Open-at-login stays off until you enable it.",
+      "Install buusdo on this computer (browser shell + tray). Open-at-login stays off until you enable it.",
     desktopDownloadWindows: "Windows installer (NSIS)",
     desktopDownloadMac: "macOS app (zip)",
     desktopDownloadLinux: "Linux amd64 (.deb)",
@@ -83,7 +83,7 @@ export const messages = {
     blocked: "Block / trust lists (extension / desktop)",
     trusted: "Lists elsewhere (extension / desktop)",
     blockListsWebsiteNote:
-      "This website does not enforce block/trust lists (extension and desktop do). By default lists stay on-device; optional Account sync (when enabled) stores only shield-lists-v1 in your busdo account. Export/import JSON or QR remains the free offline path.",
+      "This website does not enforce block/trust lists (extension and desktop do). By default lists stay on-device; optional Account sync (when enabled) stores only shield-lists-v1 in your buusdo account. Export/import JSON or QR remains the free offline path.",
     accountTitle: "Account",
     accountHint:
       "Optional. Sync personal block/trust lists only across website, extension, and desktop. Never check history or full URLs.",
@@ -153,7 +153,7 @@ export const messages = {
     personalListLeaveNote:
       "Leave suggested from your personal block list (extension / desktop). This website did not store the list.",
     none: "Nothing is saved here yet.",
-    settingsIntro: "Reversible protection choices stored only in this browser. Threat checks use busdo's own list — URLs are not sent to third-party reputation services.",
+    settingsIntro: "Reversible protection choices stored only in this browser. Threat checks use buusdo's own list — URLs are not sent to third-party reputation services.",
     back: "Back to website check",
     sensitiveTitle: "Pause before entering sensitive information.",
     whyTitle: "Why this result",
@@ -267,7 +267,7 @@ export const messages = {
     historyChecks: "checks",
     historyNoTimeouts: "No probe timeouts in recent checks.",
     intelTitle: "Threat intelligence",
-    intelBody: "Checks use busdo's curated host list and address signals on this server. No Google Safe Browsing or other third-party reputation APIs.",
+    intelBody: "Checks use buusdo's curated host list and address signals on this server. No Google Safe Browsing or other third-party reputation APIs.",
     intelMore: "More",
     intelLess: "Less",
     intelProbeBudget: "Server probe budget",
@@ -297,7 +297,7 @@ export const messages = {
     feedbackMarkFp: "false-positive"
   },
   "pt-PT": {
-    prototype: "busdo",
+    prototype: "buusdo Cybersecurity Service Tool",
     shieldSubtitle: "Cybersecurity Service Tool",
     go: "Ir",
     lightStandby: "Pronto",
@@ -317,10 +317,10 @@ export const messages = {
     navPrivacy: "Privacidade",
     privacyPolicyTitle: "Política de privacidade",
     privacyPolicyIntro:
-      "O busdo ajuda a verificar um endereço de site antes de confiar nele. As verificações usam sinais próprios e a nossa lista curada de ameaças. Esta página é o aviso de privacidade do site, da extensão e da aplicação de ambiente de trabalho.",
+      "O buusdo ajuda a verificar um endereço de site antes de confiar nele. As verificações usam sinais próprios e a nossa lista curada de ameaças. Esta página é o aviso de privacidade do site, da extensão e da aplicação de ambiente de trabalho.",
     privacyPolicyWhatTitle: "O que uma verificação usa",
     privacyPolicyWhatBody:
-      "Quando corre uma verificação, o endereço que introduz é processado no servidor do busdo para analisar a estrutura, confrontar a lista própria de ameaças e, opcionalmente, sondar a acessibilidade em direto (DNS / HTTP). Não enviamos URLs a Google Safe Browsing nem a outras APIs de reputação de terceiros, e não vendemos dados de verificação.",
+      "Quando corre uma verificação, o endereço que introduz é processado no servidor do buusdo para analisar a estrutura, confrontar a lista própria de ameaças e, opcionalmente, sondar a acessibilidade em direto (DNS / HTTP). Não enviamos URLs a Google Safe Browsing nem a outras APIs de reputação de terceiros, e não vendemos dados de verificação.",
     privacyPolicyStoreTitle: "O que é guardado",
     privacyPolicyStoreBody:
       "Predefinição: nada é guardado. Pode escolher armazenamento só neste dispositivo (listas de bloqueio/confiança, histórico opcional) no navegador, na extensão ou na app. O diagnóstico opcional para suporte inclui apenas origem e tipo de ameaça — nunca o endereço completo, e nunca para divulgação pública ou publicidade.",
@@ -329,14 +329,14 @@ export const messages = {
       "A sincronização de conta está desligada no lançamento público em Workers até existir armazenamento durável (Turso) e envio de correio. Quando for ativada, o início de sessão guarda apenas o instantâneo shield-lists-v1 de bloqueio/confiança — não o histórico nem URLs completos. Pode exportar ou apagar esse instantâneo.",
     privacyPolicyContactTitle: "Contacto",
     privacyPolicyContactBody:
-      "Para questões de privacidade, contacte o operador da sua instalação do busdo (quem gere o Worker na Cloudflare). Não cole resultados sensíveis de verificações em canais públicos.",
+      "Para questões de privacidade, contacte o operador da sua instalação do buusdo (quem gere o Worker na Cloudflare). Não cole resultados sensíveis de verificações em canais públicos.",
     privacyPolicyLimitsTitle: "Limites honestos (app + proxy)",
     privacyPolicyLimitsBody:
       "Sem desencriptação TLS — o HTTPS CONNECT usa só o nome do anfitrião; não há certificado MITM. Sem terminar processos — os programas em execução continuam. Pastas de sistema só são reportadas — /usr, /etc, caminhos de sistema Windows e Program Files nunca são movidos nem editados. Não há motor AV / de assinaturas nem captura de credenciais ou histórico de navegação.",
     privacyPolicyUpdated: "Última revisão: 2026-11-01 · EN / pt-PT · lançamento do site",
     desktopDownloadsTitle: "Transferências da app de ambiente de trabalho",
     desktopDownloadsIntro:
-      "Instale o busdo neste computador (browser + tabuleiro). Abrir ao iniciar sessão fica desligado até o ativar.",
+      "Instale o buusdo neste computador (browser + tabuleiro). Abrir ao iniciar sessão fica desligado até o ativar.",
     desktopDownloadWindows: "Instalador Windows (NSIS)",
     desktopDownloadMac: "App macOS (zip)",
     desktopDownloadLinux: "Linux amd64 (.deb)",
@@ -379,7 +379,7 @@ export const messages = {
     blocked: "Listas de bloqueio / confiança (extensão / app)",
     trusted: "Listas noutro sítio (extensão / app)",
     blockListsWebsiteNote:
-      "Este site não aplica listas de bloqueio/confiança (a extensão e a app sim). Por predefinição as listas ficam no dispositivo; a Conta opcional (quando ativa) guarda só shield-lists-v1 na conta busdo. Exportar/importar JSON ou QR continua o caminho offline gratuito.",
+      "Este site não aplica listas de bloqueio/confiança (a extensão e a app sim). Por predefinição as listas ficam no dispositivo; a Conta opcional (quando ativa) guarda só shield-lists-v1 na conta buusdo. Exportar/importar JSON ou QR continua o caminho offline gratuito.",
     accountTitle: "Conta",
     accountHint:
       "Opcional. Sincroniza só listas pessoais de bloqueio/confiança entre site, extensão e app. Nunca histórico de verificações nem URLs completos.",
@@ -449,7 +449,7 @@ export const messages = {
     personalListLeaveNote:
       "Saída sugerida pela sua lista pessoal (extensão / app). Este site não guardou a lista.",
     none: "Ainda não há nada guardado.",
-    settingsIntro: "Escolhas de proteção reversíveis, guardadas apenas neste navegador. As ameaças usam a lista própria do busdo — os URLs não são enviados a serviços de reputação de terceiros.",
+    settingsIntro: "Escolhas de proteção reversíveis, guardadas apenas neste navegador. As ameaças usam a lista própria do buusdo — os URLs não são enviados a serviços de reputação de terceiros.",
     back: "Voltar à verificação do site",
     sensitiveTitle: "Pare antes de introduzir informação sensível.",
     whyTitle: "Porquê este resultado",
@@ -563,7 +563,7 @@ export const messages = {
     historyChecks: "verificações",
     historyNoTimeouts: "Sem timeouts da sonda nas verificações recentes.",
     intelTitle: "Informação sobre ameaças",
-    intelBody: "As verificações usam a lista curada do busdo e sinais do endereço neste servidor. Sem Google Safe Browsing nem outras APIs de reputação de terceiros.",
+    intelBody: "As verificações usam a lista curada do buusdo e sinais do endereço neste servidor. Sem Google Safe Browsing nem outras APIs de reputação de terceiros.",
     intelMore: "Mais",
     intelLess: "Menos",
     intelProbeBudget: "Orçamento da sonda no servidor",

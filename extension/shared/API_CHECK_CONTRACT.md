@@ -35,7 +35,7 @@ Operator soft notice: when `personalListBlocked: true` is accepted, the server m
   "timingValid": true,
   "analysis": {
     "parsed": { "...": "..." },
-    "threat": { "state": "NO_KNOWN_MATCH", "providerName": "busdo own threat list", "...": "..." },
+    "threat": { "state": "NO_KNOWN_MATCH", "providerName": "buusdo own threat list", "...": "..." },
     "identity": { "...": "..." },
     "risk": { "level": "LOW_EVIDENCE", "evidence": [], "...": "..." },
     "sensitive": null,

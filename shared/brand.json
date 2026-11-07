@@ -1,0 +1,8 @@
+{
+  "shortName": "buusdo",
+  "formalName": "buusdo Cybersecurity Service Tool",
+  "tagline": "Cybersecurity Service Tool",
+  "wordmarkPath": "/brand/buusdo-wordmark.png",
+  "logoPath": "/brand/buusdo-logo.png",
+  "notes": "Official product name is formalName. Short UI lockup uses shortName + tagline. Legacy on-disk folders may still say Preventive Shield."
+}

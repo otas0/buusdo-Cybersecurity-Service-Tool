@@ -236,7 +236,7 @@ jobs:
           fi
           # Notice-only (not a failure / not a page). Soft HEAD lag is expected pre-publish.
           curl -sS -X POST -H 'Content-type: application/json' \
-            --data "{\"text\":\":information_source: busdo download HEAD soft warnings (${SOFT})\\n${NOTARY_LINE}\\nRun: ${{ steps.target.outputs.run_url }}\\n(notice-only - health job stayed green)${RELEASE_HINT}\"}" \
+            --data "{\"text\":\":information_source: buusdo download HEAD soft warnings (${SOFT})\\n${NOTARY_LINE}\\nRun: ${{ steps.target.outputs.run_url }}\\n(notice-only - health job stayed green)${RELEASE_HINT}\"}" \
             "$SLACK_WEBHOOK_URL"
           printf '{"softWarn":"%s","sentAt":%s}\n' "$SOFT" "$NOW" > /tmp/shield-soft-download-slack.json
           echo "updated=true" >> "$GITHUB_OUTPUT"
@@ -350,7 +350,7 @@ jobs:
             exit 0
           fi
           curl -sS -X POST -H 'Content-type: application/json' \
-            --data "{\"text\":\":x: busdo health/check failed\\nURL: ${{ steps.target.outputs.url }}\\nRun: ${{ steps.target.outputs.run_url }}\"}" \
+            --data "{\"text\":\":x: buusdo health/check failed\\nURL: ${{ steps.target.outputs.url }}\\nRun: ${{ steps.target.outputs.run_url }}\"}" \
             "$SLACK_WEBHOOK_URL"
 
       - name: Failure notice (email via GitHub)

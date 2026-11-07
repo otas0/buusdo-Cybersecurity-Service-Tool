@@ -1,6 +1,6 @@
 {
   "updatedAt": "2026-10-21",
-  "source": "busdo curated list (first-party). PT seeds live in curated-threats.pt.json and merge by default. Operate via security/data/batches + npm run threat:apply.",
+  "source": "buusdo curated list (first-party). PT seeds live in curated-threats.pt.json and merge by default. Operate via security/data/batches + npm run threat:apply.",
   "hosts": {
     "appleid-verify.example": "KNOWN_PHISHING",
     "login-microsoft-online.example": "KNOWN_PHISHING",

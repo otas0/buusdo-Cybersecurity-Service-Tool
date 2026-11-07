@@ -7,7 +7,7 @@
 
 export const STRINGS = {
   en: {
-    appTitle: "busdo",
+    appTitle: "buusdo Cybersecurity Service Tool",
     scan: "Run",
     scanning: "Wait",
     statusStandby: "Standby",
@@ -113,7 +113,7 @@ export const STRINGS = {
     listsRemove: "Remove"
   },
   "pt-PT": {
-    appTitle: "busdo",
+    appTitle: "buusdo Cybersecurity Service Tool",
     scan: "Ir",
     scanning: "Espere",
     statusStandby: "Pronto",

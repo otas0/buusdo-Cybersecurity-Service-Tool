@@ -35,8 +35,8 @@ export function RiskResult({ analysis, t, onReset }: { analysis: Analysis; t: Re
       if (!res || !res.ok) {
         setDesktopBlockNote(
           pt
-            ? "Abra primeiro o desktop busdo (localhost:3010), depois tente de novo."
-            : "Open the busdo desktop app first (localhost:3010), then try again."
+            ? "Abra primeiro o desktop buusdo (localhost:3010), depois tente de novo."
+            : "Open the buusdo desktop app first (localhost:3010), then try again."
         );
         return;
       }
@@ -44,8 +44,8 @@ export function RiskResult({ analysis, t, onReset }: { analysis: Analysis; t: Re
     } catch {
       setDesktopBlockNote(
         pt
-          ? "Abra primeiro o desktop busdo (localhost:3010), depois tente de novo."
-          : "Open the busdo desktop app first (localhost:3010), then try again."
+          ? "Abra primeiro o desktop buusdo (localhost:3010), depois tente de novo."
+          : "Open the buusdo desktop app first (localhost:3010), then try again."
       );
     }
   }
@@ -92,7 +92,7 @@ export function RiskResult({ analysis, t, onReset }: { analysis: Analysis; t: Re
   };
 
   const evidencePt: Record<string, [string, string]> = {
-    "known-threat": ["Sinal de ameaça conhecido", "Este endereço correspondeu à lista própria do busdo."],
+    "known-threat": ["Sinal de ameaça conhecido", "Este endereço correspondeu à lista própria do buusdo."],
     "no-match": ["Nenhuma ameaça conhecida nas listas", "Não foi encontrada nenhuma ameaça conhecida na lista própria. Isto não prova que o site seja seguro."],
     "unknown-reputation": ["Reputação desconhecida", "A lista própria não fornece um resultado positivo nem negativo."],
     "provider-unavailable": ["Lista de ameaças indisponível", "A lista própria não pôde ser lida. As verificações estruturais e em direto continuaram."],
@@ -306,7 +306,7 @@ export function RiskResult({ analysis, t, onReset }: { analysis: Analysis; t: Re
                 data-testid="add-desktop-block"
                 onClick={() => void openDesktopBlock()}
               >
-                {pt ? "Bloquear no desktop (busdo)" : "Block on desktop (busdo)"}
+                {pt ? "Bloquear no desktop (buusdo)" : "Block on desktop (buusdo)"}
               </button>
               {desktopBlockNote ? (
                 <p className="hint" data-testid="desktop-block-need-app" role="status">

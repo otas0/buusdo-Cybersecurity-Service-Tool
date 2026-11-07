@@ -1,5 +1,5 @@
 /**
- * busdo desktop shell.
+ * buusdo desktop shell.
  * One instance owns the dashboard and proxy. Closing the window stops both.
  *
  *   cd desktop-app && npm install

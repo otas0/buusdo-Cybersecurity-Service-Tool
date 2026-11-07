@@ -14,7 +14,7 @@ After a custom domain, `npm run production:origin -- https://YOUR_CANONICAL` rew
 ## Ready-to-paste (EN)
 
 ```
-busdo — Cybersecurity Service Tool.
+buusdo Cybersecurity Service Tool.
 Check a website before you trust it.
 https://pcpd.mtsu.workers.dev
 China entry: https://otas0.github.io/preventive-cybersecurity-prototype/
@@ -24,7 +24,7 @@ Privacy: https://pcpd.mtsu.workers.dev/en/privacy
 ## Ready-to-paste (pt-PT)
 
 ```
-busdo — verifique um site antes de confiar.
+buusdo Cybersecurity Service Tool — verifique um site antes de confiar.
 https://pcpd.mtsu.workers.dev
 Privacidade: https://pcpd.mtsu.workers.dev/pt-PT/privacy
 ```

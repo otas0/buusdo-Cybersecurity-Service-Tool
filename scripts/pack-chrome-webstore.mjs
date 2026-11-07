@@ -34,7 +34,7 @@ const copy = [
   "content",
   "shared",
   "rules",
-  "icons" // includes busdo-wordmark.png + icon16/48/128
+  "icons" // includes buusdo-wordmark.png + icon16/48/128
 ];
 
 for (const name of copy) {

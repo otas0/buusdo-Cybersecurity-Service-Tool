@@ -1,4 +1,4 @@
-# Ops runbook (busdo · Cloudflare)
+# Ops runbook (buusdo · Cloudflare)
 
 Short operator procedures after the first Workers deploy.
 
@@ -57,4 +57,4 @@ See [LAUNCH_CHECKLIST.md](LAUNCH_CHECKLIST.md) § check:prod log.
 - Staging health: when `STAGING_HEALTH_URL` is set, fail closed without Turso (`npm run assert:staging-health`); summary links ACCOUNT_SYNC_GATE ordered STRICT commands.
 - Scheduled **Staging STRICT smokes** (every 6h / dispatch) — soft pending until `STAGING_HEALTH_URL`; then STRICT magic-link + exchange + lists.
 - Soft_warn Slack rate-limit drill needs `SLACK_WEBHOOK_URL` first ([HEALTH_ALERTS.md](HEALTH_ALERTS.md)).
-- This repo **is** the busdo (Buusdo line) Cybersecurity Service Tool product. Other Buusdo products stay in their own workspaces; do not `move_agent_to_root` onto unrelated apps mid-PR.
+- This repo **is** the buusdo (Buusdo line) Cybersecurity Service Tool product. Other Buusdo products stay in their own workspaces; do not `move_agent_to_root` onto unrelated apps mid-PR.

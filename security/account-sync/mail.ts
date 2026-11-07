@@ -18,16 +18,16 @@ export async function sendMagicLinkEmail(opts: {
   expiresAt: string;
 }): Promise<MagicMailResult> {
   const from = fromAddress();
-  const subject = "busdo sign-in link";
+  const subject = "buusdo sign-in link";
   const text = [
-    "Sign in to busdo (personal block/trust lists sync only).",
+    "Sign in to buusdo (personal block/trust lists sync only).",
     "",
     opts.consumeUrl,
     "",
     `This link expires at ${opts.expiresAt}.`,
     "If you did not request this, ignore this email."
   ].join("\n");
-  const html = `<p>Sign in to busdo (personal block/trust lists sync only).</p>
+  const html = `<p>Sign in to buusdo (personal block/trust lists sync only).</p>
 <p><a href="${opts.consumeUrl}">Open sign-in link</a></p>
 <p>This link expires at ${opts.expiresAt}.</p>
 <p>If you did not request this, ignore this email.</p>`;

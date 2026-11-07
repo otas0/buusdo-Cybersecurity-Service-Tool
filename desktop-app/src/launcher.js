@@ -1,5 +1,5 @@
 /**
- * busdo launcher — no Chromium shell required.
+ * buusdo launcher — no Chromium shell required.
  *
  *   node src/launcher.js
  *   node src/launcher.js --install   # silent install; never writes login items

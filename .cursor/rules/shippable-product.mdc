@@ -5,12 +5,12 @@ alwaysApply: true
 
 # Shippable product only
 
-This repo ships **busdo** (Cybersecurity Service Tool) as a real product in the Buusdo line — not a classroom or teacher demo. Legacy code/paths may still say Preventive Shield; user-facing brand is **busdo**.
+This repo ships **buusdo Cybersecurity Service Tool** as a real product in the Buusdo line — not a classroom or teacher demo. Legacy code/paths may still say Preventive Shield; user-facing brand is **buusdo Cybersecurity Service Tool**.
 
 - Do **not** add demo, mock, fictional-only, teacher-demo, or “controlled demonstration” product UI.
 - Every user-facing feature must be something that can go live: real flows, real brands/signals where shown, reversible local choices, bilingual EN / pt-PT.
 - Test fixtures (e.g. `.test` hosts in `tests/` / evaluation) may stay for automated checks — never surface them as the product experience.
 - Prefer completing the **website** (`app/`, `components/`, `security/`) before polishing the extension or desktop app.
 - Visual language is the instrument system in `shared/tokens.css` (dark field, sharp corners, orange Halt). Do not reintroduce the cream / mint / Georgia legacy look.
-- Brand assets: `public/brand/busdo-logo.png` (full mark + tagline) and `public/brand/busdo-wordmark.png` (header lockup).
+- Brand assets: `public/brand/buusdo-logo.png` (full mark + tagline) and `public/brand/buusdo-wordmark.png` (header lockup).
 - If asked for a “demo”, implement the real product path instead (or a thin fixture behind tests only).

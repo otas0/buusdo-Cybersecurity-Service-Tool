@@ -1,6 +1,6 @@
 # First-party threat data
 
-busdo does **not** call Google Safe Browsing or other third-party reputation APIs. Product reputation comes from files in this folder plus address signals in code.
+buusdo does **not** call Google Safe Browsing or other third-party reputation APIs. Product reputation comes from files in this folder plus address signals in code.
 
 `runtime/` is gitignored (except `.gitkeep`) — head-skip cache and optional `env-overrides.env` when vinext denies `.env.local` writes.
 

@@ -32,14 +32,14 @@ function writeConnectRefuse(clientSocket, hostCheck) {
       "X-Preventive-Shield: blocked\r\n" +
       `X-Preventive-Shield-Kind: ${kind}\r\n` +
       "\r\n" +
-      "busdo blocked this host. No TLS decryption; the hostname alone matched.\r\n"
+      "buusdo blocked this host. No TLS decryption; the hostname alone matched.\r\n"
   );
   clientSocket.end();
 }
 
 function blockResponse(clientRes, classification) {
   const body = [
-    "busdo — request blocked",
+    "buusdo — request blocked",
     `kind: ${classification.kind}`,
     `target: ${classification.display}`,
     "",
