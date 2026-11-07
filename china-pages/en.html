@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="Preventive Shield — China-facing entry on GitHub Pages when Cloudflare Workers is hard to reach."
+    />
+    <title>Preventive Shield · China entry</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main class="shell">
+      <header class="top">
+        <h1>Preventive Shield</h1>
+        <p class="lang-switch">
+          <a href="./index.html">中文</a>
+          ·
+          <a href="./en.html" aria-current="page">EN</a>
+        </p>
+      </header>
+
+      <section class="stage">
+        <h2>Why this page</h2>
+        <p>
+          The live checker runs on Cloudflare Workers
+          (<code>pcpd.mtsu.workers.dev</code>). Some networks in mainland China
+          time out to <code>*.workers.dev</code> even when the Worker is healthy.
+        </p>
+        <p>
+          This <strong>GitHub Pages</strong> site is a reachable landing page:
+          privacy summary, install links, and a path back to the full product when
+          Cloudflare is accessible.
+        </p>
+      </section>
+
+      <section class="stage">
+        <h2>Links</h2>
+        <ul>
+          <li><a href="./privacy.html">Privacy (zh summary)</a></li>
+          <li><a href="./install.html">Chrome / Safari install</a></li>
+          <li>
+            <a href="https://pcpd.mtsu.workers.dev/en" rel="noreferrer"
+              >Full website check (needs Cloudflare)</a
+            >
+          </li>
+        </ul>
+      </section>
+
+      <footer class="foot">
+        <p>Preventive Shield · GitHub Pages China entry</p>
+      </footer>
+    </main>
+  </body>
+</html>
