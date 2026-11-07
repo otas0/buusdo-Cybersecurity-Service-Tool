@@ -122,7 +122,9 @@ test("cross-check Chrome store Halt FRAME (Playwright vs Sharp floors)", async (
     await page.goto(`http://127.0.0.1:${port}/`);
     await expect(page.getByTestId("store-halt-frame")).toBeVisible();
     await expect(page.getByText("Halt")).toBeVisible();
-    await expect(page.getByText("buusdo Cybersecurity Service Tool")).toBeVisible();
+    await expect(
+      page.getByRole("img", { name: "buusdo Cybersecurity Service Tool" }),
+    ).toBeVisible();
     const bg = await page.evaluate(() => getComputedStyle(document.body).backgroundColor);
     expect(bg).toMatch(/rgb\(\s*14,\s*14,\s*14\s*\)|#0e0e0e/i);
     await page.screenshot({ path: crossPath, type: "png" });
