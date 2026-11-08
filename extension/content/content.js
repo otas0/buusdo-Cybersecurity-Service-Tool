@@ -65,6 +65,26 @@
       tracker: "Đã chặn {n} trình theo dõi",
       trackers: "Đã chặn {n} trình theo dõi",
       dismiss: "Đóng"
+    },
+    "pt-BR": {
+      tracker: "Bloqueado {n} Rastreador",
+      trackers: "Bloqueados {n} Rastreadores",
+      dismiss: "Fechar"
+    },
+    de: {
+      tracker: "{n} Tracker blockiert",
+      trackers: "{n} Tracker blockiert",
+      dismiss: "Schließen"
+    },
+    fr: {
+      tracker: "{n} traqueur bloqué",
+      trackers: "{n} traqueurs bloqués",
+      dismiss: "Fermer"
+    },
+    es: {
+      tracker: "{n} rastreador bloqueado",
+      trackers: "{n} rastreadores bloqueados",
+      dismiss: "Cerrar"
     }
   };
 

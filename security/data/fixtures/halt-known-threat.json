@@ -1,7 +1,13 @@
 {
-  "description": "Stable Halt host for CI Playwright — must stay on the curated own-threat list (.example TLD).",
+  "description": "Stable Halt host for soft live Playwright — must stay on the curated own-threat list (.example TLD).",
   "host": "paypal.secure-login.example",
   "threatState": "KNOWN_PHISHING",
   "listFile": "security/data/curated-threats.json",
-  "notes": "Prefer this over live phishing TLDs. Workers check uses the same curated list in evaluation/CI."
+  "notes": [
+    "Prefer this over live phishing TLDs. Workers /api/check uses the same curated list in evaluation/CI.",
+    "Soft live specs: playwright/risk-result-zh-hans-evidence.spec.ts (locales /zh-Hans, /de, /th).",
+    "Override host with PLAYWRIGHT_HALT_HOST only if that host remains on curated-threats.json.",
+    "Origin: PLAYWRIGHT_LIVE_BASE_URL or PRODUCTION_HEALTH_URL (https://buusdocst.mtsu.workers.dev). Specs skip when unreachable.",
+    "Do not replace with a real-brand phishing URL — .example keeps CI deterministic and non-harmful."
+  ]
 }

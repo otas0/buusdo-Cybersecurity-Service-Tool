@@ -17,6 +17,15 @@
 name: Deploy Cloudflare
 
 on:
+  # Locale / i18n bag changes must ship to Workers without a manual dispatch.
+  push:
+    branches: [main, master]
+    paths:
+      - "i18n/packs/**"
+      - "i18n/messages.ts"
+      - "i18n/locales.ts"
+      - "i18n/pack-index.ts"
+      - "i18n/core-keys.ts"
   workflow_dispatch:
     inputs:
       target:
@@ -134,7 +143,10 @@ jobs:
           fi
 
       - name: Check smoke
-        if: steps.site.outputs.url != '' && steps.site.outputs.target == 'production' && github.event.inputs.run_check_smoke == 'true'
+        # Push (locale packs) defaults on; workflow_dispatch respects the input.
+        if: >
+          steps.site.outputs.url != '' && steps.site.outputs.target == 'production' &&
+          (github.event_name == 'push' || github.event.inputs.run_check_smoke == 'true')
         env:
           HEALTH_BASE_URL: ${{ steps.site.outputs.url }}
         run: npm run check:prod -- --url "$HEALTH_BASE_URL"
@@ -166,7 +178,9 @@ jobs:
   privacy:
     name: privacy-prod (after deploy)
     needs: deploy
-    if: github.event.inputs.run_privacy_smoke == 'true' && needs.deploy.outputs.target == 'production'
+    if: >
+      needs.deploy.outputs.target == 'production' &&
+      (github.event_name == 'push' || github.event.inputs.run_privacy_smoke == 'true')
     uses: ./.github/workflows/privacy-prod.yml
     with:
       url: ${{ needs.deploy.outputs.site_url }}

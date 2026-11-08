@@ -13,4 +13,10 @@ test("desktop ja machine* keys are Japanese (not EN overlay leftovers)", async (
   assert.notEqual(ja.machineQuarantineEmpty, en.machineQuarantineEmpty);
   assert.notEqual(ja.machineAskTitle, en.machineAskTitle);
   assert.equal(t("ja", "machineQuarantineEmpty"), ja.machineQuarantineEmpty);
+  assert.match(ja.scanning, /確認|スキャン|待機|中/);
+  assert.notEqual(ja.scanning, en.scanning);
+  assert.notEqual(ja.detailSafe, en.detailSafe);
+  assert.notEqual(ja.detailDanger, en.detailDanger);
+  assert.notEqual(ja.detailCaution, en.detailCaution);
+  assert.notEqual(ja.openAtLogin, en.openAtLogin);
 });

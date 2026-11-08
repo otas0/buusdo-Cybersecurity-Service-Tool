@@ -47,4 +47,40 @@ test.describe("locale recommend soft prompt", () => {
     await expect(page.getByTestId("locale-recommend")).toHaveCount(0);
     await expect(page.getByText(/Keep English|Manter inglês|保持英文/i)).toHaveCount(0);
   });
+
+  for (const { tag, expectedHint } of [
+    { tag: "xh-ZA", expectedHint: /isiXhosa|Xhosa|xh/i },
+    { tag: "th-TH", expectedHint: /ไทย|Thai|th/i }
+  ] as const) {
+    test(`first /en visit opens recommend when Accept-Language prefers ${tag}`, async ({
+      page,
+      context
+    }) => {
+      await context.addInitScript((lang) => {
+        try {
+          localStorage.removeItem("buusdocst-locale-choice");
+          localStorage.removeItem("buusdocst-locale-recommend-dismiss");
+          Object.defineProperty(navigator, "languages", {
+            get: () => [lang, "en-US"],
+            configurable: true
+          });
+          Object.defineProperty(navigator, "language", {
+            get: () => lang,
+            configurable: true
+          });
+        } catch {
+          /* ignore */
+        }
+      }, tag);
+
+      await page.goto(`${base}/en`, { waitUntil: "domcontentloaded", timeout: 45_000 });
+      await waitForReactHydration(page, '[data-testid="locale-select"]').catch(() => undefined);
+
+      const dialog = page.getByTestId("locale-recommend");
+      await expect(dialog, `locale-recommend must open for ${tag}`).toBeVisible({ timeout: 15_000 });
+      await expect(dialog).toContainText(expectedHint);
+      await page.getByTestId("locale-recommend-dismiss").click();
+      await expect(dialog).toBeHidden({ timeout: 10_000 });
+    });
+  }
 });

@@ -5,7 +5,7 @@ import { normalizeLocale } from "./locales";
 const EN_KEYS = Object.keys(messages.en);
 
 /** Near-complete vs EN snapshot — avoid marking ~80-key stubs as full. */
-const FULL_PACK_MIN_KEYS = Math.max(400, Math.floor(EN_KEYS.length * 0.9));
+export const FULL_PACK_MIN_KEYS = Math.max(400, Math.floor(EN_KEYS.length * 0.9));
 
 /** Pack file has near-complete website chrome (snapshot-sized). */
 export function isFullLocalePack(locale: string): boolean {

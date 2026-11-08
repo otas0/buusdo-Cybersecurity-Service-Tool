@@ -20,6 +20,7 @@ const MAP = {
   appTitle: "prototype",
   statusKicker: "statusKicker",
   scan: "go",
+  scanning: "checking",
   statusStandby: "lightStandby",
   statusSafe: "lightSafe",
   statusCaution: "lightCaution",
@@ -33,7 +34,10 @@ const MAP = {
   privacyLocal: "privacyLocal",
   privacyShare: "privacyShare",
   privacyHint: "privacyNote",
-  langLabel: "navAriaLabel"
+  langLabel: "navAriaLabel",
+  // Desktop chrome leftovers commonly left in EN on ja — map when pack has a close key.
+  detailSafe: "evidenceNoMatchTitle",
+  detailDanger: "evidenceLookalikeTitle"
 };
 
 const markerStart = "/* __DESKTOP_PACK_OVERLAY_START__ */";

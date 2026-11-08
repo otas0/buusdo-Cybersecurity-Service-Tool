@@ -11,11 +11,9 @@ Checklist to keep Pages `china-pages/privacy.html` aligned with the live Workers
 | Contact | operator of the Worker deployment | “联系运行该部署的运营方” | ✓ aligned |
 | Full policy CTA | self | link → `https://buusdocst.mtsu.workers.dev/zh-Hans/privacy` | ✓ linked |
 | Language pref note | n/a (Workers locale select) | `#china-lang-pref` foot-note | ✓ Pages-only |
-| Live soft check | `privacy-prod` `/zh-Hans/privacy` soft | — | ✓ CI soft step + Deploy workflow (re-ticked 2026-11-08 after FAQ Round-2 removal) |
-| Locale recommend / FAQ chrome | Workers packs zh-Hans | Pages Halt FAQ short form (honest limits only; no survey link) | ✓ re-ticked 2026-11-08 |
+| Live soft check | `privacy-prod` `/zh-Hans/privacy` soft | — | ✓ CI soft step + Deploy workflow |
+| Locale recommend / FAQ chrome | Workers packs zh-Hans | Pages Halt FAQ short form (honest limits only) | ✓ re-ticked 2026-11-08 |
 | EN entry secondary `/zh-Hans` | Workers `/zh-Hans` | `en.html` / `privacy-en.html` / `install-en.html` CTA + foot-note | ✓ documented + linked |
-| No `/survey/` on privacy | Workers `/en/privacy` | Pages privacy twins | ✓ assert in `privacy-prod` + halt-next-steps + pages-china |
-
 **When editing either surface:** update this table’s Status column and re-check zh / EN pair (`privacy-en.html` ↔ `/en/privacy`).
 
 **CI hooks:** `tests/china-halt-next-steps.test.ts` (Halt FAQ), `scripts/assert-formal-name.mjs` (brand alt), China install/Workers locale table in `docs/CHINA_GITHUB_PAGES.md` + `tests/china-setup-guide-parity.test.ts`.
