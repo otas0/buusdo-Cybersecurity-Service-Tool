@@ -19,12 +19,14 @@ Actions **Pages China** 将 `china-pages/` 发布到 `otas0/buusdocst`（secret 
 
 | 路径 | 用途 |
 |------|------|
-| `/` (`index.html`) | 中文首页 |
-| `/en.html` | English entry（含 Product / Halt 段；链到英文安装与隐私） |
+| `/` (`index.html`) | 中文入口 |
+| `/en.html` | English entry |
 | `/privacy.html` | 隐私摘要（中文） |
 | `/privacy-en.html` | Privacy summary (English) |
-| `/install.html` | Chrome / Safari / Desktop 安装说明（中文） |
+| `/install.html` | 安装说明（中文） |
 | `/install-en.html` | Install (English) |
+
+每一页顶栏统一：`中文 · EN`（`data-testid="china-lang-switch"`）+ 站点导航（入口/安装/隐私 或 Entry/Install/Privacy）。三对中英页面内容对等，无「仅中文子页」死链。
 
 ## 与 Workers 的关系
 

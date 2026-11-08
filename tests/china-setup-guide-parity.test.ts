@@ -22,7 +22,7 @@ function assertInstallPage(file: string, labelRe: RegExp) {
 }
 
 test("china-pages zh install Setup guide href matches desktop-downloads setupGuideUrl", () => {
-  assertInstallPage("install.html", /Setup guide（未签名）|Setup guide \(unsigned\)/);
+  assertInstallPage("install.html", /安装指南（未签名）|Setup guide \(unsigned\)/);
 });
 
 test("china-pages en install Setup guide href matches desktop-downloads setupGuideUrl", () => {

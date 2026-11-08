@@ -24,15 +24,22 @@
             alt="buusdo Cybersecurity Service Tool"
           />
         </h1>
-        <p class="lang-switch">
-          <a href="./index.html" aria-current="page">中文</a>
-          ·
-          <a href="./en.html">EN</a>
-        </p>
+        <div class="top-end">
+          <p class="lang-switch" data-testid="china-lang-switch">
+            <a href="./index.html" aria-current="page">中文</a>
+            ·
+            <a href="./en.html">EN</a>
+          </p>
+          <nav class="china-site-nav" aria-label="站点导航">
+            <a href="./index.html" aria-current="page">入口</a>
+            <a href="./install.html">安装</a>
+            <a href="./privacy.html">隐私</a>
+          </nav>
+        </div>
       </header>
 
       <section class="stage">
-        <p class="kicker"><span class="mark" aria-hidden="true"></span>China entry</p>
+        <p class="kicker"><span class="mark" aria-hidden="true"></span>中国入口</p>
         <h2>中国大陆访问说明</h2>
         <p class="lede">
           完整检查服务运行在 Cloudflare Workers（
@@ -67,7 +74,7 @@
       </section>
 
       <section class="stage">
-        <p class="kicker">Product</p>
+        <p class="kicker">产品</p>
         <h2>产品做什么</h2>
         <p>
           buusdo Cybersecurity Service Tool（Buusdo 产品线中的独立产品）在信任网址前，用自有威胁列表、地址结构、品牌仿冒信号、DNS
@@ -76,7 +83,7 @@
       </section>
 
       <section class="stage" data-testid="china-halt-next-steps" id="halt-next-steps">
-        <p class="kicker"><span class="mark" aria-hidden="true"></span>Halt</p>
+        <p class="kicker"><span class="mark" aria-hidden="true"></span>停止</p>
         <h2>出现 Halt（停止）时怎么办</h2>
         <p class="lede">
           完整 Halt 结果页在 Workers 检查站（离开、独立核实、可选举报）。本页只提供同样的下一步摘要；请在可访问 Cloudflare 时打开完整检查。

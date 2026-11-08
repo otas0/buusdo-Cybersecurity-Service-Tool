@@ -25,6 +25,14 @@ test("China privacy.html has zh Halt FAQ", () => {
   assert.match(privacy, /投票/);
 });
 
+test("China privacy-en.html has EN Halt FAQ", () => {
+  const privacy = readFileSync(join(process.cwd(), "china-pages/privacy-en.html"), "utf8");
+  assert.match(privacy, /data-testid="china-halt-faq"/);
+  assert.match(privacy, /Is this antivirus/i);
+  assert.match(privacy, /public vote/i);
+  assert.match(privacy, /data-testid="china-lang-switch"/);
+});
+
 test("extension Halt toast uses shared phishing-toast-mount", () => {
   const root = process.cwd();
   const mount = readFileSync(join(root, "extension/content/phishing-toast-mount.js"), "utf8");

@@ -35,11 +35,44 @@ a {
 
 .shell .top {
   display: flex;
-  align-items: baseline;
+  align-items: flex-start;
   justify-content: space-between;
   gap: 16px;
   padding: 0 0 18px;
   border-bottom: 1px solid var(--line);
+}
+
+.shell .top-end {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+  text-align: right;
+}
+
+.shell .china-site-nav {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 10px 14px;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.shell .china-site-nav a {
+  color: var(--muted);
+  text-decoration: none;
+}
+
+.shell .china-site-nav a:hover {
+  color: var(--text);
+}
+
+.shell .china-site-nav a[aria-current="page"] {
+  color: var(--text);
 }
 
 .shell .brand-lockup {
