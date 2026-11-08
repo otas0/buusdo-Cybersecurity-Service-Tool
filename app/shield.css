@@ -40,6 +40,30 @@
   object-position: left center;
   background: transparent;
   border: 0;
+  flex-shrink: 1;
+}
+
+/* 320px: long wordmark + locale badge must not crush the top bar */
+@media (max-width: 360px) {
+  .shell .top {
+    gap: 8px;
+    align-items: center;
+  }
+
+  .shell .brand-logo {
+    height: 32px;
+    max-width: min(160px, 48vw);
+  }
+
+  .shell .top-nav {
+    gap: 8px;
+    flex-wrap: nowrap;
+  }
+
+  .shell .lang-switch {
+    max-width: 2.75rem;
+    min-width: 2.5rem;
+  }
 }
 
 .shell .kicker,

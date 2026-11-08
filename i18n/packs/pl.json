@@ -59,5 +59,21 @@
   "desktopDownloadSetupGuide": "Przewodnik instalacji (niepodpisany)",
   "desktopHonestLimitsLink": "Uczciwe granice aplikacji pulpitowej",
   "timingTotalChip": "sprawdzenie {ms}ms",
-  "timingTitle": "Czas sprawdzenia"
+  "timingTitle": "Czas sprawdzenia",
+  "faqParentsTitle": "Dla rodziców i nauczycieli",
+  "faqParentsIntro": "Co to narzędzie robi, a czego nie — zanim zaufasz wynikowi Halt.",
+  "faqNoWipeTitle": "Bez automatycznego czyszczenia",
+  "faqNoWipeBody": "buusdo nie usuwa plików systemowych i nie resetuje urządzenia.",
+  "faqNoAvTitle": "To nie antywirus",
+  "faqNoAvBody": "Bez silnika AV i sygnatur — sygnały strukturalne, własna lista i sondy.",
+  "faqNoCrowdTitle": "Bez reputacji stron trzecich",
+  "faqNoCrowdBody": "Adresy URL nie trafiają do Google Safe Browsing ani innych usług zewnętrznych.",
+  "faqSurveyRound2Link": "Ankieta Round-2 (otwarta)",
+  "partialPackBanner": "Dłuższy tekst Prywatności i Ustawień jest częściowo po angielsku. Chrome i Halt są przetłumaczone.",
+  "localeRecommendTitle": "Wybierz język",
+  "localeRecommendBody": "Na podstawie przeglądarki sugerujemy {lang}. Możesz to zmienić w nagłówku.",
+  "localeRecommendAccept": "Użyj {lang}",
+  "localeRecommendStay": "Zostaw angielski",
+  "localeRecommendDismiss": "Nie teraz",
+  "whyEmpty": "Brak silnych sygnałów poza zwykłymi ograniczeniami."
 }

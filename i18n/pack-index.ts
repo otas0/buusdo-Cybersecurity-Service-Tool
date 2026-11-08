@@ -13,16 +13,23 @@ import pack_el from "./packs/el.json";
 import pack_es from "./packs/es.json";
 import pack_et from "./packs/et.json";
 import pack_fi from "./packs/fi.json";
+import pack_fil from "./packs/fil.json";
 import pack_fr from "./packs/fr.json";
 import pack_ga from "./packs/ga.json";
 import pack_hr from "./packs/hr.json";
 import pack_hu from "./packs/hu.json";
+import pack_id from "./packs/id.json";
 import pack_is from "./packs/is.json";
 import pack_it from "./packs/it.json";
 import pack_ja from "./packs/ja.json";
+import pack_km from "./packs/km.json";
+import pack_lo from "./packs/lo.json";
 import pack_lt from "./packs/lt.json";
 import pack_lv from "./packs/lv.json";
+import pack_mi from "./packs/mi.json";
+import pack_ms from "./packs/ms.json";
 import pack_mt from "./packs/mt.json";
+import pack_my from "./packs/my.json";
 import pack_nb from "./packs/nb.json";
 import pack_nl from "./packs/nl.json";
 import pack_nr from "./packs/nr.json";
@@ -35,10 +42,12 @@ import pack_sl from "./packs/sl.json";
 import pack_ss from "./packs/ss.json";
 import pack_st from "./packs/st.json";
 import pack_sv from "./packs/sv.json";
+import pack_th from "./packs/th.json";
 import pack_tn from "./packs/tn.json";
 import pack_ts from "./packs/ts.json";
 import pack_uk from "./packs/uk.json";
 import pack_ve from "./packs/ve.json";
+import pack_vi from "./packs/vi.json";
 import pack_xh from "./packs/xh.json";
 import pack_zh_Hans from "./packs/zh-Hans.json";
 import pack_zh_Hant from "./packs/zh-Hant.json";
@@ -55,16 +64,23 @@ export const LOCALE_PACKS: Record<string, LocalePack> = {
   "es": pack_es as LocalePack,
   "et": pack_et as LocalePack,
   "fi": pack_fi as LocalePack,
+  "fil": pack_fil as LocalePack,
   "fr": pack_fr as LocalePack,
   "ga": pack_ga as LocalePack,
   "hr": pack_hr as LocalePack,
   "hu": pack_hu as LocalePack,
+  "id": pack_id as LocalePack,
   "is": pack_is as LocalePack,
   "it": pack_it as LocalePack,
   "ja": pack_ja as LocalePack,
+  "km": pack_km as LocalePack,
+  "lo": pack_lo as LocalePack,
   "lt": pack_lt as LocalePack,
   "lv": pack_lv as LocalePack,
+  "mi": pack_mi as LocalePack,
+  "ms": pack_ms as LocalePack,
   "mt": pack_mt as LocalePack,
+  "my": pack_my as LocalePack,
   "nb": pack_nb as LocalePack,
   "nl": pack_nl as LocalePack,
   "nr": pack_nr as LocalePack,
@@ -77,10 +93,12 @@ export const LOCALE_PACKS: Record<string, LocalePack> = {
   "ss": pack_ss as LocalePack,
   "st": pack_st as LocalePack,
   "sv": pack_sv as LocalePack,
+  "th": pack_th as LocalePack,
   "tn": pack_tn as LocalePack,
   "ts": pack_ts as LocalePack,
   "uk": pack_uk as LocalePack,
   "ve": pack_ve as LocalePack,
+  "vi": pack_vi as LocalePack,
   "xh": pack_xh as LocalePack,
   "zh-Hans": pack_zh_Hans as LocalePack,
   "zh-Hant": pack_zh_Hant as LocalePack,

@@ -59,5 +59,21 @@
   "desktopDownloadSetupGuide": "Průvodce instalací (nepodepsáno)",
   "desktopHonestLimitsLink": "Poctivé limity desktopové aplikace",
   "timingTotalChip": "kontrola {ms}ms",
-  "timingTitle": "Čas kontroly"
+  "timingTitle": "Čas kontroly",
+  "faqParentsTitle": "For parents and teachers",
+  "faqParentsIntro": "What this tool does and does not — useful before trusting a Halt result.",
+  "faqNoWipeTitle": "No automatic wipe",
+  "faqNoWipeBody": "buusdo does not delete system files and does not reset the device.",
+  "faqNoAvTitle": "Not an antivirus",
+  "faqNoAvBody": "No AV engine or signatures — structure signals, own list, and probes.",
+  "faqNoCrowdTitle": "No third-party reputation",
+  "faqNoCrowdBody": "URLs are not sent to Google Safe Browsing or other third-party services.",
+  "faqSurveyRound2Link": "Round-2 survey (open)",
+  "partialPackBanner": "Some longer Privacy and Settings text is still in English for this language. Chrome and Halt steps are translated.",
+  "localeRecommendTitle": "Choose your language",
+  "localeRecommendBody": "Based on your browser, we suggest {lang}. You can change this anytime in the header.",
+  "localeRecommendAccept": "Use {lang}",
+  "localeRecommendStay": "Keep English",
+  "localeRecommendDismiss": "Not now",
+  "whyEmpty": "No strong signals beyond the usual limitations."
 }

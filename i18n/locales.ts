@@ -42,9 +42,9 @@ export const LOCALE_REGION_ORDER: LocaleRegion[] = [
 ];
 
 /**
- * Ship list: EN + 简/繁/日/葡 + Europe + South Africa (11 official).
- * Pacific (mi) + SEA (id/ms/th/vi/fil/km/lo/my) held until real packs — see comment below catalog.
- * Aliases: zh → zh-Hans, zh-CN/zh-SG → zh-Hans, zh-TW/zh-HK → zh-Hant, pt → pt-PT, jp → ja, no → nb.
+ * Ship list: EN + 简/繁/日/葡 + Europe + South Africa (11 official) + te reo Māori + ASEAN national languages.
+ * SEA/Pacific packs must be real translations (no EN stubs).
+ * Aliases: zh → zh-Hans, zh-CN/zh-SG → zh-Hans, zh-TW/zh-HK → zh-Hant, pt → pt-PT, jp → ja, tl → fil, no → nb.
  */
 export const LOCALE_CATALOG: readonly LocaleEntry[] = [
   { id: "en", nativeName: "English", englishName: "English", region: "global", htmlLang: "en", intl: "en-GB" },
@@ -92,10 +92,18 @@ export const LOCALE_CATALOG: readonly LocaleEntry[] = [
   { id: "ss", nativeName: "siSwati", englishName: "Swati", region: "southern-africa", htmlLang: "ss", intl: "ss-ZA" },
   { id: "ve", nativeName: "Tshivenḓa", englishName: "Venda", region: "southern-africa", htmlLang: "ve", intl: "ve-ZA" },
   { id: "ts", nativeName: "Xitsonga", englishName: "Tsonga", region: "southern-africa", htmlLang: "ts", intl: "ts-ZA" },
-  { id: "nr", nativeName: "isiNdebele", englishName: "Southern Ndebele", region: "southern-africa", htmlLang: "nr", intl: "nr-ZA" }
+  { id: "nr", nativeName: "isiNdebele", englishName: "Southern Ndebele", region: "southern-africa", htmlLang: "nr", intl: "nr-ZA" },
 
-  // Pacific + SEA national languages held until real packs land (no EN-stub ship).
-  // Planned: mi, id, ms, th, vi, fil, km, lo, my — restore with npm run gen:pack-index after packs exist.
+  { id: "mi", nativeName: "Te reo Māori", englishName: "Māori", region: "pacific", htmlLang: "mi", intl: "mi-NZ" },
+
+  { id: "id", nativeName: "Bahasa Indonesia", englishName: "Indonesian", region: "southeast-asia", htmlLang: "id", intl: "id-ID" },
+  { id: "ms", nativeName: "Bahasa Melayu", englishName: "Malay", region: "southeast-asia", htmlLang: "ms", intl: "ms-MY" },
+  { id: "th", nativeName: "ไทย", englishName: "Thai", region: "southeast-asia", htmlLang: "th", intl: "th-TH" },
+  { id: "vi", nativeName: "Tiếng Việt", englishName: "Vietnamese", region: "southeast-asia", htmlLang: "vi", intl: "vi-VN" },
+  { id: "fil", nativeName: "Filipino", englishName: "Filipino", region: "southeast-asia", htmlLang: "fil", intl: "fil-PH" },
+  { id: "km", nativeName: "ភាសាខ្មែរ", englishName: "Khmer", region: "southeast-asia", htmlLang: "km", intl: "km-KH" },
+  { id: "lo", nativeName: "ລາວ", englishName: "Lao", region: "southeast-asia", htmlLang: "lo", intl: "lo-LA" },
+  { id: "my", nativeName: "မြန်မာ", englishName: "Burmese", region: "southeast-asia", htmlLang: "my", intl: "my-MM" }
 ] as const satisfies readonly LocaleEntry[];
 
 /** Literal union of shipped locale ids. */
@@ -119,9 +127,8 @@ const ALIASES: Record<string, string> = {
   "pt-br": "pt-BR",
   no: "nb",
   "nb-NO": "nb",
-  // tl/fil held with SEA packs — keep aliases commented so normalizeLocale("tl") → en
-  // tl: "fil",
-  // "fil-PH": "fil",
+  tl: "fil",
+  "fil-PH": "fil",
   iw: "he", // not shipped; normalize only
   "en-US": "en",
   "en-GB": "en",

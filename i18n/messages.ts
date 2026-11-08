@@ -488,7 +488,7 @@ export const messages = {
     go: "Ir",
     lightStandby: "Pronto",
     lightSafe: "Limpo",
-    lightCaution: "Reter",
+    lightCaution: "Pausar",
     lightDanger: "Parar",
     lightIdle:
       "Escreva qualquer endereço de site. Verificamos a lista própria de ameaças, estrutura, marcas parecidas, DNS e resposta em direto. Em Parar: saia, verifique num canal oficial em que já confia e, se quiser, denuncie.",

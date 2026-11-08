@@ -3,7 +3,7 @@
   "shieldSubtitle": "Cybersecurity Service Tool",
   "go": "実行",
   "lightStandby": "待機",
-  "lightSafe": "クリア",
+  "lightSafe": "問題なし",
   "lightCaution": "保留",
   "lightDanger": "停止",
   "lightIdle": "任意のサイトアドレスを入力してください。自前の脅威リスト、構造、ブランドなりすまし、DNS、ライブ応答を確認します。「停止」のときは：離れ、すでに信頼している公式チャネルで確認し、任意で報告してください。",

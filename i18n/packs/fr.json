@@ -59,5 +59,21 @@
   "desktopDownloadSetupGuide": "Guide d’installation (non signé)",
   "desktopHonestLimitsLink": "Limites honnêtes de l’app de bureau",
   "timingTotalChip": "vérification {ms}ms",
-  "timingTitle": "Durée de la vérification"
+  "timingTitle": "Durée de la vérification",
+  "faqParentsTitle": "Pour les parents et enseignants",
+  "faqParentsIntro": "Ce que cet outil fait et ne fait pas — utile avant de faire confiance à un résultat Halt.",
+  "faqNoWipeTitle": "Pas d’effacement automatique",
+  "faqNoWipeBody": "buusdo ne supprime pas de fichiers système et ne réinitialise pas l’appareil.",
+  "faqNoAvTitle": "Pas un antivirus",
+  "faqNoAvBody": "Pas de moteur AV ni de signatures — signaux de structure, liste propre et sondes.",
+  "faqNoCrowdTitle": "Pas de réputation tiers",
+  "faqNoCrowdBody": "Les URL ne partent pas vers Google Safe Browsing ni d’autres services tiers.",
+  "faqSurveyRound2Link": "Questionnaire Round-2 (ouvert)",
+  "partialPackBanner": "Une partie du texte long de Confidentialité et Réglages est encore en anglais. Le chrome et Halt sont traduits.",
+  "localeRecommendTitle": "Choisissez votre langue",
+  "localeRecommendBody": "D’après votre navigateur, nous suggérons {lang}. Vous pouvez changer à tout moment dans l’en-tête.",
+  "localeRecommendAccept": "Utiliser {lang}",
+  "localeRecommendStay": "Garder l’anglais",
+  "localeRecommendDismiss": "Pas maintenant",
+  "whyEmpty": "Aucun signal fort au-delà des limites habituelles."
 }

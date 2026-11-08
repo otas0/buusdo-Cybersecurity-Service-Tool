@@ -182,9 +182,27 @@ a {
 }
 
 .shell .stage p.hint {
-  color: var(--muted);
+  /* Explicit AA hex (≥4.5:1 on --bg #0e0e0e); matches desktop .hint */
+  color: #a39e93;
   font-size: 13px;
   max-width: 42rem;
+}
+
+.shell .hint-dismiss {
+  margin-left: 0.5rem;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: #a39e93;
+  font: inherit;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  cursor: pointer;
+}
+
+.shell .hint-dismiss:hover,
+.shell .hint-dismiss:focus-visible {
+  color: var(--text);
 }
 
 .shell .muted {
@@ -411,15 +429,4 @@ a {
     flex-direction: column;
     align-items: stretch;
   }
-}
-
-.shell .hint-dismiss {
-  margin-left: 0.5rem;
-  padding: 0;
-  border: 0;
-  background: transparent;
-  color: inherit;
-  font: inherit;
-  text-decoration: underline;
-  cursor: pointer;
 }

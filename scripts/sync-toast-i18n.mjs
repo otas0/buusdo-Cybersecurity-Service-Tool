@@ -2,6 +2,9 @@
 /**
  * Rebuild extension toast COPY from website packs (toast-sized keys only).
  * Writes extension/content/phishing-toast-i18n.json and patches phishing-toast-mount.js COPY block.
+ *
+ *   node scripts/sync-toast-i18n.mjs
+ *   node scripts/sync-toast-i18n.mjs --check   # fail if JSON/mount drift
  */
 import fs from "node:fs";
 import path from "node:path";
@@ -9,20 +12,9 @@ import { fileURLToPath } from "node:url";
 
 const root = path.join(path.dirname(fileURLToPath(import.meta.url)), "..");
 const packsDir = path.join(root, "i18n/packs");
+const checkOnly = process.argv.includes("--check");
 const en = JSON.parse(fs.readFileSync(path.join(packsDir, "_en.snapshot.json"), "utf8"));
 const pt = JSON.parse(fs.readFileSync(path.join(packsDir, "_pt-PT.snapshot.json"), "utf8"));
-
-/** Map website message keys → toast COPY keys */
-const MAP = {
-  phishing: null, // special
-  dismiss: "feedbackDismissAfterReportHint",
-  dangerLevel: null, // composed
-  ignoreRisk: "ignoreRiskBody",
-  nextStepsTitle: "nextStepsTitle",
-  nextLeave: "nextStepLeave",
-  nextNoCreds: "nextStepNoCredentials",
-  nextVerify: "nextStepVerifyOfficial"
-};
 
 function toastFromBag(bag, localeId) {
   const danger = bag.lightDanger || en.lightDanger;
@@ -61,24 +53,44 @@ for (const id of locales) {
 }
 
 const outJson = path.join(root, "extension/content/phishing-toast-i18n.json");
-fs.writeFileSync(outJson, JSON.stringify(COPY, null, 2) + "\n");
-
+const expectedJson = JSON.stringify(COPY, null, 2) + "\n";
 const mountPath = path.join(root, "extension/content/phishing-toast-mount.js");
+
+if (checkOnly) {
+  if (!fs.existsSync(outJson)) {
+    console.error("[sync-toast-i18n] missing phishing-toast-i18n.json — run: npm run sync:toast-i18n");
+    process.exit(1);
+  }
+  const onDisk = fs.readFileSync(outJson, "utf8");
+  if (onDisk !== expectedJson) {
+    console.error("[sync-toast-i18n] phishing-toast-i18n.json drifts from packs — run: npm run sync:toast-i18n");
+    process.exit(1);
+  }
+  const mount = fs.readFileSync(mountPath, "utf8");
+  for (const id of Object.keys(COPY)) {
+    const needle = COPY[id].phishing;
+    if (!mount.includes(needle)) {
+      console.error(`[sync-toast-i18n] mount missing phishing for ${id}: ${needle}`);
+      process.exit(1);
+    }
+  }
+  if (!mount.includes("resolveToastLang") && !mount.includes("zh-Hans")) {
+    console.error("[sync-toast-i18n] mount missing zh-Hans / resolveToastLang");
+    process.exit(1);
+  }
+  console.info(`[sync-toast-i18n] OK (${Object.keys(COPY).length} locales)`);
+  process.exit(0);
+}
+
+fs.writeFileSync(outJson, expectedJson);
+
 let mount = fs.readFileSync(mountPath, "utf8");
 const copyLiteral = JSON.stringify(COPY, null, 2).replace(/\$/g, "$$$$");
-mount = mount.replace(
-  /const COPY = \{[\s\S]*?\n  \};/,
-  `const COPY = ${copyLiteral};`
-);
-// Resolve lang via catalog-ish normalize
-mount = mount.replace(
-  /const lang = opts\?\.lang === "pt-PT" \? "pt-PT" : "en";/,
-  `const lang = resolveToastLang(opts?.lang);`
-);
-mount = mount.replace(
-  /return COPY\[lang === "pt-PT" \? "pt-PT" : "en"\]\.dismiss;/,
-  `return COPY[resolveToastLang(lang)].dismiss;`
-);
+if (!/const COPY = \{/.test(mount)) {
+  console.error("[sync-toast-i18n] phishing-toast-mount.js missing COPY block");
+  process.exit(1);
+}
+mount = mount.replace(/const COPY = \{[\s\S]*?\n  \};/, `const COPY = ${copyLiteral};`);
 
 if (!mount.includes("function resolveToastLang")) {
   mount = mount.replace(
@@ -99,4 +111,3 @@ if (!mount.includes("function resolveToastLang")) {
 
 fs.writeFileSync(mountPath, mount);
 console.log(`Synced toast i18n (${Object.keys(COPY).length} locales) → ${path.relative(root, outJson)}`);
-void MAP;

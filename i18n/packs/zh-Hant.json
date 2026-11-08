@@ -3,7 +3,7 @@
   "shieldSubtitle": "Cybersecurity Service Tool",
   "go": "執行",
   "lightStandby": "待命",
-  "lightSafe": "暢通",
+  "lightSafe": "通過",
   "lightCaution": "暫緩",
   "lightDanger": "停止",
   "lightIdle": "輸入任意網站地址。我們會核對自有威脅清單、結構、品牌仿冒、DNS 與即時回應。若出現「停止」：離開頁面，透過您已信任的官方管道核實，然後可選擇檢舉。",

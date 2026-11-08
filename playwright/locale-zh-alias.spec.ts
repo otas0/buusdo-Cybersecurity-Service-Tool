@@ -53,4 +53,10 @@ test.describe("production zh alias", () => {
     await page.goto(`${base}/zh-CN`, { waitUntil: "domcontentloaded", timeout: 45_000 });
     await expect(page).toHaveURL(/\/zh-Hans(?:\/|$|\?)/, { timeout: 20_000 });
   });
+
+  test("/zh-SG redirects to /zh-Hans", async ({ page }) => {
+    await page.goto(`${base}/zh-SG`, { waitUntil: "domcontentloaded", timeout: 45_000 });
+    await expect(page).toHaveURL(/\/zh-Hans(?:\/|$|\?)/, { timeout: 20_000 });
+    await expect(page.getByTestId("locale-select")).toHaveValue("zh-Hans");
+  });
 });

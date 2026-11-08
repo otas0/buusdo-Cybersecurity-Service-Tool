@@ -23,13 +23,17 @@ test("catalog covers required regions and priority languages", () => {
   assert.ok(LOCALE_IDS.includes("zh-Hans"));
   assert.ok(LOCALE_IDS.includes("zh-Hant"));
   assert.ok(LOCALE_IDS.includes("ja"));
-  assert.equal(LOCALE_IDS.includes("mi"), false);
-  assert.equal(LOCALE_IDS.includes("th"), false);
+  assert.ok(LOCALE_IDS.includes("mi"));
+  assert.ok(LOCALE_IDS.includes("th"));
+  assert.ok(LOCALE_IDS.includes("id"));
+  assert.ok(LOCALE_IDS.includes("fil"));
+  assert.ok(LOCALE_IDS.includes("km"));
+  assert.ok(LOCALE_IDS.includes("lo"));
+  assert.ok(LOCALE_IDS.includes("my"));
   assert.ok(localesInRegion("europe").length >= 20);
   assert.ok(localesInRegion("southern-africa").length >= 10);
-  // SEA + Pacific held until real packs (no EN stubs in catalog).
-  assert.equal(localesInRegion("southeast-asia").length, 0);
-  assert.equal(localesInRegion("pacific").length, 0);
+  assert.equal(localesInRegion("southeast-asia").length, 8);
+  assert.equal(localesInRegion("pacific").length, 1);
   assert.equal(new Set(LOCALE_IDS).size, LOCALE_IDS.length);
 });
 
@@ -38,8 +42,7 @@ test("normalizeLocale aliases", () => {
   assert.equal(normalizeLocale("zh-TW"), "zh-Hant");
   assert.equal(normalizeLocale("pt"), "pt-PT");
   assert.equal(normalizeLocale("jp"), "ja");
-  // fil/mi held — bare tl falls through to en until SEA packs return
-  assert.equal(normalizeLocale("tl"), "en");
+  assert.equal(normalizeLocale("tl"), "fil");
   assert.equal(normalizeLocale("no"), "nb");
   assert.equal(normalizeLocale("xx-unknown"), "en");
   assert.ok(isLocale("de"));

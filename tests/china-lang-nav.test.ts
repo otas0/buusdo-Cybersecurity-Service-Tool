@@ -59,7 +59,10 @@ test("bilingual pages mark 中文/EN with data-china-lang and locale Workers CTA
     const isEn = file === "en.html" || file.endsWith("-en.html");
     if (isEn) {
       assert.match(html, /workers\.dev\/en/, file);
-      assert.doesNotMatch(html, /workers\.dev\/zh-Hans/, file);
+      // EN primary CTA stays /en; optional secondary zh-Hans link is allowed on entry.
+      if (file !== "en.html") {
+        assert.doesNotMatch(html, /workers\.dev\/zh-Hans/, file);
+      }
     } else {
       assert.match(html, /workers\.dev\/zh-Hans/, file);
       assert.doesNotMatch(html, /workers\.dev\/en(?:\/|"|'|\s)/, file);

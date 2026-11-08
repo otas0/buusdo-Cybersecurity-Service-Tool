@@ -4,13 +4,14 @@ Checklist to keep Pages `china-pages/privacy.html` aligned with the live Workers
 
 | Topic | Workers `/zh-Hans/privacy` | China `privacy.html` | Status |
 |-------|---------------------------|----------------------|--------|
-| Product formal name | `buusdo Cybersecurity Service Tool` | same in title / body | keep in sync |
-| What a check uses | server parse + own list + optional DNS/HTTP; no third-party reputation | same summary | OK |
-| What is stored | default nothing; optional on-device lists/history | same; no cloud account sync | OK |
-| Honest limits | no TLS decrypt / no process kill / system dirs report-only / no AV | Halt FAQ + “不是杀毒软件” | OK — FAQ is Pages-only short form |
-| Contact | operator of the Worker deployment | “联系运行该部署的运营方” | OK |
-| Full policy CTA | self | link → `https://buusdocst.mtsu.workers.dev/zh-Hans/privacy` | OK |
-| Language pref note | n/a (Workers locale select) | `#china-lang-pref` foot-note | Pages-only |
+| Product formal name | `buusdo Cybersecurity Service Tool` | same in title / body | ✓ reviewed 2026-11-08 (pack + Pages) |
+| What a check uses | server parse + own list + optional DNS/HTTP; no third-party reputation | same summary | ✓ aligned |
+| What is stored | default nothing; optional on-device lists/history | same; no cloud account sync | ✓ aligned |
+| Honest limits | no TLS decrypt / no process kill / system dirs report-only / no AV | Halt FAQ + “不是杀毒软件” | ✓ aligned — FAQ Pages-only short form |
+| Contact | operator of the Worker deployment | “联系运行该部署的运营方” | ✓ aligned |
+| Full policy CTA | self | link → `https://buusdocst.mtsu.workers.dev/zh-Hans/privacy` | ✓ linked |
+| Language pref note | n/a (Workers locale select) | `#china-lang-pref` foot-note | ✓ Pages-only |
+| Live soft check | `privacy-prod` `/zh-Hans/privacy` soft | — | ✓ CI after Deploy |
 
 **When editing either surface:** update this table’s Status column and re-check zh / EN pair (`privacy-en.html` ↔ `/en/privacy`).
 

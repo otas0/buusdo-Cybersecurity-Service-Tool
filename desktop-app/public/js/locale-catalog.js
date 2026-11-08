@@ -370,6 +370,78 @@ export const LOCALE_CATALOG_DATA = {
       "region": "southern-africa",
       "htmlLang": "nr",
       "intl": "nr-ZA"
+    },
+    {
+      "id": "mi",
+      "nativeName": "Te reo Māori",
+      "englishName": "Māori",
+      "region": "pacific",
+      "htmlLang": "mi",
+      "intl": "mi-NZ"
+    },
+    {
+      "id": "id",
+      "nativeName": "Bahasa Indonesia",
+      "englishName": "Indonesian",
+      "region": "southeast-asia",
+      "htmlLang": "id",
+      "intl": "id-ID"
+    },
+    {
+      "id": "ms",
+      "nativeName": "Bahasa Melayu",
+      "englishName": "Malay",
+      "region": "southeast-asia",
+      "htmlLang": "ms",
+      "intl": "ms-MY"
+    },
+    {
+      "id": "th",
+      "nativeName": "ไทย",
+      "englishName": "Thai",
+      "region": "southeast-asia",
+      "htmlLang": "th",
+      "intl": "th-TH"
+    },
+    {
+      "id": "vi",
+      "nativeName": "Tiếng Việt",
+      "englishName": "Vietnamese",
+      "region": "southeast-asia",
+      "htmlLang": "vi",
+      "intl": "vi-VN"
+    },
+    {
+      "id": "fil",
+      "nativeName": "Filipino",
+      "englishName": "Filipino",
+      "region": "southeast-asia",
+      "htmlLang": "fil",
+      "intl": "fil-PH"
+    },
+    {
+      "id": "km",
+      "nativeName": "ភាសាខ្មែរ",
+      "englishName": "Khmer",
+      "region": "southeast-asia",
+      "htmlLang": "km",
+      "intl": "km-KH"
+    },
+    {
+      "id": "lo",
+      "nativeName": "ລາວ",
+      "englishName": "Lao",
+      "region": "southeast-asia",
+      "htmlLang": "lo",
+      "intl": "lo-LA"
+    },
+    {
+      "id": "my",
+      "nativeName": "မြန်မာ",
+      "englishName": "Burmese",
+      "region": "southeast-asia",
+      "htmlLang": "my",
+      "intl": "my-MM"
     }
   ]
 };

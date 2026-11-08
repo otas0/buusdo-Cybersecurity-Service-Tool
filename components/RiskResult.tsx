@@ -256,9 +256,13 @@ export function RiskResult({
               }
               const translated = evidenceTranslated(full.id);
               return (
-                <li key={item.id}>
-                  <strong>{translated?.[0] ?? full.title ?? item.id}</strong>
-                  <span>{translated?.[1] ?? full.detail ?? ""}</span>
+                <li key={item.id} data-testid={`evidence-${item.id}`}>
+                  <strong data-testid={`evidence-${item.id}-title`}>
+                    {translated?.[0] ?? full.title ?? item.id}
+                  </strong>
+                  <span data-testid={`evidence-${item.id}-detail`}>
+                    {translated?.[1] ?? full.detail ?? ""}
+                  </span>
                 </li>
               );
             })

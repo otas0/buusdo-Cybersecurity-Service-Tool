@@ -63,9 +63,19 @@ export const CORE_MESSAGE_KEYS = [
   "desktopDownloadSetupGuide",
   "desktopHonestLimitsLink",
   "timingTotalChip",
-  "timingTitle"
-  // FAQ / locale-recommend / whyEmpty: full packs (zh/ja/de…) may translate;
-  // partial Europe/ZA packs EN-fallback until filled — not mandatory CORE.
+  "timingTitle",
+  "faqParentsTitle",
+  "faqParentsIntro",
+  "faqNoWipeTitle",
+  "faqNoWipeBody",
+  "faqNoAvTitle",
+  "faqNoAvBody",
+  "faqNoCrowdTitle",
+  "faqNoCrowdBody",
+  "faqSurveyRound2Link",
+  "partialPackBanner",
+  "localeRecommendTitle",
+  "whyEmpty"
 ] as const;
 
 export type CoreMessageKey = (typeof CORE_MESSAGE_KEYS)[number];

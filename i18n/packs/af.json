@@ -59,5 +59,21 @@
   "desktopDownloadSetupGuide": "Opstelgids (ongeteken)",
   "desktopHonestLimitsLink": "Eerlike perke van die lessenaar-app",
   "timingTotalChip": "kontrole {ms}ms",
-  "timingTitle": "Kontroletyd"
+  "timingTitle": "Kontroletyd",
+  "faqParentsTitle": "Vir ouers en onderwysers",
+  "faqParentsIntro": "Wat hierdie instrument doen en nie doen nie — nuttig voor jy ’n Halt-uitslag vertrou.",
+  "faqNoWipeTitle": "Geen outomatiese wis nie",
+  "faqNoWipeBody": "buusdo vee nie stelsellêers uit nie en herstel nie die toestel nie.",
+  "faqNoAvTitle": "Nie ’n antivirus nie",
+  "faqNoAvBody": "Geen AV-enjin of handtekeninge — struktuurseine, eie lys en peilings.",
+  "faqNoCrowdTitle": "Geen derdeparty-reputasie nie",
+  "faqNoCrowdBody": "URL’s gaan nie na Google Safe Browsing of ander derdeparty-dienste nie.",
+  "faqSurveyRound2Link": "Round-2-opname (oop)",
+  "partialPackBanner": "Langer Privaatheid- en Instellings-teks is deels nog Engels. Chrome en Halt is vertaal.",
+  "localeRecommendTitle": "Kies jou taal",
+  "localeRecommendBody": "Volgens jou blaaier stel ons {lang} voor. Jy kan dit enige tyd in die kop verander.",
+  "localeRecommendAccept": "Gebruik {lang}",
+  "localeRecommendStay": "Hou Engels",
+  "localeRecommendDismiss": "Nie nou nie",
+  "whyEmpty": "Geen sterk seine buiten die gewone perke nie."
 }

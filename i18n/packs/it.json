@@ -59,5 +59,21 @@
   "desktopDownloadSetupGuide": "Guida di installazione (non firmata)",
   "desktopHonestLimitsLink": "Limiti onesti dell’app desktop",
   "timingTotalChip": "controllo {ms}ms",
-  "timingTitle": "Tempo del controllo"
+  "timingTitle": "Tempo del controllo",
+  "faqParentsTitle": "Per genitori e insegnanti",
+  "faqParentsIntro": "Cosa fa e non fa questo strumento — utile prima di fidarsi di un Halt.",
+  "faqNoWipeTitle": "Nessuna cancellazione automatica",
+  "faqNoWipeBody": "buusdo non elimina file di sistema e non ripristina il dispositivo.",
+  "faqNoAvTitle": "Non è un antivirus",
+  "faqNoAvBody": "Nessun motore AV né firme — segnali strutturali, lista propria e probe.",
+  "faqNoCrowdTitle": "Niente reputazione di terzi",
+  "faqNoCrowdBody": "Gli URL non vanno a Google Safe Browsing né ad altri servizi di terzi.",
+  "faqSurveyRound2Link": "Questionario Round-2 (aperto)",
+  "partialPackBanner": "Parte del testo lungo di Privacy e Impostazioni è ancora in inglese. Chrome e Halt sono tradotti.",
+  "localeRecommendTitle": "Scegli la lingua",
+  "localeRecommendBody": "In base al browser suggeriamo {lang}. Puoi cambiarla in qualsiasi momento nell’intestazione.",
+  "localeRecommendAccept": "Usa {lang}",
+  "localeRecommendStay": "Tieni l’inglese",
+  "localeRecommendDismiss": "Non ora",
+  "whyEmpty": "Nessun segnale forte oltre i limiti abituali."
 }
