@@ -50,6 +50,8 @@ Cloud Account sync is **not shipping**. See [ACCOUNT_SYNC_GATE.md](ACCOUNT_SYNC_
 
 **Desktop ship = unsigned GitHub Release** (not notarized). Settings + [DESKTOP_SETUP_GUIDE.md](DESKTOP_SETUP_GUIDE.md) tell users Gatekeeper / SmartScreen is expected. Do **not** run `desktop-promote-macos-url` or wait on `NOTARIZED_HEAD_OK`. Fixture `notarized-404` soft-warn is noise for this path. Custom domain independent — [CUSTOM_DOMAIN_REDEPLOY.md](CUSTOM_DOMAIN_REDEPLOY.md). Store URLs empty until approval.
 
+**Pack express / mac zip floor (ops):** `desktop-release` and CI refuse packs without `node_modules/express`. Unsigned mac zip should be ~**58 MB**; assert floor is **55 000 000** bytes (`scripts/assert-desktop-pack-express.mjs`). Override only for deliberate experiments: `SHIELD_PACK_EXPRESS_MIN_ZIP_BYTES` (bytes). Optional local `check:desktop` skip when no pack tree: `SHIELD_PACK_EXPRESS_OPTIONAL=1`. Boot smoke: `npm run smoke:desktop-pack-launcher`.
+
 
 ## Verify
 

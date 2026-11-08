@@ -66,7 +66,12 @@ jobs:
             APP_ROOT=dist/linux/preventive-shield_0.2.0_amd64/usr/lib/preventive-shield
           fi
           node ../scripts/assert-desktop-pack-express.mjs "$APP_ROOT"
-          SHIELD_PACK_APP_ROOT="$APP_ROOT" node ../scripts/desktop-pack-launcher-smoke.mjs
+          SHARED_ROOT="dist/linux/preventive-shield_${VER}_amd64/usr/share/preventive-shield/shared"
+          if [ ! -d "$SHARED_ROOT" ]; then
+            SHARED_ROOT=dist/linux/preventive-shield_0.2.0_amd64/usr/share/preventive-shield/shared
+          fi
+          SHIELD_PACK_APP_ROOT="$APP_ROOT" SHIELD_SHARED_ROOT="$SHARED_ROOT" \
+            node ../scripts/desktop-pack-launcher-smoke.mjs
       - uses: actions/upload-artifact@v4
         with:
           name: release-linux-deb

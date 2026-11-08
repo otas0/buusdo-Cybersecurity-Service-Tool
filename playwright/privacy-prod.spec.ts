@@ -7,6 +7,7 @@
  * without workers.dev access do not fail the suite falsely.
  */
 import { expect, test } from "@playwright/test";
+import { waitForReactHydration } from "./helpers/spa-settings-nav";
 
 const base = (
   process.env.PLAYWRIGHT_BASE_URL ||
@@ -66,6 +67,13 @@ test.describe("production privacy pages", () => {
     await expect(page.getByTestId("privacy-honest-limits")).toBeVisible();
   });
 
+  test("/en/privacy#privacy-faq-parents deep-link", async ({ page }) => {
+    await page.goto(`${base}/en/privacy#privacy-faq-parents`, { waitUntil: "domcontentloaded" });
+    await expect(page.locator("#privacy-faq-parents")).toBeVisible();
+    await expect(page.getByTestId("privacy-faq-parents")).toBeVisible();
+    await expect(page.getByTestId("privacy-faq-parents")).toContainText(/antivirus|votes/i);
+  });
+
   test("/pt-PT/privacy shows policy", async ({ page }) => {
     await page.goto(`${base}/pt-PT/privacy`, { waitUntil: "domcontentloaded" });
     await expect(page.getByTestId("privacy-policy")).toBeVisible();
@@ -83,10 +91,14 @@ test.describe("production privacy pages", () => {
     await page.goto(`${base}/en/settings#settings-desktop`, { waitUntil: "domcontentloaded" });
     await expect(page.locator("#settings-desktop")).toBeVisible();
     await expect(page.getByTestId("settings-desktop-downloads")).toBeVisible();
+    await waitForReactHydration(page, '[data-testid="settings-desktop-downloads"]');
     await expect(page.getByTestId("settings-desktop-honest-limits")).toBeVisible();
     await expect(page.getByTestId("settings-desktop-release-tag")).toBeVisible();
     // Soft-assert Setup guide (unsigned) — live copy; do not fail the suite on drift.
     const setup = page.getByTestId("settings-desktop-setup-guide");
+    await waitForReactHydration(page, '[data-testid="settings-desktop-setup-guide"]').catch(() => {
+      /* soft path if marker absent */
+    });
     if ((await setup.count()) === 0) {
       console.warn("[playwright] settings-desktop-setup-guide missing on EN (soft)");
     } else {
@@ -107,8 +119,12 @@ test.describe("production privacy pages", () => {
     await page.goto(`${base}/pt-PT/settings#settings-desktop`, { waitUntil: "domcontentloaded" });
     await expect(page.locator("#settings-desktop")).toBeVisible();
     await expect(page.getByTestId("settings-desktop-downloads")).toBeVisible();
+    await waitForReactHydration(page, '[data-testid="settings-desktop-downloads"]');
     await expect(page.getByTestId("settings-desktop-honest-limits")).toBeVisible();
     const setup = page.getByTestId("settings-desktop-setup-guide");
+    await waitForReactHydration(page, '[data-testid="settings-desktop-setup-guide"]').catch(() => {
+      /* soft */
+    });
     if ((await setup.count()) === 0) {
       console.warn("[playwright] settings-desktop-setup-guide missing on pt-PT (soft)");
     } else {

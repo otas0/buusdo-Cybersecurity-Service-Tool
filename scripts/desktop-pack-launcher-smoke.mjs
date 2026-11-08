@@ -40,6 +40,28 @@ const data = await mkdtemp(path.join(tmpdir(), "shield-pack-launcher-"));
 const uiPort = Number(process.env.UI_PORT || 32000 + Math.floor(Math.random() * 2000));
 const proxyPort = Number(process.env.PROXY_PORT || uiPort + 1);
 
+function resolveSharedRoot() {
+  if ((process.env.SHIELD_SHARED_ROOT || "").trim()) {
+    return path.resolve(process.env.SHIELD_SHARED_ROOT.trim());
+  }
+  const candidates = [
+    // macOS .app / Windows NSIS stage: …/Resources/shared or stage/shared
+    path.join(appRoot, "..", "shared"),
+    // Linux .deb layout: usr/lib/preventive-shield → usr/share/preventive-shield/shared
+    path.join(appRoot, "..", "..", "share", "preventive-shield", "shared"),
+    path.resolve("shared"),
+    path.resolve("..", "shared")
+  ];
+  for (const c of candidates) {
+    if (existsSync(path.join(c, "detect.mjs")) || existsSync(path.join(c, "brand.json"))) {
+      return c;
+    }
+  }
+  fail(`SHIELD_SHARED_ROOT unresolved under pack (${appRoot})`);
+}
+
+const sharedRoot = resolveSharedRoot();
+
 const child = spawn(nodeBin, [launcher], {
   cwd: appRoot,
   env: {
@@ -47,11 +69,7 @@ const child = spawn(nodeBin, [launcher], {
     UI_PORT: String(uiPort),
     PROXY_PORT: String(proxyPort),
     SHIELD_DATA_DIR: data,
-    SHIELD_SHARED_ROOT:
-      process.env.SHIELD_SHARED_ROOT ||
-      (existsSync(path.join(appRoot, "..", "shared"))
-        ? path.join(appRoot, "..", "shared")
-        : path.resolve("shared")),
+    SHIELD_SHARED_ROOT: sharedRoot,
     SHIELD_LAUNCHER_NO_BROWSER: "1",
     SHIELD_MACHINE_SCAN: "0",
     SHIELD_TRAY: "0",

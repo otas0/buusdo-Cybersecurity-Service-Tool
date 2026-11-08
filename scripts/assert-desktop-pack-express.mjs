@@ -89,5 +89,9 @@ for (const root of roots) {
 }
 
 if (checked < 1) {
+  if (process.env.SHIELD_PACK_EXPRESS_OPTIONAL === "1") {
+    console.log("ok optional: no pack trees present — skip express assert");
+    process.exit(0);
+  }
   fail("no pack trees or zip checked — pack first or pass appRoot / SHIELD_PACK_EXPRESS_ZIP");
 }

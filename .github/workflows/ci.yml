@@ -272,6 +272,9 @@ jobs:
           # Shared typo scan (icon-tray*, Tray-Icon.png case variants, …) — same as tests/arm64-tray-icon-typo.test.ts
           node ../scripts/assert-tray-icon-typos.mjs "$ARM64_ASSETS"
           echo "arm64 tray-icon typo scan ok (incl. icon-tray*)"
+          # Same express gate as amd64 / mac zip / Windows stage (npm ci --omit=dev inside pack).
+          node ../scripts/assert-desktop-pack-express.mjs \
+            dist/linux/preventive-shield_0.2.0_arm64/usr/lib/preventive-shield
           # Cross-arch .deb may be absent without a foreign dpkg; staged tree is the artifact.
           if [ -f dist/linux/preventive-shield_0.2.0_arm64.deb ]; then
             echo "arm64 deb built on this runner"
@@ -564,6 +567,21 @@ jobs:
           header: evaluate-diff
           path: evaluation/diff.md
 
+  playwright-settings-skipped-notice:
+    name: playwright-settings skipped notice
+    if: ${{ vars.RUN_PLAYWRIGHT_SETTINGS != 'true' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Soft-fail annotation (var not enabled)
+        run: |
+          echo "::notice::playwright-settings (optional) skipped — RUN_PLAYWRIGHT_SETTINGS is not true"
+          echo "::warning title=Settings Playwright held::Keep RUN_PLAYWRIGHT_SETTINGS=false until a warm-cache Settings run is intentionally greened, then flip the repo var."
+          {
+            echo "## playwright-settings"
+            echo ""
+            echo "Skipped: \`RUN_PLAYWRIGHT_SETTINGS\` ≠ \`true\` (held)."
+          } >> "$GITHUB_STEP_SUMMARY"
+
   playwright-settings-optional:
     name: playwright-settings (optional)
     if: ${{ vars.RUN_PLAYWRIGHT_SETTINGS == 'true' }}
@@ -677,6 +695,24 @@ jobs:
       - name: China soft-fail (wrong health.service)
         if: steps.pw_install.outcome == 'success'
         run: PLAYWRIGHT_SKIP_WEBSERVER=1 npx playwright test playwright/china-soft-fail.spec.ts
+
+      - name: Halt survey blocks (RiskResult Round-1 UX)
+        id: pw_halt_survey
+        if: steps.pw_install.outcome == 'success'
+        run: |
+          BASE="${PLAYWRIGHT_BASE_URL:-http://localhost:3000}"
+          export PLAYWRIGHT_BASE_URL="$BASE"
+          npm run test:playwright:halt-survey
+        env:
+          PLAYWRIGHT_BASE_URL: ${{ vars.PLAYWRIGHT_BASE_URL || 'http://localhost:3000' }}
+
+      - name: Extension phishing toast fixture
+        if: steps.pw_install.outcome == 'success'
+        run: npm run test:playwright:extension-toast-phishing
+
+      - name: Desktop Halt ignore-risk
+        if: steps.pw_install.outcome == 'success'
+        run: npm run test:playwright:desktop-halt-ignore-risk
 
       - name: Account sync (cancelled — soft skip)
         id: pw_account
