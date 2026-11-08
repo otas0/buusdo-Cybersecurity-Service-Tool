@@ -66,7 +66,7 @@
     "sync:extension-sea-i18n:check": "node scripts/sync-extension-sea-i18n-from-packs.mjs --check",
     "test:playwright:zh-alias": "PLAYWRIGHT_SKIP_WEBSERVER=1 PLAYWRIGHT_BASE_URL=${PLAYWRIGHT_BASE_URL:-https://buusdocst.mtsu.workers.dev} playwright test playwright/locale-zh-alias.spec.ts",
     "test:playwright:zh-hans-evidence": "PLAYWRIGHT_SKIP_WEBSERVER=1 playwright test playwright/risk-result-zh-hans-evidence.spec.ts",
-    "typecheck": "tsc --noEmit && npm run assert:pack-index && npm run assert:formal-name && npm run assert:brand-web-alpha && npm run assert:safari-largeicon && npm run assert:public-promotion && npm run assert:promo-cachebust && npm run assert:promo-i18n && node scripts/assert-desktop-download-messages.mjs && node scripts/assert-listing-honest-limits.mjs && node scripts/assert-notarize-release-tag-default.mjs && npm run verify:desktop-downloads:fixture && npm run verify:desktop-downloads:fixture:notarized-404 && npm run sync:home-continue-stamp:check && npm run assert:china-hint-contrast && npm run sync:toast-i18n:check && npm run sync:desktop-i18n:check && npm run sync:extension-sea-i18n:check",
+    "typecheck": "tsc --noEmit && npm run assert:pack-index && npm run assert:formal-name && npm run assert:brand-web-alpha && npm run assert:safari-largeicon && npm run assert:public-promotion && npm run assert:promo-cachebust && npm run assert:promo-i18n && npm run assert:settings-a4-print-hint && node scripts/assert-desktop-download-messages.mjs && node scripts/assert-listing-honest-limits.mjs && node scripts/assert-notarize-release-tag-default.mjs && npm run verify:desktop-downloads:fixture && npm run verify:desktop-downloads:fixture:notarized-404 && npm run sync:home-continue-stamp:check && npm run assert:china-hint-contrast && npm run sync:toast-i18n:check && npm run sync:desktop-i18n:check && npm run sync:extension-sea-i18n:check",
     "test": "tsx --test tests/*.test.ts",
     "evaluate": "tsx evaluation/evaluation-runner.ts",
     "evaluate:diff": "tsx scripts/diff-evaluation-results.ts",
@@ -114,6 +114,8 @@
     "assert:promo-cachebust": "node scripts/assert-promo-cachebust.mjs",
     "assert:promo-i18n": "node --import tsx scripts/assert-promo-i18n.mjs",
     "assert:promo-privacy-routes": "node scripts/assert-promo-privacy-routes.mjs",
+    "assert:promo-poster-pdf-floor": "node scripts/assert-promo-poster-pdf-floor.mjs",
+    "assert:settings-a4-print-hint": "node --import tsx scripts/assert-settings-a4-print-hint.mjs",
     "assert:graphics-wordmark-charcoal": "node scripts/assert-graphics-wordmark-charcoal.mjs",
     "check:desktop": "npm run assert:debian-control-newline && SHIELD_PACK_EXPRESS_OPTIONAL=1 npm run assert:desktop-pack-express && npm run smoke:desktop-proxy-readout && npm run smoke:desktop-install-accept && node scripts/assert-dashboard-no-bare-focus.mjs && node scripts/assert-launcher-quit-preserves-honest-limits.mjs && node scripts/assert-health-monitor-notarized-kind.mjs && node scripts/assert-wrangler-prod-no-dev-return-link.mjs && node scripts/assert-hint-contrast-aa.mjs && npm run verify:desktop-downloads:fixture && npm run verify:desktop-downloads:fixture:notarized-404 && npm run smoke:desktop-quarantine-i18n && npm run test:playwright:desktop-primary-path-pt && npm run test:playwright:risk-result-desktop-block && npm run test:playwright:settings-mac-ready-to-promote && node scripts/append-check-desktop-summary.mjs && tsx --test tests/focus-gate-bare-focus.test.ts tests/spa-replace-state-hashchange.test.ts tests/home-continue-stamp-tag-only.test.ts tests/desktop-reveal-path.test.ts tests/macos-http-proxy-clear.test.ts tests/assert-desktop-pack-express-floor.test.ts",
     "mvp": "node scripts/desktop-mvp-verify.mjs",
@@ -127,7 +129,8 @@
     "threat:check": "npm run threat:validate && npm run regression",
     "threat:check:help": "node -e \"const lines=['threat:check exit: 0=ok, 1=invalid curated list or regression fail, 2=cannot read curated file','After PT list changes, npm run evaluate must keep EVAL-029–032 green (MERGE_PT on/off + benign lookalike).']; for (const m of lines) { console.log(m); if (process.env.GITHUB_ACTIONS==='true') console.log('::notice::'+m); }\"",
     "threat:apply": "tsx scripts/apply-threat-batch.ts",
-    "test:playwright:extension-popup-wordmark": "PLAYWRIGHT_SKIP_WEBSERVER=1 playwright test playwright/extension-popup-wordmark.spec.ts"
+    "test:playwright:extension-popup-wordmark": "PLAYWRIGHT_SKIP_WEBSERVER=1 playwright test playwright/extension-popup-wordmark.spec.ts",
+    "test:playwright:desktop-about-wordmark": "PLAYWRIGHT_SKIP_WEBSERVER=1 playwright test playwright/desktop-about-wordmark.spec.ts"
   },
   "dependencies": {
     "next": "16.3.4",

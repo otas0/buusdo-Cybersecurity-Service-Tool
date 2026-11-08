@@ -29,6 +29,14 @@ Wrong:
 
 Keep the same u-card hex on Graphics promo / `logo-wordmark` light plates (`#545454`). Tagline text differs by product; u color does not.
 
+| Item | Value |
+|------|-------|
+| Public clone | `https://github.com/otas0/buusdo-Graphics-Enhancement-Tool.git` |
+| Light wordmark path | `docs/promo/logo-wordmark.png` |
+| Local sibling (common) | `~/buusdo/docs/promo/logo-wordmark.png` |
+| Assert | `GRAPHICS_WORDMARK_REQUIRED=1 npm run assert:graphics-wordmark-charcoal` |
+| CI | Nightly job `graphics-charcoal-scheduled` clones the public URL and hard-fails without `#545454` |
+
 Copy of this spec may live at `buusdo/docs/BRAND_U_CARD.md` in the Graphics repo — keep hex tables in sync when either product changes.
 
 ## Rebuild

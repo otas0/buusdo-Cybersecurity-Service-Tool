@@ -134,5 +134,11 @@
   "downloadA4Poster": "Last ned A4-plakat",
   "downloadA4PosterShort": "A4",
   "downloadA4PosterHint": "Skriv ut A4 · 100 % · ingen marger · bakgrunnsgrafikk på.",
-  "statusKicker": "Tilstand"
+  "statusKicker": "Tilstand",
+  "probeBlocked403Title": "Nettstedet avviste den automatiske sondagen",
+  "probeBlocked403Detail": "Mottok HTTP 403 (Forbidden). Nettstedet avviste denne automatiske sjekken — det er ikke bevis på phishing. Åpne adressen i en vanlig nettleser om nødvendig.",
+  "probeBlocked429Title": "Nettstedet begrenset den automatiske sondagen",
+  "probeBlocked429Detail": "Mottok HTTP 429 (Too Many Requests). Nettstedet begrenset denne sjekken — det er ikke bevis på phishing. Vent og prøv igjen, eller åpne adressen i en vanlig nettleser.",
+  "probeBlocked503Title": "Nettstedet er midlertidig utilgjengelig for sondagen",
+  "probeBlocked503Detail": "Mottok HTTP 503 (Service Unavailable). Nettstedet eller kanten kan være overbelastet — det er ikke bevis på phishing. Prøv igjen senere i en vanlig nettleser om nødvendig."
 }

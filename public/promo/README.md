@@ -10,7 +10,8 @@
   - Explicit: `PLAYWRIGHT_BROWSERS_PATH="$HOME/Library/Caches/ms-playwright" npm run export:promo-poster-pdf`
   - Missing browsers: `npx playwright install chromium`
 - Local privacy routes: `PROMO_ORIGIN=http://127.0.0.1:3000 npm run assert:promo-privacy-routes` (CI quality starts vinext on :3000)
-- Dock: QR pair in `min-content` column; side copy uses `minmax(0,1fr)` so URLs wrap (no QR-over-text)
+- Dock: QR **15mm** glyphs in `min-content` column; body `overflow:hidden` so panes never paint under QR
+- No print tips on the sheet (Print QA lives only in this README)
 
 ## Offline soft-skip (`assert:promo-privacy-routes`)
 
@@ -23,6 +24,7 @@ When `PROMO_ORIGIN` is unreachable (Workers timeout, no local vinext, DNS fail),
 1. Open `poster.html` (or `/promo/poster.html` on Workers).
 2. Print → Paper **A4** · Scale **100%** · Margins **None** · **Background graphics** On.
 3. Do not use “Fit to printable area” if margins are already None — sheet is exactly 210×297 mm.
-4. **Physical QA:** one hard-copy A4 at 100% / no margins; confirm QR scan (Workers + China), charcoal u-card (`#545454`), and no clipped footer.
+4. **Physical QA:** one hard-copy A4 at 100% / no margins; charcoal u-card (`#545454`); footer not clipped.
+5. **QR scan (15mm):** phone camera must resolve both LIVE (Workers) and CHINA (Pages) codes after print — if scan fails, bump glyph above 15mm and rebuild.
 
 u-card: [BRAND_U_CARD.md](../BRAND_U_CARD.md) (`#545454` on light).

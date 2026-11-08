@@ -134,5 +134,11 @@
   "downloadA4Poster": "Lataa A4-juliste",
   "downloadA4PosterShort": "A4",
   "downloadA4PosterHint": "Tulosta A4 · 100 % · ei marginaaleja · taustagrafiikka päällä.",
-  "statusKicker": "Tila"
+  "statusKicker": "Tila",
+  "probeBlocked403Title": "Sivusto hylkäsi automaattisen tunnistuksen",
+  "probeBlocked403Detail": "Vastaanotettiin HTTP 403 (Forbidden). Sivusto hylkäsi tämän automaattisen tarkistuksen — se ei todista phishingiä. Avaa osoite tavallisessa selaimessa tarvittaessa.",
+  "probeBlocked429Title": "Sivusto rajoitti automaattista tunnistusta",
+  "probeBlocked429Detail": "Vastaanotettiin HTTP 429 (Too Many Requests). Sivusto rajoitti tätä tarkistusta — se ei todista phishingiä. Odota ja yritä uudelleen, tai avaa osoite tavallisessa selaimessa.",
+  "probeBlocked503Title": "Sivusto on tilapäisesti poissa käytöstä tunnistukselta",
+  "probeBlocked503Detail": "Vastaanotettiin HTTP 503 (Service Unavailable). Sivusto tai reunapalvelu voi olla ruuhkautunut — se ei todista phishingiä. Yritä myöhemmin uudelleen tavallisessa selaimessa tarvittaessa."
 }

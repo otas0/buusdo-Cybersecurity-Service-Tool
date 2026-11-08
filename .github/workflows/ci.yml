@@ -126,7 +126,8 @@ jobs:
 
       - name: Promo posters cachebust (build + diff public/promo)
         run: |
-          npm run assert:promo-cachebust
+          # Allow regen in CI, then require the working tree to match what we commit.
+          PROMO_CACHEBUST_REBUILD=1 npm run assert:promo-cachebust
           # Fail if committed public/promo drifted from rebuild (except .cachebust already asserted).
           if ! git diff --exit-code -- public/promo/poster.html public/promo/.cachebust public/promo/china-qr.svg public/promo/product-qr.svg; then
             echo "::error::public/promo drifted — run npm run build:promo-posters and commit"
@@ -136,7 +137,6 @@ jobs:
 
       - name: Promo privacy routes against local :3000
         id: promo_routes
-        continue-on-error: true
         run: |
           set -euo pipefail
           npm run dev -- --port 3000 > /tmp/vinext-promo-routes.log 2>&1 &
@@ -153,9 +153,12 @@ jobs:
           done
           if [ "$ready" != "1" ]; then
             echo "::warning::vinext not ready — soft-skip assert:promo-privacy-routes (see /tmp/vinext-promo-routes.log)"
+            echo "skipped=true" >> "$GITHUB_OUTPUT"
             kill "$(cat /tmp/vinext-promo-routes.pid)" 2>/dev/null || true
             exit 0
           fi
+          echo "skipped=false" >> "$GITHUB_OUTPUT"
+          # Hard-fail when vinext is up but any promo/privacy route is non-2xx.
           PROMO_ORIGIN=http://127.0.0.1:3000 npm run assert:promo-privacy-routes
           kill "$(cat /tmp/vinext-promo-routes.pid)" 2>/dev/null || true
 
@@ -172,6 +175,7 @@ jobs:
           npm run export:promo-poster-pdf
           test -f docs/promo/poster.pdf
           test -f public/promo/poster.pdf
+          node scripts/assert-promo-poster-pdf-floor.mjs
 
       - name: Upload promo poster.pdf
         if: success() || failure()
@@ -491,10 +495,22 @@ jobs:
       - name: Assert Graphics Enhancement Tool wordmark charcoal
         id: charcoal
         continue-on-error: true
+        env:
+          # Absolute path on the runner, or leave empty and use GRAPHICS_WORDMARK_B64.
+          GRAPHICS_WORDMARK_PATH: ${{ secrets.GRAPHICS_WORDMARK_PATH }}
+          # Optional base64 PNG when no path is mounted (repo secret).
+          GRAPHICS_WORDMARK_B64: ${{ secrets.GRAPHICS_WORDMARK_B64 }}
         run: |
+          set -euo pipefail
+          if [ -n "${GRAPHICS_WORDMARK_B64:-}" ]; then
+            echo "$GRAPHICS_WORDMARK_B64" | base64 -d > /tmp/graphics-logo-wordmark.png
+            export GRAPHICS_WORDMARK=/tmp/graphics-logo-wordmark.png
+            echo "::notice::Using GRAPHICS_WORDMARK_B64 secret → $GRAPHICS_WORDMARK"
+          fi
           # Sibling clone is optional on CI runners; soft-skip when absent.
           CANDIDATES=(
             "${GRAPHICS_WORDMARK:-}"
+            "${GRAPHICS_WORDMARK_PATH:-}"
             "$HOME/buusdo/docs/promo/logo-wordmark.png"
             "../buusdo/docs/promo/logo-wordmark.png"
           )
@@ -503,7 +519,7 @@ jobs:
             [ -n "$p" ] && [ -f "$p" ] && FOUND="$p" && break
           done
           if [ -z "$FOUND" ]; then
-            echo "::notice::Graphics wordmark absent — skip charcoal assert (optional job)"
+            echo "::notice::Graphics wordmark absent — skip charcoal assert (optional job). Set secrets.GRAPHICS_WORDMARK_PATH or GRAPHICS_WORDMARK_B64."
             exit 0
           fi
           GRAPHICS_WORDMARK="$FOUND" npm run assert:graphics-wordmark-charcoal
@@ -868,13 +884,14 @@ jobs:
 
       # Soft: live Workers privacy (skip inside spec if unreachable).
       # Covers /en|/pt-PT|/zh-Hans/privacy zero /survey/ links (local fixture: tests/privacy-fixture-no-survey.test.ts).
-      - name: Soft privacy-prod (en/pt-PT/zh-Hans no /survey/)
+      - name: Soft privacy-prod (Workers + China Pages no /survey/)
         if: steps.pw_install.outcome == 'success'
         continue-on-error: true
         env:
           PLAYWRIGHT_SKIP_WEBSERVER: "1"
           PLAYWRIGHT_BASE_URL: ${{ vars.PRODUCTION_HEALTH_URL || 'https://buusdocst.mtsu.workers.dev' }}
           PRODUCTION_HEALTH_URL: ${{ vars.PRODUCTION_HEALTH_URL || 'https://buusdocst.mtsu.workers.dev' }}
+          CHINA_PAGES_BASE_URL: ${{ vars.CHINA_PAGES_BASE_URL || 'https://otas0.github.io/buusdocst' }}
         run: npm run test:playwright:privacy
 
       - name: Extension phishing toast fixture
@@ -886,6 +903,14 @@ jobs:
         run: |
           export PLAYWRIGHT_SKIP_WEBSERVER=1
           npm run test:playwright:extension-popup-wordmark
+        env:
+          PLAYWRIGHT_SKIP_WEBSERVER: "1"
+
+      - name: Desktop About footer wordmark (muted u)
+        if: steps.pw_install.outcome == 'success'
+        run: |
+          export PLAYWRIGHT_SKIP_WEBSERVER=1
+          npm run test:playwright:desktop-about-wordmark
         env:
           PLAYWRIGHT_SKIP_WEBSERVER: "1"
 

@@ -159,3 +159,35 @@ test.describe("production privacy pages", () => {
     }
   });
 });
+
+const chinaBase = (process.env.CHINA_PAGES_BASE_URL || "https://otas0.github.io/buusdocst")
+  .trim()
+  .replace(/\/$/, "");
+
+test.describe("China Pages privacy mirrors (soft)", () => {
+  test.beforeAll(async () => {
+    try {
+      const res = await fetch(`${chinaBase}/privacy-en.html`, {
+        signal: AbortSignal.timeout(12_000),
+        redirect: "follow"
+      });
+      if (!res.ok) {
+        test.skip(true, `China Pages unreachable: ${chinaBase} HTTP ${res.status}`);
+      }
+    } catch {
+      test.skip(true, `China Pages unreachable: ${chinaBase}`);
+    }
+  });
+
+  for (const pagePath of ["/privacy.html", "/privacy-en.html"] as const) {
+    test(`${pagePath} has zero /survey/ links`, async ({ page }) => {
+      await page.goto(`${chinaBase}${pagePath}`, {
+        waitUntil: "domcontentloaded",
+        timeout: 45_000
+      });
+      await expect(page.locator('a[href*="/survey/"]')).toHaveCount(0);
+      await expect(page.locator("body")).not.toContainText(/survey-round2/i);
+    });
+  }
+});
+

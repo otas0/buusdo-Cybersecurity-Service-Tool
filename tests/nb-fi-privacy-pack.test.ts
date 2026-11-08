@@ -29,4 +29,24 @@ for (const id of ["nb", "fi"] as const) {
     assert.ok(bag.lightIdle && bag.lightIdle !== en.lightIdle, `${id}.lightIdle`);
     assert.ok(bag.ignoreRiskBody && bag.ignoreRiskBody !== en.ignoreRiskBody, `${id}.ignoreRiskBody`);
   });
+
+  test(`${id} probe-blocked 403/429/503 titles are localized`, () => {
+    const pack = JSON.parse(readFileSync(path.join("i18n/packs", `${id}.json`), "utf8")) as Record<
+      string,
+      string
+    >;
+    const en = getMessages("en");
+    const bag = getMessages(id);
+    for (const key of [
+      "probeBlocked403Title",
+      "probeBlocked403Detail",
+      "probeBlocked429Title",
+      "probeBlocked429Detail",
+      "probeBlocked503Title",
+      "probeBlocked503Detail"
+    ] as const) {
+      assert.ok(pack[key]?.trim(), `${id}.${key}`);
+      assert.notEqual(bag[key], en[key], `${id}.${key} still EN`);
+    }
+  });
 }

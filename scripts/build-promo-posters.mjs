@@ -81,7 +81,6 @@ function pane(lang, langAttr, t, labels) {
           <p><a href="https://buusdocst.mtsu.workers.dev">buusdocst.mtsu.workers.dev</a></p>
           <p><a href="https://otas0.github.io/buusdocst/">otas0.github.io/buusdocst</a> · ${esc(labels.china)}</p>
           <p><a href="https://buusdocst.mtsu.workers.dev/${privacyPath}/privacy">/${privacyPath}/privacy</a></p>
-          <p class="sub print-tip">${esc(labels.printTip)}</p>
         </div>
       </section>`;
 }
@@ -97,7 +96,6 @@ const labels = {
     china: "China mirror",
     get: "Get it",
     getBody: "Scan live Worker or China Pages. EN / pt-PT / 中文.",
-    printTip: "Print: A4 · 100% · margins none · background graphics on.",
   },
   pt: {
     use: "A seguir",
@@ -109,7 +107,6 @@ const labels = {
     china: "espelho China",
     get: "Obter",
     getBody: "Leia o QR do Worker ou Pages China. EN / pt-PT / 中文.",
-    printTip: "Imprimir: A4 · 100% · margens nenhuma · gráficos de fundo ligados.",
   },
   zh: {
     use: "下一步",
@@ -121,7 +118,6 @@ const labels = {
     china: "中国镜像",
     get: "获取",
     getBody: "扫码打开线上 Worker 或中国 Pages。EN / pt-PT / 中文。",
-    printTip: "打印：A4 · 100% · 无边距 · 打开背景图形。",
   },
 };
 
@@ -154,6 +150,7 @@ const html = `<!DOCTYPE html>
       width: 210mm; height: 297mm; margin: 0 auto 12px;
       padding: 7mm 7mm 6mm; background: var(--bg); border: 1px solid #111;
       display: flex; flex-direction: column; overflow: hidden; color: var(--ink);
+      isolation: isolate;
     }
     .topbar {
       display: grid; grid-template-columns: auto 1fr auto; align-items: center;
@@ -206,18 +203,17 @@ const html = `<!DOCTYPE html>
       flex: 1 1 auto; min-height: 0;
       display: grid; grid-template-columns: 1fr 1fr 1fr;
       border: 1px solid var(--line); border-top: 0;
+      overflow: hidden; /* clip pane overflow — never paint under dock/QR */
+      position: relative; z-index: 0;
     }
     .pane {
       padding: 3mm 2.8mm 2.8mm; border-right: 1px solid var(--line);
-      display: flex; flex-direction: column; gap: 2.2mm; min-width: 0; min-height: 0; background: var(--bg);
+      display: flex; flex-direction: column; gap: 2.2mm; min-width: 0; min-height: 0;
+      background: var(--bg); overflow: hidden;
     }
     .pane:last-child { border-right: 0; }
-    .pane .fill { margin-top: auto; padding-top: 2mm; border-top: 1px solid var(--hair); }
+    .pane .fill { margin-top: auto; padding-top: 2mm; border-top: 1px solid var(--hair); flex: 0 0 auto; }
     .pane .sub { margin-top: 1mm; font-size: 7.8px; line-height: 1.3; color: #333; }
-    .pane .print-tip {
-      margin-top: 1.5mm; padding: 1.2mm 1.5mm; background: var(--wash);
-      font-family: "IBM Plex Mono", ui-monospace, monospace; font-size: 7px; letter-spacing: 0.02em;
-    }
     .pane-head {
       display: flex; align-items: center; justify-content: space-between;
       padding-bottom: 1.6mm; border-bottom: 1px solid var(--hair); flex: 0 0 auto;
@@ -258,11 +254,12 @@ const html = `<!DOCTYPE html>
       font-size: 7.4px; color: var(--ink); word-break: break-all; text-underline-offset: 1px;
     }
     .dock {
-      /* minmax(0,1fr) so long URLs wrap instead of shoving QR over copy */
+      /* minmax(0,1fr) so long URLs wrap; QR 15mm stay in min-content — never overlap panes */
       display: grid; grid-template-columns: minmax(0, 1fr) min-content minmax(0, 1fr);
-      gap: 3.5mm; align-items: center;
-      border: 1px solid var(--line); border-top: 0; padding: 3mm; flex: 0 0 auto;
+      gap: 3mm; align-items: center;
+      border: 1px solid var(--line); border-top: 0; padding: 2.5mm 3mm; flex: 0 0 auto;
       background: var(--wash); overflow: hidden;
+      position: relative; z-index: 1;
     }
     .dock .side { min-width: 0; overflow-wrap: anywhere; }
     .dock .side h3 {
@@ -279,23 +276,23 @@ const html = `<!DOCTYPE html>
       font-size: 6.5px; color: var(--muted); word-break: break-all;
     }
     .dock .qrs {
-      display: flex; flex-direction: row; gap: 2.5mm; flex: 0 0 auto;
+      display: flex; flex-direction: row; gap: 2mm; flex: 0 0 auto;
       align-items: stretch;
     }
     .qr-box {
-      width: 22mm; border: 1px solid var(--line); padding: 1.5mm; background: #fff;
-      display: grid; gap: 0.8mm; justify-items: center; align-content: center;
+      width: 19mm; border: 1px solid var(--line); padding: 1.2mm; background: #fff;
+      display: grid; gap: 0.6mm; justify-items: center; align-content: center;
       flex: 0 0 auto;
     }
-    .qr-box img { width: 17mm; height: 17mm; display: block; }
+    .qr-box img { width: 15mm; height: 15mm; display: block; }
     .qr-box span {
       font-family: "IBM Plex Mono", ui-monospace, monospace;
-      font-size: 6px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted);
+      font-size: 5.5px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted);
     }
     .foot {
       border: 1px solid var(--line); border-top: 0; flex: 0 0 auto;
       display: grid; grid-template-columns: 1.2fr 1fr 1fr; gap: 0;
-      background: #fff;
+      background: #fff; position: relative; z-index: 1;
     }
     .foot .cell {
       padding: 2.8mm 2.8mm 3mm; border-right: 1px solid var(--hair);
@@ -335,7 +332,7 @@ const html = `<!DOCTYPE html>
   </style>
 </head>
 <body>
-  <p class="screen-hint">A4 · Paper A4 · Scale 100% · Margins None · Background graphics On · v=${v}</p>
+  <p class="screen-hint">A4 sheet · EN / pt-PT / 中文 · QR 15mm live + China · v=${v}</p>
   <article class="sheet">
     <header class="topbar">
       <img class="logo" src="buusdo-wordmark-on-light.png?v=${v}" alt="${esc(en.prototype)}" width="405" height="138" />
@@ -392,7 +389,7 @@ const html = `<!DOCTYPE html>
       </div>
     </footer>
 
-    <section class="foot" aria-label="Privacy · print">
+    <section class="foot" aria-label="Privacy · open">
       <div class="cell">
         <strong>${esc(en.prototype)}</strong>
         <p>${esc(en.privacyOff)} · ${esc(en.privacyLocal)}</p>
@@ -406,10 +403,10 @@ const html = `<!DOCTYPE html>
         <p><a href="https://buusdocst.mtsu.workers.dev/zh-Hans/privacy">/zh-Hans/privacy</a></p>
       </div>
       <div class="cell">
-        <h3>Print</h3>
-        <p>${esc(labels.en.printTip)}</p>
-        <p lang="pt-PT">${esc(labels.pt.printTip)}</p>
-        <p class="zh-line" lang="zh-Hans">${esc(labels.zh.printTip)}</p>
+        <h3>${esc(labels.en.open)} / ${esc(labels.pt.open)} / ${esc(labels.zh.open)}</h3>
+        <p><a href="https://buusdocst.mtsu.workers.dev">buusdocst.mtsu.workers.dev</a></p>
+        <p><a href="https://otas0.github.io/buusdocst/">otas0.github.io/buusdocst</a></p>
+        <p class="zh-line" lang="zh-Hans">${esc(labels.zh.china)} · ${esc(labels.en.china)}</p>
       </div>
     </section>
   </article>
@@ -436,7 +433,8 @@ fs.writeFileSync(
   - Explicit: \`PLAYWRIGHT_BROWSERS_PATH="$HOME/Library/Caches/ms-playwright" npm run export:promo-poster-pdf\`
   - Missing browsers: \`npx playwright install chromium\`
 - Local privacy routes: \`PROMO_ORIGIN=http://127.0.0.1:3000 npm run assert:promo-privacy-routes\` (CI quality starts vinext on :3000)
-- Dock: QR pair in \`min-content\` column; side copy uses \`minmax(0,1fr)\` so URLs wrap (no QR-over-text)
+- Dock: QR **15mm** glyphs in \`min-content\` column; body \`overflow:hidden\` so panes never paint under QR
+- No print tips on the sheet (Print QA lives only in this README)
 
 ## Offline soft-skip (\`assert:promo-privacy-routes\`)
 
@@ -449,7 +447,8 @@ When \`PROMO_ORIGIN\` is unreachable (Workers timeout, no local vinext, DNS fail
 1. Open \`poster.html\` (or \`/promo/poster.html\` on Workers).
 2. Print → Paper **A4** · Scale **100%** · Margins **None** · **Background graphics** On.
 3. Do not use “Fit to printable area” if margins are already None — sheet is exactly 210×297 mm.
-4. **Physical QA:** one hard-copy A4 at 100% / no margins; confirm QR scan (Workers + China), charcoal u-card (\`#545454\`), and no clipped footer.
+4. **Physical QA:** one hard-copy A4 at 100% / no margins; charcoal u-card (\`#545454\`); footer not clipped.
+5. **QR scan (15mm):** phone camera must resolve both LIVE (Workers) and CHINA (Pages) codes after print — if scan fails, bump glyph above 15mm and rebuild.
 
 u-card: [BRAND_U_CARD.md](../BRAND_U_CARD.md) (\`#545454\` on light).
 `,

@@ -78,18 +78,36 @@ const zipPath = join(outDir, zipName);
 
 execFileSync("zip", ["-r", "-q", zipPath, "."], { cwd: stage, stdio: "inherit" });
 
-// Listing shot bundle (not inside the extension zip) — Halt + Clear/Hold shot 2 pair.
+// Listing shot bundle (not inside the extension zip) — Halt + Clear/Hold + Desktop About.
 const shotDir = join(outDir, "listing-screenshots");
 mkdirSync(shotDir, { recursive: true });
+const aboutFrame = join(root, "docs", "store-screenshots", "FRAME-desktop-about.png");
+if (!existsSync(aboutFrame)) {
+  console.info("[pack:chrome-store] FRAME-desktop-about.png missing — running capture:desktop-about-frame");
+  execFileSync(process.execPath, [join(root, "scripts/capture-desktop-about-frame.mjs")], {
+    cwd: root,
+    stdio: "inherit",
+    env: process.env,
+  });
+}
 const frames = [
   "FRAME-formal-name.png",
   "FRAME-clear.png",
   "FRAME-hold.png",
+  "FRAME-desktop-about.png",
+  "FRAME-desktop-about-tray.png",
 ];
 for (const name of frames) {
   const from = join(root, "docs", "store-screenshots", name);
   if (!existsSync(from)) {
-    console.error(`[pack:chrome-store] missing store FRAME ${name} — run npm run capture:store-halt-frame`);
+    if (name === "FRAME-desktop-about-tray.png") {
+      console.info(`[pack:chrome-store] optional ${name} absent — skip`);
+      continue;
+    }
+    console.error(
+      `[pack:chrome-store] missing store FRAME ${name} — run npm run capture:store-halt-frame` +
+        (name.startsWith("FRAME-desktop-about") ? " / npm run capture:desktop-about-frame" : ""),
+    );
     process.exit(1);
   }
   cpSync(from, join(shotDir, name));
@@ -106,8 +124,10 @@ for (const name of frames) {
       "Chrome Web Store listing screenshots (upload order)",
       "1. FRAME-formal-name.png  — Halt",
       "2. FRAME-clear.png + FRAME-hold.png — Clear / Hold pair",
+      "3. FRAME-desktop-about.png — Desktop About footer (live HTML capture)",
+      "   FRAME-desktop-about-tray.png — About + tray composite (optional)",
       "Captions: CAPTIONS.txt (from docs/CHROME_STORE_LISTING_DRAFT.md)",
-      "Rebuild: npm run capture:store-halt-frame && npm run pack:chrome-store",
+      "Rebuild: npm run capture:store-halt-frame && npm run capture:desktop-about-frame && npm run pack:chrome-store",
       "",
     ].join("\n"),
     "utf8",
@@ -121,7 +141,10 @@ execFileSync("zip", ["-r", "-q", listingZipPath, "."], { cwd: shotDir, stdio: "i
 
 console.info(`[pack:chrome-store] OK ${zipPath}`);
 console.info(`[pack:chrome-store] listing shots → ${shotDir}`);
-console.info(`[pack:chrome-store] listing FRAME zip → ${listingZipPath} (3 FRAMEs + captions)`);
+console.info(
+  `[pack:chrome-store] listing FRAME zip → ${listingZipPath} (Halt/Clear/Hold + Desktop About + captions)`,
+);
+
 console.info(
   "[pack:chrome-store] Upload in Chrome Web Store Developer Dashboard → new item / package"
 );

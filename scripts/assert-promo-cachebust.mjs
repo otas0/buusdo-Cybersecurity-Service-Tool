@@ -63,18 +63,31 @@ for (const name of [
   }
 }
 
+// Fail typecheck/CI when on-light hash drifted and rebuild rewrote artifacts — commit both
+// .cachebust and poster.html (same v=). Allow intentional regen with PROMO_CACHEBUST_REBUILD=1
+// only after verifying poster embeds the new v= (still exits 0; git diff in CI catches uncommitted).
 if (before && before !== after) {
   console.info(
-    `[assert-promo-cachebust] cachebust updated ${before} → ${after} (committed rebuild)`,
-  );
-  console.info(
-    `[assert-promo-cachebust] NOTICE: on-light wordmark hash changed — brand sync/PNG regen; ` +
+    `[assert-promo-cachebust] NOTICE: on-light wordmark hash changed ${before} → ${after}; ` +
       `re-run npm run build:promo-posters and commit public/promo + docs/promo (.cachebust, poster.html, wordmark).`,
   );
+  if (process.env.PROMO_CACHEBUST_REBUILD !== "1") {
+    console.error(
+      `[assert-promo-cachebust] FAIL: .cachebust drifted without a committed rebuild ` +
+        `(poster must ship ?v=${after}). Set PROMO_CACHEBUST_REBUILD=1 to regen in CI after brand sync.`,
+    );
+    process.exit(1);
+  }
 } else if (!before) {
   console.info(
     `[assert-promo-cachebust] NOTICE: no prior .cachebust — first regen from on-light PNG sha ${after}`,
   );
+  if (process.env.PROMO_CACHEBUST_REBUILD !== "1") {
+    console.error(
+      `[assert-promo-cachebust] FAIL: missing .cachebust — run npm run build:promo-posters and commit`,
+    );
+    process.exit(1);
+  }
 }
 
 console.info(`[assert-promo-cachebust] OK v=${after}`);

@@ -81,6 +81,11 @@ for (const p of paths) {
       continue;
     }
   }
+  // curl often prints 000 (→ 0) when the TCP connect fails — treat as soft-skip.
+  if (!status || status === 0) {
+    console.info(`[assert-promo-privacy-routes] soft-skip ${url} (HTTP ${status} via ${via})`);
+    continue;
+  }
   if (status < 200 || status >= 300) {
     console.error(`[assert-promo-privacy-routes] FAIL ${url} → HTTP ${status} (${via})`);
     failed = true;

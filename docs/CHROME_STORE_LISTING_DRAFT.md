@@ -50,9 +50,10 @@ Instrument FRAMEs from `npm run capture:store-halt-frame` (also copied next to t
 |------:|------|------|
 | 1 | [`docs/store-screenshots/FRAME-formal-name.png`](store-screenshots/FRAME-formal-name.png) | Halt readout (primary) |
 | 2 | [`docs/store-screenshots/FRAME-clear.png`](store-screenshots/FRAME-clear.png) **and** [`FRAME-hold.png`](store-screenshots/FRAME-hold.png) | Shot 2 pair — Clear + Hold |
-| 3+ | Live popup / Settings / privacy captures | Prefer product UI for final submit |
+| 3 | [`docs/store-screenshots/FRAME-desktop-about.png`](store-screenshots/FRAME-desktop-about.png) | Desktop About footer (live HTML; packed into listing-frames.zip) |
+| 4+ | Live popup / Settings / privacy captures | Prefer product UI for final submit |
 
-Rebuild FRAMEs after brand sync: `npm run sync:brand-web && npm run capture:store-halt-frame && npm run assert:store-halt-frame-floors`.
+Rebuild FRAMEs after brand sync: `npm run sync:brand-web && npm run capture:store-halt-frame && npm run capture:desktop-about-frame && npm run assert:store-halt-frame-floors`.
 
 ## Screenshot captions (paste under each store screenshot)
 
@@ -61,6 +62,7 @@ Rebuild FRAMEs after brand sync: `npm run sync:brand-web && npm run capture:stor
 | 1 — Halt | Halt: own threat list and brand-impersonation signals matched — do not enter credentials. | Halt: a lista própria e sinais de imitação de marca coincidiram — não introduza credenciais. |
 | 2a — Clear | Clear: no strong first-party threat signals on this address — still decide carefully. | Clear: sem sinais fortes na lista própria neste endereço — decida com cuidado. |
 | 2b — Hold | Hold: mixed or incomplete signals — confirm the address before you continue. | Hold: sinais mistos ou incompletos — confirme o endereço antes de continuar. |
+| 3 — Desktop About | Desktop companion About footer — same product name; unsigned Release builds. | Rodapé About da app — mesmo nome de produto; builds Release não assinados. |
 | Settings | Reversible privacy and list choices on this device. | Escolhas de privacidade e listas reversíveis neste dispositivo. |
 | Privacy / desktop note | Companion desktop (unsigned GitHub Release): Gatekeeper/SmartScreen may warn — expected. No TLS decryption, no process kill, system folders report-only. | App (Release não assinado): Gatekeeper/SmartScreen pode avisar — esperado. Sem desencriptação TLS, sem terminar processos, pastas de sistema só reportadas. |
 
