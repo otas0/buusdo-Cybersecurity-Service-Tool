@@ -548,6 +548,11 @@ function Home({ locale }: { locale: Locale }) {
         </p>
       )}
       <UrlCheckForm t={t} bare disabled={checkDisabled} onCheck={check} />
+      <p className="hint home-downloads-cta" data-testid="home-downloads-cta">
+        <a className="text-button" href={`/${locale}/settings#settings-desktop`}>
+          {t.homeDownloadsCta}
+        </a>
+      </p>
       {checkDisabled && rateLimitSec != null && rateLimitTotal != null && (
         <RateLimitBar
           sec={rateLimitSec}

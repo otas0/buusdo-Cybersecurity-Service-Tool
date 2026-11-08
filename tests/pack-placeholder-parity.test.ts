@@ -35,22 +35,16 @@ test("every locale pack preserves EN {placeholder} tokens per key", () => {
   assert.equal(mismatches.length, 0, mismatches.slice(0, 20).join("\n"));
 });
 
-test("A4 poster keys preserve EN placeholders (incl. future {…} on hint)", () => {
+test("A4 poster CTA keys stay removed from EN bag and packs", () => {
   const a4Keys = ["downloadA4Poster", "downloadA4PosterShort", "downloadA4PosterHint"] as const;
   for (const key of a4Keys) {
-    assert.ok(en[key]?.trim(), `EN missing ${key}`);
+    assert.equal(en[key], undefined, `EN must not define ${key}`);
   }
   const files = readdirSync(packsDir).filter((f) => f.endsWith(".json") && !f.startsWith("_"));
   for (const file of files) {
     const pack = JSON.parse(readFileSync(join(packsDir, file), "utf8")) as Record<string, string>;
     for (const key of a4Keys) {
-      const val = pack[key];
-      if (!val?.trim()) continue;
-      assert.deepEqual(
-        placeholders(val),
-        placeholders(en[key]),
-        `${file}:${key} placeholder drift`
-      );
+      assert.equal(pack[key], undefined, `${file} must not define ${key}`);
     }
   }
 });

@@ -445,14 +445,16 @@
   "detailKindLimit": "Límit",
   "probeBlockedGenericTitle": "El lloc ha blocat la sonda automàtica",
   "probeBlockedGenericDetail": "S’ha rebut HTTP {status}. El lloc ha blocat o limitat aquesta comprovació — això no prova phishing. Proveu l’adreça en un navegador normal si cal.",
-  "downloadA4Poster": "Baixa el cartell A4",
-  "downloadA4PosterShort": "A4",
-  "downloadA4PosterHint": "Imprimeix A4 · 100% · sense marges · gràfics de fons activats.",
   "faqCommonTitle": "Preguntes freqüents",
   "faqCommonIntro": "Respostes breus sobre què fa i què no fa buusdo — útils abans de confiar en un resultat Atura.",
   "themeLabel": "Aparença",
   "themeDark": "Fosc",
   "themeLight": "Clar",
-  "themeHint": "Desat només en aquest navegador. El valor per defecte segueix el camp fosc de l’instrument.",
-  "navDownloads": "Baixades"
+  "themeHint": "Només en aquest navegador.",
+  "navDownloads": "Baixades",
+  "langPanelFrequent": "Freqüents",
+  "langPanelAllRegions": "Totes les regions",
+  "langPanelSearchPlaceholder": "Cerca idioma…",
+  "localeSearchPlaceholder": "Cerca idioma…",
+  "homeDownloadsCta": "Baixades d’escriptori"
 }

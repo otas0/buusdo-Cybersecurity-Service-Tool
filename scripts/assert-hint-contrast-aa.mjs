@@ -66,3 +66,24 @@ if (!css.includes("color-scheme: dark")) {
   process.exit(1);
 }
 console.info("assert-hint-contrast-aa ok");
+
+/** Also gate website light-theme --muted on cream --bg (≥4.5:1). */
+const lightBlock = tokens.match(/\[data-theme="light"\]\s*\{([\s\S]*?)\n\}/);
+if (!lightBlock) {
+  console.error('FAIL: :root[data-theme="light"] missing in shared/tokens.css');
+  process.exit(1);
+}
+const lightBg = lightBlock[1].match(/--bg:\s*(#[0-9a-fA-F]{3,8})/);
+const lightMuted = lightBlock[1].match(/--muted:\s*(#[0-9a-fA-F]{3,8})/);
+if (!lightBg || !lightMuted) {
+  console.error('FAIL: light --bg / --muted missing');
+  process.exit(1);
+}
+{
+  const ratio = contrast(hexToRgb(lightMuted[1]), hexToRgb(lightBg[1]));
+  if (ratio < 4.5) {
+    console.error(`FAIL: light --muted ${lightMuted[1]} on ${lightBg[1]} contrast ${ratio.toFixed(2)} < 4.5`);
+    process.exit(1);
+  }
+  console.info(`ok light --muted ${lightMuted[1]} on ${lightBg[1]} contrast ${ratio.toFixed(2)}`);
+}

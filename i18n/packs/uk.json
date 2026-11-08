@@ -445,14 +445,16 @@
   "detailKindLimit": "Обмеження",
   "probeBlockedGenericTitle": "Сайт заблокував автоматичний зонд",
   "probeBlockedGenericDetail": "Отримано HTTP {status}. Сайт заблокував або обмежив цю перевірку — це не доказ фішингу. За потреби спробуйте адресу у звичайному браузері.",
-  "downloadA4Poster": "Завантажити плакат A4",
-  "downloadA4PosterShort": "A4",
-  "downloadA4PosterHint": "Друк A4 · 100% · без полів · фонова графіка увімкнена.",
   "faqCommonTitle": "Часті запитання",
   "faqCommonIntro": "Короткі відповіді про те, що робить і чого не робить buusdo — корисно перед тим, як довіряти результату Halt.",
   "themeLabel": "Вигляд",
   "themeDark": "Темна",
   "themeLight": "Світла",
-  "themeHint": "Зберігається лише в цьому браузері. Типово відповідає темному полю інструмента.",
-  "navDownloads": "Завантаження"
+  "themeHint": "Лише в цьому браузері.",
+  "navDownloads": "Завантаження",
+  "langPanelFrequent": "Часті",
+  "langPanelAllRegions": "Усі регіони",
+  "langPanelSearchPlaceholder": "Пошук мови…",
+  "localeSearchPlaceholder": "Шукати мову…",
+  "homeDownloadsCta": "Завантаження для ПК"
 }

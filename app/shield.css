@@ -65,6 +65,23 @@
   .shell .lang-switch {
     max-width: 2.75rem;
     min-width: 2.5rem;
+    flex-shrink: 0;
+  }
+
+  .shell .theme-toggle {
+    flex-shrink: 0;
+    gap: 0;
+  }
+
+  .shell .theme-toggle .nav-link {
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    padding: 4px 5px;
+  }
+
+  .shell .top-nav .nav-link[data-testid="nav-lists-offline"],
+  .shell .top-nav a[data-testid="nav-downloads"] {
+    /* Keep chrome compact: downloads/lists can wrap via scroll; theme+lang stay. */
   }
 }
 

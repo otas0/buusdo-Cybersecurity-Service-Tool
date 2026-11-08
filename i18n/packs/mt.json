@@ -445,14 +445,16 @@
   "detailKindLimit": "Limitu",
   "probeBlockedGenericTitle": "Is-sit imblokka s-sonda awtomatizzata",
   "probeBlockedGenericDetail": "Riċevut HTTP {status}. Is-sit imblokka jew naqqas dan il-kontroll — dik mhix prova ta’ phishing. Ipprova l-indirizz f’browser normali jekk hemm bżonn.",
-  "downloadA4Poster": "Niżżel poster A4",
-  "downloadA4PosterShort": "A4",
-  "downloadA4PosterHint": "Ipprintja A4 · 100% · bla margini · grafika tal-isfond mixgħula.",
   "faqCommonTitle": "Mistoqsijiet frekwenti",
   "faqCommonIntro": "Tweġibiet qosra dwar x’jagħmel u x’ma jagħmilx buusdo — utli qabel ma tafda riżultat Halt.",
   "themeLabel": "Dehra",
-  "themeDark": "Skur",
-  "themeLight": "Ċar",
-  "themeHint": "Maħżun biss f’dan il-browser. Id-default isegwi l-qasam skur tal-istrument.",
-  "navDownloads": "Tniżżil"
+  "themeDark": "Skura",
+  "themeLight": "Ċara",
+  "themeHint": "F’dan il-browser biss.",
+  "navDownloads": "Downloads",
+  "langPanelFrequent": "Frekwenti",
+  "langPanelAllRegions": "Ir-reġjuni kollha",
+  "langPanelSearchPlaceholder": "Fittex lingwa…",
+  "localeSearchPlaceholder": "Fittex lingwa…",
+  "homeDownloadsCta": "Downloads tad-desktop"
 }

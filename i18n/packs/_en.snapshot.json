@@ -445,14 +445,16 @@
   "detailKindLimit": "Limit",
   "probeBlockedGenericTitle": "Site blocked the automated probe",
   "probeBlockedGenericDetail": "Received HTTP {status}. The site blocked or throttled this check — that is not proof of phishing. Try the address in a normal browser if needed.",
-  "downloadA4Poster": "Download A4 poster",
-  "downloadA4PosterShort": "A4",
-  "downloadA4PosterHint": "Print A4 · 100% · margins none · background graphics on.",
   "faqCommonTitle": "Common questions",
   "faqCommonIntro": "Short answers on what buusdo does and does not — useful before you trust a Halt result.",
   "themeLabel": "Appearance",
   "themeDark": "Dark",
   "themeLight": "Light",
   "themeHint": "Stored only in this browser. Default follows the instrument dark field.",
-  "navDownloads": "Downloads"
+  "navDownloads": "Downloads",
+  "langPanelFrequent": "Frequent",
+  "langPanelAllRegions": "All regions",
+  "langPanelSearchPlaceholder": "Search language…",
+  "localeSearchPlaceholder": "Search language…",
+  "homeDownloadsCta": "Desktop app downloads"
 }

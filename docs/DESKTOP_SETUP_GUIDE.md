@@ -56,6 +56,105 @@ Builds **não assinadas** (sem notarização Apple / sem Authenticode). Descarre
 Abrir ao iniciar sessão fica desligado até o ativar. Limites honestos: Privacy no site.
 
 
+
+## 简体中文 — 完整步骤
+
+**buusdo Cybersecurity Service Tool** 桌面版来自 [GitHub Releases](https://github.com/otas0/buusdo-Cybersecurity-Service-Tool/releases)（见网站设置 → 桌面应用下载）。构建**未签名**（无 Apple 公证 / 无 Authenticode）。
+
+### macOS（`.app` zip）
+
+1. 从 Release 或网站设置下载 `buusdo-cybersecurity-service-tool-macos-app.zip`（约 ~58 MB）。
+2. 解压得到 **buusdo Cybersecurity Service Tool**（磁盘上可能仍为 `Preventive Shield.app`）。
+3. 首次打开可能被 Gatekeeper 拦截 — 对未签名包属预期。
+4. 清除隔离属性后打开，或在「隐私与安全性」中选择仍要打开：
+
+```bash
+xattr -dr com.apple.quarantine "/path/to/Preventive Shield.app"
+open "/path/to/Preventive Shield.app"
+```
+
+5. 成功后仪表板在 **http://localhost:3010**。登录时打开默认关闭，直至您启用。
+6. 诚实限制：网站隐私 → Desktop honest limits。
+
+### Windows（NSIS）
+
+1. 下载 `buusdo-cybersecurity-service-tool-Setup-User.exe`。
+2. SmartScreen 可能提示未知发布者 — 仅在信任本仓库 Release 时选择「详细信息 → 仍要运行」。
+3. 按用户安装；登录时打开默认关闭。
+
+### Linux（amd64 `.deb`）
+
+1. 下载 `buusdo-cybersecurity-service-tool_*_amd64.deb`。
+2. `sudo dpkg -i …deb`，必要时 `sudo apt-get install -f`。
+3. 未签名属本渠道常态；确认文件来自本仓库 Releases。
+
+## 日本語 — 手順
+
+**buusdo Cybersecurity Service Tool** のデスクトップ版は [GitHub Releases](https://github.com/otas0/buusdo-Cybersecurity-Service-Tool/releases) から（サイトの設定 → デスクトップ版のダウンロード）。ビルドは**未署名**です。
+
+### macOS
+
+1. `buusdo-cybersecurity-service-tool-macos-app.zip` をダウンロード（約 ~58 MB）。
+2. 展開 → **buusdo Cybersecurity Service Tool**（ディスク上は `Preventive Shield.app` の場合あり）。
+3. Gatekeeper の警告は未署名では想定内。右クリック → 開く、または:
+
+```bash
+xattr -dr com.apple.quarantine "/path/to/Preventive Shield.app"
+open "/path/to/Preventive Shield.app"
+```
+
+4. ダッシュボードは **http://localhost:3010**。ログイン時起動はオフのままです。
+
+### Windows / Linux
+
+- Windows: NSIS インストーラ。SmartScreen は「詳細情報 → それでも実行」。
+- Linux: `.deb` を `dpkg -i`。未署名は通常です。
+
+## Deutsch — Schritte
+
+**buusdo Cybersecurity Service Tool** Desktop kommt von [GitHub Releases](https://github.com/otas0/buusdo-Cybersecurity-Service-Tool/releases) (Website → Einstellungen → Desktop-Downloads). Builds sind **unsigniert**.
+
+### macOS
+
+1. `buusdo-cybersecurity-service-tool-macos-app.zip` laden (~58 MB).
+2. Entpacken → **buusdo Cybersecurity Service Tool** (on-disk ggf. `Preventive Shield.app`).
+3. Gatekeeper-Warnung ist für unsignierte Zips erwartet. Rechtsklick → Öffnen, oder:
+
+```bash
+xattr -dr com.apple.quarantine "/path/to/Preventive Shield.app"
+open "/path/to/Preventive Shield.app"
+```
+
+4. Dashboard: **http://localhost:3010**. Start bei Anmeldung bleibt aus.
+
+### Windows / Linux
+
+- Windows: NSIS; SmartScreen → Weitere Informationen → Trotzdem ausführen.
+- Linux: `.deb` mit `dpkg -i`. Unsigniert ist für diesen Kanal normal.
+
+## Français — étapes
+
+**buusdo Cybersecurity Service Tool** bureau vient des [GitHub Releases](https://github.com/otas0/buusdo-Cybersecurity-Service-Tool/releases) (site → Paramètres → Téléchargements bureau). Builds **non signées**.
+
+### macOS
+
+1. Télécharger `buusdo-cybersecurity-service-tool-macos-app.zip` (~58 MB).
+2. Décompresser → **buusdo Cybersecurity Service Tool** (sur disque parfois `Preventive Shield.app`).
+3. L’avertissement Gatekeeper est attendu. Clic droit → Ouvrir, ou :
+
+```bash
+xattr -dr com.apple.quarantine "/path/to/Preventive Shield.app"
+open "/path/to/Preventive Shield.app"
+```
+
+4. Tableau de bord : **http://localhost:3010**. Ouverture à la connexion reste désactivée.
+
+### Windows / Linux
+
+- Windows : NSIS ; SmartScreen → Informations → Exécuter quand même.
+- Linux : `.deb` via `dpkg -i`. Non signé = normal pour ce canal.
+
+
 ## Supported languages (website + in-app setup path)
 
 Setup and desktop download copy ship in **every** UI locale below. Open Settings → Desktop app downloads in that locale:

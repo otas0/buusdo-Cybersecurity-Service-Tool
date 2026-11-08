@@ -445,14 +445,16 @@
   "detailKindLimit": "Teorainn",
   "probeBlockedGenericTitle": "Chuir an suíomh bac ar an taiscéalaí uathoibrithe",
   "probeBlockedGenericDetail": "HTTP {status} faighte. Chuir an suíomh bac ar an seiceáil seo nó shriain sé í — ní cruthúnas fioscaireachta é sin. Bain triail as an seoladh i ngnáthbhrabhsálaí más gá.",
-  "downloadA4Poster": "Íoslódáil póstaer A4",
-  "downloadA4PosterShort": "A4",
-  "downloadA4PosterHint": "Priontáil A4 · 100% · gan imeall · grafaicí cúlra ar.",
   "faqCommonTitle": "Ceisteanna coitianta",
   "faqCommonIntro": "Freagraí gairide ar cad a dhéanann agus nach ndéanann buusdo — úsáideach sula gcuireann tú muinín i dtoradh Halt.",
   "themeLabel": "Cuma",
   "themeDark": "Dorcha",
   "themeLight": "Geal",
-  "themeHint": "Stóráilte sa bhrabhsálaí seo amháin. Leanann an réamhshocrú réimse dorcha an ionstraime.",
-  "navDownloads": "Íoslódálacha"
+  "themeHint": "Sa bhrabhsálaí seo amháin.",
+  "navDownloads": "Íoslódálacha",
+  "langPanelFrequent": "Coitianta",
+  "langPanelAllRegions": "Gach réigiún",
+  "langPanelSearchPlaceholder": "Cuardaigh teanga…",
+  "localeSearchPlaceholder": "Cuardaigh teanga…",
+  "homeDownloadsCta": "Íoslódálacha deisce"
 }

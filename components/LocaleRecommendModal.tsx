@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import {
+  FREQUENT_LOCALE_IDS,
   LOCALE_CATALOG,
   getLocaleEntry,
   localesInRegion,
@@ -73,12 +74,12 @@ export function LocaleRecommendModal({
   const suggested = useMemo(() => suggestLocale(), []);
   const suggestedEntry = getLocaleEntry(suggested);
 
-  /** Short pin list (suggested + majors) — search unlocks the full catalog. */
+  /** Short pin list — same Frequent majors as LanguageSwitcher, then region hints. */
   const pinned = useMemo(() => {
     const regions = regionHintsFromBrowser();
     const seen = new Set<string>();
     const list = [];
-    for (const id of [suggested, "zh-Hans", "zh-Hant", "ja", "pt-PT", "en", "de", "fr", "es"]) {
+    for (const id of [suggested, ...FREQUENT_LOCALE_IDS]) {
       if (seen.has(id)) continue;
       seen.add(id);
       list.push(getLocaleEntry(id));
@@ -184,7 +185,7 @@ export function LocaleRecommendModal({
             className="locale-recommend-search"
             data-testid="locale-recommend-search"
             type="search"
-            placeholder="Search language…"
+            placeholder={t.langPanelSearchPlaceholder}
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             autoComplete="off"

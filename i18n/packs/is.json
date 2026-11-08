@@ -445,14 +445,16 @@
   "detailKindLimit": "Takmörk",
   "probeBlockedGenericTitle": "Vefurinn lokaði fyrir sjálfvirka könnun",
   "probeBlockedGenericDetail": "Fékk HTTP {status}. Vefurinn lokaði eða hægfærði þessa athugun — það er ekki sönnun á vefveiðum. Prófaðu slóðina í venjulegum vafra ef þörf krefur.",
-  "downloadA4Poster": "Sækja A4 veggspjald",
-  "downloadA4PosterShort": "A4",
-  "downloadA4PosterHint": "Prenta A4 · 100% · engin spássía · bakgrunnsmyndir á.",
   "faqCommonTitle": "Algengar spurningar",
   "faqCommonIntro": "Stutt svör um hvað buusdo gerir og gerir ekki — gagnlegt áður en þú treystir Halt-niðurstöðu.",
   "themeLabel": "Útlit",
   "themeDark": "Dökkt",
   "themeLight": "Ljóst",
-  "themeHint": "Vistað aðeins í þessum vafra. Sjálfgefið fylgir dökka sviði tækisins.",
-  "navDownloads": "Niðurhal"
+  "themeHint": "Aðeins í þessum vafra.",
+  "navDownloads": "Niðurhal",
+  "langPanelFrequent": "Algeng",
+  "langPanelAllRegions": "Öll svæði",
+  "langPanelSearchPlaceholder": "Leita að tungumáli…",
+  "localeSearchPlaceholder": "Leita að tungumáli…",
+  "homeDownloadsCta": "Skjáborðsniðurhal"
 }

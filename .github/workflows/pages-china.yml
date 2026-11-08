@@ -42,6 +42,10 @@ jobs:
       - name: Assert china-pages HTML has no A4 / promo poster links
         run: |
           set -euo pipefail
+          if ! command -v rg >/dev/null 2>&1; then
+            sudo apt-get update -qq
+            sudo apt-get install -y -qq ripgrep
+          fi
           if rg -n '/promo/poster\.html|china-a4-poster|data-china-poster|A4\s*海报' china-pages --glob '*.html'; then
             echo "::error::china-pages HTML must not link /promo/poster.html or ship A4 poster CTAs"
             exit 1

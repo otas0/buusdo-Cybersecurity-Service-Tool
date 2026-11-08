@@ -66,9 +66,8 @@ export const messages = {
     themeLight: "Light",
     themeHint: "Stored only in this browser. Default follows the instrument dark field.",
     navDownloads: "Downloads",
-    downloadA4Poster: "Download A4 poster",
-    downloadA4PosterShort: "A4",
-    downloadA4PosterHint: "Print A4 · 100% · margins none · background graphics on.",
+    localeSearchPlaceholder: "Search language…",
+    homeDownloadsCta: "Desktop app downloads",
     privacyDesktopMirrorNote:
       "Desktop macOS download: CDN mirror is live; GitHub Release remains the documented fallback.",
 
@@ -468,6 +467,9 @@ export const messages = {
     localeRecommendBody: "Based on your browser, we suggest {lang}. You can change this anytime in the header.",
     localeRecommendAccept: "Use {lang}",
     localeRecommendDismiss: "Not now",
+    langPanelFrequent: "Frequent",
+    langPanelAllRegions: "All regions",
+    langPanelSearchPlaceholder: "Search language…",
     whyEmpty: "No strong signals beyond the usual limitations.",
     detailKindProtocol: "Protocol",
     detailKindSubdomain: "Subdomain",
@@ -555,9 +557,8 @@ export const messages = {
     themeLight: "Claro",
     themeHint: "Guardado só neste navegador. O predefinição é o campo escuro do instrumento.",
     navDownloads: "Transferências",
-    downloadA4Poster: "Descarregar cartaz A4",
-    downloadA4PosterShort: "A4",
-    downloadA4PosterHint: "Imprimir A4 · 100% · margens nenhuma · gráficos de fundo ligados.",
+    localeSearchPlaceholder: "Pesquisar idioma…",
+    homeDownloadsCta: "Transferências da app",
     privacyDesktopMirrorNote:
       "Transferência macOS: o espelho CDN está ativo; o GitHub Release continua a ser o fallback documentado.",
 
@@ -956,6 +957,9 @@ export const messages = {
     localeRecommendBody: "Com base no seu navegador, sugerimos {lang}. Pode mudar a qualquer momento no cabeçalho.",
     localeRecommendAccept: "Usar {lang}",
     localeRecommendDismiss: "Agora não",
+    langPanelFrequent: "Frequentes",
+    langPanelAllRegions: "Todas as regiões",
+    langPanelSearchPlaceholder: "Pesquisar idioma…",
     whyEmpty: "Nenhum sinal forte além das limitações habituais.",
     detailKindProtocol: "Protocolo",
     detailKindSubdomain: "Subdomínio",

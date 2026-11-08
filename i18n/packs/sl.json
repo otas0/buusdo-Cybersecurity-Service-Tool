@@ -445,14 +445,16 @@
   "detailKindLimit": "Omejitev",
   "probeBlockedGenericTitle": "Mesto je blokiralo samodejno sondo",
   "probeBlockedGenericDetail": "Prejet HTTP {status}. Mesto je blokiralo ali dušilo to preverjanje — to ni dokaz phishinga. Po potrebi poskusite naslov v običajnem brskalniku.",
-  "downloadA4Poster": "Prenesi plakat A4",
-  "downloadA4PosterShort": "A4",
-  "downloadA4PosterHint": "Natisni A4 · 100 % · brez robov · grafika ozadja vklopljena.",
   "faqCommonTitle": "Pogosta vprašanja",
   "faqCommonIntro": "Kratki odgovori o tem, kaj buusdo počne in česa ne — uporabno, preden zaupate rezultatu Halt.",
   "themeLabel": "Videz",
   "themeDark": "Temno",
   "themeLight": "Svetlo",
-  "themeHint": "Shranjeno samo v tem brskalniku. Privzeto sledi temnemu polju instrumenta.",
-  "navDownloads": "Prenosi"
+  "themeHint": "Samo v tem brskalniku.",
+  "navDownloads": "Prenosi",
+  "langPanelFrequent": "Pogosti",
+  "langPanelAllRegions": "Vse regije",
+  "langPanelSearchPlaceholder": "Išči jezik…",
+  "localeSearchPlaceholder": "Išči jezik…",
+  "homeDownloadsCta": "Prenosi za namizje"
 }

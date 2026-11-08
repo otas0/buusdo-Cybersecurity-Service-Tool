@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import {
+  FREQUENT_LOCALE_IDS,
   LOCALE_CATALOG,
   LOCALE_REGION_LABELS,
   LOCALE_REGION_ORDER,
@@ -10,12 +11,9 @@ import {
   type LocaleEntry,
   type LocaleRegion
 } from "../i18n/locales";
-import type { Locale } from "../i18n/messages";
+import { getMessages, type Locale } from "../i18n/messages";
 
 type ShellView = "check" | "settings" | "privacy" | "lists-offline";
-
-/** Short top strip — avoids dumping the full catalog on open. */
-const FREQUENT_IDS = ["en", "zh-Hans", "zh-Hant", "ja", "pt-PT", "de", "fr", "es"] as const;
 
 function pathForView(locale: string, view: ShellView, hash = ""): string {
   if (view === "settings") return `/${locale}/settings${hash}`;
@@ -53,6 +51,7 @@ export function LanguageSwitcher({
   hash?: string;
 }) {
   const entry = getLocaleEntry(locale);
+  const t = getMessages(locale);
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
   const [expanded, setExpanded] = useState<LocaleRegion | null>(null);
@@ -65,8 +64,8 @@ export function LanguageSwitcher({
     const q = query.trim().toLowerCase();
     const seen = new Set<string>();
     const list: LocaleEntry[] = [];
-    // Current first, then priority strip.
-    for (const id of [locale, ...FREQUENT_IDS]) {
+    // Current first, then shared Frequent strip.
+    for (const id of [locale, ...FREQUENT_LOCALE_IDS]) {
       if (seen.has(id)) continue;
       seen.add(id);
       const item = getLocaleEntry(id);
@@ -173,14 +172,14 @@ export function LanguageSwitcher({
             className="lang-panel-search"
             data-testid="locale-search"
             type="search"
-            placeholder="Search language…"
+            placeholder={t.langPanelSearchPlaceholder}
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             autoComplete="off"
           />
 
           <div className="lang-panel-frequent" data-testid="locale-frequent">
-            <p className="lang-panel-kicker">Frequent</p>
+            <p className="lang-panel-kicker">{t.langPanelFrequent}</p>
             <ul className="lang-region-list">
               {frequent.map((item) => (
                 <li key={`freq-${item.id}`}>
@@ -201,7 +200,7 @@ export function LanguageSwitcher({
           </div>
 
           <div className="lang-panel-regions">
-            <p className="lang-panel-kicker">All regions</p>
+            <p className="lang-panel-kicker">{t.langPanelAllRegions}</p>
             {filteredByRegion.map(({ region, items }) => {
               const isOpen = Boolean(query.trim()) || expanded === region;
               return (

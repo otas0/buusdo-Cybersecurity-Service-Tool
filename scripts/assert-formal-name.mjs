@@ -144,5 +144,19 @@ if (
   process.exit(1);
 }
 
+
+/** Downloads intro must use formal product name (not short "buusdo" alone). */
+const messagesTs = readFileSync(join(root, "i18n/messages.ts"), "utf8");
+const introEn = messagesTs.match(/desktopDownloadsIntro:\s*"([^"]+)"/);
+if (!introEn || !introEn[1].includes(formal)) {
+  console.error("[assert-formal-name] i18n/messages.ts desktopDownloadsIntro (EN) must include formalName");
+  process.exit(1);
+}
+const zhHansPack = JSON.parse(readFileSync(join(root, "i18n/packs/zh-Hans.json"), "utf8"));
+if (!String(zhHansPack.desktopDownloadsIntro || "").includes(formal)) {
+  console.error("[assert-formal-name] zh-Hans desktopDownloadsIntro must include formalName");
+  process.exit(1);
+}
+
 await checkGithubDescription();
 console.info(`[assert-formal-name] OK formalName=${JSON.stringify(formal)}`);
