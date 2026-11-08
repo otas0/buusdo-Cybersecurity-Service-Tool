@@ -152,6 +152,8 @@ Quarantine restore-error rows (dashboard): keyboard-only a11y — Tab to a resto
 | Windows NSIS | CI `desktop-windows` stages `node.exe` and runs `makensis` (unsigned OK) |
 | Linux amd64 `.deb` | CI `desktop-linux` uploads the amd64 `.deb` |
 
+**macOS zip size floor (~58 MB):** a good unsigned `buusdo-cybersecurity-service-tool-macos-app.zip` is about **58 MB** because pack runs `npm ci --omit=dev` into the `.app` (includes `express`). Zips near **~50 MB** are the broken pre-deps ship (launcher fails with `Cannot find module 'express'`). CI / `desktop-release` refuse upload when the zip is under **55 000 000** bytes or lacks `node_modules/express` (`npm run assert:desktop-pack-express`, `SHIELD_PACK_EXPRESS_ZIP=…`). After pack, `npm run smoke:desktop-pack-launcher` boots `launcher.js` from the staged tree.
+
 ### Ship channel — unsigned GitHub (current)
 
 Notarization / `desktop-promote-macos-url` are **out of scope**. Keep `macosAppZipUrl` on the unsigned zip. User Gatekeeper / SmartScreen: [`docs/DESKTOP_SETUP_GUIDE.md`](../docs/DESKTOP_SETUP_GUIDE.md). Settings shows `settings-desktop-mac-unsigned-note` + Setup guide link.

@@ -11,6 +11,7 @@ import { expect, test } from "@playwright/test";
 const base = (
   process.env.PLAYWRIGHT_BASE_URL ||
   process.env.PRODUCTION_HEALTH_URL ||
+  process.env.STAGING_HEALTH_URL ||
   ""
 )
   .trim()
@@ -53,6 +54,10 @@ test.describe("production privacy pages", () => {
     await expect(page.getByTestId("privacy-honest-limits")).toBeVisible();
     await expect(page.getByTestId("privacy-honest-limits")).toContainText(/No TLS decryption/i);
     await expect(page.getByRole("heading", { name: /No cloud account sync/i })).toBeVisible();
+    await expect(page.getByTestId("privacy-contact")).toBeVisible();
+    await expect(page.getByTestId("privacy-contact")).toContainText(/official email|Cloudflare Worker/i);
+    await expect(page.getByTestId("privacy-faq-parents")).toBeVisible();
+    await expect(page.getByTestId("privacy-faq-parents")).toContainText(/antivirus|votes/i);
   });
 
   test("/en/privacy#privacy-honest-limits deep-link", async ({ page }) => {
@@ -70,6 +75,8 @@ test.describe("production privacy pages", () => {
     await expect(
       page.getByRole("heading", { name: /Sem sincronização de conta na nuvem/i })
     ).toBeVisible();
+    await expect(page.getByTestId("privacy-contact")).toBeVisible();
+    await expect(page.getByTestId("privacy-faq-parents")).toBeVisible();
   });
 
   test("/en/settings shows desktop download slots", async ({ page }) => {
@@ -78,6 +85,22 @@ test.describe("production privacy pages", () => {
     await expect(page.getByTestId("settings-desktop-downloads")).toBeVisible();
     await expect(page.getByTestId("settings-desktop-honest-limits")).toBeVisible();
     await expect(page.getByTestId("settings-desktop-release-tag")).toBeVisible();
+    // Soft-assert Setup guide (unsigned) — live copy; do not fail the suite on drift.
+    const setup = page.getByTestId("settings-desktop-setup-guide");
+    if ((await setup.count()) === 0) {
+      console.warn("[playwright] settings-desktop-setup-guide missing on EN (soft)");
+    } else {
+      const text = ((await setup.textContent()) || "").replace(/\s+/g, " ").trim();
+      if (!/Setup guide \(unsigned\)|Guia de instalação \(não assinado\)/i.test(text)) {
+        console.warn("[playwright] Setup guide label soft mismatch:", text);
+      } else {
+        console.info("[playwright] Setup guide (unsigned) ok:", text);
+      }
+      const href = (await setup.getAttribute("href")) || "";
+      if (!/DESKTOP_SETUP_GUIDE/i.test(href)) {
+        console.warn("[playwright] Setup guide href soft mismatch:", href);
+      }
+    }
   });
 
   test("/pt-PT/settings shows desktop download slots", async ({ page }) => {
@@ -85,5 +108,16 @@ test.describe("production privacy pages", () => {
     await expect(page.locator("#settings-desktop")).toBeVisible();
     await expect(page.getByTestId("settings-desktop-downloads")).toBeVisible();
     await expect(page.getByTestId("settings-desktop-honest-limits")).toBeVisible();
+    const setup = page.getByTestId("settings-desktop-setup-guide");
+    if ((await setup.count()) === 0) {
+      console.warn("[playwright] settings-desktop-setup-guide missing on pt-PT (soft)");
+    } else {
+      const text = ((await setup.textContent()) || "").replace(/\s+/g, " ").trim();
+      if (!/Guia de instalação \(não assinado\)|Setup guide \(unsigned\)/i.test(text)) {
+        console.warn("[playwright] Setup guide pt-PT label soft mismatch:", text);
+      } else {
+        console.info("[playwright] Setup guide pt-PT ok:", text);
+      }
+    }
   });
 });

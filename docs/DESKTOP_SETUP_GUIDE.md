@@ -9,10 +9,10 @@ Operator packaging notes: [`desktop-app/PACKAGING.md`](../desktop-app/PACKAGING.
 
 ## macOS (`.app` zip)
 
-1. Download `buusdo-cybersecurity-service-tool-macos-app.zip` from the Release (or Settings → macOS app).
+1. Download `buusdo-cybersecurity-service-tool-macos-app.zip` from the Release (or Settings → macOS app). A current good build is about **~58 MB** (production `node_modules` including `express` are inside the `.app`). If the zip is only ~50 MB, it is an old broken pack — re-download from the same Release tag after `desktop-release` republished.
 2. Unzip. You get **buusdo Cybersecurity Service Tool** / legacy on-disk name `Preventive Shield.app`.
-3. First open may be blocked by Gatekeeper (**“cannot be opened because the developer cannot be verified”**). That is expected for an unsigned zip.
-4. Clear quarantine (Terminal), then open once from Finder:
+3. First open may be blocked by Gatekeeper (**“cannot be opened because the developer cannot be verified”** / **“Apple cannot check it for malicious software”**). That is expected for an unsigned zip — not a corrupt download.
+4. Clear quarantine (Terminal), then open once from Finder (or right-click → **Open** the first time):
 
 ```bash
 xattr -dr com.apple.quarantine "/path/to/Preventive Shield.app"
@@ -20,10 +20,11 @@ xattr -dr com.apple.quarantine "/path/to/Preventive Shield.app"
 open "/path/to/Preventive Shield.app"
 ```
 
-Or: **System Settings → Privacy & Security** → allow the blocked app after the first attempt.
+Or: **System Settings → Privacy & Security** → scroll to the blocked-app message → **Open Anyway** / allow after the first attempt, then open again from Finder.
 
-5. Open-at-login stays **off** until you enable it in the app.
-6. Honest limits (no TLS decrypt, no process kill, system dirs report-only): website Privacy → Desktop honest limits.
+5. After a successful open the dashboard listens on **http://localhost:3010** (tray may show the legacy “Preventive Shield” name). If the app quits immediately with `Cannot find module 'express'`, you still have the pre-deps zip — replace it with the ~58 MB asset.
+6. Open-at-login stays **off** until you enable it in the app.
+7. Honest limits (no TLS decrypt, no process kill, system dirs report-only): website Privacy → Desktop honest limits.
 
 ## Windows (NSIS)
 
@@ -48,7 +49,7 @@ Or: **System Settings → Privacy & Security** → allow the blocked app after t
 
 Builds **não assinadas** (sem notarização Apple / sem Authenticode). Descarregue só a partir deste Release / Definições do site.
 
-- **macOS:** descompacte o zip → na primeira abertura use botão direito → **Abrir**, ou `xattr -dr com.apple.quarantine` no `.app`, ou autorize em Privacidade e segurança.
+- **macOS:** o zip bom tem ~58 MB. Descompacte → na primeira abertura use botão direito → **Abrir**, ou `xattr -dr com.apple.quarantine` no `.app`, ou autorize em Privacidade e segurança → Abrir mesmo assim.
 - **Windows:** SmartScreen → **Mais informações** → **Executar mesmo assim** (só se confiar neste Release).
 - **Linux:** instale o `.deb` da tag do Release; pacote não assinado é esperado.
 

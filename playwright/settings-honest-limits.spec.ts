@@ -17,7 +17,8 @@ import {
   assertLocaleToggleKeepsSettingsDesktop,
   assertSettingsDesktopAfterSpaNav,
   assertSpaNavNoReload,
-  trackDocumentLoads
+  trackDocumentLoads,
+  waitForReactHydration
 } from "./helpers/spa-settings-nav";
 
 const base = (process.env.PLAYWRIGHT_BASE_URL || "http://localhost:3000").replace(/\/$/, "");
@@ -118,6 +119,7 @@ test.describe("Settings → honest limits (SPA)", () => {
 
     await page.goto(`${base}/en/settings#settings-desktop`, { waitUntil: "domcontentloaded" });
     await expect(page.getByTestId("settings-desktop-downloads")).toBeVisible({ timeout: 15000 });
+    await waitForReactHydration(page, '[data-testid="settings-desktop-honest-limits"]');
     await assertDownloadsRowLabelledByHeading(page);
     const afterGoto = loads.count;
 
@@ -201,6 +203,7 @@ test.describe("Settings → honest limits (SPA)", () => {
     );
     const noteEn = page.getByTestId("privacy-desktop-mirror-note");
     await expect(noteEn).toBeVisible({ timeout: 15000 });
+    await waitForReactHydration(page, '[data-testid="privacy-desktop-mirror-note"]');
     await expect(noteEn).toHaveAttribute("href", /\/en\/settings#settings-desktop/);
 
     const beforeNoteClick = loads.count;

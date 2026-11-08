@@ -70,7 +70,7 @@ SIGN_IDENTITY="…" NOTARY_PROFILE=PreventiveShield \
 
 `build-app.sh` embeds `https://nodejs.org/dist/v$NODE_EMBED_VERSION/node-v…-darwin-{arm64|x64}.tar.gz` into `Resources/node/` (cached under `dist/macos/node-cache/`). Escape hatch only: `EMBED_SYSTEM_NODE=1`.
 
-After copying sources, pack scripts run `npm ci --omit=dev` **inside** the staged app tree so `express` and other runtime deps ship with the installer (rsync/`stage_tree` still exclude the host `node_modules`). macOS / Windows stage / Linux `.deb` all refuse to finish if `node_modules/express` is missing.
+After copying sources, pack scripts run `npm ci --omit=dev` **inside** the staged app tree so `express` and other runtime deps ship with the installer (rsync/`stage_tree` still exclude the host `node_modules`). macOS / Windows stage / Linux `.deb` all refuse to finish if `node_modules/express` is missing. Repo checks: `npm run assert:desktop-pack-express` (optional `SHIELD_PACK_EXPRESS_ZIP=…` enforces the ~58 MB / 55 000 000-byte mac zip floor) and `npm run smoke:desktop-pack-launcher` (boots packed `launcher.js`).
 
 Scripts: `packaging/macos/build-app.sh`, `sign-notarize.sh`, `entitlements.plist`.
 

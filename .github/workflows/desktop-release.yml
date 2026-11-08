@@ -60,6 +60,13 @@ jobs:
           VER="${{ needs.resolve-tag.outputs.version }}"
           src=$(ls dist/linux/preventive-shield_*_amd64.deb | head -1)
           cp -f "$src" "dist/linux/buusdo-cybersecurity-service-tool_${VER}_amd64.deb"
+          # Refuse empty runtime (rsync excludes host node_modules; pack must npm ci --omit=dev).
+          APP_ROOT="dist/linux/preventive-shield_${VER}_amd64/usr/lib/preventive-shield"
+          if [ ! -d "$APP_ROOT" ]; then
+            APP_ROOT=dist/linux/preventive-shield_0.2.0_amd64/usr/lib/preventive-shield
+          fi
+          node ../scripts/assert-desktop-pack-express.mjs "$APP_ROOT"
+          SHIELD_PACK_APP_ROOT="$APP_ROOT" node ../scripts/desktop-pack-launcher-smoke.mjs
       - uses: actions/upload-artifact@v4
         with:
           name: release-linux-deb
@@ -89,6 +96,10 @@ jobs:
           test -f dist/windows/PreventiveShield-Setup-User.exe
           cp -f dist/windows/PreventiveShield-Setup-User.exe \
             dist/windows/buusdo-cybersecurity-service-tool-Setup-User.exe
+          node ../scripts/assert-desktop-pack-express.mjs packaging/windows/stage/app
+          SHIELD_PACK_APP_ROOT=packaging/windows/stage/app \
+            SHIELD_PACK_NODE="$PWD/packaging/windows/stage/node.exe" \
+            node ../scripts/desktop-pack-launcher-smoke.mjs
       - name: Sign Windows NSIS (Authenticode) when secrets present
         shell: pwsh
         env:
@@ -135,6 +146,9 @@ jobs:
         run: |
           cd desktop-app
           npm run pack:macos
+          APP_ROOT="dist/macos/Preventive Shield.app/Contents/Resources/app"
+          node ../scripts/assert-desktop-pack-express.mjs "$APP_ROOT"
+          SHIELD_PACK_APP_ROOT="$APP_ROOT" node ../scripts/desktop-pack-launcher-smoke.mjs
           mkdir -p dist/macos
           ditto -c -k --sequesterRsrc --keepParent \
             "dist/macos/Preventive Shield.app" \
@@ -142,6 +156,9 @@ jobs:
           cp -f dist/macos/PreventiveShield-macos-app.zip \
             dist/macos/buusdo-cybersecurity-service-tool-macos-app.zip
           test -f dist/macos/buusdo-cybersecurity-service-tool-macos-app.zip
+          # CI gate before Release upload: express inside zip + ~58MB size floor.
+          SHIELD_PACK_EXPRESS_ZIP=dist/macos/buusdo-cybersecurity-service-tool-macos-app.zip \
+            node ../scripts/assert-desktop-pack-express.mjs
       - uses: actions/upload-artifact@v4
         with:
           name: release-macos-zip

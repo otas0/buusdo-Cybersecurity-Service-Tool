@@ -101,6 +101,7 @@ jobs:
           # Cache covers chromium + headless-shell under ~/.cache/ms-playwright (avoid laptop CDN).
           if [ "${HIT:-false}" = "true" ] && ls "$HOME/.cache/ms-playwright"/chromium_headless_shell-*/chrome-headless-shell-*/chrome-headless-shell >/dev/null 2>&1; then
             echo "Reusing cached Chromium + headless-shell"
+            echo "::notice::Playwright headless-shell restored from cache (warm; skip CDN install)"
           else
             npx playwright install --with-deps chromium
           fi
@@ -211,6 +212,8 @@ jobs:
           sudo apt-get install -y -qq dpkg-dev rsync
           cd desktop-app && ARCH=amd64 npm run pack:linux
           test -f dist/linux/preventive-shield_0.2.0_amd64.deb
+          node ../scripts/assert-desktop-pack-express.mjs \
+            dist/linux/preventive-shield_0.2.0_amd64/usr/lib/preventive-shield
       - name: Tray icons in amd64 pack tree
         run: |
           node scripts/assert-pack-tray-files.mjs desktop-app/dist/linux/preventive-shield_0.2.0_amd64/usr/lib/preventive-shield/assets
@@ -307,6 +310,7 @@ jobs:
           test -d packaging/windows/stage/app
           test -f packaging/windows/stage/app/src/launcher.js
           test -f packaging/windows/stage/node.exe
+          node ../scripts/assert-desktop-pack-express.mjs packaging/windows/stage/app
           ls packaging/windows/stage | head
       - name: Tray icons in Windows stage tree
         shell: bash
@@ -594,13 +598,28 @@ jobs:
           } >> "$GITHUB_STEP_SUMMARY"
           if [ "$HIT" = "true" ]; then
             echo "::notice::Playwright browsers restored from cache (warm)"
+            if ls "$HOME/.cache/ms-playwright"/chromium_headless_shell-*/chrome-headless-shell-*/chrome-headless-shell >/dev/null 2>&1; then
+              echo "::notice::Playwright headless-shell restored from cache (warm; skip CDN install)"
+              echo "| headless-shell | present |" >> "$GITHUB_STEP_SUMMARY"
+            else
+              echo "::notice::Playwright cache hit but headless-shell binary missing — install will fetch"
+              echo "| headless-shell | missing |" >> "$GITHUB_STEP_SUMMARY"
+            fi
           else
             echo "::notice::Playwright browser cache miss — install may download Chromium"
+            echo "| headless-shell | cache-miss |" >> "$GITHUB_STEP_SUMMARY"
           fi
       - name: Install Playwright Chromium
         id: pw_install
         continue-on-error: true
-        run: npx playwright install --with-deps chromium
+        run: |
+          if [ "${{ steps.pw_cache.outputs.cache-hit }}" = "true" ] && \
+             ls "$HOME/.cache/ms-playwright"/chromium_headless_shell-*/chrome-headless-shell-*/chrome-headless-shell >/dev/null 2>&1 && \
+             ls "$HOME/.cache/ms-playwright"/chromium-*/chrome-*/chrome >/dev/null 2>&1; then
+            echo "::notice::Skipping playwright install — chromium + headless-shell warm cache"
+            exit 0
+          fi
+          npx playwright install --with-deps chromium
 
       - name: Start short-lived vinext (Playwright base)
         id: pw_server
@@ -636,6 +655,7 @@ jobs:
           AUTH_MAGIC_SECRET: "ci-playwright-magic"
           LISTS_ENC_KEY: "ci-playwright-lists-enc"
 
+      # Keep RUN_PLAYWRIGHT_SETTINGS repo var false until this job is green on a warm cache run.
       - name: Narrow Settings screenshot
         id: pw_shot
         if: steps.pw_install.outcome == 'success'

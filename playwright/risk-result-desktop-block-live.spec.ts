@@ -1,5 +1,5 @@
 /**
- * Real RiskResult on the website — Block on desktop when Escudo :3010 is down.
+ * Real RiskResult on the website — Block on desktop when buusdo :3010 is down.
  *
  * Uses the live AppShell / RiskResult tree on PLAYWRIGHT_BASE_URL, but stubs
  * POST /api/check with a LEAVE_AND_BLOCK payload so vinext CI does not depend on
@@ -11,6 +11,7 @@
 import { readFileSync, existsSync } from "node:fs";
 import path from "node:path";
 import { expect, test } from "@playwright/test";
+import { submitHomeCheck } from "./helpers/spa-settings-nav";
 
 const base = (process.env.PLAYWRIGHT_BASE_URL || "").trim().replace(/\/$/, "");
 const fixturePath = path.resolve("playwright/fixtures/leave-and-block.json");
@@ -132,10 +133,7 @@ test("live RiskResult: desktop down → desktop-block-need-app", async ({ page }
   });
 
   await page.goto(`${base}/en`, { waitUntil: "domcontentloaded" });
-  const urlInput = page.locator('input[name="url"], #url, input[type="url"]').first();
-  await urlInput.waitFor({ state: "visible", timeout: 15000 });
-  await urlInput.fill(fixture.url);
-  await page.locator('button[type="submit"]').first().click();
+  await submitHomeCheck(page, fixture.url);
   // Match settings-narrow: wait for result chrome, then action row.
   await page.waitForSelector(".log-action, [data-testid='result-action-row']", { timeout: 20000 });
   await page.waitForSelector('[data-testid="result-action-row"]', { timeout: 10000 });
@@ -148,5 +146,5 @@ test("live RiskResult: desktop down → desktop-block-need-app", async ({ page }
   await block.click();
   const tip = page.getByTestId("desktop-block-need-app");
   await expect(tip).toBeVisible({ timeout: 8000 });
-  await expect(tip).toContainText(/Escudo desktop|Open the Escudo/i);
+  await expect(tip).toContainText(/buusdo desktop|Open the buusdo/i);
 });
