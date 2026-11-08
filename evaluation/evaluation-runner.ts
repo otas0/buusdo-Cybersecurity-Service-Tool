@@ -132,9 +132,10 @@ function evaluateStorage() {
 function evaluateLanguages() {
   const keys = ["sensitiveTitle","block","leave","protection","blockedInPrototype","removed","limits","checked","currentlyBlocked","invalid"] as const;
   const checks = keys.map((key)=>({ key, passed:Boolean(messages.en[key] && messages["pt-PT"][key]), english:messages.en[key], portuguese:messages["pt-PT"][key] }));
-  const resultSource = readFileSync(resolve(projectRoot,"components/RiskResult.tsx"),"utf8");
+  // RiskResult is bag-driven; assert Portuguese Halt evidence strings live in the pt-PT message bag.
+  const ptBag = JSON.stringify(messages["pt-PT"]);
   const requiredPortugueseEvidence = ["Risco crítico","PHISHING CONHECIDO","Reputação desconhecida","Parece uma organização conhecida, mas o domínio não corresponde","Saia e bloqueie este domínio","HTTPS não prova identidade ou confiança"];
-  const evidenceChecks = requiredPortugueseEvidence.map((phrase)=>({ phrase, passed:resultSource.includes(phrase) }));
+  const evidenceChecks = requiredPortugueseEvidence.map((phrase)=>({ phrase, passed:ptBag.includes(phrase) }));
   return { passed:checks.every((check)=>check.passed)&&evidenceChecks.every((check)=>check.passed),pairChecks:checks,evidenceChecks,meaningReview:"Human-reviewed for equivalent security direction; literal word-for-word translation was not required." };
 }
 
