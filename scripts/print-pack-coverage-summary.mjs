@@ -53,3 +53,10 @@ if (dropped.length) {
   console.error(`[pack-coverage] FULL regression: ${dropped.join(", ")}`);
   process.exit(1);
 }
+
+const partials = packFiles.filter((id) => !isFull(id));
+if (partials.length) {
+  const detail = partials.map((id) => `${id}=${(ratio(id) * 100).toFixed(0)}%`).join(" ");
+  console.warn(`[pack-coverage] still-partial (${partials.length}): ${detail}`);
+  console.log(`::warning::[pack-coverage] still-partial locales: ${partials.join(", ")}`);
+}

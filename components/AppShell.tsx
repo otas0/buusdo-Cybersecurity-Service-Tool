@@ -629,19 +629,10 @@ export function AppShell({ locale, slug }: { locale: Locale; slug: string[] }) {
 
   // Privacy deep-links (#privacy-honest-limits, #privacy-faq-common): scroll after the
   // privacy panel mounts so view-switch does not race the hash target.
-  // Legacy #privacy-faq-parents redirects to #privacy-faq-common.
   useEffect(() => {
     if (view !== "privacy") return;
     function scrollPrivacyHash() {
-      let hash = typeof window !== "undefined" ? window.location.hash : "";
-      if (hash === "#privacy-faq-parents") {
-        hash = "#privacy-faq-common";
-        try {
-          window.history.replaceState(null, "", `${window.location.pathname}${window.location.search}${hash}`);
-        } catch {
-          /* ignore */
-        }
-      }
+      const hash = typeof window !== "undefined" ? window.location.hash : "";
       if (hash !== "#privacy-honest-limits" && hash !== "#privacy-faq-common") return;
       const id = hash.slice(1);
       const el = document.getElementById(id);
@@ -710,14 +701,10 @@ export function AppShell({ locale, slug }: { locale: Locale; slug: string[] }) {
       }
       if (
         next === "privacy" &&
-        (hash === "#privacy-honest-limits" ||
-          hash === "#privacy-faq-common" ||
-          hash === "#privacy-faq-parents")
+        (hash === "#privacy-honest-limits" || hash === "#privacy-faq-common")
       ) {
-        const target =
-          hash === "#privacy-faq-parents" ? "#privacy-faq-common" : hash;
         window.setTimeout(() => {
-          document.getElementById(target.slice(1))?.scrollIntoView({ block: "start" });
+          document.getElementById(hash.slice(1))?.scrollIntoView({ block: "start" });
         }, 0);
       }
     }

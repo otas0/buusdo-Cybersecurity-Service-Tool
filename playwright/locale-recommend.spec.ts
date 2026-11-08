@@ -48,6 +48,43 @@ test.describe("locale recommend soft prompt", () => {
     await expect(page.getByText(/Keep English|Manter inglês|保持英文/i)).toHaveCount(0);
   });
 
+  test("recommend search Deutsch accepts → /de", async ({ page, context }) => {
+    await context.addInitScript(() => {
+      try {
+        localStorage.removeItem("buusdocst-locale-choice");
+        localStorage.removeItem("buusdocst-locale-recommend-dismiss");
+        Object.defineProperty(navigator, "languages", {
+          get: () => ["zh-CN", "en-US"],
+          configurable: true
+        });
+        Object.defineProperty(navigator, "language", {
+          get: () => "zh-CN",
+          configurable: true
+        });
+      } catch {
+        /* ignore */
+      }
+    });
+
+    await page.goto(`${base}/en`, { waitUntil: "domcontentloaded", timeout: 45_000 });
+    await waitForReactHydration(page, '[data-testid="locale-recommend"]').catch(() => undefined);
+    const dialog = page.getByTestId("locale-recommend");
+    await expect(dialog).toBeVisible({ timeout: 15_000 });
+    await expect(page.getByTestId("locale-recommend-search")).toBeVisible();
+    // Empty search: at most 6 pinned options.
+    const pinned = dialog.locator('[data-testid^="locale-recommend-option-"]');
+    await expect(pinned).toHaveCount(await pinned.count());
+    expect(await pinned.count()).toBeLessThanOrEqual(6);
+
+    await page.getByTestId("locale-recommend-search").fill("Deutsch");
+    await expect(page.getByTestId("locale-recommend-option-de")).toBeVisible();
+    await Promise.all([
+      page.waitForURL(/\/de(?:\/|\?|#|$)/),
+      page.getByTestId("locale-recommend-option-de").click()
+    ]);
+    await expect(page.locator("html")).toHaveAttribute("lang", "de");
+  });
+
   for (const { tag, expectedHint } of [
     { tag: "xh-ZA", expectedHint: /isiXhosa|Xhosa|xh/i },
     { tag: "th-TH", expectedHint: /ไทย|Thai|th/i },

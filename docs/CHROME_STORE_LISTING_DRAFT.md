@@ -22,11 +22,11 @@ Verifique um site antes de confiar — lista própria de ameaças, interface mul
 
 ## Short description (zh-Hans)
 
-在信任网站前先检查 — 自有威胁列表，支持简体中文等界面语言。
+信任网站前先检查 — 自有威胁列表，多语言界面。
 
 ## Short description (ja)
 
-信頼する前にサイトを確認 — 独自の脅威リスト、日本語ほか多言語 UI。
+信頼する前にサイトを確認 — 独自の脅威リスト、多言語 UI。
 
 ## Detailed description (EN)
 

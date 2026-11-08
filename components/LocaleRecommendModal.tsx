@@ -5,7 +5,6 @@ import {
   FREQUENT_LOCALE_IDS,
   LOCALE_CATALOG,
   getLocaleEntry,
-  localesInRegion,
   normalizeLocale,
   type LocaleRegion
 } from "../i18n/locales";
@@ -74,26 +73,17 @@ export function LocaleRecommendModal({
   const suggested = useMemo(() => suggestLocale(), []);
   const suggestedEntry = getLocaleEntry(suggested);
 
-  /** Short pin list — same Frequent majors as LanguageSwitcher, then region hints. */
+  /** Short pin list (max 6, no search) — suggested + Frequent majors only. */
   const pinned = useMemo(() => {
-    const regions = regionHintsFromBrowser();
     const seen = new Set<string>();
     const list = [];
     for (const id of [suggested, ...FREQUENT_LOCALE_IDS]) {
       if (seen.has(id)) continue;
       seen.add(id);
       list.push(getLocaleEntry(id));
+      if (list.length >= 6) break;
     }
-    for (const region of regions) {
-      for (const item of localesInRegion(region)) {
-        if (seen.has(item.id)) continue;
-        seen.add(item.id);
-        list.push(item);
-        if (list.length >= 8) break;
-      }
-      if (list.length >= 8) break;
-    }
-    return list.slice(0, 8);
+    return list.slice(0, 6);
   }, [suggested]);
 
   const filtered = useMemo(() => {
