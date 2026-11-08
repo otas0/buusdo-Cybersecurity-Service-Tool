@@ -12,6 +12,8 @@ import { canPersistLists } from "./privacy-storage";
 import { getPrivacyMode } from "./report-analysis";
 
 export const FEEDBACK_DRAFTS_KEY = "shieldFeedbackDrafts";
+/** Session flag: last saved draft mark was report (survives empty list until cleared). */
+export const FEEDBACK_LAST_REPORT_KEY = "shieldFeedbackLastReport";
 
 export type { FeedbackDraft, FeedbackMark };
 
@@ -45,7 +47,32 @@ export function saveFeedbackDraft(input: {
     mark: input.mark
   });
   write(next);
+  try {
+    if (input.mark === "report") {
+      sessionStorage.setItem(FEEDBACK_LAST_REPORT_KEY, "1");
+    }
+  } catch {
+    /* ignore */
+  }
   return { ok: true, persisted: true, drafts: next };
+}
+
+export function hadReportDraftHint(): boolean {
+  if (typeof sessionStorage === "undefined") return false;
+  try {
+    return sessionStorage.getItem(FEEDBACK_LAST_REPORT_KEY) === "1";
+  } catch {
+    return false;
+  }
+}
+
+export function clearReportDraftHint() {
+  if (typeof sessionStorage === "undefined") return;
+  try {
+    sessionStorage.removeItem(FEEDBACK_LAST_REPORT_KEY);
+  } catch {
+    /* ignore */
+  }
 }
 
 export function deleteFeedbackDraft(domain: string, mark: FeedbackMark) {
@@ -56,6 +83,7 @@ export function deleteFeedbackDraft(domain: string, mark: FeedbackMark) {
 export function clearFeedbackDrafts() {
   if (typeof localStorage === "undefined") return;
   localStorage.removeItem(FEEDBACK_DRAFTS_KEY);
+  clearReportDraftHint();
 }
 
 /** Download a batches/*.json draft for operator review + threat:apply. */

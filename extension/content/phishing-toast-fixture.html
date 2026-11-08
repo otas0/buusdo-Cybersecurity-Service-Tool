@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Extension phishing toast fixture</title>
+    <link rel="stylesheet" href="./toast.css" />
+  </head>
+  <body>
+    <p>Unit fixture — mounts Halt phishing toast via shared phishing-toast-mount.js.</p>
+    <div id="portugal-cp-shield-toast-host" aria-live="polite"></div>
+    <script src="./phishing-toast-mount.js"></script>
+    <script>
+      (function () {
+        const mount = globalThis.__buusdoPhishingToastMount;
+        const host = document.getElementById("portugal-cp-shield-toast-host");
+        const el = mount.buildPhishingToast(document, { lang: "en" });
+        el.classList.add("is-visible");
+        host.appendChild(el);
+      })();
+    </script>
+  </body>
+</html>

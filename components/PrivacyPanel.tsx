@@ -77,9 +77,28 @@ export function PrivacyPanel({
         <p className="hint">{t.privacyPolicyAccountBody}</p>
       </section>
 
-      <section className="settings-block">
+      <section className="settings-block" data-testid="privacy-contact" id="privacy-contact">
         <h3 className="settings-subhead">{t.privacyPolicyContactTitle}</h3>
         <p className="hint">{t.privacyPolicyContactBody}</p>
+      </section>
+
+      <section className="settings-block" data-testid="privacy-faq-parents" id="privacy-faq-parents">
+        <h3 className="settings-subhead">{t.faqParentsTitle}</h3>
+        <p className="hint">{t.faqParentsIntro}</p>
+        <ul className="why-list">
+          <li>
+            <strong>{t.faqNoWipeTitle}</strong>
+            <span>{t.faqNoWipeBody}</span>
+          </li>
+          <li>
+            <strong>{t.faqNoAvTitle}</strong>
+            <span>{t.faqNoAvBody}</span>
+          </li>
+          <li>
+            <strong>{t.faqNoCrowdTitle}</strong>
+            <span>{t.faqNoCrowdBody}</span>
+          </li>
+        </ul>
       </section>
 
       <p className="scope-note" data-testid="privacy-policy-updated">

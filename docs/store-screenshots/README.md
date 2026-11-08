@@ -8,5 +8,6 @@ Every Chrome / Safari store screenshot must include the formal product name **bu
 - `FRAME-clear.png` / `FRAME-hold.png` — Clear / Hold companion frames (same capture script; store shot 2 pair).
 - CI quality runs `capture:store-halt-frame` and fails if committed FRAMEs drift. Chromium CI jobs also run `capture:store-halt-frame:playwright` (writes `FRAME-formal-name.playwright.png` only — never overwrites Sharp FRAME).
 - Prefer live product screenshots for final store submit; these frames are the committed instrument references.
+- Round-2 survey facilitators may show `FRAME-hold.png` beside [survey/round2-form.html](../survey/round2-form.html). Extension Halt toast DOM is shared via `extension/content/phishing-toast-mount.js` (content script + fixture) so store-adjacent Halt chrome does not drift from the live toast.
 - `npm run sync:brand-web` rebuilds OG / icons but **does not** overwrite FRAME PNGs.
 - Captions: see [CHROME_STORE_LISTING_DRAFT.md](../CHROME_STORE_LISTING_DRAFT.md).

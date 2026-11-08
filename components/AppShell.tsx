@@ -591,14 +591,15 @@ export function AppShell({ locale, slug }: { locale: Locale; slug: string[] }) {
     return () => window.clearTimeout(timer);
   }, [slug]);
 
-  // Privacy deep-links (e.g. Settings → #privacy-honest-limits): scroll after the
+  // Privacy deep-links (#privacy-honest-limits, #privacy-faq-parents): scroll after the
   // privacy panel mounts so view-switch does not race the hash target.
   useEffect(() => {
     if (view !== "privacy") return;
     function scrollPrivacyHash() {
       const hash = typeof window !== "undefined" ? window.location.hash : "";
-      if (hash !== "#privacy-honest-limits") return;
-      const el = document.getElementById("privacy-honest-limits");
+      if (hash !== "#privacy-honest-limits" && hash !== "#privacy-faq-parents") return;
+      const id = hash.slice(1);
+      const el = document.getElementById(id);
       el?.scrollIntoView({ block: "start" });
     }
     const raf = window.requestAnimationFrame(() => {
@@ -662,9 +663,12 @@ export function AppShell({ locale, slug }: { locale: Locale; slug: string[] }) {
           }
         }, 0);
       }
-      if (next === "privacy" && hash === "#privacy-honest-limits") {
+      if (
+        next === "privacy" &&
+        (hash === "#privacy-honest-limits" || hash === "#privacy-faq-parents")
+      ) {
         window.setTimeout(() => {
-          document.getElementById("privacy-honest-limits")?.scrollIntoView({ block: "start" });
+          document.getElementById(hash.slice(1))?.scrollIntoView({ block: "start" });
         }, 0);
       }
     }

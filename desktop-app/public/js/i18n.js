@@ -17,6 +17,10 @@ export const STRINGS = {
     detailSafe: "Nothing on the list.",
     detailCaution: "Known tracker.",
     detailDanger: "Lookalike or sign-in trick.",
+    dangerLevelLabel: "Danger level",
+    ignoreRiskTitle: "If you ignore this warning",
+    ignoreRiskBody:
+      "You may hand over passwords, payment details, or other personal data to whoever controls this address. Close before typing or paying anything.",
     trackersBlocked: "Trackers",
     phishingHits: "Signals",
     langLabel: "Language",
@@ -262,6 +266,10 @@ export const STRINGS = {
     detailSafe: "Nada na lista.",
     detailCaution: "Rastreador conhecido.",
     detailDanger: "Nome parecido ou truque de início de sessão.",
+    dangerLevelLabel: "Nível de perigo",
+    ignoreRiskTitle: "Se ignorar este aviso",
+    ignoreRiskBody:
+      "Pode entregar palavras-passe, dados de pagamento ou outra informação pessoal a quem controla este endereço. Feche antes de escrever ou pagar o que quer que seja.",
     trackersBlocked: "Rastreadores",
     phishingHits: "Sinais",
     langLabel: "Idioma",

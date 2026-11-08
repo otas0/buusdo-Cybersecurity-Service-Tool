@@ -83,3 +83,5 @@ Used by [.github/workflows/desktop-release.yml](../.github/workflows/desktop-rel
 When `WIN_CERT_PFX_BASE64` is unset and `WIN_CERT_REQUIRE` is not `1`, the workflow still uploads `PreventiveShield-Setup-User.exe` unsigned and prints a notice. CI `desktop-windows` (`.github/workflows/ci.yml`) honors the same repo var `WIN_CERT_REQUIRE=1`: if the PFX secret is missing, the job **fails** instead of skipping `signtool verify`. Release (`desktop-release.yml`) refuses an unsigned upload under the same flag.
 
 **Production recommendation:** once the org Authenticode PFX is installed as `WIN_CERT_PFX_BASE64` / `WIN_CERT_PFX_PASSWORD`, set the repo variable **`WIN_CERT_REQUIRE=1`** so both release uploads and CI `desktop-windows` cannot silently skip signing.
+
+**Current ship (2026-11):** no org PFX in secrets → **keep unsigned**. Do **not** set `WIN_CERT_REQUIRE=1` until PFX is installed. Release and CI already print a clear notice and still upload / skip verify when the secret is absent. SmartScreen “Unknown publisher” is expected — see [DESKTOP_SETUP_GUIDE.md](DESKTOP_SETUP_GUIDE.md).

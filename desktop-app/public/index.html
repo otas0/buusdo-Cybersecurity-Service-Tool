@@ -76,6 +76,21 @@
             <span id="statusHost" class="status-host" hidden></span>
           </p>
           <p id="statusDetail" class="detail">Type an address.</p>
+          <p
+            id="resultDangerLevel"
+            class="detail result-danger-level"
+            data-testid="result-danger-level"
+            hidden
+          ></p>
+          <section
+            id="resultIgnoreRisk"
+            class="result-ignore-risk halt-accent"
+            data-testid="result-ignore-risk"
+            hidden
+          >
+            <p class="kicker" id="resultIgnoreRiskTitle"></p>
+            <p id="resultIgnoreRiskBody"></p>
+          </section>
 
           <nav class="primary-path" id="primaryPath" aria-label="Primary path" data-testid="primary-path">
             <button type="button" id="pathScanMachine" class="text-button" data-testid="path-scan-machine">Scan this computer</button>

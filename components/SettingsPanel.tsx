@@ -23,8 +23,10 @@ import {
 } from "./check-history";
 import {
   clearFeedbackDrafts,
+  clearReportDraftHint,
   deleteFeedbackDraft,
   exportFeedbackBatchDownload,
+  hadReportDraftHint,
   listFeedbackDrafts,
   type FeedbackDraft
 } from "./feedback-drafts";
@@ -146,6 +148,7 @@ export function SettingsPanel({
   const [mode, setMode] = useState<PrivacyMode>("off");
   const [history, setHistory] = useState<CheckHistoryEntry[]>([]);
   const [drafts, setDrafts] = useState<FeedbackDraft[]>([]);
+  const [showAfterReportHint, setShowAfterReportHint] = useState(false);
   const [diagnostics, setDiagnostics] = useState<DiagnosticEntry[]>([]);
   const [notice, setNotice] = useState("");
   const [probeBudgetMs, setProbeBudgetMs] = useState<number | null>(null);
@@ -284,6 +287,7 @@ export function SettingsPanel({
     setMode(next);
     setHistory(listCheckHistory());
     setDrafts(listFeedbackDrafts());
+    setShowAfterReportHint(hadReportDraftHint());
     setDiagnostics(listDiagnosticErrors());
   }
 
@@ -1053,10 +1057,36 @@ export function SettingsPanel({
         <p className="scope-note">{t.diagnosticNote}</p>
       </section>
 
-      <section className="settings-block">
+      <section className="settings-block" id="settings-feedback-drafts" data-testid="settings-feedback-drafts">
         <h2>{t.feedbackDraftsTitle}</h2>
+        {drafts.length > 0 ? (
+          <p className="scope-note halt-accent" data-testid="feedback-drafts-after-report">
+            {t.feedbackDraftsAfterReport}
+          </p>
+        ) : null}
         {drafts.length === 0 ? (
-          <p className="scope-note">{t.feedbackEmpty}</p>
+          <>
+            <p className="scope-note">{t.feedbackEmpty}</p>
+            {showAfterReportHint ? (
+              <p
+                className="scope-note halt-accent"
+                data-testid="feedback-drafts-empty-after-report"
+                role="status"
+              >
+                {t.feedbackDraftsAfterReport}{" "}
+                <button
+                  type="button"
+                  className="text-button"
+                  onClick={() => {
+                    clearReportDraftHint();
+                    setShowAfterReportHint(false);
+                  }}
+                >
+                  {t.feedbackDismissAfterReportHint}
+                </button>
+              </p>
+            ) : null}
+          </>
         ) : (
           <>
             <ul className="block-log">

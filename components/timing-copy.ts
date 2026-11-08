@@ -6,6 +6,8 @@ export type TimingLabelBag = {
   timingAmbiguousProbe: string;
   timingYes: string;
   timingNo: string;
+  timingTotal: string;
+  timingTotalChip: string;
 };
 
 /** Shared EN / pt-PT keys for progress + result timing copy — use everywhere. */
@@ -15,13 +17,29 @@ export function timingLabels(t: {
   timingAmbiguousProbe?: string;
   timingYes?: string;
   timingNo?: string;
+  timingTotal?: string;
+  timingTotalChip?: string;
 }): TimingLabelBag {
   return {
     timingHeadFail: t.timingHeadFail || "headFail",
     timingHeadSkipped: t.timingHeadSkipped || "headSkipped",
     timingAmbiguousProbe: t.timingAmbiguousProbe || "ambiguousProbeStatus",
     timingYes: t.timingYes || "yes",
-    timingNo: t.timingNo || "no"
+    timingNo: t.timingNo || "no",
+    timingTotal: t.timingTotal || "Total",
+    timingTotalChip: t.timingTotalChip || "check {ms}ms"
+  };
+}
+
+/** Halt action-row timing chip text + accessible name (bilingual via message bag). */
+export function formatHaltTimingChip(
+  totalMs: number,
+  labels: Pick<TimingLabelBag, "timingTotal" | "timingTotalChip">
+): { text: string; ariaLabel: string } {
+  const text = labels.timingTotalChip.replace("{ms}", String(totalMs));
+  return {
+    text,
+    ariaLabel: `${labels.timingTotal}: ${totalMs}ms`
   };
 }
 

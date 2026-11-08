@@ -8,6 +8,15 @@ vinext/Sites may block writes to `.env.local` (EPERM). Settings MERGE_PT / probe
 
 Optional Playwright base URL override (CI job `settings-screenshot`): repository variable `PLAYWRIGHT_BASE_URL` (default `http://localhost:3000`). If it still contains `:3001`, CI posts a soft notice — prefer `:3000`.
 
+**Local browsers path:** Cursor/agent shells may set `PLAYWRIGHT_BROWSERS_PATH` to a sandbox cache. For local installs and `check:desktop` Playwright specs, unset it so Chromium lands in the user cache:
+
+```bash
+env -u PLAYWRIGHT_BROWSERS_PATH npx playwright install chromium
+env -u PLAYWRIGHT_BROWSERS_PATH npm run test:playwright:risk-result-desktop-block
+```
+
+See [README.md § Local Playwright](README.md#local-playwright-chromium).
+
 ## Branch protection (maintainers)
 
 Require the **`evaluation-diff`** status check on `main`:

@@ -51,6 +51,7 @@
         "<all_urls>"
       ],
       "js": [
+        "content/phishing-toast-mount.js",
         "content/content.js"
       ],
       "css": [

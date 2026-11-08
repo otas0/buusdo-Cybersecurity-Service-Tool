@@ -58,6 +58,9 @@ test("China health soft-fail when service ≠ buusdocst", async ({ page }) => {
 
   try {
     await page.goto(`http://127.0.0.1:${port}/`);
+    await expect(page.locator("#halt-next-steps")).toBeVisible();
+    await expect(page.getByTestId("china-halt-next-steps")).toBeVisible();
+    await expect(page.locator("#halt-next-steps .halt-steps li").first()).toBeVisible();
     const reachEl = page.locator("#workers-reach");
     await expect(reachEl).toHaveAttribute("data-state", "soft-fail", { timeout: 10_000 });
     await expect(page.locator("[data-reach-status]")).toContainText(/service 异常|unexpected service/i);

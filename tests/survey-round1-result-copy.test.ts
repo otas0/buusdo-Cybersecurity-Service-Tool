@@ -20,7 +20,14 @@ const SURVEY_KEYS = [
   "honestLimitNoCrowd",
   "honestLimitNoAv",
   "actionSensitiveNote",
-  "feedbackReportHaltCta"
+  "feedbackReportHaltCta",
+  "feedbackReportExportHint",
+  "feedbackDraftsAfterReport",
+  "timingTotalChip",
+  "faqParentsTitle",
+  "faqNoWipeTitle",
+  "faqNoAvTitle",
+  "faqNoCrowdTitle"
 ] as const;
 
 test("First Round survey copy keys exist in EN and pt-PT", () => {

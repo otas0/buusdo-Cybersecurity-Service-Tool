@@ -120,6 +120,23 @@ npm audit --omit=dev
 
 Or one gate: `npm run check` (unit tests → `npm run smoke:desktop-scan-resources` → typecheck → lint → threat:check → build). The desktop smoke is Playwright-free and asserts privacy-off clears scan-resources session storage.
 
+### Local Playwright (Chromium)
+
+Install browsers into the **user** cache (not a Cursor sandbox temp path):
+
+```bash
+env -u PLAYWRIGHT_BROWSERS_PATH npx playwright install chromium
+```
+
+If `PLAYWRIGHT_BROWSERS_PATH` points at a sandbox cache, Playwright may report “Executable doesn't exist” even after a successful download. Unset it for local runs:
+
+```bash
+env -u PLAYWRIGHT_BROWSERS_PATH npm run test:playwright:desktop-primary-path-pt
+env -u PLAYWRIGHT_BROWSERS_PATH npm run check:desktop   # needs desktop app on :3010 for proxy smoke
+```
+
+Default install location: `~/Library/Caches/ms-playwright` (macOS) or `~/.cache/ms-playwright` (Linux). CI sets `PLAYWRIGHT_BROWSERS_PATH` explicitly — do not copy that into local shells unless you mean to.
+
 `npm run threat:check` = validate curated list + regression. Exit codes: `0` OK, `1` dirty/invalid curated list or regression failure (CI should fail the job), `2` could not read the curated file.
 
 ## Operating the curated threat list

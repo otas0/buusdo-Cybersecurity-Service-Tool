@@ -267,6 +267,32 @@ h1 {
   border-color: var(--accent);
 }
 
+.result-danger-level {
+  margin: 4px 0 0;
+  font-size: 13px;
+  color: var(--muted, #8a8a8a);
+}
+
+.result-ignore-risk {
+  margin-top: 12px;
+  max-width: 48ch;
+  border-left: 3px solid var(--accent, #ff4d00);
+  padding-left: 10px;
+}
+
+.result-ignore-risk .kicker {
+  margin: 0;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.result-ignore-risk p:last-child {
+  margin: 6px 0 0;
+  font-size: 13px;
+  line-height: 1.45;
+}
+
 #statusWord {
   font-size: clamp(56px, 8vw, 84px);
   line-height: 0.9;

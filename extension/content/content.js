@@ -9,6 +9,8 @@
  * Toast dismiss (optional): SW reads chrome.storage.local.shieldToastDismiss and
  * passes dismiss:true|false on every SHIELD_TOAST. Content trusts that boolean only.
  * Uses appendToastAction so the button stays under data-testid=result-action-row.
+ *
+ * Halt phishing DOM: shared builder in phishing-toast-mount.js (fixture + content).
  */
 
 (function initShieldContent() {
@@ -16,22 +18,21 @@
   window.__portugalCpShieldContent = true;
 
   const api = globalThis.browser ?? globalThis.chrome;
+  const mount = globalThis.__buusdoPhishingToastMount;
 
   const TOAST_HOST_ID = "portugal-cp-shield-toast-host";
   /** Default when SHIELD_TOAST omits dismiss (SW always sends a boolean). */
   const TOAST_DISMISS_DEFAULT = false;
 
-  const COPY = {
+  const TRACKER_COPY = {
     en: {
       tracker: "Blocked {n} Tracker",
       trackers: "Blocked {n} Trackers",
-      phishing: "Phishing pattern blocked",
       dismiss: "Dismiss"
     },
     "pt-PT": {
       tracker: "Bloqueado {n} Rastreador",
       trackers: "Bloqueados {n} Rastreadores",
-      phishing: "Padrão de phishing bloqueado",
       dismiss: "Fechar"
     }
   };
@@ -43,13 +44,11 @@
     host.id = TOAST_HOST_ID;
     host.setAttribute("aria-live", "polite");
     host.setAttribute("aria-relevant", "additions");
-    // Attach to documentElement so we still work on unusual pages.
     (document.documentElement || document.body).appendChild(host);
     return host;
   }
 
   /**
-   * Append a dismiss/Leave control under the toast action row (after the label span).
    * @param {HTMLElement} row data-testid=result-action-row node
    * @param {HTMLElement} control button/link to append
    */
@@ -62,7 +61,6 @@
   }
 
   /**
-   * Trust boolean `dismiss` from the service worker only (no storage read — avoids race).
    * @param {{ dismiss?: boolean }} payload
    */
   function resolveToastDismissFlag(payload) {
@@ -75,28 +73,27 @@
    */
   async function showToast(payload) {
     const lang = payload.lang === "pt-PT" ? "pt-PT" : "en";
-    const table = COPY[lang];
     const count = Math.max(1, Number(payload.count) || 1);
-
-    let text;
-    if (payload.kind === "phishing") {
-      text = table.phishing;
-    } else {
-      text = (count === 1 ? table.tracker : table.trackers).replace("{n}", String(count));
-    }
-
     const host = ensureHost();
-    const el = document.createElement("div");
-    el.className =
-      "portugal-cp-shield-toast" +
-      (payload.kind === "phishing" ? " portugal-cp-shield-toast--danger" : " portugal-cp-shield-toast--caution");
-    // Keep dismiss/Leave controls inside this node when added — same testid as RiskResult.
-    // Label span stays first; appendToastAction() adds buttons after it.
-    el.setAttribute("data-testid", "result-action-row");
-    const label = document.createElement("span");
-    label.className = "portugal-cp-shield-toast__label";
-    label.textContent = text;
-    el.appendChild(label);
+
+    let el;
+    if (payload.kind === "phishing") {
+      if (!mount || typeof mount.buildPhishingToast !== "function") {
+        console.warn("[buusdo] phishing-toast-mount.js missing — skip Halt toast");
+        return;
+      }
+      el = mount.buildPhishingToast(document, { lang });
+    } else {
+      const table = TRACKER_COPY[lang];
+      const text = (count === 1 ? table.tracker : table.trackers).replace("{n}", String(count));
+      el = document.createElement("div");
+      el.className = "portugal-cp-shield-toast portugal-cp-shield-toast--caution";
+      el.setAttribute("data-testid", "result-action-row");
+      const label = document.createElement("span");
+      label.className = "portugal-cp-shield-toast__label";
+      label.textContent = text;
+      el.appendChild(label);
+    }
 
     let hideTimer = 0;
     let fadeTimer = 0;
@@ -109,10 +106,14 @@
 
     const dismissOn = resolveToastDismissFlag(payload);
     if (dismissOn) {
+      const dismissText =
+        payload.kind === "phishing" && mount
+          ? mount.dismissLabel(lang)
+          : TRACKER_COPY[lang].dismiss;
       const btn = document.createElement("button");
       btn.type = "button";
-      btn.textContent = table.dismiss;
-      btn.setAttribute("aria-label", table.dismiss);
+      btn.textContent = dismissText;
+      btn.setAttribute("aria-label", dismissText);
       btn.addEventListener("click", (ev) => {
         ev.preventDefault();
         ev.stopPropagation();
@@ -122,11 +123,8 @@
     }
 
     host.appendChild(el);
-
-    // Animate in / out with CSS classes already defined in toast.css.
     requestAnimationFrame(() => el.classList.add("is-visible"));
-
-    hideTimer = window.setTimeout(removeToast, 3200);
+    hideTimer = window.setTimeout(removeToast, payload.kind === "phishing" ? 7200 : 3200);
   }
 
   api.runtime.onMessage.addListener((message, _sender, sendResponse) => {

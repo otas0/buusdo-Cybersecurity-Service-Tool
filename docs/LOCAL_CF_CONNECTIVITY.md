@@ -43,5 +43,32 @@ At the same time:
 
 ## Operator rule (detail)
 
-
 Treat **remote health OK + local timeout** as a **connectivity** issue. Fix the network or use CI smoke; only escalate as an outage when health fails from a known-good runner.
+
+## Staging (`buusdocst-staging`) — Actions-only assert when laptop times out
+
+Same TCP filter often hits **staging** as production:
+
+`https://buusdocst-staging.mtsu.workers.dev`
+
+**If local `curl` / `npm run assert:staging-health` times out after a successful `wrangler deploy`:**
+
+1. Do **not** redeploy solely for the timeout.
+2. Confirm from GitHub Actions (ubuntu is Cloudflare-reachable):
+   - Workflow **Deploy Cloudflare** (staging target) — post-deploy health step when `STAGING_HEALTH_URL` is set
+   - Workflow **Health monitor** / **Production health smoke** — staging gate when `vars.STAGING_HEALTH_URL` is set
+3. Laptop substitutes that stay valid without Workers reachability:
+   ```bash
+   # Privacy + contact/FAQ against local vinext (same copy as staging after deploy)
+   PLAYWRIGHT_BASE_URL=http://localhost:3000 npm run test:playwright:privacy
+   npm run test:playwright:halt-survey
+   ```
+4. Log “deploy OK + local CF timeout + Actions assert” in the deploy notes — not as a Worker outage.
+
+Actions-only checklist:
+
+```bash
+# On ubuntu-latest (CI), not on a filtered laptop:
+STAGING_HEALTH_URL=https://buusdocst-staging.mtsu.workers.dev npm run assert:staging-health
+PLAYWRIGHT_BASE_URL=https://buusdocst-staging.mtsu.workers.dev npm run test:playwright:privacy
+```

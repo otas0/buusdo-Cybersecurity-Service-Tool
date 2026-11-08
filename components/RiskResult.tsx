@@ -6,7 +6,12 @@ import { probeBlockedPair } from "../security/probe-blocked-copy";
 import { canPersistLists } from "./privacy-storage";
 import { listFeedbackDrafts, saveFeedbackDraft, type FeedbackMark } from "./feedback-drafts";
 import { CopyEnvLine } from "./CopyEnvLine";
-import { formatTimingFlagChips, formatTimingSummaryLine, timingLabels } from "./timing-copy";
+import {
+  formatHaltTimingChip,
+  formatTimingFlagChips,
+  formatTimingSummaryLine,
+  timingLabels
+} from "./timing-copy";
 import { levelToLight, TrafficLights } from "./TrafficLights";
 import type { Locale } from "../i18n/messages";
 import { riskWhyItems, whyEvidenceDisplay } from "./risk-why-items";
@@ -67,13 +72,20 @@ export function RiskResult({ analysis, t, onReset }: { analysis: Analysis; t: Re
       return;
     }
     setDraftMarks(result.drafts.filter((item) => item.domain === feedbackHost).map((item) => item.mark));
-    setFeedbackNote(t.feedbackSaved);
+    setFeedbackNote(mark === "report" ? t.feedbackReportExportHint : t.feedbackSaved);
   }
 
   function openSettingsData() {
     const locale = pt ? "pt-PT" : "en";
     if (typeof window !== "undefined") {
       window.location.assign(`/${locale}/settings#settings-privacy`);
+    }
+  }
+
+  function openSettingsFeedback() {
+    const locale = pt ? "pt-PT" : "en";
+    if (typeof window !== "undefined") {
+      window.location.assign(`/${locale}/settings#settings-feedback-drafts`);
     }
   }
 
@@ -376,6 +388,23 @@ export function RiskResult({ analysis, t, onReset }: { analysis: Analysis; t: Re
               {timingLabels(t).timingAmbiguousProbe}
             </span>
           ) : null}
+          {showIgnoreRisk && analysis.timing?.totalMs != null ? (
+            (() => {
+              const chip = formatHaltTimingChip(analysis.timing.totalMs, timingLabels(t));
+              return (
+                <span
+                  className="timing-flag-chip is-on"
+                  data-testid="halt-timing-chip"
+                  data-flag="totalMs"
+                  data-on="1"
+                  title={chip.ariaLabel}
+                  aria-label={chip.ariaLabel}
+                >
+                  {chip.text}
+                </span>
+              );
+            })()
+          ) : null}
           {official && <a className="text-button" href={`https://${official}`} target="_blank" rel="noreferrer">{t.verified}</a>}
           {risk.recommendation === "LEAVE_AND_BLOCK" && (
             <a
@@ -470,9 +499,14 @@ export function RiskResult({ analysis, t, onReset }: { analysis: Analysis; t: Re
           </button>
         </div>
         {feedbackNote && (
-          <p className="scope-note" role="status">
+          <p className="scope-note" role="status" data-testid="feedback-note">
             {feedbackNote}{" "}
-            {!canPersistLists() && (
+            {feedbackNote === t.feedbackReportExportHint ? (
+              <button type="button" className="text-button" onClick={openSettingsFeedback}>
+                {t.feedbackReportExportSettings}
+              </button>
+            ) : null}
+            {!canPersistLists() && feedbackNote !== t.feedbackReportExportHint && (
               <button type="button" className="text-button" onClick={openSettingsData}>
                 {t.feedbackOpenSettings}
               </button>

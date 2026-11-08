@@ -33,6 +33,10 @@ Actions **Pages China** 将 `china-pages/` 发布到 `otas0/buusdocst`（secret 
 
 Pages **不能**替代 `POST /api/check`。
 
+### Halt next-steps on Pages
+
+`index.html` / `en.html` include `#halt-next-steps` (`data-testid="china-halt-next-steps"`): the same leave / no-credentials / verify / optional-report summary as the Workers Halt result. Full interactive Halt UI (traffic lights, report draft, timing) remains on Workers `/en` only — open **打开完整检查** / **Open full check** when Cloudflare is reachable.
+
 ## 运维
 
 - 改 `china-pages/` 后推产品仓 `main` → Actions 同步到 `buusdocst`

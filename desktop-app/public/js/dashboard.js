@@ -28,6 +28,10 @@ const els = {
   statusWord: document.getElementById("statusWord"),
   statusHost: document.getElementById("statusHost"),
   statusDetail: document.getElementById("statusDetail"),
+  resultDangerLevel: document.getElementById("resultDangerLevel"),
+  resultIgnoreRisk: document.getElementById("resultIgnoreRisk"),
+  resultIgnoreRiskTitle: document.getElementById("resultIgnoreRiskTitle"),
+  resultIgnoreRiskBody: document.getElementById("resultIgnoreRiskBody"),
   trackersLabel: document.getElementById("trackersLabel"),
   phishingLabel: document.getElementById("phishingLabel"),
   trackersValue: document.getElementById("trackersValue"),
@@ -533,10 +537,28 @@ function wordFor(level) {
   return t(lang, "statusStandby");
 }
 
+function setHaltSurveyBlocks(show) {
+  if (els.resultDangerLevel) {
+    if (show) {
+      els.resultDangerLevel.hidden = false;
+      els.resultDangerLevel.textContent = `${t(lang, "dangerLevelLabel")}: ${t(lang, "statusDanger")}`;
+    } else {
+      els.resultDangerLevel.hidden = true;
+      els.resultDangerLevel.textContent = "";
+    }
+  }
+  if (els.resultIgnoreRisk) {
+    els.resultIgnoreRisk.hidden = !show;
+    if (els.resultIgnoreRiskTitle) els.resultIgnoreRiskTitle.textContent = t(lang, "ignoreRiskTitle");
+    if (els.resultIgnoreRiskBody) els.resultIgnoreRiskBody.textContent = t(lang, "ignoreRiskBody");
+  }
+}
+
 function setReadout(level) {
   const shown = level === "idle" ? "idle" : level;
   els.readout.dataset.level = shown;
   els.statusWord.textContent = wordFor(shown);
+  setHaltSurveyBlocks(shown === "danger");
   renderStatusHostChip();
 }
 

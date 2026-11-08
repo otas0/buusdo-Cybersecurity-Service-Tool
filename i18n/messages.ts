@@ -7,7 +7,8 @@ export const messages = {
     lightSafe: "Clear",
     lightCaution: "Hold",
     lightDanger: "Halt",
-    lightIdle: "Type any website address. We check our own threat list, structure, brand lookalikes, DNS and live response.",
+    lightIdle:
+      "Type any website address. We check our own threat list, structure, brand lookalikes, DNS and live response. On Halt: leave, verify on an official channel you already trust, then optionally report.",
     lightLimited: "Clear means no strong warning from the checks run — not a promise that the site is safe.",
     privacyNote:
       "Default: nothing is stored. Diagnostics only help fix technical problems — never the address, and never for public release.",
@@ -98,6 +99,22 @@ export const messages = {
       "This is not an antivirus product. Closing the tab stops further entry of data here; it does not scan or clean your device.",
     actionSensitiveNote:
       "Do not enter sensitive information unless you can confirm the address through an independent source.",
+    feedbackReportExportHint:
+      "Draft saved. Open Settings → Feedback drafts to export a batches/*.json file for operator review — nothing is uploaded.",
+    feedbackReportExportSettings: "Open Settings → Feedback drafts",
+    timingTotalChip: "check {ms}ms",
+    faqParentsTitle: "For parents and teachers",
+    faqParentsIntro:
+      "Short answers about what this tool does and does not do — useful before you ask a student or child to trust a Halt result.",
+    faqNoWipeTitle: "Can buusdo erase data a site already took?",
+    faqNoWipeBody:
+      "No. Change passwords on the real official site if anything was entered, and watch bank or email alerts.",
+    faqNoAvTitle: "Is this antivirus?",
+    faqNoAvBody:
+      "No. Closing the tab stops further data entry on that address; it does not scan or clean the device.",
+    faqNoCrowdTitle: "Does the score come from other users’ votes?",
+    faqNoCrowdBody:
+      "No. Results use buusdo’s curated threat list and address signals — not a public “how many people flagged this” count.",
     // EVAL surface-copy keys (no website block UI): protection, blockedInPrototype, removed, currentlyBlocked
     verified: "Open the listed domain",
     protection: "Use the extension or desktop app to update protection lists.",
@@ -326,6 +343,9 @@ export const messages = {
     feedbackFalsePositive: "Wrong flag — draft false positive",
     feedbackReportHaltCta: "Report this website",
     feedbackSaved: "Saved on this device.",
+    feedbackDraftsAfterReport:
+      "After a Halt report draft: tick the checklist below, export batches/*.json, then an operator runs npm run threat:apply. Nothing uploads from this browser.",
+    feedbackDismissAfterReportHint: "Dismiss hint",
     feedbackNeedLocal: "Choose This device only or Diagnostics in Settings to keep feedback drafts.",
     feedbackAlready: "Already in local drafts.",
     feedbackDraftsTitle: "Feedback drafts",
@@ -347,7 +367,8 @@ export const messages = {
     lightSafe: "Limpo",
     lightCaution: "Reter",
     lightDanger: "Parar",
-    lightIdle: "Escreva qualquer endereço de site. Verificamos a lista própria de ameaças, estrutura, marcas parecidas, DNS e resposta em direto.",
+    lightIdle:
+      "Escreva qualquer endereço de site. Verificamos a lista própria de ameaças, estrutura, marcas parecidas, DNS e resposta em direto. Em Parar: saia, verifique num canal oficial em que já confia e, se quiser, denuncie.",
     lightLimited: "Limpo significa que não houve alerta forte nas verificações feitas — não é uma promessa de que o site é seguro.",
     privacyNote:
       "Predefinição: nada é guardado. O diagnóstico só ajuda a corrigir problemas técnicos — nunca o endereço, e nunca para divulgação pública.",
@@ -438,6 +459,22 @@ export const messages = {
       "Isto não é um produto antivírus. Fechar o separador impede que continue a introduzir dados aqui; não analisa nem limpa o dispositivo.",
     actionSensitiveNote:
       "Não introduza informação sensível sem confirmar o endereço através de uma fonte independente.",
+    feedbackReportExportHint:
+      "Rascunho guardado. Abra Definições → Rascunhos de feedback para exportar um ficheiro batches/*.json para revisão — nada é enviado.",
+    feedbackReportExportSettings: "Abrir Definições → Rascunhos de feedback",
+    timingTotalChip: "verificação {ms}ms",
+    faqParentsTitle: "Para pais e professores",
+    faqParentsIntro:
+      "Respostas curtas sobre o que esta ferramenta faz e não faz — úteis antes de pedir a um aluno ou filho que confie num resultado Parar.",
+    faqNoWipeTitle: "O buusdo consegue apagar dados que um site já recolheu?",
+    faqNoWipeBody:
+      "Não. Se introduziu dados, altere palavras-passe no site oficial verdadeiro e acompanhe alertas do banco ou email.",
+    faqNoAvTitle: "Isto é antivírus?",
+    faqNoAvBody:
+      "Não. Fechar o separador impede que continue a introduzir dados nesse endereço; não analisa nem limpa o dispositivo.",
+    faqNoCrowdTitle: "O resultado vem de votos de outros utilizadores?",
+    faqNoCrowdBody:
+      "Não. Os resultados usam a lista curada do buusdo e sinais do endereço — não um contador público de denúncias.",
     verified: "Abrir o domínio listado",
     protection: "Use a extensão ou a app para atualizar as listas de proteção.",
     currentlyBlocked: "fica bloqueado na extensão ou na app quando o adicionar aí.",
@@ -665,6 +702,9 @@ export const messages = {
     feedbackFalsePositive: "Alerta errado — rascunho de falso positivo",
     feedbackReportHaltCta: "Denunciar este site",
     feedbackSaved: "Guardado neste dispositivo.",
+    feedbackDraftsAfterReport:
+      "Depois de um rascunho de denúncia em Parar: marque a checklist abaixo, exporte batches/*.json e um operador corre npm run threat:apply. Nada é enviado a partir deste navegador.",
+    feedbackDismissAfterReportHint: "Dispensar aviso",
     feedbackNeedLocal: "Escolha «Só neste dispositivo» ou «Diagnóstico» nas Definições para guardar rascunhos.",
     feedbackAlready: "Já está nos rascunhos locais.",
     feedbackDraftsTitle: "Rascunhos de feedback",
