@@ -30,6 +30,8 @@ Verifique um site antes de confiar — lista própria de ameaças, interface mul
 
 ## Detailed description (EN)
 
+<!-- Education-framing ban: no parents/teachers/school/classroom/student/demo wording. -->
+
 buusdo Cybersecurity Service Tool (Buusdo product line) helps you check a website address before you enter sensitive information. Checks use our own curated threat list and live reachability — not third-party reputation APIs.
 
 Privacy default: nothing is stored. Optional this-device-only block and trust lists stay on your computer; you can export or import them as JSON or QR. There is no cloud account or cross-device list sync.

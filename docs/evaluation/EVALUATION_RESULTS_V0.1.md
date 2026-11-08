@@ -43,7 +43,7 @@ Every scenario's actual input, parsed domain, signals, decision, recommendation,
 - **Completed scenario failures:** none.
 - **TEST_EXPECTATION_ERROR, pre-execution:** the first synthetic punycode fixture was not a valid URL. It was replaced with the repository's existing validated fictional punycode fixture before scenario execution. No product behavior changed.
 - **IMPLEMENTATION_DEFECT, evaluation harness:** the first language-presence check included a redundant comparison between disjoint TypeScript literal unions. The comparison was removed; the non-empty bilingual pair check is unchanged. No product behavior changed.
-- **DESIGN_LIMITATION, low severity:** block and trust are independent lists, so the same domain can exist in both. The behavior is deterministic and documented, but a future version should define precedence. It does not block the teacher demonstration.
+- **DESIGN_LIMITATION, low severity:** block and trust are independent lists, so the same domain can exist in both. The behavior is deterministic and documented, but a future version should define precedence. It does not block the live product check flow.
 
 ### V0.1 evaluation corrections
 

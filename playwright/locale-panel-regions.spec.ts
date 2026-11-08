@@ -50,4 +50,18 @@ test.describe("language panel regions", () => {
     await page.getByTestId("locale-search").fill("zzzz-no-such-locale");
     await expect(page.getByTestId("locale-empty")).toHaveText(afPack.langPanelNoMatches);
   });
+
+  test("pt-PT opens with europe region expanded by default", async ({ page }) => {
+    await page.goto(`${base}/pt-PT`, { waitUntil: "domcontentloaded" });
+    await waitForReactHydration(page, '[data-testid="locale-toggle"]');
+    await page.getByTestId("locale-toggle").click();
+    await expect(page.getByTestId("locale-panel")).toBeVisible();
+    await expect(page.getByTestId("locale-frequent")).toHaveCount(0);
+    const europe = page.getByTestId("locale-region-europe");
+    await expect(europe.getByRole("button").first()).toHaveAttribute("aria-expanded", "true");
+    await expect(page.getByTestId("locale-option-pt-PT")).toBeVisible();
+    await expect(page.getByTestId("locale-option-it")).toBeVisible();
+    await expect(page.getByTestId("locale-option-en")).toHaveCount(0);
+  });
+
 });
