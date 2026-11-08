@@ -152,9 +152,11 @@ const ALIASES: Record<string, string> = {
   "st-ZA": "st",
   "tn-ZA": "tn",
   "ss-ZA": "ss",
+  "ss-SZ": "ss",
   "ve-ZA": "ve",
   "ts-ZA": "ts",
   "nr-ZA": "nr",
+  "nr-ZW": "nr",
   "mi-NZ": "mi",
   iw: "he", // not shipped; normalize only
   "en-US": "en",

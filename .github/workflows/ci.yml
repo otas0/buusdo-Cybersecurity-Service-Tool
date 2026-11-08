@@ -43,6 +43,12 @@ jobs:
           npm run test
           echo "::notice::shield-lists classic fixture covered in tests/shield-lists.test.ts (mjs + shield-lists.classic.js parity)"
 
+      - name: Pack coverage ratios (locale notice)
+        run: |
+          summary="$(node scripts/print-pack-coverage-summary.mjs)"
+          echo "$summary"
+          echo "::notice::$summary"
+
       - name: QR browser bundle soft-check
         run: |
           if [ ! -f shared/qrcode-browser.js ]; then

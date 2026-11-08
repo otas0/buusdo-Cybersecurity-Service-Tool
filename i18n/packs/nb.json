@@ -144,5 +144,8 @@
   "ambiguousProbeNotPhishing": "Bot-blokkering / begrensning på sondagen er ikke phishing-bevis — åpne nettstedet i en vanlig nettleser hvis du fortsatt trenger det.",
   "evidenceProbeTimeoutTitle": "Live-sjekken ble tidsavbrutt",
   "evidenceProbeTimeoutDetail": "Nettstedet svarte ikke i tide.",
-  "timingAmbiguousProbe": "ambiguousProbeStatus"
+  "timingAmbiguousProbe": "ambiguousProbeStatus",
+  "historyCsvFilterProbeBlocked": "kun probe-blocked",
+  "historyFilterProbeBlocked": "Vis bare probe-blocked-sjekker",
+  "historyFilterProbeBlockedEmpty": "Ingen probe-blocked-sjekker i nylig historikk."
 }

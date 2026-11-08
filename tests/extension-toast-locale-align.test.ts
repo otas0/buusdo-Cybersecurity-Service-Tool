@@ -37,6 +37,15 @@ test("extension shared i18n has toast Halt chips for mi/th/vi (SEA overlay)", ()
   assert.match(shared, /"toastPhishing":\s*"หยุด"/);
   assert.match(shared, /"toastPhishing":\s*"Dừng"/);
   assert.match(shared, /"toastPhishing":\s*"停止"/); // ja Halt
-  assert.match(shared, /"toastPhishing":\s*"Halt"/); // de
+  // de / fr / es Halt chips — native instrument verbs (not EN-only bag presence)
+  function toastChip(id: string, chip: string) {
+    const re = new RegExp(
+      `(?:^|\\n)\\s{2}(?:"${id}"|${id})\\s*:\\s*\\{[\\s\\S]*?"toastPhishing"\\s*:\\s*"${chip}"`
+    );
+    assert.match(shared, re, `${id} toastPhishing should be ${chip}`);
+  }
+  toastChip("de", "Halt");
+  toastChip("fr", "Stop");
+  toastChip("es", "Alto");
   assert.match(shared, /toastPhishing:\s*"Halt"|toastPhishing:\s*"停止"|toastPhishing:\s*"Parar"/);
 });

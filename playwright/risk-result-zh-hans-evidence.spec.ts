@@ -154,7 +154,11 @@ test.describe("live Halt evidence (soft)", () => {
       .or(page.locator('input[name="url"], input[type="url"], input[data-testid="check-url"]').first());
     await expect(input.first()).toBeVisible({ timeout: 20_000 });
     await input.first().fill(host);
-    const go = page.getByRole("button", { name: /运行|Go|Run|檢查|检查|Ausführen|ตรวจ|เริ่ม/i }).first();
+    const go = page
+      .getByRole("button", {
+        name: /运行|Go|Run|檢查|检查|Ausführen|ตรวจ|เริ่ม|Voer uit|Qalisa|Lancer|Ejecutar/i
+      })
+      .first();
     await go.click();
     const evidence = page.getByTestId("evidence-known-threat");
     await expect(evidence).toBeVisible({ timeout: 45_000 });
@@ -171,5 +175,13 @@ test.describe("live Halt evidence (soft)", () => {
 
   test("known-threat Halt shows evidence-known-threat on /th", async ({ page }) => {
     await runKnownThreatOnLocale(page, "/th", /ภัย|คุกคาม|รายการ/);
+  });
+
+  test("known-threat Halt shows evidence-known-threat on /af", async ({ page }) => {
+    await runKnownThreatOnLocale(page, "/af", /bedreiging|Bekende|sein/i);
+  });
+
+  test("known-threat Halt shows evidence-known-threat on /zu", async ({ page }) => {
+    await runKnownThreatOnLocale(page, "/zu", /nsongo|Uphawu|eyaziwayo/i);
   });
 });

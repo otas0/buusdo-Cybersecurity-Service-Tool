@@ -54,4 +54,8 @@ test("CHINA_GITHUB_PAGES locale table matches install Workers settings hrefs", (
   assert.match(enEntry, /Open full check \(EN\)/);
   assert.doesNotMatch(enInstall, /Open full check<\/a>/);
   assert.doesNotMatch(enEntry, /Halt detail/);
+  const enPrivacy = readFileSync(path.join(repo, "china-pages/privacy-en.html"), "utf8");
+  assert.match(enPrivacy, /Open full check \(EN\)/);
+  assert.match(enPrivacy, /data-testid="china-workers-en"/);
+  assert.doesNotMatch(enPrivacy, />Open full check<\/a/);
 });

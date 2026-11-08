@@ -39,7 +39,10 @@ const MAP = {
   langLabel: "navCheck",
   toastPhishing: "lightDanger",
   toastTracker: "lightCaution",
-  toastTrackers: "lightCaution"
+  toastTrackers: "lightCaution",
+  downloadA4Poster: "downloadA4Poster",
+  downloadA4PosterShort: "downloadA4PosterShort",
+  downloadA4PosterHint: "downloadA4PosterHint"
 };
 
 const markerStart = "/* __EXTENSION_SEA_PACK_OVERLAY_START__ */";

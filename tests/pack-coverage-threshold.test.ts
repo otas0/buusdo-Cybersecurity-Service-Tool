@@ -14,7 +14,7 @@ test("FULL_PACK_MIN_KEYS is exported and near EN snapshot size", () => {
   console.info(summary);
   assert.match(summary, /minKeys=\d+/);
   assert.match(summary, /xh=\d+%:(full|partial)/);
-  for (const id of ["xh", "af", "zu", "st", "tn", "nso", "ss", "ve", "ts", "nr"]) {
+  for (const id of ["xh", "af", "zu", "st", "tn", "nso", "ss", "ve", "ts", "nr", "fr", "es", "de"]) {
     assert.equal(isFullLocalePack(id), true, id);
     assert.equal(showsPartialPackBanner(id), false, id);
   }

@@ -144,5 +144,8 @@
   "ambiguousProbeNotPhishing": "Bot-esto / rajoitus tunnistuksessa ei ole phishing-todiste — avaa sivusto tavallisessa selaimessa, jos yhä tarvitset sitä.",
   "evidenceProbeTimeoutTitle": "Live-tarkistus aikakatkaistiin",
   "evidenceProbeTimeoutDetail": "Sivusto ei vastannut ajoissa.",
-  "timingAmbiguousProbe": "ambiguousProbeStatus"
+  "timingAmbiguousProbe": "ambiguousProbeStatus",
+  "historyCsvFilterProbeBlocked": "vain probe-blocked",
+  "historyFilterProbeBlocked": "Näytä vain probe-blocked-tarkistukset",
+  "historyFilterProbeBlockedEmpty": "Ei probe-blocked-tarkistuksia äskettäisessä historiassa."
 }

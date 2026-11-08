@@ -52,7 +52,11 @@ test.describe("locale recommend soft prompt", () => {
     { tag: "xh-ZA", expectedHint: /isiXhosa|Xhosa|xh/i },
     { tag: "th-TH", expectedHint: /ไทย|Thai|th/i },
     { tag: "af-ZA", expectedHint: /Afrikaans|af/i },
-    { tag: "zu-ZA", expectedHint: /isiZulu|Zulu|zu/i }
+    { tag: "zu-ZA", expectedHint: /isiZulu|Zulu|zu/i },
+    { tag: "ss-ZA", expectedHint: /siSwati|Swati|ss/i },
+    { tag: "ve-ZA", expectedHint: /Venda|Tshiven|ve/i },
+    { tag: "ts-ZA", expectedHint: /Xitsonga|Tsonga|ts/i },
+    { tag: "nr-ZA", expectedHint: /Ndebele|isiNdebele|nr/i }
   ] as const) {
     test(`first /en visit opens recommend when Accept-Language prefers ${tag}`, async ({
       page,

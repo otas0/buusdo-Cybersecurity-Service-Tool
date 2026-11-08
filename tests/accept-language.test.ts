@@ -41,6 +41,12 @@ test("localeFromAcceptLanguage Southern Africa + Māori region tags", () => {
   assert.equal(localeFromAcceptLanguage("nso-ZA;q=0.9"), "nso");
   assert.equal(localeFromAcceptLanguage("st-ZA;q=0.9"), "st");
   assert.equal(localeFromAcceptLanguage("tn-ZA;q=0.9"), "tn");
+  assert.equal(localeFromAcceptLanguage("ss-ZA;q=0.9"), "ss");
+  assert.equal(localeFromAcceptLanguage("ss-SZ;q=0.8"), "ss");
+  assert.equal(localeFromAcceptLanguage("ve-ZA;q=0.9"), "ve");
+  assert.equal(localeFromAcceptLanguage("ts-ZA;q=0.9"), "ts");
+  assert.equal(localeFromAcceptLanguage("nr-ZA;q=0.9"), "nr");
+  assert.equal(localeFromAcceptLanguage("nr-ZW;q=0.8"), "nr");
   assert.equal(localeFromAcceptLanguage("mi-NZ,en;q=0.6"), "mi");
 });
 

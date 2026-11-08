@@ -25,7 +25,21 @@ function regionHintsFromBrowser(): LocaleRegion[] {
     if (lower.startsWith("th") || lower.startsWith("vi") || lower.startsWith("id") || lower.startsWith("ms")) {
       regions.add("southeast-asia");
     }
-    if (lower.startsWith("af") || lower.startsWith("zu") || lower.includes("-za")) {
+    if (
+      lower.startsWith("af") ||
+      lower.startsWith("zu") ||
+      lower.startsWith("xh") ||
+      lower.startsWith("ss") ||
+      lower.startsWith("ve") ||
+      lower.startsWith("ts") ||
+      lower.startsWith("nr") ||
+      lower.startsWith("nso") ||
+      lower.startsWith("st") ||
+      lower.startsWith("tn") ||
+      lower.includes("-za") ||
+      lower.includes("-sz") ||
+      lower.includes("-zw")
+    ) {
       regions.add("southern-africa");
     }
     if (lower.startsWith("mi") || lower.includes("-nz")) regions.add("pacific");

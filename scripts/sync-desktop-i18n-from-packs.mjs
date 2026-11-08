@@ -37,8 +37,29 @@ const MAP = {
   langLabel: "navAriaLabel",
   // Desktop chrome leftovers commonly left in EN on ja — map when pack has a close key.
   detailSafe: "evidenceNoMatchTitle",
-  detailDanger: "evidenceLookalikeTitle"
+  detailDanger: "evidenceLookalikeTitle",
+  // Account / lists — website pack keys (survive sync without one-shot ja edits)
+  accountTitle: "accountTitle",
+  accountHint: "accountHint",
+  accountEmailPlaceholder: "accountEmailPlaceholder",
+  accountSendLink: "accountSendLink",
+  accountSyncToggle: "accountSyncToggle",
+  accountSyncNow: "accountSyncNow",
+  accountSignOut: "accountSignOut",
+  accountSignedIn: "accountSignedInAs",
+  accountSignedOut: "accountSignedOut",
+  accountMagicSent: "accountMagicSent",
+  accountSyncMerged: "accountSyncMerged",
+  accountDisabled: "accountDisabled",
+  accountOfflineBackup: "accountOfflineBackup",
+  accountSyncFail: "accountError",
+  listsTitle: "listsOfflineKicker",
+  listsHint: "listsOfflineIntro",
+  pathSyncAccount: "accountSyncToggle"
 };
+
+// Desktop-only ja strings (website / lists UI without pack twins). Applied after MAP.
+const jaExtraPath = path.join(root, "desktop-app/public/js/i18n-ja-extra.json");
 
 const markerStart = "/* __DESKTOP_PACK_OVERLAY_START__ */";
 const markerEnd = "/* __DESKTOP_PACK_OVERLAY_END__ */";
@@ -129,6 +150,11 @@ const bags = {
   ),
   ja: applyOverlay({ ...enBag, ...(extractBag(src, "ja") || {}) }, packs.ja)
 };
+
+if (fs.existsSync(jaExtraPath)) {
+  const jaExtra = JSON.parse(fs.readFileSync(jaExtraPath, "utf8"));
+  Object.assign(bags.ja, jaExtra);
+}
 
 const block = buildBlock(bags);
 let next = src;
