@@ -18,4 +18,18 @@ for (const id of ["sv", "da"] as const) {
     assert.ok(pack.privacyPolicyLimitsBody?.trim());
     assert.ok(pack.probeBlockedGenericDetail?.includes("{status}"));
   });
+
+  test(`${id} pack Settings chrome beyond intro is localized`, () => {
+    const pack = JSON.parse(readFileSync(path.join("i18n/packs", `${id}.json`), "utf8")) as Record<
+      string,
+      string
+    >;
+    const en = getMessages("en");
+    const bag = getMessages(id);
+    assert.ok(pack.desktopDownloadsIntro?.trim());
+    assert.ok(pack.feedbackHint?.trim());
+    assert.ok(pack.feedbackOpenSettings?.trim());
+    assert.notEqual(bag.desktopDownloadsIntro, en.desktopDownloadsIntro);
+    assert.notEqual(bag.feedbackHint, en.feedbackHint);
+  });
 }

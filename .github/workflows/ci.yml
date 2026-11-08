@@ -111,6 +111,16 @@ jobs:
       - name: Typecheck
         run: npm run typecheck
 
+      - name: Promo posters cachebust (build + diff public/promo)
+        run: |
+          npm run assert:promo-cachebust
+          # Fail if committed public/promo drifted from rebuild (except .cachebust already asserted).
+          if ! git diff --exit-code -- public/promo/poster.html public/promo/.cachebust public/promo/china-qr.svg public/promo/product-qr.svg; then
+            echo "::error::public/promo drifted — run npm run build:promo-posters and commit"
+            git diff --stat -- public/promo || true
+            exit 1
+          fi
+
       - name: Lint
         run: npm run lint
 
@@ -749,6 +759,14 @@ jobs:
       - name: Extension phishing toast fixture
         if: steps.pw_install.outcome == 'success'
         run: npm run test:playwright:extension-toast-phishing
+
+      - name: Extension popup wordmark (muted u on dark)
+        if: steps.pw_install.outcome == 'success'
+        run: |
+          export PLAYWRIGHT_SKIP_WEBSERVER=1
+          npm run test:playwright:extension-popup-wordmark
+        env:
+          PLAYWRIGHT_SKIP_WEBSERVER: "1"
 
       - name: Desktop Halt ignore-risk
         if: steps.pw_install.outcome == 'success'

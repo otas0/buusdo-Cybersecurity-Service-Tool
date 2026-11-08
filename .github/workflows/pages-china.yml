@@ -74,3 +74,25 @@ jobs:
             assert_url "$page" 'data-china-lang'
           done
           assert_url "/" 'china-workers-locale-hint'
+
+      - name: Assert live wordmark has no Halt-orange u-card
+        run: |
+          set -euo pipefail
+          base="https://otas0.github.io/buusdocst"
+          url="${base}/assets/buusdo-wordmark.png"
+          curl -sS -L -o /tmp/china-wordmark.png "$url"
+          node --input-type=module <<'NODE'
+          import sharp from "sharp";
+          const { data, info } = await sharp("/tmp/china-wordmark.png").ensureAlpha().raw().toBuffer({ resolveWithObject: true });
+          let orange = 0;
+          for (let i = 0; i < data.length; i += info.channels) {
+            if (data[i + 3] < 200) continue;
+            const r = data[i], g = data[i + 1], b = data[i + 2];
+            if (r >= 160 && g <= 120 && b <= 60 && r > g + 40 && r > b + 80) orange += 1;
+          }
+          if (orange > 40) {
+            console.error(`FAIL live china wordmark has ~${orange} Halt-orange pixels`);
+            process.exit(1);
+          }
+          console.log(`OK live china wordmark Halt-orange px=${orange}`);
+          NODE

@@ -118,17 +118,44 @@ for (const onLight of onLightPaths) {
   }
 }
 
-const darkWm = "public/brand/buusdo-wordmark.png";
-if (fs.existsSync(path.join(root, darkWm))) {
+const darkWms = [
+  "public/brand/buusdo-wordmark.png",
+  "china-pages/assets/buusdo-wordmark.png",
+  "extension/icons/buusdo-wordmark.png",
+  "desktop-app/public/brand/buusdo-wordmark.png",
+];
+for (const darkWm of darkWms) {
+  if (!fs.existsSync(path.join(root, darkWm))) {
+    console.error(`FAIL missing ${darkWm}`);
+    failed = true;
+    continue;
+  }
   const stats = await countColors(darkWm);
   if (stats.muted < 200) {
     console.error(
-      `FAIL ${darkWm}: expected MUTED #8d897f u-card on dark field (found ${stats.muted} px)`
+      `FAIL ${darkWm}: expected MUTED #8d897f u-card on dark field (found ${stats.muted} px)`,
     );
     failed = true;
   } else {
     console.info(`OK ${darkWm} muted u-card px=${stats.muted}`);
   }
+}
+
+const ogRel = "public/og.png";
+if (fs.existsSync(path.join(root, ogRel))) {
+  const stats = await countColors(ogRel);
+  // OG composites dark wordmark — muted u-card must survive resize.
+  if (stats.muted < 800) {
+    console.error(
+      `FAIL ${ogRel}: expected muted #8d897f u-card floor ≥800 (found ${stats.muted}) — re-run npm run sync:brand-web`,
+    );
+    failed = true;
+  } else {
+    console.info(`OK ${ogRel} muted u-card px=${stats.muted}`);
+  }
+} else {
+  console.error(`FAIL missing ${ogRel}`);
+  failed = true;
 }
 
 if (failed) process.exit(1);

@@ -21,6 +21,7 @@ Wrong:
 |------|------|
 | `shared/brand/source/designer/buusdo-cst-wordmark-reference.png` | Designer still (white plate, CST tagline) |
 | `shared/brand/source/buusdo-wordmark-light-plate.png` | Cropped light-plate master for sync |
+| `shared/brand/source/buusdo-wordmark-paths.svg` | Preferred source — embeds plate + locks `#545454` swatch/`u-card`; sync rasterizes this when present |
 | `scripts/sync-brand-web-assets.mjs` | Builds on-light + dark-field + china / extension / desktop copies |
 | `npm run assert:brand-web-alpha` | Asserts charcoal `#545454` @ alpha 255 on-light; muted on dark |
 
@@ -36,4 +37,9 @@ Copy of this spec may live at `buusdo/docs/BRAND_U_CARD.md` in the Graphics repo
 npm run sync:brand-web
 npm run assert:brand-web-alpha
 npm run capture:store-halt-frame   # Chrome store FRAMEs use dark wordmark
+npm run build:promo-posters
+# Graphics sibling clone:
+npm run assert:graphics-wordmark-charcoal
 ```
+
+When `shared/brand/source/buusdo-wordmark-paths.svg` lands, prefer that vector and remove charcoal-detection heuristics from `scripts/sync-brand-web-assets.mjs`.

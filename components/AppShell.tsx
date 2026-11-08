@@ -169,6 +169,15 @@ function Header({
         >
           {t.navListsOffline}
         </a>
+        <a
+          className="nav-link"
+          href="/promo/poster.html"
+          target="_blank"
+          rel="noreferrer"
+          data-testid="nav-download-a4-poster"
+        >
+          {t.downloadA4Poster}
+        </a>
         <LanguageSwitcher locale={locale} view={view} hash={switchHash} />
       </nav>
     </header>

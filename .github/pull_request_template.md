@@ -2,6 +2,13 @@
 
 -
 
+## Brand assets (if this PR touches logos / wordmarks)
+
+- Light / on-light **u-card** must stay charcoal **`#545454`** (never Halt orange `#ff4d00`).
+- Dark-field u-card maps to instrument muted **`#8d897f`** via `npm run sync:brand-web`.
+- After editing `shared/brand/source/**`, run `npm run sync:brand-web` then `npm run assert:brand-web-alpha` (also part of `npm run typecheck`).
+- Spec: [`docs/BRAND_U_CARD.md`](docs/BRAND_U_CARD.md). Prefer `shared/brand/source/buusdo-wordmark-paths.svg` for a frozen vector u-card.
+
 ## Evaluation artifact (PR compare)
 
 CI uploads `evaluation/results/evaluation-results.json` as the **evaluation-results** artifact on every run (including failed jobs when the file exists).

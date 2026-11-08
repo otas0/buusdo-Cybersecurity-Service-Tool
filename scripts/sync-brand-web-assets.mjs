@@ -192,9 +192,18 @@ async function pngFromSvg(svg, size) {
   return sharp(Buffer.from(svg)).resize(size, size).png().toBuffer();
 }
 
-const wordSrc = fs.readFileSync(
-  path.join(sourceDir, "buusdo-wordmark-light-plate.png"),
-);
+const designerPath = path.join(sourceDir, "buusdo-wordmark-paths.svg");
+let wordSrc;
+if (fs.existsSync(designerPath)) {
+  // Prefer path SVG (frozen charcoal #545454 u-card) over light-plate raster.
+  wordSrc = await sharp(designerPath).png().toBuffer();
+  console.info("[sync:brand-web] Using designer path wordmark:", path.relative(root, designerPath));
+} else {
+  wordSrc = fs.readFileSync(path.join(sourceDir, "buusdo-wordmark-light-plate.png"));
+  console.info(
+    "[sync:brand-web] No designer path wordmark yet — place shared/brand/source/buusdo-wordmark-paths.svg when available.",
+  );
+}
 const logoSrc = fs.readFileSync(
   path.join(sourceDir, "buusdo-logo-light-plate.png"),
 );
@@ -360,13 +369,6 @@ await sharp({
 console.info(
   "[sync:brand-web] Store FRAME left to Playwright: npm run capture:store-halt-frame",
 );
-
-const designerPath = path.join(sourceDir, "buusdo-wordmark-paths.svg");
-if (!fs.existsSync(designerPath)) {
-  console.info(
-    "[sync:brand-web] No designer path wordmark yet — place shared/brand/source/buusdo-wordmark-paths.svg when available.",
-  );
-}
 
 console.log(
   `Synced brand + favicon/tray/OG/Safari/extension icons → ${targets.join(", ")}`,

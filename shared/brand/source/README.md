@@ -5,7 +5,7 @@
 | `designer/buusdo-cst-wordmark-reference.png` | **Designer still** (do not guess colors — replace plates from this) |
 | `buusdo-wordmark-light-plate.png` | Cropped light-plate master for `npm run sync:brand-web` |
 | `buusdo-logo-light-plate.png` | Square logo light-plate master (same u-card) |
-| `buusdo-wordmark-paths.svg` | **Optional designer path wordmark** — when present, sync may adopt it |
+| `buusdo-wordmark-paths.svg` | **Preferred** — frozen charcoal `#545454` u-card polygon + letterforms; `sync:brand-web` rasterizes this when present |
 
 ## u-card color (required)
 
