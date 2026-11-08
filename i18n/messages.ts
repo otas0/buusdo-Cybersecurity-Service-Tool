@@ -469,6 +469,8 @@ export const messages = {
     localeRecommendDismiss: "Not now",
     langPanelAllRegions: "All regions",
     langPanelSearchPlaceholder: "Search language…",
+    langPanelNoMatches: "No matches",
+
     whyEmpty: "No strong signals beyond the usual limitations.",
     detailKindProtocol: "Protocol",
     detailKindSubdomain: "Subdomain",
@@ -958,6 +960,8 @@ export const messages = {
     localeRecommendDismiss: "Agora não",
     langPanelAllRegions: "Todas as regiões",
     langPanelSearchPlaceholder: "Pesquisar idioma…",
+    langPanelNoMatches: "Sem resultados",
+
     whyEmpty: "Nenhum sinal forte além das limitações habituais.",
     detailKindProtocol: "Protocolo",
     detailKindSubdomain: "Subdomínio",

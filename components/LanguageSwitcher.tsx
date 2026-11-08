@@ -203,7 +203,7 @@ export function LanguageSwitcher({
             })}
             {!filteredByRegion.length ? (
               <p className="lang-panel-empty" data-testid="locale-empty">
-                No matches
+                {t.langPanelNoMatches}
               </p>
             ) : null}
           </div>

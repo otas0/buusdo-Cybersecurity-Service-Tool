@@ -456,5 +456,6 @@
   "langPanelAllRegions": "Todas as regiões",
   "langPanelSearchPlaceholder": "Pesquisar idioma…",
   "extensionToastPhishing": "Padrão de phishing bloqueado",
-  "homeDownloadsCta": "Transferências da app"
+  "homeDownloadsCta": "Transferências da app",
+  "langPanelNoMatches": "Sem resultados"
 }
