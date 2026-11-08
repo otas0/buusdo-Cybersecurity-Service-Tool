@@ -124,5 +124,8 @@
   "feedbackReadyToApplyHint": "Afkryds readyToApply nedenfor (og reviewedBy) før npm run threat:apply.",
   "feedbackChecklistHosts": "hostsReviewed — hver vært er gennemgået",
   "feedbackChecklistFp": "falsePositivesConfirmed — FP-fjernelser er bevidste",
-  "feedbackChecklistReady": "readyToApply — klar til threat:apply"
+  "feedbackChecklistReady": "readyToApply — klar til threat:apply",
+  "downloadA4Poster": "Download A4 poster",
+  "downloadA4PosterShort": "A4",
+  "downloadA4PosterHint": "Print A4 · 100% · margins none · background graphics on."
 }

@@ -85,18 +85,21 @@ test("pt-PT bag stays complete vs EN keys", () => {
   }
 });
 
-test("full packs zh-Hans / zh-Hant / ja match EN key set when present", () => {
+test("every full pack (coverage threshold) matches EN snapshot key set", async () => {
   const enPath = path.join(packsDir, "_en.snapshot.json");
   if (!existsSync(enPath)) return;
   const enKeys = Object.keys(JSON.parse(readFileSync(enPath, "utf8")));
-  for (const id of ["zh-Hans", "zh-Hant", "ja"] as const) {
+  const { isFullLocalePack, FULL_PACK_MIN_KEYS } = await import("../i18n/pack-coverage");
+  const fullIds = LOCALE_IDS.filter((id) => id !== "en" && id !== "pt-PT" && isFullLocalePack(id));
+  assert.ok(fullIds.length >= 10, `expected many full packs, got ${fullIds.length} (minKeys=${FULL_PACK_MIN_KEYS})`);
+  for (const id of fullIds) {
     const packPath = path.join(packsDir, `${id}.json`);
-    if (!existsSync(packPath)) {
-      assert.fail(`missing full pack ${id}`);
-    }
+    assert.ok(existsSync(packPath), `missing full pack ${id}`);
     const pack = JSON.parse(readFileSync(packPath, "utf8")) as Record<string, string>;
     const missing = enKeys.filter((k) => !pack[k]?.trim());
     assert.equal(missing.length, 0, `${id} missing keys: ${missing.slice(0, 8).join(", ")}`);
+  }
+  for (const id of ["zh-Hans", "zh-Hant", "ja"] as const) {
     const t = getMessages(id);
     assert.notEqual(t.navCheck, getMessages("en").navCheck, `${id} navCheck should differ from EN`);
   }

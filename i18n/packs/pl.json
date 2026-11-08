@@ -75,5 +75,8 @@
   "localeRecommendDismiss": "Nie teraz",
   "whyEmpty": "Brak silnych sygnałów poza zwykłymi ograniczeniami.",
   "probeBlockedGenericTitle": "Witryna zablokowała automatyczną sondę",
-  "probeBlockedGenericDetail": "Otrzymano HTTP {status}. Witryna zablokowała lub ograniczyła to sprawdzenie — to nie dowód phishingu. Otwórz adres w zwykłej przeglądarce, jeśli potrzebujesz."
+  "probeBlockedGenericDetail": "Otrzymano HTTP {status}. Witryna zablokowała lub ograniczyła to sprawdzenie — to nie dowód phishingu. Otwórz adres w zwykłej przeglądarce, jeśli potrzebujesz.",
+  "downloadA4Poster": "Download A4 poster",
+  "downloadA4PosterShort": "A4",
+  "downloadA4PosterHint": "Print A4 · 100% · margins none · background graphics on."
 }

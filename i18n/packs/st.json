@@ -446,5 +446,8 @@
   "detailKindTiming": "Nako",
   "detailKindLimit": "Moeli",
   "probeBlockedGenericTitle": "Sebaka se thibetse tlhahlobo e iketsang",
-  "probeBlockedGenericDetail": "Ho amohetsoe HTTP {status}. Sebaka se thibetse kapa se fokolitse tlhahlobo ena — seo ha se bopaki ba bolotsana. Leka aterese sebaling se tloaelehileng ha ho hlokahala."
+  "probeBlockedGenericDetail": "Ho amohetsoe HTTP {status}. Sebaka se thibetse kapa se fokolitse tlhahlobo ena — seo ha se bopaki ba bolotsana. Leka aterese sebaling se tloaelehileng ha ho hlokahala.",
+  "downloadA4Poster": "Download A4 poster",
+  "downloadA4PosterShort": "A4",
+  "downloadA4PosterHint": "Print A4 · 100% · margins none · background graphics on."
 }

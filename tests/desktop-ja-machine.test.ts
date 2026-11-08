@@ -19,4 +19,7 @@ test("desktop ja machine* keys are Japanese (not EN overlay leftovers)", async (
   assert.notEqual(ja.detailDanger, en.detailDanger);
   assert.notEqual(ja.detailCaution, en.detailCaution);
   assert.notEqual(ja.openAtLogin, en.openAtLogin);
+  assert.match(ja.footAboutVersion, /v\{version\}/);
+  assert.notEqual(ja.honestLimitsTitle, en.honestLimitsTitle);
+  assert.notEqual(ja.proxyGuideSummary, en.proxyGuideSummary);
 });

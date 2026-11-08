@@ -1,7 +1,11 @@
 #!/usr/bin/env node
 /**
- * Overlay website pack chrome onto extension STRINGS for mi / th / vi.
+ * Overlay website pack chrome onto extension STRINGS for toast-aligned locales
+ * beyond the hand-maintained en / pt-PT / zh-Hans bags.
  * Preserves extension-only keys (lists*, account*, websiteApi*) from the prior bag.
+ *
+ * Locales: mi / th / vi / ja / de / fr / es / zh-Hant / pt-BR
+ * (toast 12 = those + en + pt-PT + zh-Hans).
  *
  *   node scripts/sync-extension-sea-i18n-from-packs.mjs
  *   node scripts/sync-extension-sea-i18n-from-packs.mjs --check
@@ -14,7 +18,8 @@ const root = path.join(path.dirname(fileURLToPath(import.meta.url)), "..");
 const checkOnly = process.argv.includes("--check");
 const i18nPath = path.join(root, "extension/shared/i18n.js");
 const packsDir = path.join(root, "i18n/packs");
-const LOCALES = ["mi", "th", "vi"];
+/** Overlay bags (hand bags en / pt-PT / zh-Hans stay above the marker). */
+const LOCALES = ["mi", "th", "vi", "ja", "de", "fr", "es", "zh-Hant", "pt-BR"];
 
 /** extension key → website pack key */
 const MAP = {
@@ -47,8 +52,7 @@ function loadPack(id) {
 }
 
 function extractBag(src, id) {
-  // Last bag in STRINGS may omit the trailing comma before `};`.
-  const re = new RegExp(`\\n  ${id}: (\\{[\\s\\S]*?\\n  \\}),?`);
+  const re = new RegExp(`\\n  (?:${id}|"${id}"): (\\{[\\s\\S]*?\\n  \\}),?`);
   const m = src.match(re);
   if (!m) return null;
   try {
@@ -72,12 +76,13 @@ function applyOverlay(base, pack) {
 }
 
 function bagLiteral(id, bag) {
+  const needsQuote = !/^[A-Za-z_][A-Za-z0-9_]*$/.test(id);
+  const key = needsQuote ? JSON.stringify(id) : id;
   const body = JSON.stringify(bag, null, 2)
     .split("\n")
     .map((line, i) => (i === 0 ? line : `  ${line}`))
     .join("\n");
-  // STRINGS uses unquoted keys for mi/th/vi: mi: { ... },
-  return `  ${id}: ${body.replace(/^\{\n/, "{\n").replace(/\n\}$/, "\n  }")},`;
+  return `  ${key}: ${body.replace(/^\{\n/, "{\n").replace(/\n\}$/, "\n  }")},`;
 }
 
 function buildBlock(bags) {
@@ -123,21 +128,9 @@ if (src.includes(markerStart) && src.includes(markerEnd)) {
     () => block
   );
 } else {
-  // Replace hand mi/th/vi bags with marker block (after zh-Hans bag closing).
-  const miStart = src.search(/\n  mi: \{/);
-  if (miStart < 0) {
-    console.error("[sync-extension-sea-i18n] could not find mi bag to replace");
-    process.exit(1);
-  }
-  const afterVi = src.indexOf("\n};", src.search(/\n  vi: \{/));
-  if (afterVi < 0) {
-    console.error("[sync-extension-sea-i18n] could not find end of vi bag");
-    process.exit(1);
-  }
-  // Find closing of vi object: line with `  },` then `};` of STRINGS — vi ends with `  }` before `};`
-  const viMatch = src.match(/\n  vi: \{[\s\S]*?\n  \}\n\};/);
+  const viMatch = src.match(/\n  mi: \{[\s\S]*?\n  \}\n\};/);
   if (!viMatch) {
-    console.error("[sync-extension-sea-i18n] could not match mi..vi block");
+    console.error("[sync-extension-sea-i18n] could not match mi.. end block");
     process.exit(1);
   }
   next = src.replace(/\n  mi: \{[\s\S]*?\n  \}\n\};/, `\n${block}\n};`);

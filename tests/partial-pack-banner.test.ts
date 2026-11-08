@@ -4,15 +4,18 @@ import { join } from "node:path";
 import test from "node:test";
 import { showsPartialPackBanner } from "../i18n/pack-coverage";
 
-test("showsPartialPackBanner false for full packs, true for thin packs", () => {
+test("showsPartialPackBanner is false for complete locale packs", () => {
   assert.equal(showsPartialPackBanner("en"), false);
   assert.equal(showsPartialPackBanner("pt-PT"), false);
   assert.equal(showsPartialPackBanner("zh-Hans"), false);
   assert.equal(showsPartialPackBanner("xh"), false);
   assert.equal(showsPartialPackBanner("zu"), false);
   assert.equal(showsPartialPackBanner("af"), false);
-  assert.equal(showsPartialPackBanner("ss"), true);
-  assert.equal(showsPartialPackBanner("ve"), true);
+  assert.equal(showsPartialPackBanner("ss"), false);
+  assert.equal(showsPartialPackBanner("ve"), false);
+  assert.equal(showsPartialPackBanner("ts"), false);
+  assert.equal(showsPartialPackBanner("nr"), false);
+  assert.equal(showsPartialPackBanner("bg"), true);
 });
 
 test("Settings and Privacy panels both render partialPackBanner", () => {

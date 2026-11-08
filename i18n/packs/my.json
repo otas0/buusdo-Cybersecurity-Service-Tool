@@ -446,5 +446,8 @@
   "detailKindTiming": "အချိန်",
   "detailKindLimit": "ကန့်သတ်ချက်",
   "probeBlockedGenericTitle": "ဆိုက်က အလိုအလျောက် စစ်ဆေးမှုကို ပိတ်ပင်ထားသည်",
-  "probeBlockedGenericDetail": "HTTP {status} ရရှိသည်။ ဆိုက်က ဤစစ်ဆေးမှုကို ပိတ်ပင် သို့မဟုတ် ကန့်သတ်ထားသည် — ၎င်းသည် phishing သက်သေ မဟုတ်ပါ။ လိုအပ်ပါက ပုံမှန်ဘရောက်ဇာတွင် လိပ်စာကို စမ်းကြည့်ပါ။"
+  "probeBlockedGenericDetail": "HTTP {status} ရရှိသည်။ ဆိုက်က ဤစစ်ဆေးမှုကို ပိတ်ပင် သို့မဟုတ် ကန့်သတ်ထားသည် — ၎င်းသည် phishing သက်သေ မဟုတ်ပါ။ လိုအပ်ပါက ပုံမှန်ဘရောက်ဇာတွင် လိပ်စာကို စမ်းကြည့်ပါ။",
+  "downloadA4Poster": "Download A4 poster",
+  "downloadA4PosterShort": "A4",
+  "downloadA4PosterHint": "Print A4 · 100% · margins none · background graphics on."
 }

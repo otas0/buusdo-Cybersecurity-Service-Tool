@@ -124,5 +124,8 @@
   "feedbackReadyToApplyHint": "Bocka readyToApply nedan (och reviewedBy) före npm run threat:apply.",
   "feedbackChecklistHosts": "hostsReviewed — varje värd har granskats",
   "feedbackChecklistFp": "falsePositivesConfirmed — FP-borttagningar avsiktliga",
-  "feedbackChecklistReady": "readyToApply — klar för threat:apply"
+  "feedbackChecklistReady": "readyToApply — klar för threat:apply",
+  "downloadA4Poster": "Download A4 poster",
+  "downloadA4PosterShort": "A4",
+  "downloadA4PosterHint": "Print A4 · 100% · margins none · background graphics on."
 }

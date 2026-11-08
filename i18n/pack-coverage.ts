@@ -28,3 +28,17 @@ export function packCoverageRatio(locale: string): number {
   const hit = EN_KEYS.filter((k) => pack[k]?.trim()).length;
   return EN_KEYS.length ? hit / EN_KEYS.length : 0;
 }
+
+/** One-line CI summary: locale=ratio (full|partial). */
+export function formatPackCoverageSummary(
+  localeIds: string[] = Object.keys(LOCALE_PACKS)
+): string {
+  const rows = ["en", "pt-PT", ...localeIds.filter((id) => id !== "en" && id !== "pt-PT")]
+    .filter((id, i, a) => a.indexOf(id) === i)
+    .map((id) => {
+      const ratio = packCoverageRatio(id);
+      const flag = isFullLocalePack(id) ? "full" : "partial";
+      return `${id}=${(ratio * 100).toFixed(0)}%:${flag}`;
+    });
+  return `[pack-coverage] minKeys=${FULL_PACK_MIN_KEYS} ${rows.join(" ")}`;
+}

@@ -26,16 +26,17 @@ test("content TRACKER_COPY covers toast 12-locale set", () => {
 
 test("extension shared i18n has toast Halt chips for mi/th/vi (SEA overlay)", () => {
   const shared = readFileSync(join(root, "extension/shared/i18n.js"), "utf8");
-  for (const id of ["en", "pt-PT", "zh-Hans", "mi", "th", "vi"]) {
+  for (const id of ["en", "pt-PT", "zh-Hans", "mi", "th", "vi", "ja", "de", "fr", "es"]) {
     assert.match(
       shared,
       new RegExp(`(?:^|\\n)\\s{2}(?:"${id}"|${id})\\s*:`),
       `shared STRINGS missing bag ${id}`
     );
-    assert.match(shared, /toastPhishing/);
   }
   assert.match(shared, /"toastPhishing":\s*"Tū"/);
   assert.match(shared, /"toastPhishing":\s*"หยุด"/);
   assert.match(shared, /"toastPhishing":\s*"Dừng"/);
+  assert.match(shared, /"toastPhishing":\s*"停止"/); // ja Halt
+  assert.match(shared, /"toastPhishing":\s*"Halt"/); // de
   assert.match(shared, /toastPhishing:\s*"Halt"|toastPhishing:\s*"停止"|toastPhishing:\s*"Parar"/);
 });

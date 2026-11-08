@@ -50,7 +50,9 @@ test.describe("locale recommend soft prompt", () => {
 
   for (const { tag, expectedHint } of [
     { tag: "xh-ZA", expectedHint: /isiXhosa|Xhosa|xh/i },
-    { tag: "th-TH", expectedHint: /ไทย|Thai|th/i }
+    { tag: "th-TH", expectedHint: /ไทย|Thai|th/i },
+    { tag: "af-ZA", expectedHint: /Afrikaans|af/i },
+    { tag: "zu-ZA", expectedHint: /isiZulu|Zulu|zu/i }
   ] as const) {
     test(`first /en visit opens recommend when Accept-Language prefers ${tag}`, async ({
       page,

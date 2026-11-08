@@ -446,5 +446,8 @@
   "detailKindTiming": "Zeit",
   "detailKindLimit": "Grenze",
   "probeBlockedGenericTitle": "Die Seite hat die automatische Sonde blockiert",
-  "probeBlockedGenericDetail": "HTTP {status} erhalten. Die Seite hat diese Prüfung blockiert oder gedrosselt — das ist kein Phishing-Beweis. Öffnen Sie die Adresse bei Bedarf in einem normalen Browser."
+  "probeBlockedGenericDetail": "HTTP {status} erhalten. Die Seite hat diese Prüfung blockiert oder gedrosselt — das ist kein Phishing-Beweis. Öffnen Sie die Adresse bei Bedarf in einem normalen Browser.",
+  "downloadA4Poster": "A4-Poster herunterladen",
+  "downloadA4PosterShort": "A4",
+  "downloadA4PosterHint": "A4 drucken · 100 % · keine Ränder · Hintergrundgrafiken an."
 }

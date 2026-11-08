@@ -75,5 +75,8 @@
   "localeRecommendDismiss": "Ahora no",
   "whyEmpty": "Ninguna señal fuerte más allá de las limitaciones habituales.",
   "probeBlockedGenericTitle": "Site blocked the automated probe",
-  "probeBlockedGenericDetail": "Received HTTP {status}. The site blocked or throttled this check — that is not proof of phishing. Try the address in a normal browser if needed."
+  "probeBlockedGenericDetail": "Received HTTP {status}. The site blocked or throttled this check — that is not proof of phishing. Try the address in a normal browser if needed.",
+  "downloadA4Poster": "Download A4 poster",
+  "downloadA4PosterShort": "A4",
+  "downloadA4PosterHint": "Print A4 · 100% · margins none · background graphics on."
 }

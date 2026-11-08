@@ -126,5 +126,8 @@
   "navAriaLabel": "Navigation",
   "statusKicker": "État",
   "probeBlockedGenericTitle": "Le site a bloqué la sonde automatique",
-  "probeBlockedGenericDetail": "HTTP {status} reçu. Le site a bloqué ou limité ce contrôle — ce n’est pas une preuve de phishing. Ouvrez l’adresse dans un navigateur normal si besoin."
+  "probeBlockedGenericDetail": "HTTP {status} reçu. Le site a bloqué ou limité ce contrôle — ce n’est pas une preuve de phishing. Ouvrez l’adresse dans un navigateur normal si besoin.",
+  "downloadA4Poster": "Télécharger l’affiche A4",
+  "downloadA4PosterShort": "A4",
+  "downloadA4PosterHint": "Imprimer A4 · 100 % · sans marges · graphismes d’arrière-plan activés."
 }

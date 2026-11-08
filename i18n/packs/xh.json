@@ -446,5 +446,8 @@
   "detailKindTiming": "Ixesha",
   "detailKindLimit": "Umda",
   "probeBlockedGenericTitle": "Isayithi ithintele uvavanyo oluzenzekelayo",
-  "probeBlockedGenericDetail": "Kufunyenwe i-HTTP {status}. Isayithi ithintele okanye ithothise olu hlolo — oko akubobungqina bobuqhophololo. Zama idilesi kwibhrawuza eqhelekileyo ukuba kuyimfuneko."
+  "probeBlockedGenericDetail": "Kufunyenwe i-HTTP {status}. Isayithi ithintele okanye ithothise olu hlolo — oko akubobungqina bobuqhophololo. Zama idilesi kwibhrawuza eqhelekileyo ukuba kuyimfuneko.",
+  "downloadA4Poster": "Download A4 poster",
+  "downloadA4PosterShort": "A4",
+  "downloadA4PosterHint": "Print A4 · 100% · margins none · background graphics on."
 }

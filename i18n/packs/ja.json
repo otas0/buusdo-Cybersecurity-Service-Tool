@@ -446,5 +446,8 @@
   "detailKindTiming": "所要時間",
   "detailKindLimit": "制限",
   "probeBlockedGenericTitle": "サイトが自動探査をブロックしました",
-  "probeBlockedGenericDetail": "HTTP {status} を受信しました。サイトがこの検査をブロックまたは制限したのであり、フィッシングの証明ではありません。必要なら通常のブラウザでアドレスを開いてください。"
+  "probeBlockedGenericDetail": "HTTP {status} を受信しました。サイトがこの検査をブロックまたは制限したのであり、フィッシングの証明ではありません。必要なら通常のブラウザでアドレスを開いてください。",
+  "downloadA4Poster": "A4ポスターをダウンロード",
+  "downloadA4PosterShort": "A4",
+  "downloadA4PosterHint": "A4で印刷 · 100% · 余白なし · 背景グラフィックオン。"
 }

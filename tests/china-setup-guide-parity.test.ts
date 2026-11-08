@@ -49,4 +49,9 @@ test("CHINA_GITHUB_PAGES locale table matches install Workers settings hrefs", (
   assert.match(enInstall, /buusdocst\.mtsu\.workers\.dev\/en\/settings#settings-desktop/);
   assert.match(zhInstall, /data-testid="china-workers-zh-hans"/);
   assert.match(zhInstall, /打开完整检查（简体中文 \/zh-Hans）/);
+  const enEntry = readFileSync(path.join(repo, "china-pages/en.html"), "utf8");
+  assert.match(enInstall, /Open full check \(EN\)/);
+  assert.match(enEntry, /Open full check \(EN\)/);
+  assert.doesNotMatch(enInstall, /Open full check<\/a>/);
+  assert.doesNotMatch(enEntry, /Halt detail/);
 });
