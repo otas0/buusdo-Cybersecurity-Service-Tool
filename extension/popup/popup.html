@@ -23,15 +23,29 @@
       </h1>
       <label class="lang">
         <span class="visually-hidden" id="langLabel">Language</span>
-          <select id="langSelect" aria-label="Language">
-            <option value="en">EN</option>
-            <option value="zh-Hans">简</option>
-            <option value="pt-PT">PT</option>
-            <option value="mi">MI</option>
-            <option value="th">TH</option>
-            <option value="vi">VI</option>
-            <option value="it">IT</option>
-            <option value="nl">NL</option>
+          <select id="langSelect" aria-label="Language" data-testid="extension-locale-select">
+            <optgroup label="Global">
+              <option value="en">English</option>
+            </optgroup>
+            <optgroup label="East Asia">
+              <option value="zh-Hans">简体中文</option>
+              <option value="zh-Hant">繁體中文</option>
+            </optgroup>
+            <optgroup label="Europe">
+              <option value="pt-PT">Português (Portugal)</option>
+              <option value="de">Deutsch</option>
+              <option value="fr">Français</option>
+              <option value="es">Español</option>
+              <option value="it">Italiano</option>
+              <option value="nl">Nederlands</option>
+            </optgroup>
+            <optgroup label="Pacific">
+              <option value="mi">Te reo Māori</option>
+            </optgroup>
+            <optgroup label="Southeast Asia">
+              <option value="th">ไทย</option>
+              <option value="vi">Tiếng Việt</option>
+            </optgroup>
           </select>
       </label>
     </header>

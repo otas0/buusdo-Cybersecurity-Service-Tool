@@ -64,9 +64,17 @@ const MAP = {
   toastPhishing: "lightDanger",
   toastTracker: "lightCaution",
   toastTrackers: "lightCaution",
-  // Closest pack twins for proxy chrome
-  proxyGuideSummary: "desktopHonestLimitsLink",
-  proxyBody: "honestLimitsTitle"
+  // Real proxyGuide* pack keys (website packs carry desktop proxy chrome)
+  proxyGuideSummary: "proxyGuideSummary",
+  proxyGuideShow: "proxyGuideShow",
+  proxyGuideLead: "proxyGuideLead",
+  proxyGuideMac: "proxyGuideMac",
+  proxyGuideWin: "proxyGuideWin",
+  proxyGuideLinux: "proxyGuideLinux",
+  proxyGuideBrowser: "proxyGuideBrowser",
+  proxyGuideCurl: "proxyGuideCurl",
+  proxyGuideAfterBlock: "proxyGuideAfterBlock",
+  proxyBody: "proxyGuideLead"
 };
 
 // Desktop-only ja strings (website / lists UI without pack twins). Applied after MAP.

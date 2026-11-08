@@ -19,6 +19,8 @@ git switch -c brand/shield-css
 git push -u origin HEAD
 ```
 
+**Nav density / top-bar hide experiments** (hiding `nav-lists-offline` / downloads, theme-toggle sizing) belong **only** on `brand/shield-css` — never as drive-by edits on `main` during locale PRs.
+
 3. Before starting an i18n batch on `main`:
 
 ```bash

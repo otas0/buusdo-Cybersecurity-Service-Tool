@@ -28,6 +28,8 @@ Actions **Pages China** 将 `china-pages/` 发布到 `otas0/buusdocst`（secret 
 
 每一页顶栏统一：`中文 · EN`（`data-testid="china-lang-switch"`）+ 站点导航（入口/安装/隐私 或 Entry/Install/Privacy）。三对中英页面内容对等，无「仅中文子页」死链。
 
+**Locale packs:** 欧洲目录语言包均为完整包（含中欧 / 南欧 / 波罗的海 / `ca` / `ga` / `mt` / `uk` / `is` / `sl`）— 无「精简欧洲」或部分包暗示。English: all Europe catalog packs are full — no thin-Europe implication. See entry pages `data-testid="china-europe-packs-full"`.
+
 语言偏好：`lang-persist.js`（`<head>` 同步加载，先于 `reachability.js` defer）把选择写入 `localStorage`（`buusdocst-china-lang`）。顶栏 `中文` / `EN` 带 `data-china-lang`；显式切换用 session 标记，避免「点了 EN 再点中文又跳回 EN」。选 EN 后打开中文 URL（如 `/` 或 `install.html`）会落到对应英文页。
 
 **本地验证默认中文：** 打开 Pages 任意页 → DevTools → Application → Local Storage → 删除 `buusdocst-china-lang`（并清 `sessionStorage` 的 `buusdocst-china-lang-nav`）→ 再打开 `/` 或 `install.html`，应停在中文页。

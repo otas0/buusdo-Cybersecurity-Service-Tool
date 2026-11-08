@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState, type KeyboardEvent } from "react";
 import {
   LOCALE_CATALOG,
   getLocaleEntry,
@@ -72,6 +72,7 @@ export function LocaleRecommendModal({
   const [query, setQuery] = useState("");
   const suggested = useMemo(() => suggestLocale(), []);
   const suggestedEntry = getLocaleEntry(suggested);
+  const optionRefs = useRef<(HTMLButtonElement | null)[]>([]);
 
   /** Short pin list (max 6, no search) — shared helper with unit/Playwright snapshots. */
   const pinned = useMemo(
@@ -139,6 +140,16 @@ export function LocaleRecommendModal({
   const body = t.localeRecommendBody.replace("{lang}", suggestedEntry.nativeName);
   const acceptLabel = t.localeRecommendAccept.replace("{lang}", suggestedEntry.nativeName);
 
+  function onOptionKeyDown(e: KeyboardEvent<HTMLButtonElement>, index: number) {
+    if (e.key !== "ArrowDown" && e.key !== "ArrowUp") return;
+    e.preventDefault();
+    const last = filtered.length - 1;
+    if (last < 0) return;
+    const next =
+      e.key === "ArrowDown" ? (index >= last ? 0 : index + 1) : index <= 0 ? last : index - 1;
+    optionRefs.current[next]?.focus();
+  }
+
   return (
     <div className="locale-recommend" role="dialog" aria-modal="true" data-testid="locale-recommend">
       <div className="locale-recommend-card">
@@ -173,6 +184,11 @@ export function LocaleRecommendModal({
             onChange={(e) => setQuery(e.target.value)}
             autoComplete="off"
           />
+          {!query.trim() ? (
+            <p className="hint locale-recommend-search-hint" data-testid="locale-recommend-search-hint">
+              {t.localeRecommendSearchHint}
+            </p>
+          ) : null}
           {/* Hidden select kept for existing Playwright selectOption helpers. */}
           <select
             className="visually-hidden"
@@ -187,13 +203,17 @@ export function LocaleRecommendModal({
             ))}
           </select>
           <ul className="locale-recommend-list" data-testid="locale-recommend-list">
-            {filtered.map((item) => (
+            {filtered.map((item, index) => (
               <li key={item.id}>
                 <button
                   type="button"
+                  ref={(el) => {
+                    optionRefs.current[index] = el;
+                  }}
                   className={item.id === suggested ? "lang-option is-current" : "lang-option"}
                   data-testid={`locale-recommend-option-${item.id}`}
                   onClick={() => accept(item.id)}
+                  onKeyDown={(e) => onOptionKeyDown(e, index)}
                 >
                   <span className="lang-option-native">{item.nativeName}</span>
                   <span className="lang-option-en">{item.englishName}</span>

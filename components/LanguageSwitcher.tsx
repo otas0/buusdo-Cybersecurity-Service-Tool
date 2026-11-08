@@ -75,7 +75,7 @@ export function LanguageSwitcher({
     function onDoc(e: MouseEvent) {
       if (!rootRef.current?.contains(e.target as Node)) setOpen(false);
     }
-    function onKey(e: KeyboardEvent) {
+    function onKey(e: globalThis.KeyboardEvent) {
       if (e.key === "Escape") setOpen(false);
     }
     document.addEventListener("mousedown", onDoc);
@@ -105,7 +105,6 @@ export function LanguageSwitcher({
 
   return (
     <div className="lang-switch" data-testid="locale-switch" ref={rootRef}>
-      {/* Hidden native select: keeps Playwright selectOption + form semantics. */}
       <label className="visually-hidden">
         Language
         <select
@@ -213,7 +212,6 @@ export function LanguageSwitcher({
   );
 }
 
-/** For tests / docs: shipped locale count. */
 export function shippedLocaleCount(): number {
   return LOCALE_CATALOG.length;
 }

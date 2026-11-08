@@ -467,7 +467,6 @@ export const messages = {
     localeRecommendBody: "Based on your browser, we suggest {lang}. You can change this anytime in the header.",
     localeRecommendAccept: "Use {lang}",
     localeRecommendDismiss: "Not now",
-    langPanelAllRegions: "All regions",
     langPanelSearchPlaceholder: "Search language…",
     langPanelNoMatches: "No matches",
 
@@ -958,7 +957,6 @@ export const messages = {
     localeRecommendBody: "Com base no seu navegador, sugerimos {lang}. Pode mudar a qualquer momento no cabeçalho.",
     localeRecommendAccept: "Usar {lang}",
     localeRecommendDismiss: "Agora não",
-    langPanelAllRegions: "Todas as regiões",
     langPanelSearchPlaceholder: "Pesquisar idioma…",
     langPanelNoMatches: "Sem resultados",
 

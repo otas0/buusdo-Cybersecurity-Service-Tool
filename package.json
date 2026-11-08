@@ -132,8 +132,9 @@
     "threat:apply": "tsx scripts/apply-threat-batch.ts",
     "test:playwright:extension-popup-wordmark": "PLAYWRIGHT_SKIP_WEBSERVER=1 playwright test playwright/extension-popup-wordmark.spec.ts",
     "test:playwright:desktop-about-wordmark": "PLAYWRIGHT_SKIP_WEBSERVER=1 playwright test playwright/desktop-about-wordmark.spec.ts",
-    "test:playwright:theme-chrome": "PLAYWRIGHT_SKIP_WEBSERVER=1 playwright test playwright/theme-locale-panel.spec.ts playwright/top-bar-theme-lang-narrow.spec.ts playwright/theme-fouc-boot.spec.ts playwright/theme-wordmark-swap.spec.ts",
-    "assert:desktop-tray-display-name": "node scripts/assert-desktop-tray-display-name.mjs"
+    "test:playwright:theme-chrome": "PLAYWRIGHT_SKIP_WEBSERVER=1 playwright test playwright/theme-locale-panel.spec.ts playwright/top-bar-theme-lang-narrow.spec.ts playwright/theme-fouc-boot.spec.ts playwright/theme-wordmark-swap.spec.ts playwright/home-downloads-cta-narrow.spec.ts",
+    "assert:desktop-tray-display-name": "node scripts/assert-desktop-tray-display-name.mjs",
+    "assert:eu-locale-routes-200": "node scripts/assert-eu-locale-routes-200.mjs"
   },
   "dependencies": {
     "next": "16.3.4",

@@ -156,7 +156,7 @@ test.describe("live Halt evidence (soft)", () => {
     await input.first().fill(host);
     const go = page
       .getByRole("button", {
-        name: /运行|Go|Run|檢查|检查|Ausführen|ตรวจ|เริ่ม|Voer uit|Qalisa|Lancer|Ejecutar|Spustit|Εκτέλεση|Esegui|Uitvoeren/i
+        name: /运行|Go|Run|檢查|检查|Ausführen|ตรวจ|เริ่ม|Voer uit|Qalisa|Lancer|Ejecutar|Spustit|Εκτέλεση|Esegui|Uitvoeren|Zaženi|Executa/i
       })
       .first();
     await go.click();
@@ -223,5 +223,17 @@ test.describe("live Halt evidence (soft)", () => {
 
   test("known-threat Halt shows evidence-known-threat on /ca", async ({ page }) => {
     await runKnownThreatOnLocale(page, "/ca", /amenaça|conegud|Senyal/i);
+  });
+
+  test("known-threat Halt shows evidence-known-threat on /sl", async ({ page }) => {
+    await runKnownThreatOnLocale(page, "/sl", /grožnj|znane|Signal/i);
+  });
+
+  test("known-threat Halt shows evidence-known-threat on /uk", async ({ page }) => {
+    await runKnownThreatOnLocale(page, "/uk", /загроз|відом|Сигнал/i);
+  });
+
+  test("known-threat Halt shows evidence-known-threat on /is", async ({ page }) => {
+    await runKnownThreatOnLocale(page, "/is", /ógn|þekkt|Merki/i);
   });
 });

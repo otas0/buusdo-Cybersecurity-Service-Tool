@@ -29,18 +29,18 @@ for (const id of ["sv", "da", "fi", "nb"] as const) {
     assert.ok(bag!.statusDanger?.trim());
   });
 
-  test(`desktop ${id} honestLimits / proxy MAP keys differ from EN when present`, () => {
+  test(`desktop ${id} honestLimits / proxyGuide* MAP keys differ from EN`, () => {
     const bag = extractBag(id);
     assert.ok(bag, `missing STRINGS[${id}]`);
     assert.ok(src.includes(`"${id}"`), `DESKTOP_BAGS / overlay should surface ${id}`);
-    if (en.honestLimitsTitle) {
-      assert.ok(bag!.honestLimitsTitle?.trim());
-      assert.notEqual(bag!.honestLimitsTitle, en.honestLimitsTitle);
-    }
-    if (en.proxyGuideSummary) {
-      assert.ok(bag!.proxyGuideSummary?.trim());
-      assert.notEqual(bag!.proxyGuideSummary, en.proxyGuideSummary);
-    }
+    assert.ok(bag!.honestLimitsTitle?.trim());
+    assert.notEqual(bag!.honestLimitsTitle, en.honestLimitsTitle);
+    assert.ok(bag!.proxyGuideSummary?.trim());
+    assert.notEqual(bag!.proxyGuideSummary, en.proxyGuideSummary);
+    // Must be real proxy chrome, not an honestLimits twin.
+    assert.match(bag!.proxyGuideSummary, /127\.0\.0\.1:8080|proxy|välitys|Proxy/i);
+    assert.ok(bag!.proxyGuideShow?.trim());
+    assert.notEqual(bag!.proxyGuideShow, en.proxyGuideShow);
   });
 }
 

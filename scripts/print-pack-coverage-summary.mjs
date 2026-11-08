@@ -55,8 +55,25 @@ if (dropped.length) {
 }
 
 const partials = packFiles.filter((id) => !isFull(id));
+const summaryPath = process.env.GITHUB_STEP_SUMMARY;
 if (partials.length) {
   const detail = partials.map((id) => `${id}=${(ratio(id) * 100).toFixed(0)}%`).join(" ");
   console.warn(`[pack-coverage] still-partial (${partials.length}): ${detail}`);
   console.log(`::warning::[pack-coverage] still-partial locales: ${partials.join(", ")}`);
+  if (summaryPath) {
+    const table = [
+      "## Pack coverage — still partial",
+      "",
+      "| Locale | Ratio |",
+      "|--------|------:|",
+      ...partials.map((id) => `| \`${id}\` | ${(ratio(id) * 100).toFixed(0)}% |`),
+      ""
+    ].join("\n");
+    fs.appendFileSync(summaryPath, `${table}\n`);
+  }
+} else {
+  console.log("::notice::[pack-coverage] all-full");
+  if (summaryPath) {
+    fs.appendFileSync(summaryPath, "## Pack coverage\n\nAll locale packs are **full** (zero partial).\n\n");
+  }
 }

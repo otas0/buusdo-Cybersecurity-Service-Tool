@@ -44,8 +44,8 @@ function localesFromLangSelect() {
   return [...block[0].matchAll(/<option\s+value="([^"]+)"/g)].map((m) => m[1]);
 }
 
-// Overlay Halt chips beyond the popup #langSelect 12-set (it/nl keep toast COPY in JSON for shared i18n sync).
-const EXTRA_PACKS = ["pt-BR", "zh-Hant", "ja", "de", "fr", "es", "it", "nl"];
+// Overlay Halt chips beyond the popup #langSelect set (af/zu + BR/ja extras).
+const EXTRA_PACKS = ["pt-BR", "ja", "af", "zu"];
 const langSelectOrder = localesFromLangSelect();
 const locales = [...new Set([...langSelectOrder, ...EXTRA_PACKS])];
 

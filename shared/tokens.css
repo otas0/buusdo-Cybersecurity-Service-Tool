@@ -31,6 +31,7 @@
   --idle: #3a3a3a;
   --accent: #ff4d00;
   --border: rgba(243, 241, 234, 0.16);
+  --panel-edge: rgba(243, 241, 234, 0.28);
   --radius: 0px;
   --font: "Helvetica Neue", Helvetica, Arial, sans-serif;
   --mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
@@ -54,5 +55,6 @@
   --idle: #b8b3a6;
   --accent: #ff4d00;
   --border: rgba(26, 25, 22, 0.16);
+  --panel-edge: rgba(26, 25, 22, 0.36);
   color-scheme: light;
 }

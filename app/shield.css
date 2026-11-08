@@ -81,7 +81,13 @@
 
   .shell .top-nav .nav-link[data-testid="nav-lists-offline"],
   .shell .top-nav a[data-testid="nav-downloads"] {
-    /* Keep chrome compact: downloads/lists can wrap via scroll; theme+lang stay. */
+    /* Compact chrome: hide secondary nav; home Downloads CTA + Settings remain reachable. */
+    display: none;
+  }
+
+  .shell .home-downloads-cta {
+    display: block;
+    margin-top: 14px;
   }
 }
 
@@ -164,7 +170,7 @@
   flex-direction: column;
   background: var(--panel);
   color: var(--text);
-  border: 1px solid color-mix(in srgb, var(--muted) 40%, transparent);
+  border: 1px solid var(--panel-edge, var(--border));
   box-shadow: 0 12px 32px color-mix(in srgb, #000 45%, transparent);
   color-scheme: inherit;
   overflow: hidden;
@@ -175,29 +181,11 @@
   margin: 8px 8px 4px;
   padding: 7px 8px;
   background: transparent;
-  border: 1px solid color-mix(in srgb, var(--muted) 45%, transparent);
+  border: 1px solid var(--panel-edge, var(--border));
   color: var(--text);
   font-family: var(--mono);
   font-size: 12px;
   letter-spacing: 0.02em;
-}
-
-.shell .lang-panel-kicker {
-  margin: 6px 10px 2px;
-  font-family: var(--mono);
-  font-size: 10px;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--muted);
-}
-
-.shell .lang-panel-frequent {
-  flex: 0 1 auto;
-  max-height: min(9.5rem, 38%);
-  overflow: auto;
-  border-bottom: 1px solid color-mix(in srgb, var(--muted) 28%, transparent);
-  padding-bottom: 4px;
-  min-height: 0;
 }
 
 .shell .lang-panel-regions {
@@ -212,11 +200,26 @@
     max-height: min(70vh, 24rem);
     width: min(18rem, calc(100vw - 16px));
   }
+}
 
-  .shell .lang-panel-frequent {
-    max-height: min(8rem, 34%);
+/* 320px portrait: keep search visible; shrink region list first. */
+@media (max-width: 320px) {
+  .shell .lang-panel {
+    max-height: min(58vh, 16.5rem);
+    width: min(17rem, calc(100vw - 12px));
+  }
+
+  .shell .lang-panel-search {
+    margin: 6px 6px 2px;
+    padding: 6px 7px;
+    font-size: 11px;
+  }
+
+  .shell .lang-panel-regions {
+    min-height: 3rem;
   }
 }
+
 
 .shell .lang-region-toggle {
   width: 100%;
@@ -1137,21 +1140,17 @@
   }
 }
 
-/* Appearance — header toggle (primary) + Settings copy (secondary) */
+/* Appearance — one header toggle; Settings shows themeHeaderHint only (no dual buttons). */
 .theme-toggle {
   display: inline-flex;
   align-items: center;
   gap: 2px;
 }
-.theme-switch-row {
-  display: flex;
-  gap: 12px;
-  margin: 8px 0;
+.theme-switch {
+  margin: 0;
 }
-.theme-opt.is-active {
-  color: var(--halt);
-  outline: 1px solid var(--halt);
-  outline-offset: 2px;
+.theme-switch .hint {
+  margin: 6px 0 0;
 }
 
 

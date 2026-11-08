@@ -12,14 +12,19 @@ import {
   recommendPinnedLocaleIds
 } from "../i18n/locales";
 
-test("FREQUENT_LOCALE_IDS lists recommend majors only", () => {
+test("FREQUENT_LOCALE_IDS lists recommend majors only — switcher has no Frequent strip", () => {
   assert.deepEqual([...FREQUENT_LOCALE_IDS], ["en", "zh-Hans", "ja", "pt-PT", "de"]);
   const switcher = readFileSync("components/LanguageSwitcher.tsx", "utf8");
   const recommend = readFileSync("components/LocaleRecommendModal.tsx", "utf8");
+  const docs = readFileSync("docs/I18N.md", "utf8");
+  const css = readFileSync("app/shield.css", "utf8");
   assert.doesNotMatch(switcher, /FREQUENT_LOCALE_IDS/);
   assert.doesNotMatch(switcher, /locale-frequent/);
+  assert.doesNotMatch(css, /lang-panel-frequent/);
   assert.match(recommend, /recommendPinnedLocaleIds/);
-  assert.doesNotMatch(recommend, /FREQUENT_LOCALE_IDS/);
+  assert.match(recommend, /localeRecommendSearchHint/);
+  assert.match(docs, /LOCALE_RECOMMEND_PIN_MAX/);
+  assert.match(docs, /recommendPinnedLocaleIds/);
 });
 
 test("recommendPinnedLocaleIds dedupes suggested and caps at PIN_MAX", () => {

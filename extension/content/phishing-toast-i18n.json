@@ -19,6 +19,16 @@
     "nextNoCreds": "不要在此网站输入密码、卡号、短信/邮件验证码或其他个人数据。",
     "nextVerify": "独立核实：打开您已信任的该组织官方域名或应用（书签、银行卡、已知应用商店）。不要使用可疑页面上显示的电话或邮箱。"
   },
+  "zh-Hant": {
+    "phishing": "已攔截釣魚模式",
+    "dismiss": "關閉提示",
+    "dangerLevel": "危險等級: 停止",
+    "ignoreRisk": "您可能把密碼、付款資料或其他個人資料交給控制此地址的人。在輸入或支付任何內容之前請關閉分頁。",
+    "nextStepsTitle": "接下來做什麼——逐步說明",
+    "nextLeave": "立即離開此頁面——不要繼續使用您檢查過的地址。",
+    "nextNoCreds": "不要在此網站輸入密碼、卡號、簡訊/電子郵件驗證碼或其他個人資料。",
+    "nextVerify": "獨立核實：開啟您已信任的該組織官方網域或應用程式（書籤、金融卡、已知應用程式商店）。不要使用可疑頁面上顯示的電話或電子郵件。"
+  },
   "pt-PT": {
     "phishing": "Padrão de phishing bloqueado",
     "dismiss": "Dispensar aviso",
@@ -28,6 +38,56 @@
     "nextLeave": "Saia já desta página — não continue no endereço que verificou.",
     "nextNoCreds": "Não introduza palavras-passe, números de cartão, códigos de SMS/email ou outros dados pessoais neste site.",
     "nextVerify": "Verifique de forma independente: abra o domínio ou a app oficial da organização em que já confia (marcador, cartão do banco, loja de apps conhecida). Não use telefones nem emails mostrados na página suspeita."
+  },
+  "de": {
+    "phishing": "Phishing-Muster blockiert",
+    "dismiss": "Hinweis schließen",
+    "dangerLevel": "Gefahrenstufe: Halt",
+    "ignoreRisk": "Sie könnten Passwörter, Zahlungsdaten oder andere personenbezogene Daten an die Person übergeben, die diese Adresse kontrolliert. Schließen Sie den Tab, bevor Sie etwas eingeben oder bezahlen.",
+    "nextStepsTitle": "Was als Nächstes zu tun ist — Schritt für Schritt",
+    "nextLeave": "Verlassen Sie diese Seite jetzt — fahren Sie nicht mit der geprüften Adresse fort.",
+    "nextNoCreds": "Geben Sie auf dieser Seite keine Passwörter, Kartennummern, Codes aus SMS/E-Mail oder andere personenbezogene Daten ein.",
+    "nextVerify": "Unabhängig prüfen: öffnen Sie die offizielle Domain oder App der Organisation, der Sie bereits vertrauen (Lesezeichen, Bankkarte, bekannter App-Store). Nutzen Sie keine Telefonnummern oder E-Mails von der verdächtigen Seite."
+  },
+  "fr": {
+    "phishing": "Modèle de phishing bloqué",
+    "dismiss": "Fermer l’indication",
+    "dangerLevel": "Niveau de danger: Stop",
+    "ignoreRisk": "Vous pourriez transmettre des mots de passe, des données de paiement ou d’autres données personnelles à qui contrôle cette adresse. Fermez l’onglet avant de saisir ou de payer quoi que ce soit.",
+    "nextStepsTitle": "Que faire ensuite — étape par étape",
+    "nextLeave": "Quittez cette page maintenant — ne continuez pas sur l’adresse que vous avez vérifiée.",
+    "nextNoCreds": "N’entrez pas de mots de passe, numéros de carte, codes SMS/e-mail ni d’autres données personnelles sur ce site.",
+    "nextVerify": "Vérifiez de façon indépendante : ouvrez le domaine ou l’application officielle de l’organisation en laquelle vous avez déjà confiance (favori, carte bancaire, boutique d’apps connue). N’utilisez pas les numéros ou e-mails affichés sur la page suspecte."
+  },
+  "es": {
+    "phishing": "Patrón de phishing bloqueado",
+    "dismiss": "Descartar aviso",
+    "dangerLevel": "Nivel de peligro: Alto",
+    "ignoreRisk": "Podría entregar contraseñas, datos de pago u otros datos personales a quien controle esta dirección. Cierre la pestaña antes de escribir o pagar nada.",
+    "nextStepsTitle": "Qué hacer a continuación — paso a paso",
+    "nextLeave": "Salga ya de esta página — no continúe en la dirección que comprobó.",
+    "nextNoCreds": "No introduzca contraseñas, números de tarjeta, códigos de SMS/correo ni otros datos personales en este sitio.",
+    "nextVerify": "Verifique de forma independiente: abra el dominio o la app oficial de la organización en la que ya confía (marcador, tarjeta bancaria, tienda de apps conocida). No use teléfonos ni correos mostrados en la página sospechosa."
+  },
+  "it": {
+    "phishing": "Modello di phishing bloccato",
+    "dismiss": "Chiudi avviso",
+    "dangerLevel": "Livello di pericolo: Stop",
+    "ignoreRisk": "Potresti consegnare password, dati di pagamento o altri dati personali a chi controlla questo indirizzo. Chiudi la scheda prima di digitare o pagare qualsiasi cosa.",
+    "nextStepsTitle": "Cosa fare dopo — passo dopo passo",
+    "nextLeave": "Lascia subito questa pagina — non continuare sull’indirizzo che hai controllato.",
+    "nextNoCreds": "Non inserire password, numeri di carta, codici da SMS/e-mail o altri dati personali su questo sito.",
+    "nextVerify": "Verifica in modo indipendente: apri il dominio o l’app ufficiale dell’organizzazione di cui ti fidi già (segnalibro, carta bancaria, store di app noto). Non usare telefoni o e-mail mostrati sulla pagina sospetta."
+  },
+  "nl": {
+    "phishing": "Phishingpatroon geblokkeerd",
+    "dismiss": "Hint sluiten",
+    "dangerLevel": "Gevaarsniveau: Stop",
+    "ignoreRisk": "U kunt wachtwoorden, betaalgegevens of andere persoonsgegevens overhandigen aan wie dit adres beheert. Sluit het tabblad voordat u iets typt of betaalt.",
+    "nextStepsTitle": "Wat nu te doen — stap voor stap",
+    "nextLeave": "Verlaat deze pagina nu — ga niet verder op het adres dat u controleerde.",
+    "nextNoCreds": "Voer op deze site geen wachtwoorden, kaartnummers, codes uit sms/e-mail of andere persoonsgegevens in.",
+    "nextVerify": "Verifieer onafhankelijk: open het officiële domein of de app van de organisatie die u al vertrouwt (bladwijzer, bankpas, bekende app store). Gebruik geen telefoonnummers of e-mails op de verdachte pagina."
   },
   "mi": {
     "phishing": "Kua ārai te tauira tinihanga",
@@ -59,26 +119,6 @@
     "nextNoCreds": "Đừng nhập mật khẩu, số thẻ, mã từ SMS/email hay dữ liệu cá nhân khác trên trang này.",
     "nextVerify": "Xác minh độc lập: mở tên miền hoặc ứng dụng chính thức của tổ chức bạn đã tin (dấu trang, thẻ ngân hàng, cửa hàng ứng dụng quen). Đừng dùng số điện thoại hay email hiện trên trang đáng ngờ."
   },
-  "it": {
-    "phishing": "Modello di phishing bloccato",
-    "dismiss": "Chiudi avviso",
-    "dangerLevel": "Livello di pericolo: Stop",
-    "ignoreRisk": "Potresti consegnare password, dati di pagamento o altri dati personali a chi controlla questo indirizzo. Chiudi la scheda prima di digitare o pagare qualsiasi cosa.",
-    "nextStepsTitle": "Cosa fare dopo — passo dopo passo",
-    "nextLeave": "Lascia subito questa pagina — non continuare sull’indirizzo che hai controllato.",
-    "nextNoCreds": "Non inserire password, numeri di carta, codici da SMS/e-mail o altri dati personali su questo sito.",
-    "nextVerify": "Verifica in modo indipendente: apri il dominio o l’app ufficiale dell’organizzazione di cui ti fidi già (segnalibro, carta bancaria, store di app noto). Non usare telefoni o e-mail mostrati sulla pagina sospetta."
-  },
-  "nl": {
-    "phishing": "Phishingpatroon geblokkeerd",
-    "dismiss": "Hint sluiten",
-    "dangerLevel": "Gevaarsniveau: Stop",
-    "ignoreRisk": "U kunt wachtwoorden, betaalgegevens of andere persoonsgegevens overhandigen aan wie dit adres beheert. Sluit het tabblad voordat u iets typt of betaalt.",
-    "nextStepsTitle": "Wat nu te doen — stap voor stap",
-    "nextLeave": "Verlaat deze pagina nu — ga niet verder op het adres dat u controleerde.",
-    "nextNoCreds": "Voer op deze site geen wachtwoorden, kaartnummers, codes uit sms/e-mail of andere persoonsgegevens in.",
-    "nextVerify": "Verifieer onafhankelijk: open het officiële domein of de app van de organisatie die u al vertrouwt (bladwijzer, bankpas, bekende app store). Gebruik geen telefoonnummers of e-mails op de verdachte pagina."
-  },
   "pt-BR": {
     "phishing": "Padrão de phishing bloqueado",
     "dismiss": "Dispensar aviso",
@@ -88,16 +128,6 @@
     "nextLeave": "Saia já desta página — não continue no endereço que você verificou.",
     "nextNoCreds": "Não digite senhas, números de cartão, códigos de SMS/e-mail ou outros dados pessoais neste site.",
     "nextVerify": "Verifique de forma independente: abra o domínio ou o app oficial da organização em que você já confia (favorito, cartão do banco, loja de apps conhecida). Não use telefones nem e-mails mostrados na página suspeita."
-  },
-  "zh-Hant": {
-    "phishing": "已攔截釣魚模式",
-    "dismiss": "關閉提示",
-    "dangerLevel": "危險等級: 停止",
-    "ignoreRisk": "您可能把密碼、付款資料或其他個人資料交給控制此地址的人。在輸入或支付任何內容之前請關閉分頁。",
-    "nextStepsTitle": "接下來做什麼——逐步說明",
-    "nextLeave": "立即離開此頁面——不要繼續使用您檢查過的地址。",
-    "nextNoCreds": "不要在此網站輸入密碼、卡號、簡訊/電子郵件驗證碼或其他個人資料。",
-    "nextVerify": "獨立核實：開啟您已信任的該組織官方網域或應用程式（書籤、金融卡、已知應用程式商店）。不要使用可疑頁面上顯示的電話或電子郵件。"
   },
   "ja": {
     "phishing": "フィッシングパターンをブロックしました",
@@ -109,34 +139,24 @@
     "nextNoCreds": "このサイトにパスワード、カード番号、SMS/メールのコード、その他の個人データを入力しないでください。",
     "nextVerify": "独立して確認してください：すでに信頼している公式ドメインやアプリを開く（ブックマーク、キャッシュカード、既知のアプリストア）。不審なページに表示された電話番号やメールは使わないでください。"
   },
-  "de": {
-    "phishing": "Phishing-Muster blockiert",
-    "dismiss": "Hinweis schließen",
-    "dangerLevel": "Gefahrenstufe: Halt",
-    "ignoreRisk": "Sie könnten Passwörter, Zahlungsdaten oder andere personenbezogene Daten an die Person übergeben, die diese Adresse kontrolliert. Schließen Sie den Tab, bevor Sie etwas eingeben oder bezahlen.",
-    "nextStepsTitle": "Was als Nächstes zu tun ist — Schritt für Schritt",
-    "nextLeave": "Verlassen Sie diese Seite jetzt — fahren Sie nicht mit der geprüften Adresse fort.",
-    "nextNoCreds": "Geben Sie auf dieser Seite keine Passwörter, Kartennummern, Codes aus SMS/E-Mail oder andere personenbezogene Daten ein.",
-    "nextVerify": "Unabhängig prüfen: öffnen Sie die offizielle Domain oder App der Organisation, der Sie bereits vertrauen (Lesezeichen, Bankkarte, bekannter App-Store). Nutzen Sie keine Telefonnummern oder E-Mails von der verdächtigen Seite."
+  "af": {
+    "phishing": "Phishing-patroon geblokkeer",
+    "dismiss": "Maak wenk toe",
+    "dangerLevel": "Gevaarsvlak: Stop",
+    "ignoreRisk": "Jy kan wagwoorde, betalingbesonderhede of ander persoonlike data oorhandig aan wie hierdie adres beheer. Maak die oortjie toe voordat jy enigiets tik of betaal.",
+    "nextStepsTitle": "Wat om volgende te doen — stap vir stap",
+    "nextLeave": "Verlaat hierdie bladsy nou — moenie voortgaan op die adres wat jy gekontroleer het nie.",
+    "nextNoCreds": "Moenie wagwoorde, kaartnommers, kodes uit SMS/e-pos of ander persoonlike data op hierdie werf invoer nie.",
+    "nextVerify": "Verifieer onafhanklik: open die organisasie se amptelike domein of app wat jy reeds vertrou (boekmerk, bankkaart, bekende appwinkel). Moenie fone of e-posse op die verdagte bladsy gebruik nie."
   },
-  "fr": {
-    "phishing": "Modèle de phishing bloqué",
-    "dismiss": "Fermer l’indication",
-    "dangerLevel": "Niveau de danger: Stop",
-    "ignoreRisk": "Vous pourriez transmettre des mots de passe, des données de paiement ou d’autres données personnelles à qui contrôle cette adresse. Fermez l’onglet avant de saisir ou de payer quoi que ce soit.",
-    "nextStepsTitle": "Que faire ensuite — étape par étape",
-    "nextLeave": "Quittez cette page maintenant — ne continuez pas sur l’adresse que vous avez vérifiée.",
-    "nextNoCreds": "N’entrez pas de mots de passe, numéros de carte, codes SMS/e-mail ni d’autres données personnelles sur ce site.",
-    "nextVerify": "Vérifiez de façon indépendante : ouvrez le domaine ou l’application officielle de l’organisation en laquelle vous avez déjà confiance (favori, carte bancaire, boutique d’apps connue). N’utilisez pas les numéros ou e-mails affichés sur la page suspecte."
-  },
-  "es": {
-    "phishing": "Patrón de phishing bloqueado",
-    "dismiss": "Descartar aviso",
-    "dangerLevel": "Nivel de peligro: Alto",
-    "ignoreRisk": "Podría entregar contraseñas, datos de pago u otros datos personales a quien controle esta dirección. Cierre la pestaña antes de escribir o pagar nada.",
-    "nextStepsTitle": "Qué hacer a continuación — paso a paso",
-    "nextLeave": "Salga ya de esta página — no continúe en la dirección que comprobó.",
-    "nextNoCreds": "No introduzca contraseñas, números de tarjeta, códigos de SMS/correo ni otros datos personales en este sitio.",
-    "nextVerify": "Verifique de forma independiente: abra el dominio o la app oficial de la organización en la que ya confía (marcador, tarjeta bancaria, tienda de apps conocida). No use teléfonos ni correos mostrados en la página sospechosa."
+  "zu": {
+    "phishing": "Iphethini yokukhwabanisa livinjwe",
+    "dismiss": "Susa iseluleko",
+    "dangerLevel": "Izinga lobungozi: Misa",
+    "ignoreRisk": "Unganikeza amaphasiwedi, imininingwane yokukhokha, noma enye idatha yomuntu siqu kulowo olawula leli kheli. Vala ithebhu ngaphambi kokuthayipha noma ukukhokha noma yini.",
+    "nextStepsTitle": "Okufanele ukwenze ngokulandelayo — isinyathelo ngesinyathelo",
+    "nextLeave": "Phuma kuleli khasi manje — ungakuqhubeki ekhelini olihlolile.",
+    "nextNoCreds": "Ungafaki amaphasiwedi, izinombolo zamakhadi, amakhodi e-SMS/imeyili, noma enye idatha yomuntu siqu kule sayithi.",
+    "nextVerify": "Qinisekisa ngokuzimela: vula isizinda noma uhlelo lwesikhathi esisemthethweni senhlangano osesethemba kakade (ibhukhimakhi, ikhadi lebhanga, isitolo sohlelo olwaziwayo). Ungasebenzisi izingcingo noma ama-imeyili akhona ekhasini elisolisayo."
   }
 }
