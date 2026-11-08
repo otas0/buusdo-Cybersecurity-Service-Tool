@@ -70,6 +70,32 @@ async function main() {
   if (typeof data?.regionCount !== "number" || data.regionCount < 1) {
     fail("regionCount missing or invalid", data?.regionCount);
   }
+  const byRegion = data?.localesByRegion;
+  if (!byRegion || typeof byRegion !== "object") {
+    fail("localesByRegion missing or not an object", byRegion);
+  }
+  /** Must match i18n/locales.ts LOCALE_REGION_ORDER. */
+  const expectedRegions = [
+    "global",
+    "east-asia",
+    "europe",
+    "southern-africa",
+    "pacific",
+    "southeast-asia"
+  ];
+  for (const region of expectedRegions) {
+    const n = byRegion[region];
+    if (typeof n !== "number" || n < 1) {
+      fail(`localesByRegion.${region} must be a number ≥ 1`, n);
+    }
+  }
+  const extra = Object.keys(byRegion).filter((k) => !expectedRegions.includes(k));
+  if (extra.length) {
+    fail(`localesByRegion has unexpected keys: ${extra.join(", ")}`);
+  }
+  if (byRegion.europe < 20) {
+    fail("localesByRegion.europe must be ≥ 20", byRegion.europe);
+  }
   if (typeof data?.probeTimeoutMs !== "number" || data.probeTimeoutMs <= 0) {
     fail("probeTimeoutMs missing or invalid", data?.probeTimeoutMs);
   }
@@ -78,7 +104,7 @@ async function main() {
   }
 
   console.info(
-    `[health-smoke] OK service=${data.service} localeCount=${data.localeCount} regionCount=${data.regionCount} probeTimeoutMs=${data.probeTimeoutMs} accountSyncEnabled=${data.accountSyncEnabled} checkedAt=${data.checkedAt}`
+    `[health-smoke] OK service=${data.service} localeCount=${data.localeCount} europe=${data.localesByRegion.europe} regionCount=${data.regionCount} probeTimeoutMs=${data.probeTimeoutMs} accountSyncEnabled=${data.accountSyncEnabled} checkedAt=${data.checkedAt}`
   );
   process.exit(0);
 }

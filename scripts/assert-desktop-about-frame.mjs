@@ -49,4 +49,62 @@ if (!aboutHtml.includes(formal)) {
   );
   process.exit(1);
 }
+/** Optional pixel / OCR spot-check (soft unless ASSERT_ABOUT_FRAME_STRICT=1). */
+async function optionalPixelOrOcr() {
+  const strict = process.env.ASSERT_ABOUT_FRAME_STRICT === "1";
+  try {
+    const { default: sharp } = await import("sharp");
+    const { data, info } = await sharp(frame).ensureAlpha().raw().toBuffer({ resolveWithObject: true });
+    let nonBg = 0;
+    for (let i = 0; i < data.length; i += 4) {
+      const r = data[i];
+      const g = data[i + 1];
+      const b = data[i + 2];
+      const a = data[i + 3];
+      if (a < 8) continue;
+      // Count pixels that are not near pure black / pure field
+      if (r + g + b > 40) nonBg++;
+    }
+    const ratio = nonBg / (info.width * info.height);
+    if (ratio < 0.01) {
+      const msg = `[assert-desktop-about-frame] FRAME looks empty (non-bg ratio=${ratio.toFixed(4)})`;
+      if (strict) {
+        console.error(msg);
+        process.exit(1);
+      }
+      console.warn(`SOFT-FAIL ${msg}`);
+    } else {
+      console.info(`[assert-desktop-about-frame] pixel OK non-bg≈${(ratio * 100).toFixed(1)}%`);
+    }
+  } catch (err) {
+    console.info(
+      "[assert-desktop-about-frame] sharp unavailable — skip pixel spot-check",
+      err instanceof Error ? err.message.split("\n")[0] : err
+    );
+  }
+
+  // Optional OCR via system tesseract if present
+  try {
+    const { execFileSync } = await import("node:child_process");
+    const text = execFileSync("tesseract", [frame, "stdout", "-l", "eng"], {
+      encoding: "utf8",
+      timeout: 20000
+    });
+    const ok = text.includes("buusdo") || text.toLowerCase().includes("cybersecurity");
+    if (!ok) {
+      const msg = `[assert-desktop-about-frame] OCR missed formalName tokens (got ${JSON.stringify(text.slice(0, 80))})`;
+      if (strict) {
+        console.error(msg);
+        process.exit(1);
+      }
+      console.warn(`SOFT-FAIL ${msg}`);
+    } else {
+      console.info("[assert-desktop-about-frame] OCR OK (buusdo / cybersecurity)");
+    }
+  } catch {
+    console.info("[assert-desktop-about-frame] tesseract unavailable — skip OCR spot-check");
+  }
+}
+
+await optionalPixelOrOcr();
 console.info(`[assert-desktop-about-frame] OK FRAME=${size}B formalName=${JSON.stringify(formal)}`);

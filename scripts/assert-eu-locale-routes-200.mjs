@@ -23,6 +23,7 @@ import {
   healthTimeoutMs,
   localeTimeoutMs,
   liveOriginCandidates,
+  mapPool,
   maybeTimeoutWebhook,
   resolveLiveOrigin
 } from "./lib/live-origin.mjs";
@@ -36,22 +37,6 @@ const europeIds = [...localesSrc.matchAll(/\{ id: "([^"]+)"[^}]*region: "europe"
 function concurrency() {
   const n = Number(process.env.EU_LOCALE_CONCURRENCY || 6);
   return Number.isFinite(n) && n > 0 ? Math.min(24, Math.round(n)) : 6;
-}
-
-/** Run async mapper over items with a fixed worker pool. */
-async function mapPool(items, limit, fn) {
-  const out = new Array(items.length);
-  let next = 0;
-  async function worker() {
-    while (next < items.length) {
-      const i = next;
-      next += 1;
-      out[i] = await fn(items[i], i);
-    }
-  }
-  const n = Math.min(limit, items.length) || 1;
-  await Promise.all(Array.from({ length: n }, () => worker()));
-  return out;
 }
 
 function failureTableMarkdown(localeRows) {
@@ -69,9 +54,15 @@ function failureTableMarkdown(localeRows) {
 
 const candidates = liveOriginCandidates();
 if (!candidates.length) {
-  console.log("::notice::skipped-live [eu-routes-200] no PLAYWRIGHT_LIVE_BASE_URL / PRODUCTION_HEALTH_URL");
+  const stagingHint =
+    process.env.DEPLOY_TARGET === "staging"
+      ? " Staging first deploy: set repo var `STAGING_HEALTH_URL` to the printed `*.workers.dev` URL, then re-run Deploy (or soft EU job)."
+      : "";
+  console.log(
+    `::notice::skipped-live [eu-routes-200] no PLAYWRIGHT_LIVE_BASE_URL / PRODUCTION_HEALTH_URL / STAGING_HEALTH_URL.${stagingHint}`
+  );
   await appendStepSummaryAsync(
-    "## EU locale routes\n\nSkipped — set `PLAYWRIGHT_LIVE_BASE_URL` or `PRODUCTION_HEALTH_URL`.\n"
+    `## EU locale routes\n\nSkipped — no smoke origin.${stagingHint}\n\nSet \`STAGING_HEALTH_URL\` (staging) or \`PRODUCTION_HEALTH_URL\` / deploy \`site_url\` (production).\n`
   );
   process.exit(0);
 }

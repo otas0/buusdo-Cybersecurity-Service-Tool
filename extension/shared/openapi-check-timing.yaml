@@ -2,7 +2,7 @@
 openapi: 3.0.3
 info:
   title: buusdo Cybersecurity Service Tool check API
-  version: "1.5.2"
+  version: "1.5.3"
   description: >
     Never calls third-party reputation APIs.
 
@@ -14,9 +14,11 @@ info:
     read-only hint). It is outside CheckTiming / check-timing.schema.json and is never
     persisted by the website.
 
-    Health 1.5.2: GET /api/health echoes accountSyncEnabled + accountSyncEnabledEnv
-    (ACCOUNT_SYNC_ENABLED). Also personalHintLogEnabled + personalHintLogEnv
-    (CHECK_PERSONAL_HINT_LOG). Optional ops fields (when CHECK_TIMING_SCHEMA_FAIL_HEALTH=1):
+    Health 1.5.3: GET /api/health adds localeCount + regionCount + localesByRegion
+    (catalog smoke; health-smoke asserts localeCount ≥ 40). Still echoes
+    accountSyncEnabled + accountSyncEnabledEnv (ACCOUNT_SYNC_ENABLED),
+    personalHintLogEnabled + personalHintLogEnv (CHECK_PERSONAL_HINT_LOG).
+    Optional ops fields (when CHECK_TIMING_SCHEMA_FAIL_HEALTH=1):
     timingSchemaFailCounts + timingSchemaFailCountsEnv (no URL).
     CheckTiming schema remains 1.5 (ambiguousProbeStatus).
     Edit docs/API_CHECK_CONTRACT.md only — never hand-edit extension/shared/ copies.

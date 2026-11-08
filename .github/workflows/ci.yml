@@ -53,6 +53,11 @@ jobs:
           # Hard-fail when a previously-full locale drops below FULL_PACK_MIN_KEYS.
           npx tsx --test tests/pack-coverage-threshold.test.ts
 
+      - name: i18n gate — no dead language-panel keys
+        run: |
+          npx tsx --test tests/pack-no-dead-lang-panel-keys.test.ts
+          echo "::notice::pack-no-dead-lang-panel-keys OK (langPanelFrequent / langPanelAllRegions absent)"
+
       - name: QR browser bundle soft-check
         run: |
           if [ ! -f shared/qrcode-browser.js ]; then
@@ -899,6 +904,26 @@ jobs:
           npm run test:playwright:theme-chrome
         env:
           PLAYWRIGHT_SKIP_WEBSERVER: "1"
+
+      - name: LanguageSwitcher Frequent-strip guard (always + path filter notice)
+        run: |
+          set -euo pipefail
+          npx tsx --test tests/language-switcher-no-frequent-guard.test.ts tests/frequent-locale-ids-parity.test.ts
+          BASE="${{ github.event.before || 'HEAD~1' }}"
+          if git rev-parse --verify "$BASE" >/dev/null 2>&1; then
+            if git diff --name-only "$BASE" HEAD | grep -E '^(components/LanguageSwitcher\.tsx|app/shield\.css|playwright/locale-panel-regions\.spec\.ts)$' >/dev/null; then
+              echo "::notice::LanguageSwitcher / lang-panel CSS / regions spec changed — Frequent-strip guard re-checked"
+            fi
+          fi
+
+      - name: Locale recommend aria-describedby + extension zh-Hant live + Downloads deeplink
+        if: steps.pw_install.outcome == 'success'
+        run: |
+          export PLAYWRIGHT_SKIP_WEBSERVER=1
+          npm run test:playwright:locale-chrome-a11y
+        env:
+          PLAYWRIGHT_SKIP_WEBSERVER: "1"
+          PLAYWRIGHT_BASE_URL: ${{ vars.PLAYWRIGHT_BASE_URL || 'http://localhost:3000' }}
 
       # Soft: live Workers privacy (skip inside spec if unreachable).
       # Covers /en|/pt-PT|/zh-Hans/privacy zero /survey/ links (local fixture: tests/privacy-fixture-no-survey.test.ts).

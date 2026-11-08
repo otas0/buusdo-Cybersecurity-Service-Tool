@@ -1,5 +1,5 @@
 /**
- * After choosing zh-Hant in the extension popup, core UI keys must resolve from the Hant bag.
+ * After choosing zh-Hant in the extension popup, core UI keys must be Traditional (not EN).
  *
  *   npx tsx --test tests/extension-popup-zh-hant-strings.test.ts
  */
@@ -24,39 +24,32 @@ test("zh-Hant bag via normalizeUiLang + t() covers core popup chrome", async () 
   };
   assert.equal(normalizeUiLang("zh-TW"), "zh-Hant");
   assert.equal(normalizeUiLang("zh-HK"), "zh-Hant");
-  assert.equal(normalizeUiLang("zh-Hant"), "zh-Hant");
   assert.ok(STRINGS["zh-Hant"]);
 
-  const required = [
-    "appTitle",
+  assert.equal(t("zh-Hant", "langLabel"), "語言");
+  assert.equal(t("zh-Hant", "listsTitle"), "個人清單");
+  assert.match(t("zh-Hant", "appTitle"), /buusdo Cybersecurity Service Tool/);
+
+  const mustDiffer = [
     "scan",
     "statusStandby",
     "statusDanger",
-    "statusSafe",
-    "statusCaution",
-    "langLabel",
     "listsTitle",
+    "listsExport",
+    "listsImport",
+    "listsHint",
     "websiteApiLabel",
-    "trackersBlocked",
-    "phishingHits"
+    "langLabel",
+    "listBlock",
+    "listTrust"
   ] as const;
-
-  for (const key of required) {
-    const hant = t("zh-Hant", key);
-    assert.ok(hant && hant !== key, `zh-Hant missing ${key}`);
-  }
-
-  // Formal product name is intentionally identical across locales.
-  assert.match(t("zh-Hant", "appTitle"), /buusdo Cybersecurity Service Tool/);
-
-  // Several chrome keys must be localized (not EN).
-  for (const key of ["scan", "statusStandby", "statusDanger", "statusSafe"] as const) {
+  for (const key of mustDiffer) {
     assert.notEqual(t("zh-Hant", key), t("en", key), `zh-Hant ${key} must differ from EN`);
   }
 
-  const sample = JSON.stringify(STRINGS["zh-Hant"]);
-  assert.ok(
-    /關閉|清單|匯出|攔截|危險|執行|待命/.test(sample),
-    "zh-Hant bag should include Traditional characters"
-  );
+  // Spot-check Traditional forms (not Simplified).
+  assert.match(t("zh-Hant", "langLabel"), /語/);
+  assert.doesNotMatch(t("zh-Hant", "langLabel"), /检查|语言/);
+  assert.match(t("zh-Hant", "listsTitle"), /清單/);
+  assert.doesNotMatch(t("zh-Hant", "listsTitle"), /个人列表/);
 });

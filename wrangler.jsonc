@@ -6,7 +6,9 @@
   // workers.dev URL = https://buusdocst.<account-subdomain>.workers.dev
   // Staging (Cloudflare Vite): build WITH env, then deploy WITHOUT --env:
   //   CLOUDFLARE_ENV=staging vinext build && wrangler deploy
-  // (--env staging alone after a prod build still uploads top-level name buusdocst.)
+  // Preview soft-probe Worker:
+  //   CLOUDFLARE_ENV=preview vinext build && node scripts/assert-preview-wrangler-name.mjs && wrangler deploy
+  // (--env staging/preview alone after a prod build still uploads top-level name buusdocst.)
   // Never put ACCOUNT_SYNC_ENABLED=1 or ACCOUNT_SYNC_DEV_RETURN_LINK on the top-level (prod) vars.
   "name": "buusdocst",
   "compatibility_date": "2025-10-01",
@@ -29,6 +31,18 @@
       "preview_urls": true,
       "vars": {
         // Same as prod — Account sync cancelled (no DEV_RETURN_LINK).
+        "ACCOUNT_SYNC_ENABLED": "0",
+        "ACCOUNT_SYNC_REQUIRE_TURSO": "1"
+      }
+    },
+    "preview": {
+      // Dedicated soft-probe Worker for PLAYWRIGHT_PREVIEW_BASE_URL (not production).
+      // Expected: https://buusdocst-preview.<account-subdomain>.workers.dev
+      // Until first deploy, soft probes may reuse STAGING_HEALTH_URL as the preview var.
+      "name": "buusdocst-preview",
+      "workers_dev": true,
+      "preview_urls": true,
+      "vars": {
         "ACCOUNT_SYNC_ENABLED": "0",
         "ACCOUNT_SYNC_REQUIRE_TURSO": "1"
       }

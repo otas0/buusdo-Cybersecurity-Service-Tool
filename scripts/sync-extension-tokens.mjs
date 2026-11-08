@@ -21,9 +21,17 @@ if (Buffer.compare(a, b) === 0) {
   process.exit(0);
 }
 if (check) {
-  console.error(
-    "[sync-extension-tokens] DRIFT — extension/shared/tokens.css ≠ shared/tokens.css. Run: npm run sync:extension-tokens"
-  );
+  console.error("");
+  console.error("╔══════════════════════════════════════════════════════════════════╗");
+  console.error("║  FAIL: extension/shared/tokens.css drifted from shared/tokens.css ║");
+  console.error("║  Fix:  npm run sync:extension-tokens                              ║");
+  console.error("║  Then: git add extension/shared/tokens.css                        ║");
+  console.error("╚══════════════════════════════════════════════════════════════════╝");
+  if (process.env.GITHUB_ACTIONS === "true") {
+    console.error(
+      "::error title=extension tokens drift::extension/shared/tokens.css ≠ shared/tokens.css — run npm run sync:extension-tokens"
+    );
+  }
   process.exit(1);
 }
 copyFileSync(src, dest);

@@ -460,7 +460,7 @@
   "proxyGuideWin": "Windows: Impostazioni → Rete e Internet → Proxy → Configurazione manuale → Usa un server proxy → Indirizzo 127.0.0.1 Porta 8080.",
   "proxyGuideLinux": "Linux: imposta http_proxy=http://127.0.0.1:8080 per l’app, o il proxy di rete del desktop → HTTP 127.0.0.1:8080.",
   "proxyGuideBrowser": "Browser: preferisci il proxy del SO, o un’estensione che invia HTTP tramite 127.0.0.1:8080. Non installare certificati MITM — questo prodotto non decifra mai il TLS.",
-  "proxyGuideCurl": "Quick test: curl -x http://127.0.0.1:8080 http://www.google-analytics.com/collect -i",
+  "proxyGuideCurl": "Prova rapida: curl -x http://127.0.0.1:8080 http://www.google-analytics.com/collect -i",
   "proxyGuideAfterBlock": "Host bloccati. Imposta il proxy HTTP a 127.0.0.1:8080 o il registro resta vuoto.",
   "extensionToastPhishing": "Modello di phishing bloccato",
   "homeDownloadsCta": "Download desktop",

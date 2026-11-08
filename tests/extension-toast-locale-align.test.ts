@@ -16,8 +16,8 @@ test("content TRACKER_COPY covers toast 12-locale set", () => {
   const toast = Object.keys(
     JSON.parse(readFileSync(join(root, "extension/content/phishing-toast-i18n.json"), "utf8"))
   );
-  // Popup #langSelect (12 with zh-Hant) + EXTRA_PACKS (pt-BR/ja/af/zu).
-  assert.ok(toast.length >= 14, `expected ≥14 toast locales, got ${toast.length}`);
+  // Popup #langSelect (14 with zh-Hant + af/zu) + EXTRA_PACKS (pt-BR/ja).
+  assert.ok(toast.length >= 16, `expected ≥16 toast locales, got ${toast.length}`);
   for (const id of [
     "en",
     "pt-PT",
@@ -30,26 +30,54 @@ test("content TRACKER_COPY covers toast 12-locale set", () => {
     "nl",
     "de",
     "fr",
-    "es"
+    "es",
+    "af",
+    "zu"
   ]) {
-    assert.ok(toast.includes(id), `toast JSON missing langSelect core ${id}`);
+    assert.ok(toast.includes(id), `toast JSON missing langSelect locale ${id}`);
   }
-  for (const id of ["af", "zu"]) {
+  for (const id of ["pt-BR", "ja"]) {
     assert.ok(toast.includes(id), `toast JSON missing EXTRA locale ${id}`);
   }
   const content = readFileSync(join(root, "extension/content/content.js"), "utf8");
   const tracker = trackerLocales(content);
-  for (const id of ["en", "pt-PT", "zh-Hans", "mi", "th", "vi", "it", "nl", "de", "fr", "es"]) {
+  for (const id of [
+    "en",
+    "pt-PT",
+    "zh-Hans",
+    "mi",
+    "th",
+    "vi",
+    "it",
+    "nl",
+    "de",
+    "fr",
+    "es",
+    "af",
+    "zu"
+  ]) {
     assert.ok(tracker.includes(id), `TRACKER_COPY missing langSelect locale ${id}`);
-  }
-  for (const id of ["af", "zu"]) {
-    assert.ok(tracker.includes(id), `TRACKER_COPY missing EXTRA toast locale ${id}`);
   }
 });
 
 test("extension shared i18n has toast Halt chips for mi/th/vi (SEA overlay)", () => {
   const shared = readFileSync(join(root, "extension/shared/i18n.js"), "utf8");
-  for (const id of ["en", "pt-PT", "zh-Hans", "mi", "th", "vi", "ja", "de", "fr", "es", "it", "nl"]) {
+  for (const id of [
+    "en",
+    "pt-PT",
+    "zh-Hans",
+    "mi",
+    "th",
+    "vi",
+    "ja",
+    "de",
+    "fr",
+    "es",
+    "it",
+    "nl",
+    "af",
+    "zu"
+  ]) {
     assert.match(
       shared,
       new RegExp(`(?:^|\\n)\\s{2}(?:"${id}"|${id})\\s*:`),

@@ -115,6 +115,25 @@ export function formatProbeTable(probes) {
 }
 
 /**
+ * Run async mapper over items with a fixed worker pool.
+ * Result array order matches input order (stable).
+ */
+export async function mapPool(items, limit, fn) {
+  const out = new Array(items.length);
+  let next = 0;
+  async function worker() {
+    while (next < items.length) {
+      const i = next;
+      next += 1;
+      out[i] = await fn(items[i], i);
+    }
+  }
+  const n = Math.min(Math.max(1, limit), Math.max(1, items.length));
+  await Promise.all(Array.from({ length: n }, () => worker()));
+  return out;
+}
+
+/**
  * Optional timeout webhook (opt-in). Distinct from skipped SLACK_WEBHOOK_URL.
  */
 export async function maybeTimeoutWebhook(payload) {

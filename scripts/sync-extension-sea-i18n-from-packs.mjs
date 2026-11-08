@@ -4,8 +4,8 @@
  * beyond the hand-maintained en / pt-PT / zh-Hans bags.
  * Preserves extension-only keys (lists*, account*, websiteApi*) from the prior bag.
  *
- * Locales: mi / th / vi / ja / de / fr / es / zh-Hant / pt-BR
- * (toast 12 = those + en + pt-PT + zh-Hans).
+ * Locales: mi / th / vi / ja / de / fr / es / it / nl / zh-Hant / pt-BR / af / zu
+ * (popup #langSelect + EXTRA toast overlays beyond hand bags en / pt-PT / zh-Hans).
  *
  *   node scripts/sync-extension-sea-i18n-from-packs.mjs
  *   node scripts/sync-extension-sea-i18n-from-packs.mjs --check

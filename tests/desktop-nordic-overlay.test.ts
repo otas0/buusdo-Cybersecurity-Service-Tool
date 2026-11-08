@@ -26,7 +26,13 @@ for (const id of OVERLAY) {
   test(`desktop ${id} Halt chrome differs from EN`, () => {
     const bag = extractBag(id);
     assert.ok(bag, `missing STRINGS[${id}]`);
-    assert.notEqual(bag!.statusDanger, en.statusDanger);
+    // de keeps Latin “Halt”; assert another chrome key instead.
+    if (id === "de") {
+      assert.notEqual(bag!.scan, en.scan);
+      assert.equal(bag!.statusDanger, "Halt");
+    } else {
+      assert.notEqual(bag!.statusDanger, en.statusDanger);
+    }
     assert.notEqual(bag!.scan, en.scan);
     assert.ok(bag!.statusDanger?.trim());
   });
@@ -44,7 +50,7 @@ for (const id of OVERLAY) {
     assert.notEqual(bag!.honestLimitsTitle, en.honestLimitsTitle);
   });
 
-  test(`desktop ${id} proxyGuide* MAP keys differ from EN`, () => {
+  test(`desktop ${id} proxyGuide* OS bodies differ from EN (steps keep OS names)`, () => {
     const bag = extractBag(id);
     assert.ok(bag, `missing STRINGS[${id}]`);
     assert.ok(bag!.proxyGuideSummary?.trim());
@@ -52,6 +58,12 @@ for (const id of OVERLAY) {
     assert.ok(bag!.proxyGuideMac?.trim());
     assert.notEqual(bag!.proxyGuideMac, en.proxyGuideMac);
     assert.match(bag!.proxyGuideMac, /macOS/i);
+    assert.ok(bag!.proxyGuideWin?.trim());
+    assert.notEqual(bag!.proxyGuideWin, en.proxyGuideWin);
+    assert.match(bag!.proxyGuideWin, /Windows/i);
+    assert.ok(bag!.proxyGuideLinux?.trim());
+    assert.notEqual(bag!.proxyGuideLinux, en.proxyGuideLinux);
+    assert.match(bag!.proxyGuideLinux, /Linux/i);
   });
 }
 

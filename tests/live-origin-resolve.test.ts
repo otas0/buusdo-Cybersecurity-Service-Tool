@@ -2,8 +2,15 @@
  *   npx tsx --test tests/live-origin-resolve.test.ts
  */
 import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
 import { test } from "node:test";
-import { liveOriginCandidates, healthTimeoutMs, localeTimeoutMs, formatProbeTable } from "../scripts/lib/live-origin.mjs";
+import {
+  liveOriginCandidates,
+  healthTimeoutMs,
+  localeTimeoutMs,
+  formatProbeTable,
+  mapPool
+} from "../scripts/lib/live-origin.mjs";
 
 test("liveOriginCandidates prefers LIVE then PROD then STAGING then PREVIEW", () => {
   const prev = { ...process.env };
@@ -40,4 +47,34 @@ test("formatProbeTable includes curl-w columns", () => {
   assert.match(md, /http_code/);
   assert.match(md, /000/);
   assert.match(md, /timeout/);
+});
+
+test("assert-eu-locale-routes-200 documents concurrency 6 + fail artifact", () => {
+  const src = readFileSync("scripts/assert-eu-locale-routes-200.mjs", "utf8");
+  assert.match(src, /EU_LOCALE_CONCURRENCY/);
+  assert.match(src, /mapPool/);
+  assert.match(src, /EU_FAIL_ARTIFACT/);
+  assert.match(src, /skipped-live/);
+});
+
+test("mapPool preserves input order under concurrency", async () => {
+  const items = [10, 20, 30, 40, 50, 60, 70, 80];
+  const started: number[] = [];
+  const out = await mapPool(items, 3, async (n, i) => {
+    started.push(i);
+    await new Promise((r) => setTimeout(r, 5 + ((7 - i) % 3)));
+    return n * 2;
+  });
+  assert.deepEqual(out, items.map((n) => n * 2));
+  assert.equal(started.length, items.length);
+});
+
+test("soft-live Go button helper covers ga/mt pack labels", () => {
+  const src = readFileSync("playwright/helpers/soft-live-go-button.ts", "utf8");
+  assert.match(src, /SOFT_LIVE_GO_BUTTON_NAME/);
+  assert.match(src, /Rith/);
+  assert.match(src, /Mexxi/);
+  const risk = readFileSync("playwright/risk-result-zh-hans-evidence.spec.ts", "utf8");
+  assert.match(risk, /SOFT_LIVE_GO_BUTTON_NAME/);
+  assert.doesNotMatch(risk, /Zaženi\|Executa\|Запустити/);
 });

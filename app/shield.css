@@ -13,8 +13,8 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 20px;
-  padding: 0 0 22px;
+  gap: 28px;
+  padding: 0 0 26px;
   border-bottom: 1px solid var(--line);
 }
 
@@ -77,6 +77,12 @@
     font-size: 10px;
     letter-spacing: 0.08em;
     padding: 4px 5px;
+  }
+
+  .shell .top-nav .nav-link[data-testid="nav-lists-offline"],
+  .shell .top-nav a[data-testid="nav-downloads"] {
+    /* Compact chrome: hide secondary nav; home/result Downloads CTA remains reachable. */
+    display: none;
   }
 
   .shell .home-downloads-cta,
@@ -397,26 +403,40 @@
 }
 
 .shell .stage {
-  padding: 44px 0 0;
+  padding: 48px 0 0;
+}
+
+/* Check home: one job — lights + note + form; downloads/lists sit below the fold line. */
+.shell .stage-check .kicker {
+  margin: 0 0 18px;
 }
 
 .shell .stage-check .light-note {
-  margin: 0 0 28px;
-  max-width: 36rem;
+  margin: 0 0 32px;
+  max-width: 34rem;
+}
+
+.shell .stage-check .instrument-check,
+.shell .stage-check .check-card {
+  margin-top: 0;
 }
 
 .shell .stage-secondary {
-  margin-top: 28px;
-  padding-top: 18px;
+  margin-top: 40px;
+  padding-top: 20px;
   border-top: 1px solid color-mix(in srgb, var(--muted) 22%, transparent);
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 8px;
+  max-width: 28rem;
 }
 
 .shell .stage-secondary .hint,
 .shell .stage-secondary .scope-note {
   margin: 0;
+  font-size: 13px;
+  line-height: 1.4;
+  color: color-mix(in srgb, var(--muted) 88%, var(--text));
 }
 
 .shell .kicker {

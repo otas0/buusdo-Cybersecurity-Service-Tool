@@ -1,10 +1,11 @@
+<!-- latest-deploy-run: 42482596754 2026-11-08T12:56:55Z -->
 # Local Cloudflare connectivity (do not misread timeouts)
 
 ## What happened (2026-11-08) — repeat timeout
 
 From the same Asia laptop path, HTTPS to `https://buusdocst.mtsu.workers.dev` again **TCP timed out** (`curl` exit 28; `/api/health`, `/en`, `/sl`, `/ca` all `http_code=000`).
 
-At the same wall-clock window, GitHub Actions **Deploy Cloudflare** on `ubuntu-latest` completed **success** (deploy + Health smoke + Check smoke green) — e.g. [run 42482441353](https://github.com/otas0/buusdo-Cybersecurity-Service-Tool/actions/runs/42482441353).
+At the same wall-clock window, GitHub Actions **Deploy Cloudflare** on `ubuntu-latest` completed **success** (deploy + Health smoke + Check smoke green) — e.g. [run 42482596754](https://github.com/otas0/buusdo-Cybersecurity-Service-Tool/actions/runs/42482596754).
 
 | Symptom | Classification |
 |---------|----------------|

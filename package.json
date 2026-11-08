@@ -12,7 +12,7 @@
     "health:prod": "node scripts/health-smoke.mjs",
     "check:prod": "node scripts/check-smoke.mjs",
     "production:origin": "node scripts/set-production-origin.mjs",
-    "hooks:install": "git config core.hooksPath .githooks && chmod +x .githooks/pre-commit && echo 'git hooks \u2192 .githooks (openapi:check on commit)'",
+    "hooks:install": "git config core.hooksPath .githooks && chmod +x .githooks/pre-commit && echo 'git hooks \u2192 .githooks (openapi + stamp + extension-tokens on commit)'",
     "smoke:desktop-scan-resources": "node scripts/desktop-scan-resources-smoke.mjs",
     "smoke:desktop-machine": "node scripts/desktop-machine-smoke.mjs",
     "smoke:desktop-launcher": "node scripts/desktop-launcher-smoke.mjs",
@@ -138,7 +138,9 @@
     "sync:extension-tokens": "node scripts/sync-extension-tokens.mjs",
     "sync:extension-tokens:check": "node scripts/sync-extension-tokens.mjs --check",
     "assert:china-wordmark-parity": "node scripts/assert-china-wordmark-parity.mjs",
-    "assert:desktop-about-frame": "node scripts/assert-desktop-about-frame.mjs"
+    "assert:desktop-about-frame": "node scripts/assert-desktop-about-frame.mjs",
+    "sync:latest-deploy-run-url": "node scripts/sync-latest-deploy-run-url.mjs",
+    "test:playwright:locale-chrome-a11y": "PLAYWRIGHT_SKIP_WEBSERVER=1 playwright test playwright/locale-recommend-aria-describedby.spec.ts playwright/extension-popup-zh-hant-live.spec.ts playwright/home-downloads-settings-deeplink.spec.ts playwright/home-downloads-cta-narrow.spec.ts"
   },
   "dependencies": {
     "next": "16.3.4",

@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
  * Overlay website pack chrome onto desktop STRINGS for ja / zh-Hant / zh-Hans,
- * Nordic packs (sv / da / fi / nb), and Europe popup locales (de / fr / es).
+ * Nordic packs (sv / da / fi / nb), and Europe popup locales (de / fr / es / it / nl).
  * Preserves existing bag keys (machine*, etc.) and only overwrites MAP keys from packs.
  *
  *   node scripts/sync-desktop-i18n-from-packs.mjs

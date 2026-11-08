@@ -21,7 +21,7 @@ First-party only. The website check endpoint never calls Google Safe Browsing or
 | `skipHeadHosts` | no | Registrable domains (max 50) that should skip HEAD on the first hop — from local history of repeated HEAD failures. Domains only; never full URLs. |
 | `personalListBlocked` | no | Read-only hint from extension/desktop that the host is on the caller’s personal block list. When `true`, analysis may include evidence id `user-block`. **The website never stores or enforces personal lists** — this flag is not persisted and does not affect rate-limit keys. |
 
-Also see OpenAPI **1.5.2** fragment: `docs/openapi-check-timing.yaml` (`personalListBlocked` is request-only and outside `CheckTiming`). When `personalListBlocked` is `true` and the rest of the check is only `LOW_EVIDENCE`, recommendation may be `LEAVE` (stronger levels keep their own recommendation).
+Also see OpenAPI **1.5.3** fragment: `docs/openapi-check-timing.yaml` (`personalListBlocked` is request-only and outside `CheckTiming`). When `personalListBlocked` is `true` and the rest of the check is only `LOW_EVIDENCE`, recommendation may be `LEAVE` (stronger levels keep their own recommendation). Health 1.5.3 adds `localeCount` / `regionCount` / `localesByRegion`.
 
 **Examples:** OpenAPI response example `personalListBlockedLeave` under `POST /api/check` → `200` → `examples` in [`docs/openapi-check-timing.yaml`](./openapi-check-timing.yaml) (LEAVE + LOW_EVIDENCE + `user-block` evidence).
 
@@ -56,7 +56,7 @@ Operator soft notice: when `personalListBlocked: true` is accepted, the server m
 }
 ```
 
-Use `analysis.timing` for probe tuning (`docs/check-timing.schema.json`, OpenAPI 1.5.2 `docs/openapi-check-timing.yaml`). Health echoes `accountSyncEnabled` when account list-sync is gated (`ACCOUNT_SYNC_ENABLED`). `ambiguousProbeStatus` is `true` when the live probe got HTTP 403/429/503 (bot block / throttle) — paired with evidence id `probe-blocked`; it does not escalate risk. Use `analysis.live.timedOut` with `probe-timeout` evidence — never invent third-party reputation fields. Legacy evidence id `sensitive` aliases to `sensitive-path` (`security/evidence-ids.ts`). When the request sent `personalListBlocked: true`, `analysis.personalListBlocked` echoes `true` and `analysis.risk.evidence` may include id `user-block` (still no server-side list storage). With only `LOW_EVIDENCE` otherwise, `risk.recommendation` may be `LEAVE`.
+Use `analysis.timing` for probe tuning (`docs/check-timing.schema.json`, OpenAPI 1.5.3 `docs/openapi-check-timing.yaml`). Health echoes `accountSyncEnabled` when account list-sync is gated (`ACCOUNT_SYNC_ENABLED`), plus catalog smoke fields `localeCount` (≥ 40 in health-smoke). `ambiguousProbeStatus` is `true` when the live probe got HTTP 403/429/503 (bot block / throttle) — paired with evidence id `probe-blocked`; it does not escalate risk. Use `analysis.live.timedOut` with `probe-timeout` evidence — never invent third-party reputation fields. Legacy evidence id `sensitive` aliases to `sensitive-path` (`security/evidence-ids.ts`). When the request sent `personalListBlocked: true`, `analysis.personalListBlocked` echoes `true` and `analysis.risk.evidence` may include id `user-block` (still no server-side list storage). With only `LOW_EVIDENCE` otherwise, `risk.recommendation` may be `LEAVE`.
 
 ## Operators FAQ — `probe-blocked` vs phishing
 

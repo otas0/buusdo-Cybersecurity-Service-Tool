@@ -36,11 +36,14 @@ Wrangler OAuth / `wrangler login` cannot be copied into GH secrets — use an AP
 | `PRODUCTION_HEALTH_URL` | Same origin for [health-monitor.yml](../.github/workflows/health-monitor.yml). **Live:** `https://buusdocst.mtsu.workers.dev` |
 | `STAGING_HEALTH_URL` | Non-prod Worker origin. **Live:** `https://buusdocst-staging.mtsu.workers.dev`. `assert-staging-health` requires `ok: true` and **`accountSyncEnabled: false`**. Must **not** equal `PRODUCTION_HEALTH_URL`. |
 | `PLAYWRIGHT_LIVE_BASE_URL` | Optional override for soft-live Halt + EU locale 200 (highest priority). Usually unset in Actions — Deploy soft job passes the smoke URL. |
-| `PLAYWRIGHT_PREVIEW_BASE_URL` | Optional **preview** Worker / pages origin. Soft probes fall back here after LIVE → PRODUCTION → STAGING. |
+| `PLAYWRIGHT_PREVIEW_BASE_URL` | Optional **preview** fallback after LIVE → PRODUCTION → STAGING. **Dedicated Worker name (planned):** `buusdocst-preview` → `https://buusdocst-preview.mtsu.workers.dev`. Until that Worker exists, reuse staging: `gh variable set PLAYWRIGHT_PREVIEW_BASE_URL --body https://buusdocst-staging.mtsu.workers.dev`. Do not point preview at production. |
 | `HEALTH_TIMEOUT_MS` | Health probe budget for soft scripts (default `8000`). Separate from locale HTML probes. |
 | `LOCALE_TIMEOUT_MS` | Per-locale HTML probe budget (default `12000`). |
+| `EU_LOCALE_CONCURRENCY` | Parallel Europe locale HTML fetches in `assert:eu-locale-routes-200` (default `6`, max 24). Deploy soft job sets `6`. |
 | `CHECKLIST_CI_WRITE` | Set to `0` to disable bot commits that append check:prod rows to LAUNCH_CHECKLIST |
 | `RUN_PLAYWRIGHT_SETTINGS` | Optional CI job `playwright-settings`. Keep **`false`** until offline Settings narrow (`npm run test:playwright:settings`) is green; only then `gh variable set RUN_PLAYWRIGHT_SETTINGS --body true`. |
+
+**Deploy soft jobs:** `eu-locale-routes-200` always runs after a successful deploy (production + staging) with **`continue-on-error: true`** — eval 2026-11-08: do **not** hard-fail production on a single locale blip (would flake locale-pack push deploys). Opt-in soft-live Halt: workflow_dispatch **`run_soft_live_halt`** installs Playwright and runs `live Halt evidence` against the smoke URL.
 
 ## Account sync — cancelled
 

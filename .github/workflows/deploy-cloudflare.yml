@@ -6,7 +6,7 @@
 # Optional variable:
 #   NEXT_PUBLIC_SITE_URL   — https://YOUR_DOMAIN or https://….workers.dev (no trailing slash)
 #   STAGING_HEALTH_URL     — after first staging deploy; must ≠ PRODUCTION_HEALTH_URL
-#   PLAYWRIGHT_PREVIEW_BASE_URL — optional preview fallback for soft EU / soft-live probes
+#   PLAYWRIGHT_PREVIEW_BASE_URL — optional preview fallback (prefer dedicated buusdocst-preview Worker)
 #
 # After first success: locally run
 #   npm run production:origin -- https://…
@@ -14,8 +14,9 @@
 # Custom domain second deploy: docs/CUSTOM_DOMAIN_REDEPLOY.md (hold until Account gate + POST_LAUNCH_48H).
 # Local laptop timeouts ≠ outage: docs/LOCAL_CF_CONNECTIVITY.md — trust Actions only.
 #
-# Soft-live Halt (Playwright against Workers): prefer this Deploy soft path, not the CI unit matrix
-# (offline fixture tests stay in CI). See docs/I18N.md § Soft live Halt fixture.
+# Soft EU locale 200: always soft (continue-on-error) for production + staging — locale-pack
+# push deploys must not hard-fail the workflow on a single locale blip. Soft-live Halt Playwright
+# is opt-in via workflow_dispatch `run_soft_live_halt` (not on CI unit matrix). See docs/I18N.md.
 
 
 name: Deploy Cloudflare
@@ -54,6 +55,11 @@ on:
         required: false
         type: boolean
         default: true
+      run_soft_live_halt:
+        description: "After deploy, soft-run Playwright live Halt evidence against Workers"
+        required: false
+        type: boolean
+        default: false
 
 jobs:
   deploy:
@@ -88,7 +94,7 @@ jobs:
             else
               # First staging deploy: health step skipped until STAGING_HEALTH_URL is set.
               URL=""
-              echo "::notice::STAGING_HEALTH_URL unset — deploy will run; set the var to the printed workers.dev URL after first success"
+              echo "::notice::STAGING_HEALTH_URL unset — deploy will run; set the var to the printed workers.dev URL after first success (soft EU job will skip until then)"
             fi
           else
             if [ -n "$OVERRIDE" ]; then
@@ -107,7 +113,7 @@ jobs:
             echo "NEXT_PUBLIC_SITE_URL=$URL" >> "$GITHUB_ENV"
             echo "::notice::target=$TARGET NEXT_PUBLIC_SITE_URL=$URL"
           else
-            echo "::notice::target=$TARGET (no smoke URL yet)"
+            echo "::notice::target=$TARGET (no smoke URL yet — first staging? set STAGING_HEALTH_URL after wrangler prints the workers.dev host)"
           fi
 
       - name: Install
@@ -158,13 +164,14 @@ jobs:
   eu-locale-routes:
     name: eu-locale-routes-200 (soft)
     needs: deploy
-    # Production + staging: run whenever deploy succeeded (URL may come from outputs or repo vars).
+    # Keep soft for production + staging (continue-on-error). Eval 2026-11-08: do not hard-fail
+    # production on a single locale blip — locale-pack push deploys would otherwise flake.
     if: needs.deploy.result == 'success'
     runs-on: ubuntu-latest
     continue-on-error: true
     steps:
       - uses: actions/checkout@v4
-      # Pure Node script — no npm install (omit=dev / full ci both unnecessary).
+      # Pure Node script — no npm install.
       - name: Europe locale routes 200
         id: eu
         env:
@@ -177,18 +184,21 @@ jobs:
           EU_LOCALE_CONCURRENCY: "6"
           EU_FAIL_ARTIFACT: ${{ runner.temp }}/eu-locale-failures.md
           WORKERS_TIMEOUT_WEBHOOK_URL: ${{ secrets.WORKERS_TIMEOUT_WEBHOOK_URL }}
+          DEPLOY_TARGET: ${{ needs.deploy.outputs.target }}
         run: |
           set -euo pipefail
-          # Fallback when deploy left site_url empty (first staging) but staging var exists.
           if [ -z "${PLAYWRIGHT_LIVE_BASE_URL:-}" ]; then
-            if [ -n "${STAGING_HEALTH_URL:-}" ] && [ "${{ needs.deploy.outputs.target }}" = "staging" ]; then
+            if [ -n "${STAGING_HEALTH_URL:-}" ] && [ "${DEPLOY_TARGET}" = "staging" ]; then
               export PLAYWRIGHT_LIVE_BASE_URL="$STAGING_HEALTH_URL"
             elif [ -n "${PRODUCTION_HEALTH_URL:-}" ]; then
               export PLAYWRIGHT_LIVE_BASE_URL="$PRODUCTION_HEALTH_URL"
             fi
           fi
+          if [ -z "${PLAYWRIGHT_LIVE_BASE_URL:-}" ] && [ "${DEPLOY_TARGET}" = "staging" ]; then
+            echo "::notice::skipped-live [eu-routes-200] staging first deploy has no smoke URL yet — set STAGING_HEALTH_URL to the wrangler workers.dev host, then re-run Deploy or this soft job"
+          fi
           node scripts/assert-eu-locale-routes-200.mjs
-          echo "::notice::eu-locale-routes-200 finished (soft job; continue-on-error)"
+          echo "::notice::eu-locale-routes-200 finished (soft job; continue-on-error for production+staging)"
       - name: Upload EU failure table
         if: failure()
         uses: actions/upload-artifact@v4
@@ -196,11 +206,55 @@ jobs:
           name: eu-locale-failures
           path: ${{ runner.temp }}/eu-locale-failures.md
           if-no-files-found: ignore
-          retention-days: 14
+          retention-days: 7
+
+  soft-live-halt:
+    name: soft-live Halt (Playwright)
+    needs: deploy
+    if: >
+      needs.deploy.result == 'success' &&
+      github.event_name == 'workflow_dispatch' &&
+      github.event.inputs.run_soft_live_halt == 'true'
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+      - name: Install
+        run: npm ci
+      - name: Install Playwright Chromium
+        run: npx playwright install --with-deps chromium
+      - name: Soft-live Halt evidence
+        env:
+          PLAYWRIGHT_SKIP_WEBSERVER: "1"
+          PLAYWRIGHT_LIVE_BASE_URL: ${{ needs.deploy.outputs.site_url }}
+          PRODUCTION_HEALTH_URL: ${{ vars.PRODUCTION_HEALTH_URL }}
+          STAGING_HEALTH_URL: ${{ vars.STAGING_HEALTH_URL }}
+          PLAYWRIGHT_PREVIEW_BASE_URL: ${{ vars.PLAYWRIGHT_PREVIEW_BASE_URL }}
+          HEALTH_TIMEOUT_MS: "8000"
+          WORKERS_TIMEOUT_WEBHOOK_URL: ${{ secrets.WORKERS_TIMEOUT_WEBHOOK_URL }}
+        run: |
+          set -euo pipefail
+          if [ -z "${PLAYWRIGHT_LIVE_BASE_URL:-}" ]; then
+            if [ "${{ needs.deploy.outputs.target }}" = "staging" ] && [ -n "${STAGING_HEALTH_URL:-}" ]; then
+              export PLAYWRIGHT_LIVE_BASE_URL="$STAGING_HEALTH_URL"
+            elif [ -n "${PRODUCTION_HEALTH_URL:-}" ]; then
+              export PLAYWRIGHT_LIVE_BASE_URL="$PRODUCTION_HEALTH_URL"
+            fi
+          fi
+          if [ -z "${PLAYWRIGHT_LIVE_BASE_URL:-}" ]; then
+            echo "::notice::skipped-live soft-live Halt — no origin URL (set site_url / STAGING_HEALTH_URL / PRODUCTION_HEALTH_URL)"
+            exit 0
+          fi
+          npx playwright test playwright/risk-result-zh-hans-evidence.spec.ts -g "live Halt evidence"
+          echo "::notice::soft-live Halt finished (continue-on-error)"
 
   deploy-summary:
     name: Deploy Summary
-    needs: [deploy, eu-locale-routes]
+    needs: [deploy, eu-locale-routes, soft-live-halt]
     if: always() && needs.deploy.result != 'cancelled'
     runs-on: ubuntu-latest
     steps:
@@ -215,7 +269,9 @@ jobs:
           TARGET: ${{ needs.deploy.outputs.target }}
           SMOKE_URL: ${{ needs.deploy.outputs.site_url }}
           EU_RESULT: ${{ needs.eu-locale-routes.result }}
+          SOFT_LIVE_RESULT: ${{ needs.soft-live-halt.result }}
           DEPLOY_RESULT: ${{ needs.deploy.result }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
         run: |
           set -euo pipefail
           FAIL_MD="${{ runner.temp }}/eu-fail/eu-locale-failures.md"
@@ -226,7 +282,7 @@ jobs:
             elif [ "$EU_RESULT" = "failure" ]; then
               echo "## EU locale route failures"
               echo ""
-              echo "_Soft job failed but no artifact was uploaded — see \`eu-locale-routes-200 (soft)\` logs._"
+              echo "_Soft job failed but no artifact was uploaded — open soft job logs below._"
               echo ""
             fi
             echo "## Deploy Cloudflare"
@@ -234,7 +290,8 @@ jobs:
             echo "| Field | Value |"
             echo "| --- | --- |"
             echo "| deploy | \`$DEPLOY_RESULT\` |"
-            echo "| eu-locale soft | \`$EU_RESULT\` |"
+            echo "| eu-locale soft | \`$EU_RESULT\` — [run logs]($RUN_URL) (job \`eu-locale-routes-200 (soft)\`) |"
+            echo "| soft-live Halt | \`$SOFT_LIVE_RESULT\` — [run logs]($RUN_URL) (job \`soft-live Halt (Playwright)\`; skipped unless workflow_dispatch + run_soft_live_halt) |"
             echo "| target | \`$TARGET\` |"
             echo "| smoke URL | \`$SMOKE_URL\` |"
             CMD="npm run deploy:cloudflare"
@@ -242,12 +299,16 @@ jobs:
             echo "| command | \`$CMD\` |"
             echo ""
             if [ "$TARGET" = "staging" ]; then
-              echo "Staging: Account sync is **cancelled** (\`accountSyncEnabled\` must stay false). Soft EU job runs for staging when deploy succeeds."
+              echo "Staging: Account sync is **cancelled** (\`accountSyncEnabled\` must stay false). Soft EU stays \`continue-on-error\` (same as production)."
+              if [ -z "$SMOKE_URL" ]; then
+                echo ""
+                echo "> **First staging deploy:** smoke URL empty — set \`STAGING_HEALTH_URL\` to the wrangler \`*.workers.dev\` host, then re-run Deploy so soft EU / soft-live can probe."
+              fi
             else
               echo "Custom domain: **hold** until docs/POST_LAUNCH_48H.md (docs/CUSTOM_DOMAIN_REDEPLOY.md)."
+              echo ""
+              echo "EU soft job stays soft on production (eval 2026-11-08): hard-fail would flake locale-pack push deploys."
             fi
-            echo ""
-            echo "Soft-live Halt Playwright stays off the CI unit matrix — run via \`npm run test:playwright:zh-hans-evidence\` against Workers, or add a future Deploy soft job (docs/I18N.md)."
           } >> "$GITHUB_STEP_SUMMARY"
 
   privacy:

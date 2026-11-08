@@ -12,6 +12,10 @@ test("health-smoke.mjs documents --url and required assertions", () => {
   assert.match(src, /curatedListPresent/);
   assert.match(src, /localeCount/);
   assert.match(src, /localeCount < 40|localeCount must be a number ≥ 40/);
+  assert.match(src, /localesByRegion\.europe/);
+  assert.match(src, /expectedRegions/);
+  assert.match(src, /southeast-asia/);
+  assert.match(src, /europe < 20|europe must be ≥ 20/);
   assert.match(src, /thirdPartyReputation/);
   assert.match(src, /accountSyncEnabled/);
 });

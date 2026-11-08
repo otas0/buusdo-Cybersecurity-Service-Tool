@@ -136,26 +136,6 @@
     "nextNoCreds": "Đừng nhập mật khẩu, số thẻ, mã từ SMS/email hay dữ liệu cá nhân khác trên trang này.",
     "nextVerify": "Xác minh độc lập: mở tên miền hoặc ứng dụng chính thức của tổ chức bạn đã tin (dấu trang, thẻ ngân hàng, cửa hàng ứng dụng quen). Đừng dùng số điện thoại hay email hiện trên trang đáng ngờ."
   },
-  "pt-BR": {
-    "phishing": "Padrão de phishing bloqueado",
-    "dismiss": "Dispensar aviso",
-    "dangerLevel": "Nível de perigo: Parar",
-    "ignoreRisk": "Você pode entregar senhas, dados de pagamento ou outros dados pessoais a quem controla este endereço. Feche a aba antes de digitar ou pagar qualquer coisa.",
-    "nextStepsTitle": "O que fazer a seguir — passo a passo",
-    "nextLeave": "Saia já desta página — não continue no endereço que você verificou.",
-    "nextNoCreds": "Não digite senhas, números de cartão, códigos de SMS/e-mail ou outros dados pessoais neste site.",
-    "nextVerify": "Verifique de forma independente: abra o domínio ou o app oficial da organização em que você já confia (favorito, cartão do banco, loja de apps conhecida). Não use telefones nem e-mails mostrados na página suspeita."
-  },
-  "ja": {
-    "phishing": "フィッシングパターンをブロックしました",
-    "dismiss": "ヒントを閉じる",
-    "dangerLevel": "危険度: 停止",
-    "ignoreRisk": "パスワード、支払い情報、その他の個人データを、このアドレスを支配する相手に渡すおそれがあります。入力や支払いの前にタブを閉じてください。",
-    "nextStepsTitle": "次にすること — 手順どおり",
-    "nextLeave": "今すぐこのページを離れてください — 確認したアドレスで続けないでください。",
-    "nextNoCreds": "このサイトにパスワード、カード番号、SMS/メールのコード、その他の個人データを入力しないでください。",
-    "nextVerify": "独立して確認してください：すでに信頼している公式ドメインやアプリを開く（ブックマーク、キャッシュカード、既知のアプリストア）。不審なページに表示された電話番号やメールは使わないでください。"
-  },
   "af": {
     "phishing": "Phishing-patroon geblokkeer",
     "dismiss": "Maak wenk toe",
@@ -175,6 +155,26 @@
     "nextLeave": "Phuma kuleli khasi manje — ungakuqhubeki ekhelini olihlolile.",
     "nextNoCreds": "Ungafaki amaphasiwedi, izinombolo zamakhadi, amakhodi e-SMS/imeyili, noma enye idatha yomuntu siqu kule sayithi.",
     "nextVerify": "Qinisekisa ngokuzimela: vula isizinda noma uhlelo lwesikhathi esisemthethweni senhlangano osesethemba kakade (ibhukhimakhi, ikhadi lebhanga, isitolo sohlelo olwaziwayo). Ungasebenzisi izingcingo noma ama-imeyili akhona ekhasini elisolisayo."
+  },
+  "pt-BR": {
+    "phishing": "Padrão de phishing bloqueado",
+    "dismiss": "Dispensar aviso",
+    "dangerLevel": "Nível de perigo: Parar",
+    "ignoreRisk": "Você pode entregar senhas, dados de pagamento ou outros dados pessoais a quem controla este endereço. Feche a aba antes de digitar ou pagar qualquer coisa.",
+    "nextStepsTitle": "O que fazer a seguir — passo a passo",
+    "nextLeave": "Saia já desta página — não continue no endereço que você verificou.",
+    "nextNoCreds": "Não digite senhas, números de cartão, códigos de SMS/e-mail ou outros dados pessoais neste site.",
+    "nextVerify": "Verifique de forma independente: abra o domínio ou o app oficial da organização em que você já confia (favorito, cartão do banco, loja de apps conhecida). Não use telefones nem e-mails mostrados na página suspeita."
+  },
+  "ja": {
+    "phishing": "フィッシングパターンをブロックしました",
+    "dismiss": "ヒントを閉じる",
+    "dangerLevel": "危険度: 停止",
+    "ignoreRisk": "パスワード、支払い情報、その他の個人データを、このアドレスを支配する相手に渡すおそれがあります。入力や支払いの前にタブを閉じてください。",
+    "nextStepsTitle": "次にすること — 手順どおり",
+    "nextLeave": "今すぐこのページを離れてください — 確認したアドレスで続けないでください。",
+    "nextNoCreds": "このサイトにパスワード、カード番号、SMS/メールのコード、その他の個人データを入力しないでください。",
+    "nextVerify": "独立して確認してください：すでに信頼している公式ドメインやアプリを開く（ブックマーク、キャッシュカード、既知のアプリストア）。不審なページに表示された電話番号やメールは使わないでください。"
   }
 };
   /* TOAST_COPY_END */

@@ -460,7 +460,7 @@
   "proxyGuideWin": "Windows: Instellingen → Netwerk en internet → Proxy → Handmatige installatie → Een proxyserver gebruiken → Adres 127.0.0.1 Poort 8080.",
   "proxyGuideLinux": "Linux: zet http_proxy=http://127.0.0.1:8080 voor de app, of de netwerkproxy van het bureaublad → HTTP 127.0.0.1:8080.",
   "proxyGuideBrowser": "Browser: geef de voorkeur aan de OS-proxy, of een extensie die HTTP via 127.0.0.1:8080 stuurt. Installeer geen MITM-certificaat — dit product ontsleutelt TLS nooit.",
-  "proxyGuideCurl": "Quick test: curl -x http://127.0.0.1:8080 http://www.google-analytics.com/collect -i",
+  "proxyGuideCurl": "Snelle test: curl -x http://127.0.0.1:8080 http://www.google-analytics.com/collect -i",
   "proxyGuideAfterBlock": "Hosts geblokkeerd. Zet de HTTP-proxy op 127.0.0.1:8080 of het log blijft leeg.",
   "extensionToastPhishing": "Phishingpatroon geblokkeerd",
   "homeDownloadsCta": "Desktop-downloads",

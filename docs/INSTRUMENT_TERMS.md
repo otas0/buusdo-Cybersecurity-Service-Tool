@@ -36,6 +36,7 @@ Product instrument language — keep short and consistent across locales.
 | is | Stöðva | Halda | Hreint | Biðstaða |
 | sl | Stop | Zadrži | Čisto | Pripravljenost |
 | th | หยุด | ชะลอ | ผ่าน | พร้อม |
+| vi | Dừng | Giữ | Thông | Chờ |
 | mi | Tū | Tatari | Mahea | Tūrei |
 | af | Stop | Wag | Skoon | Gereed |
 | zu | Misa | Linda | Kucacile | Ulindile |
@@ -43,7 +44,13 @@ Product instrument language — keep short and consistent across locales.
 | km | ឈប់ | ផ្អាក | ឆ្លង | រង់ចាំ |
 | lo | ຢຸດ | ຊະລໍ | ຜ່ານ | ພ້ອມ |
 | my | ရပ် | ဆိုင်း | အဆင်ပြေ | အဆင်သင့် |
+| ga | Stad | Coinnigh | Glan | Fanacht |
+| mt | Waqqaf | Żomm | Ċar | Lest |
+| ro | Stop | Reține | Curat | Așteptare |
+| bg | Стоп | Задръж | Чисто | Готовност |
+
+SEA overlay (`th` / `vi` / `mi` + extension bags) must keep `lightSafe` / `lightStandby` on this table — Clear / Standby chips are not EN leftovers after SEA sync.
 
 When expanding packs, keep these four keys aligned with this table unless a native reviewer updates the row.
 
-Toast Halt chips (extension overlay) use `lightDanger` — Stop / Alto / Parar / Halt / Stopp / Seis map 1:1 into `toastPhishing` via `sync-extension-sea-i18n` / `sync-toast-i18n`.
+Toast Halt chips (extension overlay) use `lightDanger` — Stop / Alto / Parar / Halt / Stopp / Seis / Dừng / หยุด map 1:1 into `toastPhishing` via `sync-extension-sea-i18n` / `sync-toast-i18n`.

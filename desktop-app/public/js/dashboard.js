@@ -264,7 +264,8 @@ let lang = "en";
 function fillLangSelect() {
   const sel = els.langSelect;
   if (!sel || !LOCALE_CATALOG_DATA?.catalog) return;
-  const { regionOrder, regionLabels, catalog } = LOCALE_CATALOG_DATA;
+  const { regionOrder, regionLabels, catalog, desktopFirstClassBags } = LOCALE_CATALOG_DATA;
+  const firstClass = new Set(desktopFirstClassBags || []);
   const previous = sel.value || lang;
   sel.innerHTML = "";
   for (const region of regionOrder) {
@@ -276,6 +277,14 @@ function fillLangSelect() {
       const opt = document.createElement("option");
       opt.value = item.id;
       opt.textContent = item.nativeName;
+      // First-class bags (de/fr/es/it/nl + Nordic/CJK…) get a native-UI hint; others EN chrome.
+      if (firstClass.has(item.id)) {
+        opt.dataset.desktopBag = "first-class";
+        opt.title = "Native desktop UI";
+      } else {
+        opt.dataset.desktopBag = "en-fallback";
+        opt.title = "English UI fallback";
+      }
       group.appendChild(opt);
     }
     sel.appendChild(group);

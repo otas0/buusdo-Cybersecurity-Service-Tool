@@ -25,6 +25,12 @@ jobs:
           cp shared/tokens.css china-pages/assets/tokens.css
           cmp -s shared/tokens.css china-pages/assets/tokens.css
 
+      - name: Assert China wordmark/logo match Workers public/brand (hash + size)
+        run: |
+          set -euo pipefail
+          node scripts/assert-china-wordmark-parity.mjs
+          echo "::notice::China Pages brand assets match public/brand (wordmark + logo)"
+
       - name: Assert no Round-2 survey leftovers in publish tree
         run: |
           set -euo pipefail

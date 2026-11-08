@@ -18,14 +18,14 @@ const EXPECTED: Record<string, string> = {
   nso: "Ga go na dipoelo",
   st: "Ha ho na liphetho",
   tn: "Ga go na diphitlhelelo",
-  th: "ไม่พบภาษาที่ตรงกัน",
+  th: "ไม่พบภาษาที่ตรงกับคำค้น",
   vi: "Không có ngôn ngữ khớp",
   id: "Tidak ada bahasa yang cocok",
   ms: "Tiada bahasa sepadan",
   fil: "Walang tumugmang wika",
   km: "គ្មានភាសាត្រូវគ្នា",
   lo: "ບໍ່ພົບພາສາທີ່ກົງກັນ",
-  my: "ကိုက်ညီသော ဘာသာစကား မရှိပါ",
+  my: "ရှာဖွေမှုနှင့် ကိုက်ညီသော ဘာသာစကား မရှိပါ",
   mi: "Kāore he reo e tutuki ana"
 };
 

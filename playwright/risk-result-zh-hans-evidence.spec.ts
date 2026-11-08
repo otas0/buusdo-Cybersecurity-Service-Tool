@@ -7,6 +7,7 @@ import { createServer } from "node:http";
 import { readFileSync } from "node:fs";
 import path from "node:path";
 import { expect, test } from "@playwright/test";
+import { SOFT_LIVE_GO_BUTTON_NAME } from "./helpers/soft-live-go-button";
 
 const root = process.cwd();
 const en = JSON.parse(readFileSync(path.join(root, "i18n/packs/_en.snapshot.json"), "utf8")) as Record<
@@ -168,11 +169,7 @@ test.describe("live Halt evidence (soft)", () => {
       .or(page.locator('input[name="url"], input[type="url"], input[data-testid="check-url"]').first());
     await expect(input.first()).toBeVisible({ timeout: 20_000 });
     await input.first().fill(host);
-    const go = page
-      .getByRole("button", {
-        name: /运行|Go|Run|檢查|检查|Ausführen|ตรวจ|เริ่ม|Voer uit|Qalisa|Lancer|Ejecutar|Spustit|Εκτέλεση|Esegui|Uitvoeren|Zaženi|Executa|Запустити|Keyra|Rith|Mexxi/i
-      })
-      .first();
+    const go = page.getByRole("button", { name: SOFT_LIVE_GO_BUTTON_NAME }).first();
     await go.click();
     const evidence = page.getByTestId("evidence-known-threat");
     await expect(evidence).toBeVisible({ timeout: 45_000 });

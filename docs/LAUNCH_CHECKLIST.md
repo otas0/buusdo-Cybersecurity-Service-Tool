@@ -10,6 +10,7 @@ Recorded via `npm run production:origin` → README + `shared/production-site.js
 - [x] Node ≥ 22.13; `npm ci`
 - [x] `npm run check` (2026-11-01 — tests + typecheck + lint + threat:check + build)
 - [ ] `npm run openapi:check` (run before OpenAPI-touching commits)
+- [x] OpenAPI / health **1.5.3** — `localeCount` + `regionCount` + `localesByRegion` on `GET /api/health`; `health-smoke` asserts `localeCount ≥ 40` and `localesByRegion.europe ≥ 20` (2026-11-08)
 - [ ] Manual: `/en`, `/pt-PT`, Settings, privacy, one check via `npm run dev`
 - [ ] Promo mirror: `npm run build:promo-posters` then open `/promo/poster.html` (EN / pt-PT / 中文); Print A4 · 100% · Margins None fits one page; live + China QR scan OK
 - [ ] After deploy: `https://buusdocst.mtsu.workers.dev/promo/poster.html` 200 + cache-bust wordmark loads

@@ -15,7 +15,8 @@ const REQUIRED = [
   "langRegionEastAsia",
   "langRegionEurope",
   "langRegionPacific",
-  "langRegionSoutheastAsia"
+  "langRegionSoutheastAsia",
+  "langRegionSouthernAfrica"
 ] as const;
 
 test("popup optgroups carry data-i18n-label MessageBag keys", () => {
@@ -37,4 +38,27 @@ test("EN MessageBag and packs include langRegion* keys", () => {
     assert.match(messages, new RegExp(`${key}:`), `messages.ts missing ${key}`);
     assert.ok(enPack[key]?.trim(), `_en.snapshot missing ${key}`);
   }
+});
+
+test("it / zh-Hans packs flip Europe and East Asia optgroup labels", () => {
+  const it = JSON.parse(readFileSync(join(root, "i18n/packs/it.json"), "utf8")) as Record<
+    string,
+    string
+  >;
+  const zh = JSON.parse(readFileSync(join(root, "i18n/packs/zh-Hans.json"), "utf8")) as Record<
+    string,
+    string
+  >;
+  const en = JSON.parse(
+    readFileSync(join(root, "i18n/packs/_en.snapshot.json"), "utf8")
+  ) as Record<string, string>;
+  assert.equal(it.langRegionEurope, "Europa");
+  assert.equal(zh.langRegionEastAsia, "东亚");
+  assert.notEqual(it.langRegionEurope, en.langRegionEurope);
+  assert.notEqual(zh.langRegionEastAsia, en.langRegionEastAsia);
+  assert.notEqual(it.langRegionEurope, zh.langRegionEurope);
+  // Shared bags must expose the keys popup.js applies via t(lang, key).
+  const shared = readFileSync(join(root, "extension/shared/i18n.js"), "utf8");
+  assert.match(shared, /langRegionEurope":?\s*"Europa"/);
+  assert.match(shared, /langRegionEastAsia:\s*"东亚"/);
 });
