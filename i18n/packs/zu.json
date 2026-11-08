@@ -465,5 +465,13 @@
   "extensionToastPhishing": "Iphethini yokukhwabanisa livinjwe",
   "homeDownloadsCta": "Ukulanda kwekhompyutha",
   "langPanelNoMatches": "Akukho okufanayo",
-  "themeHeaderHint": "Use the one Appearance button in the header (next to language)."
+  "desktopHonestLimitsGateTitle": "Ngaphambi kokuba le khompyutha iskenwe",
+  "langRegionGlobal": "Emhlabeni jikelele",
+  "langRegionEastAsia": "I-East Asia",
+  "langRegionEurope": "IYurophu",
+  "langRegionPacific": "IPacific",
+  "langRegionSoutheastAsia": "ISoutheast Asia",
+  "langRegionSouthernAfrica": "INingizimu Afrika",
+  "themeHeaderHint": "Use the one Appearance button in the header (next to language).",
+  "localeRecommendSearchHint": "Pinned suggestions below. Search to browse the full language list."
 }

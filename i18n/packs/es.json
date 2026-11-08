@@ -465,5 +465,13 @@
   "extensionToastPhishing": "Patrón de phishing bloqueado",
   "homeDownloadsCta": "Descargas de escritorio",
   "langPanelNoMatches": "Sin resultados",
-  "themeHeaderHint": "Use el botón Apariencia del encabezado (junto al idioma)."
+  "desktopHonestLimitsGateTitle": "Antes de analizar este ordenador",
+  "langRegionGlobal": "Global",
+  "langRegionEastAsia": "Asia oriental",
+  "langRegionEurope": "Europa",
+  "langRegionPacific": "Pacífico",
+  "langRegionSoutheastAsia": "Sudeste asiático",
+  "langRegionSouthernAfrica": "África austral",
+  "themeHeaderHint": "Use el botón Apariencia del encabezado (junto al idioma).",
+  "localeRecommendSearchHint": "Sugerencias abajo. Busque para ver la lista completa."
 }

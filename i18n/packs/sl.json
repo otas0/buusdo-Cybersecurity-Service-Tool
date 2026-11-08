@@ -465,5 +465,13 @@
   "extensionToastPhishing": "Phishing vzorec blokiran",
   "homeDownloadsCta": "Prenosi za namizje",
   "langPanelNoMatches": "Ni zadetkov",
-  "themeHeaderHint": "Use the one Appearance button in the header (next to language)."
+  "desktopHonestLimitsGateTitle": "Preden se ta računalnik pregleda",
+  "langRegionGlobal": "Globalno",
+  "langRegionEastAsia": "Vzhodna Azija",
+  "langRegionEurope": "Evropa",
+  "langRegionPacific": "Pacifik",
+  "langRegionSoutheastAsia": "JV Azija",
+  "langRegionSouthernAfrica": "Južna Afrika",
+  "themeHeaderHint": "Use the one Appearance button in the header (next to language).",
+  "localeRecommendSearchHint": "Pinned suggestions below. Search to browse the full language list."
 }

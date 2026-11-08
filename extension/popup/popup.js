@@ -134,6 +134,12 @@ function applyI18n() {
   }
   if (document.title !== undefined) document.title = t(lang, "appTitle");
   els.langLabel.textContent = t(lang, "langLabel");
+  if (els.langSelect) {
+    for (const group of els.langSelect.querySelectorAll("optgroup[data-i18n-label]")) {
+      const key = group.getAttribute("data-i18n-label");
+      if (key) group.label = t(lang, key);
+    }
+  }
   els.scanLabel.textContent = t(lang, "scan");
   els.trackersLabel.textContent = t(lang, "trackersBlocked");
   els.phishingLabel.textContent = t(lang, "phishingHits");

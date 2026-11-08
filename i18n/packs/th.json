@@ -465,5 +465,13 @@
   "extensionToastPhishing": "บล็อกรูปแบบฟิชชิงแล้ว",
   "homeDownloadsCta": "ดาวน์โหลดเดสก์ท็อป",
   "langPanelNoMatches": "ไม่พบผลลัพธ์",
-  "themeHeaderHint": "Use the one Appearance button in the header (next to language)."
+  "desktopHonestLimitsGateTitle": "Before this computer is scanned",
+  "langRegionGlobal": "Global",
+  "langRegionEastAsia": "East Asia",
+  "langRegionEurope": "Europe",
+  "langRegionPacific": "Pacific",
+  "langRegionSoutheastAsia": "Southeast Asia",
+  "langRegionSouthernAfrica": "Southern Africa",
+  "themeHeaderHint": "Use the one Appearance button in the header (next to language).",
+  "localeRecommendSearchHint": "ด้านล่างคือคำแนะนำ ค้นหาเพื่อดูภาษาทั้งหมด"
 }

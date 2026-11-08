@@ -465,5 +465,13 @@
   "extensionToastPhishing": "已攔截釣魚模式",
   "homeDownloadsCta": "桌面應用下載",
   "langPanelNoMatches": "無相符結果",
-  "themeHeaderHint": "請使用頁首中的外觀按鈕（在語言旁邊）。"
+  "desktopHonestLimitsGateTitle": "掃描此電腦之前",
+  "langRegionGlobal": "全球",
+  "langRegionEastAsia": "東亞",
+  "langRegionEurope": "歐洲",
+  "langRegionPacific": "太平洋",
+  "langRegionSoutheastAsia": "東南亞",
+  "langRegionSouthernAfrica": "南部非洲",
+  "themeHeaderHint": "請使用頁首中的外觀按鈕（在語言旁邊）。",
+  "localeRecommendSearchHint": "下方為建議。搜尋可瀏覽全部語言。"
 }

@@ -465,5 +465,13 @@
   "extensionToastPhishing": "已拦截钓鱼模式",
   "homeDownloadsCta": "桌面应用下载",
   "langPanelNoMatches": "无匹配",
-  "themeHeaderHint": "请使用页眉中的外观按钮（在语言旁边）。"
+  "desktopHonestLimitsGateTitle": "扫描此电脑之前",
+  "langRegionGlobal": "全球",
+  "langRegionEastAsia": "东亚",
+  "langRegionEurope": "欧洲",
+  "langRegionPacific": "太平洋",
+  "langRegionSoutheastAsia": "东南亚",
+  "langRegionSouthernAfrica": "南部非洲",
+  "themeHeaderHint": "请使用页眉中的外观按钮（在语言旁边）。",
+  "localeRecommendSearchHint": "下方为推荐。搜索可浏览全部语言。"
 }

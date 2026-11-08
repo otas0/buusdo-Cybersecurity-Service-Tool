@@ -465,5 +465,13 @@
   "extensionToastPhishing": "Шаблон фішингу заблоковано",
   "homeDownloadsCta": "Завантаження для ПК",
   "langPanelNoMatches": "Немає збігів",
-  "themeHeaderHint": "Use the one Appearance button in the header (next to language)."
+  "desktopHonestLimitsGateTitle": "Перш ніж сканувати цей комп’ютер",
+  "langRegionGlobal": "Глобально",
+  "langRegionEastAsia": "Східна Азія",
+  "langRegionEurope": "Європа",
+  "langRegionPacific": "Тихий океан",
+  "langRegionSoutheastAsia": "Південно-Східна Азія",
+  "langRegionSouthernAfrica": "Південна Африка",
+  "themeHeaderHint": "Use the one Appearance button in the header (next to language).",
+  "localeRecommendSearchHint": "Pinned suggestions below. Search to browse the full language list."
 }

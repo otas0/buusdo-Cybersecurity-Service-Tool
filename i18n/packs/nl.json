@@ -465,5 +465,13 @@
   "extensionToastPhishing": "Phishingpatroon geblokkeerd",
   "homeDownloadsCta": "Desktop-downloads",
   "langPanelNoMatches": "Geen resultaten",
-  "themeHeaderHint": "Gebruik de knop Weergave in de kop (naast taal)."
+  "desktopHonestLimitsGateTitle": "Voordat deze computer wordt gescand",
+  "langRegionGlobal": "Wereldwijd",
+  "langRegionEastAsia": "Oost-Azië",
+  "langRegionEurope": "Europa",
+  "langRegionPacific": "Pacific",
+  "langRegionSoutheastAsia": "Zuidoost-Azië",
+  "langRegionSouthernAfrica": "Zuidelijk Afrika",
+  "themeHeaderHint": "Gebruik de knop Weergave in de kop (naast taal).",
+  "localeRecommendSearchHint": "Suggesties hieronder. Zoek voor de volledige talenlijst."
 }

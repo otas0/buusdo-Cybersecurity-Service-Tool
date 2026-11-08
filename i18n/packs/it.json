@@ -465,5 +465,13 @@
   "extensionToastPhishing": "Modello di phishing bloccato",
   "homeDownloadsCta": "Download desktop",
   "langPanelNoMatches": "Nessun risultato",
-  "themeHeaderHint": "Usa il pulsante Aspetto nell’intestazione (accanto alla lingua)."
+  "desktopHonestLimitsGateTitle": "Prima di analizzare questo computer",
+  "langRegionGlobal": "Globale",
+  "langRegionEastAsia": "Asia orientale",
+  "langRegionEurope": "Europa",
+  "langRegionPacific": "Pacifico",
+  "langRegionSoutheastAsia": "Sud-est asiatico",
+  "langRegionSouthernAfrica": "Africa australe",
+  "themeHeaderHint": "Usa il pulsante Aspetto nell’intestazione (accanto alla lingua).",
+  "localeRecommendSearchHint": "Suggerimenti sotto. Cerca per l’elenco completo."
 }

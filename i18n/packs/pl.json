@@ -465,5 +465,13 @@
   "extensionToastPhishing": "Wzorzec phishingu zablokowany",
   "homeDownloadsCta": "Pobieranie aplikacji",
   "langPanelNoMatches": "Brak wyników",
-  "themeHeaderHint": "Użyj jednego przycisku Wygląd w nagłówku (obok języka)."
+  "desktopHonestLimitsGateTitle": "Zanim ten komputer zostanie przeskanowany",
+  "langRegionGlobal": "Globalnie",
+  "langRegionEastAsia": "Azja Wschodnia",
+  "langRegionEurope": "Europa",
+  "langRegionPacific": "Pacyfik",
+  "langRegionSoutheastAsia": "Azja Południowo-Wschodnia",
+  "langRegionSouthernAfrica": "Afryka Południowa",
+  "themeHeaderHint": "Użyj jednego przycisku Wygląd w nagłówku (obok języka).",
+  "localeRecommendSearchHint": "Sugestie poniżej. Szukaj, by zobaczyć pełną listę."
 }

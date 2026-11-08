@@ -14,7 +14,10 @@ const DESKTOP_BAGS = new Set([
   "sv",
   "da",
   "fi",
-  "nb"
+  "nb",
+  "de",
+  "fr",
+  "es"
 ]);
 
 /** @param {string|null|undefined} lang */

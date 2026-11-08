@@ -465,5 +465,13 @@
   "extensionToastPhishing": "Phishing-Muster blockiert",
   "homeDownloadsCta": "Desktop-App herunterladen",
   "langPanelNoMatches": "Keine Treffer",
-  "themeHeaderHint": "Nutzen Sie die eine Erscheinungsbild-Schaltfläche in der Kopfzeile (neben der Sprache)."
+  "desktopHonestLimitsGateTitle": "Bevor dieser Computer gescannt wird",
+  "langRegionGlobal": "Global",
+  "langRegionEastAsia": "Ostasien",
+  "langRegionEurope": "Europa",
+  "langRegionPacific": "Pazifik",
+  "langRegionSoutheastAsia": "Südostasien",
+  "langRegionSouthernAfrica": "Südliches Afrika",
+  "themeHeaderHint": "Nutzen Sie die eine Erscheinungsbild-Schaltfläche in der Kopfzeile (neben der Sprache).",
+  "localeRecommendSearchHint": "Unten Vorschläge. Suche öffnet die volle Sprachenliste."
 }

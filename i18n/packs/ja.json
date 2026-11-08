@@ -465,5 +465,13 @@
   "extensionToastPhishing": "フィッシングパターンをブロックしました",
   "homeDownloadsCta": "デスクトップ版のダウンロード",
   "langPanelNoMatches": "一致なし",
-  "themeHeaderHint": "ヘッダーの外観ボタン（言語の横）を使ってください。"
+  "desktopHonestLimitsGateTitle": "このパソコンをスキャンする前に",
+  "langRegionGlobal": "グローバル",
+  "langRegionEastAsia": "東アジア",
+  "langRegionEurope": "ヨーロッパ",
+  "langRegionPacific": "太平洋",
+  "langRegionSoutheastAsia": "東南アジア",
+  "langRegionSouthernAfrica": "南部アフリカ",
+  "themeHeaderHint": "ヘッダーの外観ボタン（言語の横）を使ってください。",
+  "localeRecommendSearchHint": "下は候補です。検索で全言語を表示できます。"
 }

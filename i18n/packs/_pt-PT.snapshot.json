@@ -464,5 +464,13 @@
   "proxyGuideAfterBlock": "Anfitriões bloqueados. Defina o proxy HTTP para 127.0.0.1:8080 ou o registo fica vazio.",
   "extensionToastPhishing": "Padrão de phishing bloqueado",
   "homeDownloadsCta": "Transferências da app",
-  "langPanelNoMatches": "Sem resultados"
+  "langPanelNoMatches": "Sem resultados",
+  "desktopHonestLimitsGateTitle": "Antes de analisar este computador",
+  "langRegionGlobal": "Global",
+  "langRegionEastAsia": "Ásia Oriental",
+  "langRegionEurope": "Europa",
+  "langRegionPacific": "Pacífico",
+  "langRegionSoutheastAsia": "Sudeste Asiático",
+  "langRegionSouthernAfrica": "África Austral",
+  "localeRecommendSearchHint": "Sugestões abaixo. Pesquise para ver a lista completa de idiomas."
 }

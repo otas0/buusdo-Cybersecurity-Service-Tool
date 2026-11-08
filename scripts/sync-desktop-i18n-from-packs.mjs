@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
- * Overlay website pack chrome onto desktop STRINGS for ja / zh-Hant / zh-Hans
- * and Nordic packs (sv / da / fi / nb).
+ * Overlay website pack chrome onto desktop STRINGS for ja / zh-Hant / zh-Hans,
+ * Nordic packs (sv / da / fi / nb), and Europe popup locales (de / fr / es).
  * Preserves existing bag keys (machine*, etc.) and only overwrites MAP keys from packs.
  *
  *   node scripts/sync-desktop-i18n-from-packs.mjs
@@ -57,8 +57,9 @@ const MAP = {
   listsTitle: "listsOfflineKicker",
   listsHint: "listsOfflineIntro",
   pathSyncAccount: "accountSyncToggle",
-  // Honest limits + Halt toast chips (Nordic / CJK overlays)
-  honestLimitsTitle: "honestLimitsTitle",
+  // Gate title is desktop-specific; website honestLimitsTitle stays product chrome (kicker).
+  honestLimitsTitle: "desktopHonestLimitsGateTitle",
+  honestLimitsKicker: "honestLimitsTitle",
   honestLimitsItemAv: "honestLimitNoAv",
   honestLimitsBody: "honestLimitNoWipe",
   toastPhishing: "lightDanger",
@@ -83,6 +84,8 @@ const jaExtraPath = path.join(root, "desktop-app/public/js/i18n-ja-extra.json");
 const markerStart = "/* __DESKTOP_PACK_OVERLAY_START__ */";
 const markerEnd = "/* __DESKTOP_PACK_OVERLAY_END__ */";
 const NORDIC = ["sv", "da", "fi", "nb"];
+const EUROPE_DESKTOP = ["de", "fr", "es"];
+const OVERLAY_LOCALES = [...NORDIC, ...EUROPE_DESKTOP];
 
 function parseEnBag(src) {
   const enMatch = src.match(/export const STRINGS = \{\s*en:\s*(\{[\s\S]*?\n  \}),\s*\n  "pt-PT":/);
@@ -128,7 +131,7 @@ function buildBlock(bags) {
     assignLiteral("zh-Hans", bags["zh-Hans"]),
     assignLiteral("zh-Hant", bags["zh-Hant"]),
     assignLiteral("ja", bags.ja),
-    ...NORDIC.map((id) => assignLiteral(id, bags[id])),
+    ...OVERLAY_LOCALES.map((id) => assignLiteral(id, bags[id])),
     markerEnd
   ].join("\n");
 }
@@ -155,7 +158,7 @@ const packs = {
   "zh-Hans": loadPack("zh-Hans"),
   "zh-Hant": loadPack("zh-Hant"),
   ja: loadPack("ja"),
-  ...Object.fromEntries(NORDIC.map((id) => [id, loadPack(id)]))
+  ...Object.fromEntries(OVERLAY_LOCALES.map((id) => [id, loadPack(id)]))
 };
 for (const [id, pack] of Object.entries(packs)) {
   if (!pack) {
@@ -173,7 +176,7 @@ const bags = {
   ),
   ja: applyOverlay({ ...enBag, ...(extractBag(src, "ja") || {}) }, packs.ja),
   ...Object.fromEntries(
-    NORDIC.map((id) => [
+    OVERLAY_LOCALES.map((id) => [
       id,
       applyOverlay({ ...enBag, ...(extractBag(src, id) || {}) }, packs[id])
     ])
@@ -198,7 +201,7 @@ if (src.includes(markerStart) && src.includes(markerEnd)) {
   next = next.replace(/\nSTRINGS\["zh-Hans"\] = \{[\s\S]*?\n\};\n/, "\n");
   next = next.replace(/\nSTRINGS\["zh-Hant"\] = \{[\s\S]*?\n\};\n/, "\n");
   next = next.replace(/\nSTRINGS\["ja"\] = \{[\s\S]*?\n\};\n/, "\n");
-  for (const id of NORDIC) {
+  for (const id of OVERLAY_LOCALES) {
     next = next.replace(new RegExp(`\\nSTRINGS\\[${JSON.stringify(id)}\\] = \\{[\\s\\S]*?\\n\\};\\n`), "\n");
   }
   next = next.replace("\nexport function t(", `\n${block}\n\nexport function t(`);
@@ -222,5 +225,5 @@ if (checkOnly) {
 
 fs.writeFileSync(i18nPath, next);
 console.log(
-  `Synced desktop STRINGS ja/zh-Hant/zh-Hans + ${NORDIC.join(",")} (zh-Hans machineScope zh? ${/[\u4e00-\u9fff]/.test(bags["zh-Hans"].machineScope || "")})`
+  `Synced desktop STRINGS ja/zh-Hant/zh-Hans + ${OVERLAY_LOCALES.join(",")} (zh-Hans machineScope zh? ${/[\u4e00-\u9fff]/.test(bags["zh-Hans"].machineScope || "")})`
 );

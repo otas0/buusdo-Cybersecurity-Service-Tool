@@ -465,5 +465,13 @@
   "extensionToastPhishing": "Veiðisvindlumynstur lokað",
   "homeDownloadsCta": "Skjáborðsniðurhal",
   "langPanelNoMatches": "Engar niðurstöður",
-  "themeHeaderHint": "Use the one Appearance button in the header (next to language)."
+  "desktopHonestLimitsGateTitle": "Áður en þessi tölva er skönnuð",
+  "langRegionGlobal": "Alþjóðlegt",
+  "langRegionEastAsia": "Austur-Asía",
+  "langRegionEurope": "Evrópa",
+  "langRegionPacific": "Kyrrahaf",
+  "langRegionSoutheastAsia": "Suðaustur-Asía",
+  "langRegionSouthernAfrica": "Suður-Afríka",
+  "themeHeaderHint": "Use the one Appearance button in the header (next to language).",
+  "localeRecommendSearchHint": "Pinned suggestions below. Search to browse the full language list."
 }
