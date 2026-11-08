@@ -20,9 +20,11 @@ Actions **Pages China** 将 `china-pages/` 发布到 `otas0/buusdocst`（secret 
 | 路径 | 用途 |
 |------|------|
 | `/` (`index.html`) | 中文首页 |
-| `/en.html` | English |
+| `/en.html` | English entry（含 Product / Halt 段；链到英文安装与隐私） |
 | `/privacy.html` | 隐私摘要（中文） |
-| `/install.html` | Chrome / Safari 安装说明 |
+| `/privacy-en.html` | Privacy summary (English) |
+| `/install.html` | Chrome / Safari / Desktop 安装说明（中文） |
+| `/install-en.html` | Install (English) |
 
 ## 与 Workers 的关系
 
