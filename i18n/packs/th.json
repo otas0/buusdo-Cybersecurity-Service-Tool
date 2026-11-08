@@ -446,5 +446,7 @@
   "detailKindSubdomain": "ซับโดเมน",
   "detailKindRedirects": "การเปลี่ยนทาง",
   "detailKindTiming": "เวลา",
-  "detailKindLimit": "ขอบเขต"
+  "detailKindLimit": "ขอบเขต",
+  "probeBlockedGenericTitle": "Site blocked the automated probe",
+  "probeBlockedGenericDetail": "Received HTTP {status}. The site blocked or throttled this check — that is not proof of phishing. Try the address in a normal browser if needed."
 }

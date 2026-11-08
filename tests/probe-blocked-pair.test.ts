@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
-import { messages } from "../i18n/messages";
+import { getMessages, messages } from "../i18n/messages";
 import {
   ambiguousProbeBlockedCopy,
   probeBlockedPair,
@@ -68,4 +68,30 @@ test("ambiguousProbeBlockedCopy uses locale bag for ja/de and generic {status}",
   assert.ok(de.title.trim());
   const other = ambiguousProbeBlockedCopy(418, "zh-Hans");
   assert.match(other.detail, /418/);
+});
+
+test("probeBlockedPair multi-locale titles/details stay bag-backed", () => {
+  for (const locale of ["de", "th", "mi", "ja", "zh-Hans", "pt-PT"] as const) {
+    const bag = getMessages(locale);
+    for (const code of [403, 429, 503] as const) {
+      const pair = probeBlockedPair(
+        { id: "probe-blocked", detail: `Received HTTP ${code}.` },
+        { locale, liveStatusCode: code }
+      );
+      assert.ok(pair, `${locale}/${code}`);
+      const titleKey = `probeBlocked${code}Title` as const;
+      const detailKey = `probeBlocked${code}Detail` as const;
+      assert.equal(pair![0], bag[titleKey]);
+      assert.equal(pair![1], bag[detailKey]);
+      assert.notEqual(pair![0].trim(), "");
+      assert.match(pair![1], new RegExp(String(code)));
+    }
+    const generic = probeBlockedPair(
+      { id: "probe-blocked", detail: "Received HTTP 418." },
+      { locale, liveStatusCode: 418 }
+    );
+    assert.ok(generic);
+    assert.match(generic![1], /418/);
+    assert.equal(generic![0], bag.probeBlockedGenericTitle);
+  }
 });

@@ -75,5 +75,7 @@
   "localeRecommendAccept": "Use {lang}",
   "localeRecommendStay": "Keep English",
   "localeRecommendDismiss": "Not now",
-  "whyEmpty": "No strong signals beyond the usual limitations."
+  "whyEmpty": "No strong signals beyond the usual limitations.",
+  "probeBlockedGenericTitle": "Site blocked the automated probe",
+  "probeBlockedGenericDetail": "Received HTTP {status}. The site blocked or throttled this check — that is not proof of phishing. Try the address in a normal browser if needed."
 }

@@ -75,5 +75,7 @@
   "localeRecommendAccept": "Gebruik {lang}",
   "localeRecommendStay": "Hou Engels",
   "localeRecommendDismiss": "Nie nou nie",
-  "whyEmpty": "Geen sterk seine buiten die gewone perke nie."
+  "whyEmpty": "Geen sterk seine buiten die gewone perke nie.",
+  "probeBlockedGenericTitle": "Die werf het die outomatiese peiling geblokkeer",
+  "probeBlockedGenericDetail": "HTTP {status} ontvang. Die werf het hierdie tjek geblokkeer of beperk — dit is nie phishing-bewys nie. Open die adres in ’n gewone blaaier indien nodig."
 }

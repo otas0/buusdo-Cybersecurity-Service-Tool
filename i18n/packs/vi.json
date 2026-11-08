@@ -446,5 +446,7 @@
   "detailKindSubdomain": "Tên miền phụ",
   "detailKindRedirects": "Chuyển hướng",
   "detailKindTiming": "Thời gian",
-  "detailKindLimit": "Giới hạn"
+  "detailKindLimit": "Giới hạn",
+  "probeBlockedGenericTitle": "Site blocked the automated probe",
+  "probeBlockedGenericDetail": "Received HTTP {status}. The site blocked or throttled this check — that is not proof of phishing. Try the address in a normal browser if needed."
 }

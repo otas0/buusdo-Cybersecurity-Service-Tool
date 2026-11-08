@@ -446,5 +446,7 @@
   "detailKindSubdomain": "Rohe-iti",
   "detailKindRedirects": "Ngā whakahoki",
   "detailKindTiming": "Wā",
-  "detailKindLimit": "Tepenga"
+  "detailKindLimit": "Tepenga",
+  "probeBlockedGenericTitle": "Site blocked the automated probe",
+  "probeBlockedGenericDetail": "Received HTTP {status}. The site blocked or throttled this check — that is not proof of phishing. Try the address in a normal browser if needed."
 }

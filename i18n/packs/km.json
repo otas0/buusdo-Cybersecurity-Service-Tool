@@ -446,5 +446,7 @@
   "detailKindSubdomain": "ដែនរង",
   "detailKindRedirects": "ការបញ្ជូនបន្ត",
   "detailKindTiming": "ពេលវេលា",
-  "detailKindLimit": "ដែនកំណត់"
+  "detailKindLimit": "ដែនកំណត់",
+  "probeBlockedGenericTitle": "Site blocked the automated probe",
+  "probeBlockedGenericDetail": "Received HTTP {status}. The site blocked or throttled this check — that is not proof of phishing. Try the address in a normal browser if needed."
 }

@@ -79,7 +79,9 @@ export const CORE_MESSAGE_KEYS = [
   "localeRecommendAccept",
   "localeRecommendStay",
   "localeRecommendDismiss",
-  "whyEmpty"
+  "whyEmpty",
+  "probeBlockedGenericTitle",
+  "probeBlockedGenericDetail"
 ] as const;
 
 export type CoreMessageKey = (typeof CORE_MESSAGE_KEYS)[number];

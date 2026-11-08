@@ -75,5 +75,7 @@
   "localeRecommendAccept": "Użyj {lang}",
   "localeRecommendStay": "Zostaw angielski",
   "localeRecommendDismiss": "Nie teraz",
-  "whyEmpty": "Brak silnych sygnałów poza zwykłymi ograniczeniami."
+  "whyEmpty": "Brak silnych sygnałów poza zwykłymi ograniczeniami.",
+  "probeBlockedGenericTitle": "Witryna zablokowała automatyczną sondę",
+  "probeBlockedGenericDetail": "Otrzymano HTTP {status}. Witryna zablokowała lub ograniczyła to sprawdzenie — to nie dowód phishingu. Otwórz adres w zwykłej przeglądarce, jeśli potrzebujesz."
 }

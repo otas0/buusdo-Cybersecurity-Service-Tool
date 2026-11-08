@@ -446,5 +446,7 @@
   "detailKindSubdomain": "အခွဲဒိုမိန်း",
   "detailKindRedirects": "လမ်းလွှဲများ",
   "detailKindTiming": "အချိန်",
-  "detailKindLimit": "ကန့်သတ်ချက်"
+  "detailKindLimit": "ကန့်သတ်ချက်",
+  "probeBlockedGenericTitle": "Site blocked the automated probe",
+  "probeBlockedGenericDetail": "Received HTTP {status}. The site blocked or throttled this check — that is not proof of phishing. Try the address in a normal browser if needed."
 }

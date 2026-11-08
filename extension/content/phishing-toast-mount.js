@@ -13,6 +13,8 @@
     if (id === "jp") return COPY.ja ? "ja" : "en";
     return "en";
   }
+
+  /* TOAST_COPY_START */
   const COPY = {
   "en": {
     "phishing": "Phishing pattern blocked",
@@ -135,6 +137,60 @@
     "nextVerify": "Xác minh độc lập: mở tên miền hoặc ứng dụng chính thức của tổ chức bạn đã tin (dấu trang, thẻ ngân hàng, cửa hàng ứng dụng quen). Đừng dùng số điện thoại hay email hiện trên trang đáng ngờ."
   }
 };
+  /* TOAST_COPY_END */
+
+  /**
+   * @param {Document} doc
+   * @param {{ lang?: string }} [opts]
+   * @returns {HTMLElement} toast root (data-testid=result-action-row)
+   */
+  function buildPhishingToast(doc, opts) {
+    const lang = resolveToastLang(opts?.lang);
+    const table = COPY[lang] || COPY.en;
+    const el = doc.createElement("div");
+    el.className = "portugal-cp-shield-toast portugal-cp-shield-toast--danger";
+    el.setAttribute("data-testid", "result-action-row");
+
+    const label = doc.createElement("span");
+    label.className = "portugal-cp-shield-toast__label";
+    label.textContent = table.phishing;
+    el.appendChild(label);
+
+    const danger = doc.createElement("p");
+    danger.className = "portugal-cp-shield-toast__danger-level";
+    danger.setAttribute("data-testid", "result-danger-level");
+    danger.textContent = table.dangerLevel;
+    el.appendChild(danger);
+
+    const ignore = doc.createElement("p");
+    ignore.className = "portugal-cp-shield-toast__ignore-risk";
+    ignore.setAttribute("data-testid", "result-ignore-risk");
+    ignore.textContent = table.ignoreRisk;
+    el.appendChild(ignore);
+
+    const steps = doc.createElement("ol");
+    steps.className = "portugal-cp-shield-toast__next-steps";
+    steps.setAttribute("data-testid", "result-next-steps");
+    steps.setAttribute("aria-label", table.nextStepsTitle);
+    for (const line of [table.nextLeave, table.nextNoCreds, table.nextVerify]) {
+      const li = doc.createElement("li");
+      li.textContent = line;
+      steps.appendChild(li);
+    }
+    el.appendChild(steps);
+
+    return el;
+  }
+
+  const api = {
+    COPY,
+    resolveToastLang,
+    buildPhishingToast,
+    dismissLabel(lang) {
+      const id = resolveToastLang(lang);
+      return (COPY[id] || COPY.en).dismiss;
+    }
+  };
 
   global.__buusdoPhishingToastMount = api;
   if (typeof module !== "undefined" && module.exports) {

@@ -75,5 +75,7 @@
   "localeRecommendAccept": "Gebruik {lang}",
   "localeRecommendStay": "Engels houden",
   "localeRecommendDismiss": "Niet nu",
-  "whyEmpty": "Geen sterk signaal buiten de gebruikelijke limieten."
+  "whyEmpty": "Geen sterk signaal buiten de gebruikelijke limieten.",
+  "probeBlockedGenericTitle": "De site heeft de automatische sonde geblokkeerd",
+  "probeBlockedGenericDetail": "HTTP {status} ontvangen. De site heeft deze check geblokkeerd of beperkt — dat is geen phishingbewijs. Open het adres in een normale browser indien nodig."
 }

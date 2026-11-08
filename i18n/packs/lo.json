@@ -446,5 +446,7 @@
   "detailKindSubdomain": "ໂດເມນຍ່ອຍ",
   "detailKindRedirects": "ການປ່ຽນເສັ້ນ",
   "detailKindTiming": "ເວລາ",
-  "detailKindLimit": "ຂີດຈຳກັດ"
+  "detailKindLimit": "ຂີດຈຳກັດ",
+  "probeBlockedGenericTitle": "Site blocked the automated probe",
+  "probeBlockedGenericDetail": "Received HTTP {status}. The site blocked or throttled this check — that is not proof of phishing. Try the address in a normal browser if needed."
 }

@@ -65,9 +65,9 @@ Facilitator visual: [store-screenshots/FRAME-hold.png](./store-screenshots/FRAME
 | Field | Required | Values |
 |-------|----------|--------|
 | `language` | yes | UI locale used during the Halt session (`en`, `pt-PT`, `zh-Hans`, `ja`, `th`, `mi`, … or `other`) |
-| `locale` | optional | Same BCP-47 id when it differs from `language`, or leave blank (compare treats blank as `language`) |
+| `locale` | optional | Same BCP-47 id as the product header when available. Compare segments with **`locale` if non-empty, else `language`** (`segment by locale/language:`). |
 
-Ask participants to pick the **same language they used in the product header** while answering. Merge row CSVs without renaming columns.
+Ask participants to pick the **same language they used in the product header** while answering. Prefer filling **`locale`** with that BCP-47 id (e.g. `zh-Hans`) so Round-2 `not_sure` splits stay stable when `language` is a free-text label. Merge row CSVs without renaming columns.
 
 ## Form (ready to run)
 
