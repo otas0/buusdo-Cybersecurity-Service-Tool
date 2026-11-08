@@ -61,6 +61,9 @@ export const messages = {
     desktopDownloadReadyToPromote:
       "Legacy note: notarized promote is not used on this ship path — keep the unsigned GitHub zip as primary.",
     desktopHonestLimitsLink: "Desktop honest limits",
+    downloadA4Poster: "Download A4 poster",
+    downloadA4PosterShort: "A4",
+    downloadA4PosterHint: "Print A4 · 100% · margins none · background graphics on.",
     privacyDesktopMirrorNote:
       "Desktop macOS download: CDN mirror is live; GitHub Release remains the documented fallback.",
 
@@ -542,6 +545,9 @@ export const messages = {
     desktopDownloadReadyToPromote:
       "Nota legada: a promoção notarizada não é usada neste canal — mantenha o zip não assinado do GitHub como primário.",
     desktopHonestLimitsLink: "Limites honestos da app",
+    downloadA4Poster: "Descarregar cartaz A4",
+    downloadA4PosterShort: "A4",
+    downloadA4PosterHint: "Imprimir A4 · 100% · margens nenhuma · gráficos de fundo ligados.",
     privacyDesktopMirrorNote:
       "Transferência macOS: o espelho CDN está ativo; o GitHub Release continua a ser o fallback documentado.",
 
