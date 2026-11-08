@@ -40,6 +40,7 @@
     "assert:prod-auth-gone": "node scripts/assert-prod-auth-gone.mjs",
     "start": "vinext start",
     "lint": "eslint . --ignore-pattern dist --ignore-pattern .next",
+    "gen:pack-index": "node scripts/gen-pack-index.mjs",
     "assert:formal-name": "node scripts/assert-formal-name.mjs",
     "assert:brand-web-alpha": "node scripts/assert-brand-web-alpha.mjs",
     "assert:safari-largeicon": "node scripts/assert-safari-largeicon.mjs",

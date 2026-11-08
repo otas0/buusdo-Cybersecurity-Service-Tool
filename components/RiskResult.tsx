@@ -14,15 +14,27 @@ import {
 } from "./timing-copy";
 import { levelToLight, TrafficLights } from "./TrafficLights";
 import type { Locale } from "../i18n/messages";
+import { isPortugueseLocale } from "../i18n/locales";
 import { riskWhyItems, whyEvidenceDisplay } from "./risk-why-items";
 
-export function RiskResult({ analysis, t, onReset }: { analysis: Analysis; t: Record<string, string>; onReset: () => void }) {
+export function RiskResult({
+  analysis,
+  t,
+  locale = "en",
+  onReset
+}: {
+  analysis: Analysis;
+  t: Record<string, string>;
+  locale?: Locale;
+  onReset: () => void;
+}) {
   const { parsed, risk, identity, threat, sensitive, live } = analysis;
   const [feedbackNote, setFeedbackNote] = useState("");
   const [showDetails, setShowDetails] = useState(false);
   const [draftMarks, setDraftMarks] = useState<FeedbackMark[]>([]);
   const [desktopBlockNote, setDesktopBlockNote] = useState("");
-  const pt = t.navCheck === "Verificar";
+  /** Legacy inline PT copy until those strings move into the message bag. */
+  const pt = isPortugueseLocale(locale);
   const feedbackHost = parsed.hostname.toLowerCase().replace(/\.$/, "");
 
   async function openDesktopBlock() {
@@ -76,14 +88,12 @@ export function RiskResult({ analysis, t, onReset }: { analysis: Analysis; t: Re
   }
 
   function openSettingsData() {
-    const locale = pt ? "pt-PT" : "en";
     if (typeof window !== "undefined") {
       window.location.assign(`/${locale}/settings#settings-privacy`);
     }
   }
 
   function openSettingsFeedback() {
-    const locale = pt ? "pt-PT" : "en";
     if (typeof window !== "undefined") {
       window.location.assign(`/${locale}/settings#settings-feedback-drafts`);
     }
@@ -137,11 +147,10 @@ export function RiskResult({ analysis, t, onReset }: { analysis: Analysis; t: Re
       "Este anfitrião está na sua lista pessoal (extensão ou app). O site não guardou a lista."
     ],
   };
-  const locale = pt ? "pt-PT" : "en";
   function probeBlockedTranslated(item: { id: string; detail: string }): [string, string] | undefined {
     return probeBlockedPair(item, {
       liveStatusCode: live?.statusCode,
-      locale
+      locale: isPortugueseLocale(locale) ? "pt-PT" : "en"
     });
   }
   const limitationsPt = [
@@ -262,7 +271,7 @@ export function RiskResult({ analysis, t, onReset }: { analysis: Analysis; t: Re
               if (full.id === "probe-blocked") {
                 const display = whyEvidenceDisplay(full, {
                   liveStatusCode: live?.statusCode,
-                  locale
+                  locale: isPortugueseLocale(locale) ? "pt-PT" : "en"
                 });
                 return (
                   <li key={item.id}>
@@ -410,7 +419,7 @@ export function RiskResult({ analysis, t, onReset }: { analysis: Analysis; t: Re
             <a
               className="text-button"
               data-testid="leave-and-block-settings"
-              href={`/${pt ? "pt-PT" : "en"}/settings#settings-block-lists`}
+              href={`/${locale}/settings#settings-block-lists`}
             >
               {t.leaveAndBlockSettingsCta}
             </a>
@@ -421,7 +430,7 @@ export function RiskResult({ analysis, t, onReset }: { analysis: Analysis; t: Re
           <a
             className="text-button"
             data-testid="result-block-lists-settings"
-            href={`/${pt ? "pt-PT" : "en"}/settings#settings-block-lists`}
+            href={`/${locale}/settings#settings-block-lists`}
           >
             {t.blockListsSettingsLink}
           </a>
@@ -445,7 +454,7 @@ export function RiskResult({ analysis, t, onReset }: { analysis: Analysis; t: Re
             {analysis.timing && (
               <>
                 <CopyEnvLine
-                  locale={(pt ? "pt-PT" : "en") as Locale}
+                  locale={locale}
                   envLine={formatTimingSummaryLine(analysis.timing, timingLabels(t))}
                   label={t.timingCopySummary}
                   copiedLabel={t.timingCopied}

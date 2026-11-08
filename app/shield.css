@@ -44,12 +44,37 @@
 
 .shell .kicker,
 .shell .lang,
+.shell .lang-select,
 .shell .nav-link {
   font-family: var(--mono);
   font-size: 11px;
   letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--muted);
+}
+
+.shell .lang-switch {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  max-width: 11rem;
+}
+
+.shell .lang-select {
+  appearance: none;
+  background: transparent;
+  border: 1px solid color-mix(in srgb, var(--muted) 45%, transparent);
+  color: var(--text);
+  padding: 4px 22px 4px 8px;
+  max-width: 100%;
+  cursor: pointer;
+  text-transform: none;
+  letter-spacing: 0.04em;
+  font-size: 12px;
+}
+
+.shell .lang-badge {
+  display: none;
 }
 
 .shell h1 {

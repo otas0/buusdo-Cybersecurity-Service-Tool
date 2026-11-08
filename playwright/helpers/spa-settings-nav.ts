@@ -107,15 +107,15 @@ export async function assertSettingsDesktopAfterSpaNav(
   before: number,
   urlTimeoutMs = 10000
 ) {
-  await page.waitForURL(/\/(?:en|pt-PT)\/settings#settings-desktop/, { timeout: urlTimeoutMs });
+  await page.waitForURL(/\/(?:en|pt-PT|zh-Hans|ja)\/settings#settings-desktop/, { timeout: urlTimeoutMs });
   assertSpaNavNoReload(documentLoads, before);
   await expect(page.getByTestId("settings-desktop-downloads")).toBeVisible({ timeout: 15000 });
   await assertSettingsDesktopInView(page);
 }
 
 /**
- * Locale toggle from Settings#settings-desktop must keep hash + scroll target in view
- * (EN ↔ pt-PT). Used by honest-limits + narrow — no local in-view copies.
+ * Locale select from Settings#settings-desktop must keep hash + scroll target in view
+ * (EN → pt-PT → en). Used by honest-limits + narrow — no local in-view copies.
  */
 export async function assertLocaleToggleKeepsSettingsDesktop(page: Page, base: string) {
   const root = base.replace(/\/$/, "");
@@ -124,15 +124,15 @@ export async function assertLocaleToggleKeepsSettingsDesktop(page: Page, base: s
   await waitForReactHydration(page, '[data-testid="settings-desktop-downloads"]');
   await expect(page).toHaveURL(/\/en\/settings#settings-desktop/);
 
-  const lang = page.getByTestId("locale-toggle");
+  const lang = page.getByTestId("locale-select");
   await expect(lang).toBeVisible();
-  await waitForReactHydration(page, '[data-testid="locale-toggle"]');
-  await lang.click();
+  await waitForReactHydration(page, '[data-testid="locale-select"]');
+  await lang.selectOption("pt-PT");
   await expect(page).toHaveURL(/\/pt-PT\/settings#settings-desktop/);
   await expect(page.getByTestId("settings-desktop-downloads")).toBeVisible({ timeout: 15000 });
   await assertSettingsDesktopInView(page);
 
-  await page.getByTestId("locale-toggle").click();
+  await page.getByTestId("locale-select").selectOption("en");
   await expect(page).toHaveURL(/\/en\/settings#settings-desktop/);
   await assertSettingsDesktopInView(page);
 }

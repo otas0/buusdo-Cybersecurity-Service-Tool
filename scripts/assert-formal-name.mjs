@@ -104,5 +104,25 @@ async function checkGithubDescription() {
   }
 }
 
+/** China Pages wordmark alt must match formalName on every bilingual HTML. */
+const chinaPages = [
+  "index.html",
+  "en.html",
+  "install.html",
+  "install-en.html",
+  "privacy.html",
+  "privacy-en.html"
+];
+for (const file of chinaPages) {
+  const html = readFileSync(join(root, "china-pages", file), "utf8");
+  const expectedAlt = `alt="${formal}"`;
+  if (!html.includes(expectedAlt)) {
+    console.error(
+      `[assert-formal-name] china-pages/${file} brand img alt must be ${JSON.stringify(formal)}`
+    );
+    process.exit(1);
+  }
+}
+
 await checkGithubDescription();
 console.info(`[assert-formal-name] OK formalName=${JSON.stringify(formal)}`);

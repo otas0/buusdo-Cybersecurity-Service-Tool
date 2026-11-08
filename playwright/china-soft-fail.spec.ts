@@ -75,8 +75,12 @@ test("China health soft-fail when service ≠ buusdocst", async ({ page }) => {
     await expect(cta).toHaveClass(/ghost-button/);
     await expect(cta).not.toHaveClass(/is-disabled/);
   } finally {
-    await new Promise<void>((resolve, reject) =>
-      server.close((err) => (err ? reject(err) : resolve())),
-    );
+    try {
+      const anyServer = server as typeof server & { closeAllConnections?: () => void };
+      anyServer.closeAllConnections?.();
+    } catch {
+      /* ignore */
+    }
+    server.close();
   }
 });

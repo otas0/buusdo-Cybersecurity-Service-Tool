@@ -41,9 +41,18 @@ Actions **Pages China** 将 `china-pages/` 发布到 `otas0/buusdocst`（secret 
 
 Pages **不能**替代 `POST /api/check`。
 
+### Workers locale 对照（China Pages → Workers）
+
+| China Pages | Workers 完整检查 / 设置 / 隐私 |
+|-------------|--------------------------------|
+| 中文页（`index` / `install` / `privacy`） | `/zh-Hans`、`/zh-Hans/settings#settings-desktop`、`/zh-Hans/privacy` |
+| 英文页（`en` / `install-en` / `privacy-en`） | `/en`、`/en/settings#settings-desktop`、`/en/privacy` |
+
+别名：`/zh`、`/zh-CN` 在 Workers 上 **redirect → `/zh-Hans`**（避免旧链 404）。简体文案包：`i18n/packs/zh-Hans.json`。
+
 ### Halt next-steps on Pages
 
-`index.html` / `en.html` include `#halt-next-steps` (`data-testid="china-halt-next-steps"`): the same leave / no-credentials / verify / optional-report summary as the Workers Halt result. Full interactive Halt UI (traffic lights, report draft, timing) remains on Workers `/en` only — open **打开完整检查** / **Open full check** when Cloudflare is reachable.
+`index.html` / `en.html` include `#halt-next-steps` (`data-testid="china-halt-next-steps"`): the same leave / no-credentials / verify / optional-report summary as the Workers Halt result. Full interactive Halt UI remains on Workers (`/zh-Hans` or `/en`) — open **打开完整检查** / **Open full check** when Cloudflare is reachable.
 
 ## 运维
 

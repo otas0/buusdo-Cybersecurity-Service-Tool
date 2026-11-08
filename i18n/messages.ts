@@ -1,3 +1,6 @@
+import { isPortugueseLocale, normalizeLocale, type LocaleId } from "./locales";
+import { LOCALE_PACKS } from "./pack-index";
+
 export const messages = {
   en: {
     prototype: "buusdo Cybersecurity Service Tool",
@@ -722,7 +725,23 @@ export const messages = {
   }
 } as const;
 
-export type Locale = keyof typeof messages;
-export function getMessages(locale: string) {
-  return messages[locale === "pt-PT" ? "pt-PT" : "en"];
+/** String bag — values are locale-specific, not EN string literals. */
+export type MessageBag = { [K in keyof (typeof messages)["en"]]: string };
+/** Shipped locale ids from i18n/locales.ts (EN + regional packs). */
+export type Locale = LocaleId;
+
+export function getMessages(locale: string): MessageBag {
+  const id = normalizeLocale(locale);
+  if (id === "pt-PT") return messages["pt-PT"] as MessageBag;
+  if (id === "en") return messages.en as MessageBag;
+  // pt-BR: Portuguese Brazil pack if present, else Portugal bag (closer than EN).
+  if (id === "pt-BR") {
+    const pack = LOCALE_PACKS["pt-BR"];
+    return { ...messages["pt-PT"], ...(pack ?? {}) } as MessageBag;
+  }
+  const pack = LOCALE_PACKS[id];
+  if (!pack) return messages.en as MessageBag;
+  return { ...messages.en, ...pack } as MessageBag;
 }
+
+export { isPortugueseLocale, normalizeLocale };

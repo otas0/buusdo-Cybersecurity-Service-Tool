@@ -75,6 +75,65 @@ test("survey-round2 is not product nav and skips lang-persist", () => {
   assert.match(html, /data-china-product-nav="off"/);
 });
 
+test("lang-persist does not rewrite localStorage on unknown HTML (survey)", async () => {
+  const js = readFileSync(path.join(root, "lang-persist.js"), "utf8");
+  assert.doesNotMatch(js, /survey-round2/);
+  assert.match(js, /hasOwnProperty\.call\(PAIRS,\s*file\)/);
+
+  const vm = await import("node:vm");
+  const storage: Record<string, string> = { "buusdocst-china-lang": "en" };
+  let wrote = false;
+  const context = {
+    location: {
+      pathname: "/buusdocst/survey-round2.html",
+      search: "",
+      hash: ""
+    },
+    localStorage: {
+      getItem: (k: string) => storage[k] ?? null,
+      setItem: (k: string, v: string) => {
+        wrote = true;
+        storage[k] = v;
+      }
+    },
+    sessionStorage: {
+      getItem: () => null,
+      setItem: () => undefined,
+      removeItem: () => undefined
+    },
+    document: {
+      readyState: "complete",
+      addEventListener: () => undefined,
+      querySelectorAll: () => []
+    },
+    history: { replaceState: () => undefined },
+    URLSearchParams,
+    Object
+  };
+  vm.runInNewContext(js, context);
+  assert.equal(wrote, false);
+  assert.equal(storage["buusdocst-china-lang"], "en");
+});
+
+test("entry pages mark logo aria-current; install/privacy logos do not", () => {
+  for (const file of ["index.html", "en.html"]) {
+    const html = readFileSync(path.join(root, file), "utf8");
+    assert.match(html, /brand-lockup[\s\S]*?aria-current="page"/, file);
+  }
+  for (const file of ["install.html", "install-en.html", "privacy.html", "privacy-en.html"]) {
+    const html = readFileSync(path.join(root, file), "utf8");
+    const logoBlock = html.match(/brand-lockup[\s\S]*?<\/h1>/)?.[0] || "";
+    assert.doesNotMatch(logoBlock, /aria-current="page"/, file);
+  }
+});
+
+test("zh entry points Workers CTA at zh-Hans and notes possible EN UI", () => {
+  const html = readFileSync(path.join(root, "index.html"), "utf8");
+  assert.match(html, /workers\.dev\/zh-Hans/);
+  assert.match(html, /data-testid="china-workers-locale-hint"/);
+  assert.match(html, /界面文案可能仍为英文|仍为英文/);
+});
+
 test("china-pages lang switch pairs point at zh/en counterparts", () => {
   for (const { zh, en } of pairs) {
     const zhHtml = readFileSync(path.join(root, zh), "utf8");

@@ -2,7 +2,8 @@
 
 import { useEffect, useState } from "react";
 import type { Locale } from "../i18n/messages";
-import { getMessages } from "../i18n/messages";
+import { getMessages, isPortugueseLocale } from "../i18n/messages";
+import { localeIntl } from "../i18n/locales";
 import {
   applyPrivacyModeChange,
   canPersistLists,
@@ -538,7 +539,7 @@ export function SettingsPanel({
                 <span className="meta" data-tick={headSkipClock}>
                   {row.until
                     ? `${t.headSkipUntil} ${new Date(row.until).toLocaleString(
-                        locale === "pt-PT" ? "pt-PT" : "en-GB"
+                        localeIntl(locale)
                       )} · ${formatHeadSkipRelative(row.until, t)}`
                     : "—"}
                 </span>
@@ -640,7 +641,7 @@ export function SettingsPanel({
         </p>
         {!persist && (
           <p className="scope-note" role="status">
-            {locale === "pt-PT"
+            {isPortugueseLocale(locale)
               ? "Com «Nunca guardar», o histórico e os rascunhos de feedback não são guardados neste navegador."
               : "With Never store, check history and feedback drafts are not saved in this browser."}
           </p>
@@ -752,7 +753,7 @@ export function SettingsPanel({
           {" · "}
           <a
             className="text-button"
-            href={`/${locale === "pt-PT" ? "pt-PT" : "en"}/privacy#privacy-honest-limits`}
+            href={`/${locale}/privacy#privacy-honest-limits`}
             data-testid="settings-desktop-honest-limits"
             onClick={(e) => {
               if (!onOpenHonestLimits) return;

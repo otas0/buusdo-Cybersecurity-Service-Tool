@@ -12,7 +12,6 @@ export function ListsOfflinePanel({
   onOpenSettingsLists?: () => void;
 }) {
   const t = getMessages(locale);
-  const pt = locale === "pt-PT";
 
   return (
     <main className="stage settings-stage" data-testid="lists-offline">
@@ -52,7 +51,7 @@ export function ListsOfflinePanel({
         </button>
         <a
           className="text-button"
-          href={`/${pt ? "pt-PT" : "en"}/settings#settings-block-lists`}
+          href={`/${locale}/settings#settings-block-lists`}
           data-testid="lists-offline-settings"
           onClick={(e) => {
             if (!onOpenSettingsLists) return;

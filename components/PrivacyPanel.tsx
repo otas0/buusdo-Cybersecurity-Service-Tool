@@ -15,7 +15,6 @@ export function PrivacyPanel({
   onOpenDesktopDownloads?: () => void;
 }) {
   const t = getMessages(locale);
-  const pt = locale === "pt-PT";
   // Client resolve so Playwright stubs (__SHIELD_TEST_DESKTOP_DOWNLOADS__) win over SSR HTML.
   const [mirrorLive, setMirrorLive] = useState(false);
   const [releaseNotesUrl, setReleaseNotesUrl] = useState("#");
@@ -52,7 +51,7 @@ export function PrivacyPanel({
           <p className="scope-note">
             <a
               className="text-button"
-              href={`/${pt ? "pt-PT" : "en"}/settings#settings-desktop`}
+              href={`/${locale}/settings#settings-desktop`}
               data-testid="privacy-desktop-mirror-note"
               onClick={(e) => {
                 if (!onOpenDesktopDownloads) return;
@@ -117,7 +116,7 @@ export function PrivacyPanel({
       </p>
 
       <p className="hint">
-        <a className="text-button" href={`/${pt ? "pt-PT" : "en"}/settings#settings-desktop`}>
+        <a className="text-button" href={`/${locale}/settings#settings-desktop`}>
           {t.desktopDownloadsTitle}
         </a>
         {" · "}
@@ -136,7 +135,7 @@ export function PrivacyPanel({
         <button type="button" className="text-button" onClick={onBack}>
           {t.back}
         </button>
-        <a className="text-button" href={`/${pt ? "pt-PT" : "en"}/settings#settings-privacy`}>
+        <a className="text-button" href={`/${locale}/settings#settings-privacy`}>
           {t.navSettings}
         </a>
       </div>

@@ -35,18 +35,27 @@ jobs:
           force_orphan: true
           commit_message: "Publish China entry from buusdo-Cybersecurity-Service-Tool"
 
-      - name: Assert live lang-persist.js is 200
+      - name: Assert live lang-persist.js + bilingual pages
         run: |
           set -euo pipefail
-          url="https://otas0.github.io/buusdocst/lang-persist.js"
-          for i in 1 2 3 4 5 6 7 8; do
-            code=$(curl -sS -L -o /tmp/china-lang-persist.js -w "%{http_code}" "$url" || echo "000")
-            if [ "$code" = "200" ] && grep -q "buusdocst-china-lang" /tmp/china-lang-persist.js; then
-              echo "OK $url ($code) attempt=$i"
-              exit 0
-            fi
-            echo "wait lang-persist.js code=$code attempt=$i"
-            sleep 8
+          base="https://otas0.github.io/buusdocst"
+          assert_url() {
+            local path="$1"
+            local needle="$2"
+            local url="${base}${path}"
+            for i in 1 2 3 4 5 6 7 8; do
+              code=$(curl -sS -L -o /tmp/china-live-body -w "%{http_code}" "$url" || echo "000")
+              if [ "$code" = "200" ] && grep -q "$needle" /tmp/china-live-body; then
+                echo "OK $url ($code) attempt=$i"
+                return 0
+              fi
+              echo "wait $url code=$code attempt=$i"
+              sleep 8
+            done
+            echo "::error::$url not HTTP 200 with expected body ($needle)"
+            return 1
+          }
+          assert_url "/lang-persist.js" "buusdocst-china-lang"
+          for page in "/" "/en.html" "/install.html" "/install-en.html" "/privacy.html" "/privacy-en.html"; do
+            assert_url "$page" 'data-china-lang'
           done
-          echo "::error::lang-persist.js not HTTP 200 with expected body at $url"
-          exit 1

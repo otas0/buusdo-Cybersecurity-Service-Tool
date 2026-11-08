@@ -3,6 +3,8 @@
 import { useEffect, useRef, useState } from "react";
 import type { Analysis, CheckTiming } from "../security/analyse";
 import { getMessages, type Locale } from "../i18n/messages";
+import { localeHtmlLang, localeIntl } from "../i18n/locales";
+import { LanguageSwitcher } from "./LanguageSwitcher";
 import { UrlCheckForm } from "./UrlCheckForm";
 import { RiskResult } from "./RiskResult";
 import { TrafficLights } from "./TrafficLights";
@@ -95,7 +97,6 @@ function Header({
   onNavigate: (next: ShellView) => void;
 }) {
   const t = getMessages(locale);
-  const other = locale === "en" ? "pt-PT" : "en";
   const [viewHash, setViewHash] = useState("");
   useEffect(() => {
     if (view !== "privacy" && view !== "settings") {
@@ -120,12 +121,8 @@ function Header({
     view === "privacy" && viewHash.startsWith("#")
       ? viewHash
       : "";
-  const otherPath =
-    view === "settings"
-      ? `/${other}/settings${settingsHash}`
-      : view === "privacy"
-        ? `/${other}/privacy${privacyHash}`
-        : `/${other}`;
+  const switchHash =
+    view === "settings" ? settingsHash : view === "privacy" ? privacyHash : "";
   return (
     <header className="top">
       <div className="brand">
@@ -141,7 +138,7 @@ function Header({
           <span className="visually-hidden">{t.prototype}</span>
         </h1>
       </div>
-      <nav className="top-nav" aria-label={locale === "pt-PT" ? "Navegação" : "Navigation"}>
+      <nav className="top-nav" aria-label="Navigation">
         <button
           type="button"
           className={`nav-link ${view === "check" ? "is-active" : ""}`}
@@ -171,14 +168,7 @@ function Header({
         >
           {t.navListsOffline}
         </a>
-        <a
-          className="lang"
-          href={otherPath}
-          data-testid="locale-toggle"
-          aria-label={other === "pt-PT" ? "Mudar idioma" : "Switch language"}
-        >
-          {locale === "en" ? "PT" : "EN"}
-        </a>
+        <LanguageSwitcher locale={locale} view={view} hash={switchHash} />
       </nav>
     </header>
   );
@@ -504,6 +494,7 @@ function Home({ locale }: { locale: Locale }) {
           key={analysis.parsed.registrableDomain}
           analysis={analysis}
           t={t}
+          locale={locale}
           onReset={() => setAnalysis(null)}
         />
       </main>
@@ -512,7 +503,7 @@ function Home({ locale }: { locale: Locale }) {
 
   return (
     <main className="stage">
-      <p className="kicker">{locale === "en" ? "Status" : "Estado"}</p>
+      <p className="kicker">{locale.startsWith("pt") ? "Estado" : "Status"}</p>
       <TrafficLights
         level="idle"
         standby={t.lightStandby}
@@ -561,7 +552,7 @@ function Home({ locale }: { locale: Locale }) {
                   {entry.timedOut ? ` · ${t.historyTimedOut}` : ""}
                   {entry.headSkipped ? ` · ${t.historyHeadSkipped}` : ""}
                   {" · "}
-                  {new Date(entry.at).toLocaleString(locale === "pt-PT" ? "pt-PT" : "en-GB")}
+                  {new Date(entry.at).toLocaleString(localeIntl(locale))}
                 </span>
               </li>
             ))}
@@ -577,7 +568,7 @@ export function AppShell({ locale, slug }: { locale: Locale; slug: string[] }) {
   const [view, setView] = useState<ShellView>(() => viewFromSlug(slug));
 
   useEffect(() => {
-    document.documentElement.lang = locale;
+    document.documentElement.lang = localeHtmlLang(locale);
   }, [locale]);
 
   useEffect(() => {
