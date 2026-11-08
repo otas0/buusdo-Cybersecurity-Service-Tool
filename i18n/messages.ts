@@ -469,6 +469,8 @@ export const messages = {
     localeRecommendDismiss: "Not now",
     langPanelSearchPlaceholder: "Search language…",
     langPanelNoMatches: "No matches",
+    localeRecommendSearchHint:
+      "Pinned suggestions below. Search to browse the full language list.",
     langRegionGlobal: "Global",
     langRegionEastAsia: "East Asia",
     langRegionEurope: "Europe",
@@ -966,6 +968,8 @@ export const messages = {
     localeRecommendDismiss: "Agora não",
     langPanelSearchPlaceholder: "Pesquisar idioma…",
     langPanelNoMatches: "Sem resultados",
+    localeRecommendSearchHint:
+      "Sugestões abaixo. Pesquise para ver a lista completa de idiomas.",
     langRegionGlobal: "Global",
     langRegionEastAsia: "Ásia Oriental",
     langRegionEurope: "Europa",
