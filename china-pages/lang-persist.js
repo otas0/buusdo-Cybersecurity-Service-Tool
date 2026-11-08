@@ -1,9 +1,17 @@
 /**
  * Persist China Pages language (zh | en) across Entry / Install / Privacy.
- * Explicit 中文 · EN clicks win; later visits to the other locale redirect.
+ *
+ * Load order (do not change casually):
+ * - This file: synchronous in <head>, no defer/async — may location.replace before paint.
+ * - reachability.js: defer at end of <body> — only runs after DOM parse; must not run on a
+ *   page that is about to redirect, and must not rewrite language preference.
+ *
+ * Explicit 中文/EN uses data-china-lang and ?china_lang= on the href so a later click is not
+ * bounced back by the mismatch redirect (click + sessionStorage alone can race).
  */
 (function () {
   var KEY = "buusdocst-china-lang";
+  var NAV_KEY = "buusdocst-china-lang-nav";
   var PAIRS = {
     "index.html": { zh: "index.html", en: "en.html" },
     "en.html": { zh: "index.html", en: "en.html" },
@@ -35,6 +43,7 @@
   }
 
   function writePref(lang) {
+    if (lang !== "en" && lang !== "zh") return;
     try {
       localStorage.setItem(KEY, lang);
     } catch (_) {
@@ -67,6 +76,7 @@
     if (!name || name === "." || name.indexOf(".") === -1) {
       name = "index.html";
     }
+    if (!Object.prototype.hasOwnProperty.call(PAIRS, name)) return href;
     var target = counterpart(name, lang);
     if (!target || target === name) return href;
     var prefix = path.slice(0, path.length - name.length);
@@ -77,6 +87,7 @@
     var anchors = document.querySelectorAll("a[href]");
     for (var i = 0; i < anchors.length; i += 1) {
       var a = anchors[i];
+      if (a.hasAttribute("data-china-lang")) continue;
       if (a.closest && a.closest('[data-testid="china-lang-switch"]')) continue;
       var href = a.getAttribute("href");
       if (!href || href.charAt(0) === "#") continue;
@@ -86,35 +97,79 @@
     }
   }
 
-  function bindLangSwitch() {
-    var root = document.querySelector('[data-testid="china-lang-switch"]');
-    if (!root) return;
-    var links = root.querySelectorAll("a[href]");
-    for (var i = 0; i < links.length; i += 1) {
-      links[i].addEventListener("click", function (ev) {
-        var a = ev.currentTarget;
-        var href = a.getAttribute("href") || "";
-        var file = href.split("/").pop() || "";
-        var hashIdx = file.indexOf("#");
-        if (hashIdx >= 0) file = file.slice(0, hashIdx);
-        var lang = pageLang(file || "index.html");
-        writePref(lang);
-      });
+  function markLangSwitchClick(lang) {
+    writePref(lang);
+    try {
+      sessionStorage.setItem(NAV_KEY, lang);
+    } catch (_) {
+      /* private mode */
     }
   }
 
-  var file = pageFile();
-  var current = pageLang(file);
-  var pref = readPref();
+  document.addEventListener(
+    "click",
+    function (ev) {
+      var t = ev.target;
+      if (!t || !t.closest) return;
+      var a = t.closest("a[data-china-lang]");
+      if (!a) return;
+      var lang = a.getAttribute("data-china-lang");
+      if (lang === "en" || lang === "zh") markLangSwitchClick(lang);
+    },
+    true
+  );
 
-  // Visiting a locale page adopts that locale (deep link = choice).
+  var file = pageFile();
+  if (!Object.prototype.hasOwnProperty.call(PAIRS, file)) {
+    return;
+  }
+
+  var current = pageLang(file);
+  var fromSwitch = null;
+
+  try {
+    var params = new URLSearchParams(location.search || "");
+    var qLang = params.get("china_lang");
+    if (qLang === "en" || qLang === "zh") {
+      fromSwitch = qLang;
+      writePref(qLang);
+      params.delete("china_lang");
+      var qs = params.toString();
+      if (typeof history !== "undefined" && history.replaceState) {
+        history.replaceState(
+          null,
+          "",
+          location.pathname + (qs ? "?" + qs : "") + location.hash
+        );
+      }
+    }
+  } catch (_) {
+    /* ignore */
+  }
+
+  if (!fromSwitch) {
+    try {
+      fromSwitch = sessionStorage.getItem(NAV_KEY);
+      if (fromSwitch) sessionStorage.removeItem(NAV_KEY);
+    } catch (_) {
+      fromSwitch = null;
+    }
+  }
+
+  var pref;
+  if (fromSwitch === "en" || fromSwitch === "zh") {
+    writePref(fromSwitch);
+    pref = fromSwitch;
+  } else {
+    pref = readPref();
+  }
+
   if (!pref) {
     writePref(current);
     pref = current;
   }
 
-  // Keep chosen language when a shared/zh URL is opened after EN was selected.
-  if (pref && pref !== current) {
+  if (!fromSwitch && pref !== current) {
     var dest = counterpart(file, pref);
     if (dest && dest !== file) {
       var next =
@@ -128,7 +183,6 @@
 
   function boot() {
     rewriteInternalLinks(current);
-    bindLangSwitch();
   }
 
   if (document.readyState === "loading") {

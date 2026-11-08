@@ -55,9 +55,19 @@
     </style>
   </head>
   <body>
-    <main>
+    <main data-testid="china-survey-round2" data-china-product-nav="off">
       <p class="kicker" data-testid="round2-open" style="color:var(--halt);letter-spacing:0.12em;text-transform:uppercase;font-size:11px;margin:0 0 8px;">
         Round-2 · OPEN for responses
+      </p>
+      <p
+        data-testid="china-survey-not-product-nav"
+        style="color:var(--muted);font-size:0.85rem;margin:0 0 16px;border:1px solid var(--line);padding:10px 12px;"
+      >
+        Survey form only — not product chrome. No 中文 · EN site nav and no language redirect
+        (<code>lang-persist.js</code> is not loaded). Return via
+        <a href="./index.html" style="color:var(--text)">中国入口</a>
+        /
+        <a href="./en.html" style="color:var(--text)">EN entry</a>.
       </p>
       <h1>buusdo Round-2 survey</h1>
       <p class="lede">

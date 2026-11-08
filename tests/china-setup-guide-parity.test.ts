@@ -12,21 +12,24 @@ const downloads = JSON.parse(
 ) as { setupGuideUrl?: string };
 const expected = String(downloads.setupGuideUrl || "").trim();
 
-function assertInstallPage(file: string, labelRe: RegExp) {
+function assertInstallPage(file: string, labelRe: RegExp, workersLocale: "zh-Hans" | "en") {
   const html = readFileSync(path.join(repo, "china-pages", file), "utf8");
   assert.ok(expected.includes("DESKTOP_SETUP_GUIDE"), "setupGuideUrl must point at DESKTOP_SETUP_GUIDE");
   assert.match(html, /data-testid="china-setup-guide"/);
   assert.match(html, labelRe);
   assert.ok(html.includes(expected), `${file} must include setupGuideUrl ${expected}`);
-  assert.match(html, /buusdocst\.mtsu\.workers\.dev\/en\/settings#settings-desktop/);
+  assert.match(
+    html,
+    new RegExp(`buusdocst\\.mtsu\\.workers\\.dev\\/${workersLocale}/settings#settings-desktop`)
+  );
 }
 
 test("china-pages zh install Setup guide href matches desktop-downloads setupGuideUrl", () => {
-  assertInstallPage("install.html", /安装指南（未签名）|Setup guide \(unsigned\)/);
+  assertInstallPage("install.html", /安装指南（未签名）|Setup guide \(unsigned\)/, "zh-Hans");
 });
 
 test("china-pages en install Setup guide href matches desktop-downloads setupGuideUrl", () => {
-  assertInstallPage("install-en.html", /Setup guide \(unsigned\)/);
+  assertInstallPage("install-en.html", /Setup guide \(unsigned\)/, "en");
 });
 
 test("china-pages EN entry links to English install/privacy (not zh-only)", () => {

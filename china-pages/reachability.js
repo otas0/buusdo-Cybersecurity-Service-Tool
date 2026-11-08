@@ -1,6 +1,10 @@
 /**
  * Read-only Workers reachability probe for the China entry.
  * Does not call /api/check — only GET /api/health with a short timeout.
+ *
+ * Load order: lang-persist.js is sync in <head> (may redirect). This file is
+ * defer at end of <body> — never move it before lang-persist or give it defer:false
+ * in head, or a bounce redirect can race the health fetch / CTA wiring.
  */
 (function () {
   const WORKERS_ORIGIN = "https://buusdocst.mtsu.workers.dev";

@@ -11,6 +11,7 @@ import { expect, test } from "@playwright/test";
 const root = process.cwd();
 const html = readFileSync(join(root, "china-pages/index.html"), "utf8");
 const reach = readFileSync(join(root, "china-pages/reachability.js"), "utf8");
+const persist = readFileSync(join(root, "china-pages/lang-persist.js"), "utf8");
 const css = readFileSync(join(root, "china-pages/styles.css"), "utf8");
 
 test("China health soft-fail when service ≠ buusdocst", async ({ page }) => {
@@ -19,6 +20,11 @@ test("China health soft-fail when service ≠ buusdocst", async ({ page }) => {
     if (url.startsWith("/reachability.js")) {
       res.writeHead(200, { "Content-Type": "application/javascript; charset=utf-8" });
       res.end(reach);
+      return;
+    }
+    if (url.startsWith("/lang-persist.js")) {
+      res.writeHead(200, { "Content-Type": "application/javascript; charset=utf-8" });
+      res.end(persist);
       return;
     }
     if (url.startsWith("/styles.css") || url.startsWith("/assets/tokens.css")) {
@@ -35,6 +41,7 @@ test("China health soft-fail when service ≠ buusdocst", async ({ page }) => {
     // Point script at local reachability.js
     res.end(
       html
+        .replace(/src="\.?\/?lang-persist\.js"/, 'src="/lang-persist.js"')
         .replace(/src="\.?\/?reachability\.js"/, 'src="/reachability.js"')
         .replace(/href="\.?\/?styles\.css"/, 'href="/styles.css"')
         .replace(/href="\.?\/?assets\/tokens\.css"/, 'href="/styles.css"'),
