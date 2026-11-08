@@ -42,19 +42,29 @@ export const LOCALE_REGION_ORDER: LocaleRegion[] = [
 ];
 
 /**
- * Short “Frequent” strip shared by LanguageSwitcher + LocaleRecommendModal.
- * Keep in sync — do not diverge per component.
+ * Short “Frequent” majors for LocaleRecommendModal pins (LanguageSwitcher uses region accordion).
+ * Kept at 5 for a lighter first paint; fr/es/zh-Hant remain via search / regions.
  */
-export const FREQUENT_LOCALE_IDS = [
-  "en",
-  "zh-Hans",
-  "zh-Hant",
-  "ja",
-  "pt-PT",
-  "de",
-  "fr",
-  "es"
-] as const;
+export const FREQUENT_LOCALE_IDS = ["en", "zh-Hans", "ja", "pt-PT", "de"] as const;
+
+/** Max pinned options in LocaleRecommendModal when search is empty. */
+export const LOCALE_RECOMMEND_PIN_MAX = 6;
+
+/**
+ * Shared pin order for LocaleRecommendModal + tests: suggested first, then Frequent majors.
+ * Deduped, capped at LOCALE_RECOMMEND_PIN_MAX.
+ */
+export function recommendPinnedLocaleIds(suggested: string): string[] {
+  const seen = new Set<string>();
+  const out: string[] = [];
+  for (const id of [suggested, ...FREQUENT_LOCALE_IDS]) {
+    if (!id || seen.has(id)) continue;
+    seen.add(id);
+    out.push(id);
+    if (out.length >= LOCALE_RECOMMEND_PIN_MAX) break;
+  }
+  return out;
+}
 
 /**
  * Ship list: EN + 简/繁/日/葡 + Europe + South Africa (11 official) + te reo Māori + ASEAN national languages.

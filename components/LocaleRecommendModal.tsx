@@ -2,10 +2,10 @@
 
 import { useEffect, useMemo, useState } from "react";
 import {
-  FREQUENT_LOCALE_IDS,
   LOCALE_CATALOG,
   getLocaleEntry,
   normalizeLocale,
+  recommendPinnedLocaleIds,
   type LocaleRegion
 } from "../i18n/locales";
 import { getMessages, type Locale } from "../i18n/messages";
@@ -73,18 +73,11 @@ export function LocaleRecommendModal({
   const suggested = useMemo(() => suggestLocale(), []);
   const suggestedEntry = getLocaleEntry(suggested);
 
-  /** Short pin list (max 6, no search) — suggested + Frequent majors only. */
-  const pinned = useMemo(() => {
-    const seen = new Set<string>();
-    const list = [];
-    for (const id of [suggested, ...FREQUENT_LOCALE_IDS]) {
-      if (seen.has(id)) continue;
-      seen.add(id);
-      list.push(getLocaleEntry(id));
-      if (list.length >= 6) break;
-    }
-    return list.slice(0, 6);
-  }, [suggested]);
+  /** Short pin list (max 6, no search) — shared helper with unit/Playwright snapshots. */
+  const pinned = useMemo(
+    () => recommendPinnedLocaleIds(suggested).map((id) => getLocaleEntry(id)),
+    [suggested]
+  );
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
@@ -210,7 +203,7 @@ export function LocaleRecommendModal({
           </ul>
           {!filtered.length ? (
             <p className="lang-panel-empty" data-testid="locale-recommend-empty">
-              No matches
+              {t.langPanelNoMatches}
             </p>
           ) : null}
         </label>
