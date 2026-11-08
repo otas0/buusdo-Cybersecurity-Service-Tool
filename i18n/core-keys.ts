@@ -74,7 +74,6 @@ export const CORE_MESSAGE_KEYS = [
   "faqNoAvBody",
   "faqNoCrowdTitle",
   "faqNoCrowdBody",
-  "faqSurveyRound2Link",
   "partialPackBanner",
   "localeRecommendTitle",
   "localeRecommendBody",

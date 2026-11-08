@@ -68,7 +68,6 @@
   "faqNoAvBody": "Pas de moteur AV ni de signatures — signaux de structure, liste propre et sondes.",
   "faqNoCrowdTitle": "Pas de réputation tiers",
   "faqNoCrowdBody": "Les URL ne partent pas vers Google Safe Browsing ni d’autres services tiers.",
-  "faqSurveyRound2Link": "Questionnaire Round-2 (ouvert)",
   "partialPackBanner": "Une partie du texte long de Confidentialité et Réglages est encore en anglais. Le chrome et Halt sont traduits.",
   "localeRecommendTitle": "Choisissez votre langue",
   "localeRecommendBody": "D’après votre navigateur, nous suggérons {lang}. Vous pouvez changer à tout moment dans l’en-tête.",

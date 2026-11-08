@@ -77,17 +77,8 @@ test("bilingual pages mark 中文/EN with data-china-lang and locale Workers CTA
   }
 });
 
-test("survey-round2 is not product nav and skips lang-persist", () => {
-  const html = readFileSync(path.join(root, "survey-round2.html"), "utf8");
-  assert.doesNotMatch(html, /src=["'][^"']*lang-persist\.js["']/);
-  assert.doesNotMatch(html, /china-lang-switch/);
-  assert.match(html, /data-testid="china-survey-not-product-nav"/);
-  assert.match(html, /data-china-product-nav="off"/);
-});
-
-test("lang-persist does not rewrite localStorage on unknown HTML (survey)", async () => {
+test("lang-persist does not rewrite localStorage on unknown HTML", async () => {
   const js = readFileSync(path.join(root, "lang-persist.js"), "utf8");
-  assert.doesNotMatch(js, /survey-round2/);
   assert.match(js, /hasOwnProperty\.call\(PAIRS,\s*file\)/);
 
   const vm = await import("node:vm");
@@ -95,7 +86,7 @@ test("lang-persist does not rewrite localStorage on unknown HTML (survey)", asyn
   let wrote = false;
   const context = {
     location: {
-      pathname: "/buusdocst/survey-round2.html",
+      pathname: "/buusdocst/not-a-product-page.html",
       search: "",
       hash: ""
     },

@@ -86,7 +86,6 @@
   "faqNoAvBody": "不是。關閉分頁可阻止在該地址繼續輸入資料；它不會掃描或清理裝置。",
   "faqNoCrowdTitle": "分數來自其他使用者的投票嗎？",
   "faqNoCrowdBody": "不是。結果使用 buusdo 整理的威脅清單和地址訊號——不是公開的「有多少人檢舉」計數。",
-  "faqSurveyRound2Link": "第二輪問卷（開放——本機 CSV）",
   "verified": "開啟所列網域",
   "protection": "使用擴充功能或桌面應用程式更新保護清單。",
   "currentlyBlocked": "在擴充功能或桌面應用程式中新增後會被封鎖。",

@@ -86,7 +86,6 @@
   "faqNoAvBody": "No. Closing the tab stops further data entry on that address; it does not scan or clean the device.",
   "faqNoCrowdTitle": "Does the score come from other users’ votes?",
   "faqNoCrowdBody": "No. Results use buusdo’s curated threat list and address signals — not a public “how many people flagged this” count.",
-  "faqSurveyRound2Link": "Round-2 survey (open — local CSV)",
   "verified": "Open the listed domain",
   "protection": "Use the extension or desktop app to update protection lists.",
   "currentlyBlocked": "is blocked in the extension or desktop app when you add it there.",

@@ -37,7 +37,6 @@ test("SPA hashchange scrolls #privacy-faq-parents into view", async ({ page }) =
 
   await expect(page).toHaveURL(/#privacy-faq-parents/);
   await assertHashSectionInView(page, "#privacy-faq-parents");
-  await expect(page.getByTestId("privacy-round2-survey")).toBeVisible();
 });
 
 test("direct deep-link /en/privacy#privacy-faq-parents lands in view", async ({ page }) => {

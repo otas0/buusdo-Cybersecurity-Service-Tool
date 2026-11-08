@@ -86,7 +86,6 @@
   "faqNoAvBody": "不是。关闭标签页可阻止在该地址继续输入数据；它不会扫描或清理设备。",
   "faqNoCrowdTitle": "分数来自其他用户的投票吗？",
   "faqNoCrowdBody": "不是。结果使用 buusdo 整理的威胁列表和地址信号——不是公开的「有多少人举报」计数。",
-  "faqSurveyRound2Link": "第二轮问卷（开放——本地 CSV）",
   "verified": "打开所列域名",
   "protection": "使用扩展或桌面应用更新保护列表。",
   "currentlyBlocked": "在扩展或桌面应用中添加后会被拦截。",

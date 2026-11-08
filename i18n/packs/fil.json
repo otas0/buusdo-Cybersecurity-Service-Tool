@@ -86,7 +86,6 @@
   "faqNoAvBody": "Hindi. Ang pagsara ng tab ay humihinto sa paglalagay ng datos sa address na iyon; hindi nito sine-scan o nililinis ang device.",
   "faqNoCrowdTitle": "Galing ba ang score sa boto ng ibang user?",
   "faqNoCrowdBody": "Hindi. Gumagamit ang resulta ng curated na listahan ng banta at signal ng address ng buusdo — hindi pampublikong bilang kung ilan ang nag-flag.",
-  "faqSurveyRound2Link": "Round-2 na survey (bukas — lokal na CSV)",
   "verified": "Buksan ang nakalistang domain",
   "protection": "Gamitin ang extension o desktop app para i-update ang mga listahan ng proteksiyon.",
   "currentlyBlocked": "naka-block sa extension o desktop app kapag idinagdag mo doon.",
