@@ -5,7 +5,7 @@ import type { Analysis, CheckTiming } from "../security/analyse";
 import { getMessages, type Locale } from "../i18n/messages";
 import { localeHtmlLang, localeIntl } from "../i18n/locales";
 import { LanguageSwitcher } from "./LanguageSwitcher";
-import { hydrateThemeFromStorage } from "./ThemeSwitch";
+import { hydrateThemeFromStorage, ThemeToggle } from "./ThemeSwitch";
 import { LocaleRecommendModal, maybeAcceptLanguageRedirect } from "./LocaleRecommendModal";
 import { UrlCheckForm } from "./UrlCheckForm";
 import { RiskResult } from "./RiskResult";
@@ -196,6 +196,7 @@ function Header({
         >
           {t.navDownloads}
         </a>
+        <ThemeToggle locale={locale} />
         <LanguageSwitcher locale={locale} view={view} hash={switchHash} />
       </nav>
     </header>

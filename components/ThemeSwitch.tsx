@@ -30,8 +30,7 @@ export function hydrateThemeFromStorage() {
   applyTheme(readStoredTheme());
 }
 
-export function ThemeSwitch({ locale }: { locale: Locale }) {
-  const t = getMessages(locale);
+function useThemeState() {
   const [theme, setTheme] = useState<UiTheme>("dark");
 
   useEffect(() => {
@@ -50,8 +49,52 @@ export function ThemeSwitch({ locale }: { locale: Locale }) {
     }
   }
 
+  return { theme, onChange };
+}
+
+/** Compact Dark | Light control for the top nav (next to language). */
+export function ThemeToggle({ locale }: { locale: Locale }) {
+  const t = getMessages(locale);
+  const { theme, onChange } = useThemeState();
+
   return (
-    <div className="theme-switch" data-testid="theme-switch">
+    <div
+      className="theme-toggle"
+      data-testid="theme-switch"
+      role="group"
+      aria-label={t.themeLabel}
+    >
+      <button
+        type="button"
+        className={`nav-link theme-opt${theme === "dark" ? " is-active" : ""}`}
+        data-testid="theme-dark"
+        aria-pressed={theme === "dark"}
+        title={t.themeDark}
+        onClick={() => onChange("dark")}
+      >
+        {t.themeDark}
+      </button>
+      <button
+        type="button"
+        className={`nav-link theme-opt${theme === "light" ? " is-active" : ""}`}
+        data-testid="theme-light"
+        aria-pressed={theme === "light"}
+        title={t.themeLight}
+        onClick={() => onChange("light")}
+      >
+        {t.themeLight}
+      </button>
+    </div>
+  );
+}
+
+/** Settings copy of the same control. */
+export function ThemeSwitch({ locale }: { locale: Locale }) {
+  const t = getMessages(locale);
+  const { theme, onChange } = useThemeState();
+
+  return (
+    <div className="theme-switch" data-testid="theme-switch-settings">
       <p className="kicker" id="theme-switch-label">
         {t.themeLabel}
       </p>
@@ -59,7 +102,7 @@ export function ThemeSwitch({ locale }: { locale: Locale }) {
         <button
           type="button"
           className={`text-button theme-opt${theme === "dark" ? " is-active" : ""}`}
-          data-testid="theme-dark"
+          data-testid="theme-dark-settings"
           aria-pressed={theme === "dark"}
           onClick={() => onChange("dark")}
         >
@@ -68,7 +111,7 @@ export function ThemeSwitch({ locale }: { locale: Locale }) {
         <button
           type="button"
           className={`text-button theme-opt${theme === "light" ? " is-active" : ""}`}
-          data-testid="theme-light"
+          data-testid="theme-light-settings"
           aria-pressed={theme === "light"}
           onClick={() => onChange("light")}
         >
