@@ -45,7 +45,8 @@ const header = splitCsvLine(lines[0]).map((h) => h.trim().toLowerCase());
 const col = header.indexOf("clicked_bad");
 const ageCol = header.indexOf("age");
 const roleCol = header.indexOf("role");
-const localeCol = Math.max(header.indexOf("locale"), header.indexOf("language"));
+const localeCol = header.indexOf("locale");
+const languageCol = header.indexOf("language");
 if (col < 0) {
   console.error("CSV missing clicked_bad column");
   process.exit(2);
@@ -70,8 +71,9 @@ for (const line of lines.slice(1)) {
   const v = (cells[col] || "").trim().toLowerCase();
   const age = ageCol >= 0 ? (cells[ageCol] || "").trim().toLowerCase() : "";
   const role = roleCol >= 0 ? (cells[roleCol] || "").trim().toLowerCase() : "";
-  const localeRaw = localeCol >= 0 ? (cells[localeCol] || "").trim() : "";
-  const locale = localeRaw || "unknown";
+  const localeFromLocale = localeCol >= 0 ? (cells[localeCol] || "").trim() : "";
+  const localeFromLanguage = languageCol >= 0 ? (cells[languageCol] || "").trim() : "";
+  const locale = localeFromLocale || localeFromLanguage || "unknown";
   const isNotSure = v === "not_sure" || v === "not sure";
   if (v === "yes") counts.yes += 1;
   else if (v === "no") counts.no += 1;
