@@ -78,5 +78,10 @@
   "downloadA4PosterShort": "A4",
   "downloadA4PosterHint": "Spausdinti A4 · 100 % · be paraščių · fono grafika įjungta.",
   "faqCommonTitle": "Dažni klausimai",
-  "faqCommonIntro": "Trumpi atsakymai, ką buusdo daro ir ko nedaro — naudinga prieš pasitikint Halt rezultatu."
+  "faqCommonIntro": "Trumpi atsakymai, ką buusdo daro ir ko nedaro — naudinga prieš pasitikint Halt rezultatu.",
+  "themeLabel": "Appearance",
+  "themeDark": "Dark",
+  "themeLight": "Light",
+  "themeHint": "Stored only in this browser. Default follows the instrument dark field.",
+  "navDownloads": "Downloads"
 }

@@ -78,5 +78,10 @@
   "downloadA4PosterShort": "A4",
   "downloadA4PosterHint": "Imprimă A4 · 100% · fără margini · grafica de fundal activă.",
   "faqCommonTitle": "Întrebări frecvente",
-  "faqCommonIntro": "Răspunsuri scurte despre ce face și ce nu face buusdo — utile înainte să ai încredere într-un rezultat Halt."
+  "faqCommonIntro": "Răspunsuri scurte despre ce face și ce nu face buusdo — utile înainte să ai încredere într-un rezultat Halt.",
+  "themeLabel": "Appearance",
+  "themeDark": "Dark",
+  "themeLight": "Light",
+  "themeHint": "Stored only in this browser. Default follows the instrument dark field.",
+  "navDownloads": "Downloads"
 }

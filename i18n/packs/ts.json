@@ -449,5 +449,10 @@
   "downloadA4PosterShort": "A4",
   "downloadA4PosterHint": "Printa A4 · 100% · ku nga ri na margin · digrafiki ta le ndzhaku ti pfuriwile.",
   "faqCommonTitle": "Swivutiso leswi tolovelekeke",
-  "faqCommonIntro": "Tinhlamulo to koma hi leswi buusdo yi swi endlaka na leswi yi nga swi endli — swi pfuna emahlweni ko tshemba mbuyelo wa Yima."
+  "faqCommonIntro": "Tinhlamulo to koma hi leswi buusdo yi swi endlaka na leswi yi nga swi endli — swi pfuna emahlweni ko tshemba mbuyelo wa Yima.",
+  "themeLabel": "Appearance",
+  "themeDark": "Dark",
+  "themeLight": "Light",
+  "themeHint": "Stored only in this browser. Default follows the instrument dark field.",
+  "navDownloads": "Downloads"
 }

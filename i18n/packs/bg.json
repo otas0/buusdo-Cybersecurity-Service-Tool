@@ -78,5 +78,10 @@
   "downloadA4PosterShort": "A4",
   "downloadA4PosterHint": "Печат A4 · 100% · без полета · фонова графика включена.",
   "faqCommonTitle": "Често задавани въпроси",
-  "faqCommonIntro": "Кратки отговори какво прави и какво не прави buusdo — полезни, преди да се доверите на резултат Halt."
+  "faqCommonIntro": "Кратки отговори какво прави и какво не прави buusdo — полезни, преди да се доверите на резултат Halt.",
+  "themeLabel": "Appearance",
+  "themeDark": "Dark",
+  "themeLight": "Light",
+  "themeHint": "Stored only in this browser. Default follows the instrument dark field.",
+  "navDownloads": "Downloads"
 }

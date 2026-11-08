@@ -78,5 +78,10 @@
   "downloadA4PosterShort": "A4",
   "downloadA4PosterHint": "Ipprintja A4 · 100% · bla margini · grafika tal-isfond mixgħula.",
   "faqCommonTitle": "Mistoqsijiet frekwenti",
-  "faqCommonIntro": "Tweġibiet qosra dwar x’jagħmel u x’ma jagħmilx buusdo — utli qabel ma tafda riżultat Halt."
+  "faqCommonIntro": "Tweġibiet qosra dwar x’jagħmel u x’ma jagħmilx buusdo — utli qabel ma tafda riżultat Halt.",
+  "themeLabel": "Appearance",
+  "themeDark": "Dark",
+  "themeLight": "Light",
+  "themeHint": "Stored only in this browser. Default follows the instrument dark field.",
+  "navDownloads": "Downloads"
 }

@@ -10,7 +10,7 @@ Until a custom domain replaces workers.dev, the **only** public links are:
 | Privacy (EN) | `https://buusdocst.mtsu.workers.dev/en/privacy` |
 | Privacy (optional locale) | `https://buusdocst.mtsu.workers.dev/pt-PT/privacy` |
 | China entry (GitHub Pages) | `https://otas0.github.io/buusdocst/` — explain/privacy/install when Workers is hard to reach ([CHINA_GITHUB_PAGES.md](CHINA_GITHUB_PAGES.md)) |
-| A4 poster (print) | `https://buusdocst.mtsu.workers.dev/promo/poster.html` — EN / pt-PT / 中文 |
+| A4 poster (print handoff only) | `https://buusdocst.mtsu.workers.dev/promo/poster.html` — EN / pt-PT / 中文. **Not** product chrome (nav / Settings / extension / desktop footer must not link this). |
 | A4 poster (legacy pt URL) | `…/promo/poster-pt.html` → meta-refresh redirect to `poster.html` (keep for old links; see [promo/README.md](promo/README.md)) |
 
 After a custom domain, `npm run production:origin -- https://YOUR_CANONICAL` rewrites this table. Also set GitHub `NEXT_PUBLIC_SITE_URL` + `PRODUCTION_HEALTH_URL` ([CUSTOM_DOMAIN_REDEPLOY.md](CUSTOM_DOMAIN_REDEPLOY.md)).
@@ -65,6 +65,7 @@ A4 海报：https://buusdocst.mtsu.workers.dev/promo/poster.html
 - Advertise both `www` and apex
 - Link localhost, preview URLs, or alternate workers.dev hostnames (`pcpd`, `preventive-shield` — those Workers are deleted)
 - Republish or advertise any hostname other than `buusdocst.mtsu.workers.dev` / `otas0.github.io/buusdocst`
+- Link A4 / `/promo/poster.html` from product chrome (nav, Settings, extension, desktop footer) — print handoff URL only
 - Promise cloud Account sync, cross-device cloud lists, or magic-link sign-in ([ACCOUNT_SYNC_GATE.md](ACCOUNT_SYNC_GATE.md))
 - Publish check results or sample “risky” URLs that still work as phish bait
 

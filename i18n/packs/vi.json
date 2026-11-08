@@ -449,5 +449,10 @@
   "downloadA4PosterShort": "A4",
   "downloadA4PosterHint": "In A4 · 100% · không lề · bật đồ họa nền.",
   "faqCommonTitle": "Câu hỏi thường gặp",
-  "faqCommonIntro": "Câu trả lời ngắn về việc buusdo làm gì và không làm gì — hữu ích trước khi bạn tin một kết quả Dừng."
+  "faqCommonIntro": "Câu trả lời ngắn về việc buusdo làm gì và không làm gì — hữu ích trước khi bạn tin một kết quả Dừng.",
+  "themeLabel": "Appearance",
+  "themeDark": "Dark",
+  "themeLight": "Light",
+  "themeHint": "Stored only in this browser. Default follows the instrument dark field.",
+  "navDownloads": "Downloads"
 }

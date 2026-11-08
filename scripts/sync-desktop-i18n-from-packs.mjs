@@ -93,6 +93,7 @@ function applyOverlay(base, pack) {
   for (const [desk, web] of Object.entries(MAP)) {
     if (pack[web]?.trim()) out[desk] = pack[web];
   }
+  delete out.footA4Poster;
   return out;
 }
 

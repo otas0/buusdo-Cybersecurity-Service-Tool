@@ -449,5 +449,10 @@
   "downloadA4PosterShort": "A4",
   "downloadA4PosterHint": "Printa A4 · 100% · go se na margin · digrafiki tsa kwa morago di butswe.",
   "faqCommonTitle": "Dipotso tse di tlwaelegileng",
-  "faqCommonIntro": "Dikarabo tse dikhutshwane ka se buusdo e se dirang le se e sa se dire — di thusa pele o tshepa maduo a Ema."
+  "faqCommonIntro": "Dikarabo tse dikhutshwane ka se buusdo e se dirang le se e sa se dire — di thusa pele o tshepa maduo a Ema.",
+  "themeLabel": "Appearance",
+  "themeDark": "Dark",
+  "themeLight": "Light",
+  "themeHint": "Stored only in this browser. Default follows the instrument dark field.",
+  "navDownloads": "Downloads"
 }

@@ -78,5 +78,10 @@
   "downloadA4PosterShort": "A4",
   "downloadA4PosterHint": "Drukāt A4 · 100% · bez malām · fona grafika ieslēgta.",
   "faqCommonTitle": "Bieži uzdotie jautājumi",
-  "faqCommonIntro": "Īsas atbildes par to, ko buusdo dara un nedara — noderīgi, pirms uzticaties Halt rezultātam."
+  "faqCommonIntro": "Īsas atbildes par to, ko buusdo dara un nedara — noderīgi, pirms uzticaties Halt rezultātam.",
+  "themeLabel": "Appearance",
+  "themeDark": "Dark",
+  "themeLight": "Light",
+  "themeHint": "Stored only in this browser. Default follows the instrument dark field.",
+  "navDownloads": "Downloads"
 }

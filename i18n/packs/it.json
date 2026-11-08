@@ -31,7 +31,7 @@
   "privacyPolicyLimitsBody": "Nessuna decrittazione TLS — HTTPS CONNECT è solo per hostname; nessun certificato MITM. Nessuna terminazione processi — i programmi in esecuzione continuano. Le cartelle di sistema sono solo report — /usr, /etc, percorsi di sistema Windows e Program Files non vengono mai spostati né modificati. Nessun motore AV / firme e nessuna cattura di credenziali o cronologia di navigazione.",
   "privacyPolicyUpdated": "Ultima revisione: 2026-11-07 · lancio del sito",
   "desktopDownloadsTitle": "Download dell’app desktop",
-  "desktopDownloadsIntro": "Installa buusdo su questo computer dalla release GitHub (shell browser + tray). Le build non sono firmate — vedi la guida di installazione. Apri all’accesso resta disattivato finché non lo abiliti.",
+  "desktopDownloadsIntro": "Installa buusdo Cybersecurity Service Tool su questo computer dalla release GitHub (shell browser + tray). Le build non sono firmate — vedi la guida di installazione. Apri all’accesso resta disattivato finché non lo abiliti.",
   "desktopDownloadWindows": "Installer Windows (NSIS)",
   "desktopDownloadMac": "App macOS (zip)",
   "desktopDownloadLinux": "Linux amd64 (.deb)",
@@ -449,5 +449,10 @@
   "downloadA4PosterShort": "A4",
   "downloadA4PosterHint": "Stampa A4 · 100% · senza margini · grafica di sfondo attiva.",
   "faqCommonTitle": "Domande frequenti",
-  "faqCommonIntro": "Risposte brevi su cosa fa e non fa buusdo — utili prima di fidarsi di un risultato Stop."
+  "faqCommonIntro": "Risposte brevi su cosa fa e non fa buusdo — utili prima di fidarsi di un risultato Stop.",
+  "themeLabel": "Appearance",
+  "themeDark": "Dark",
+  "themeLight": "Light",
+  "themeHint": "Stored only in this browser. Default follows the instrument dark field.",
+  "navDownloads": "Downloads"
 }

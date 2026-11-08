@@ -449,5 +449,10 @@
   "downloadA4PosterShort": "A4",
   "downloadA4PosterHint": "Phrinta i-A4 · 100% · akukho amamajini · iigrafiki zangemuva zivuliwe.",
   "faqCommonTitle": "Imibuzo ejwayelekile",
-  "faqCommonIntro": "Izimpendulo ezimfushane ngalokho i-buusdo eyikwenzayo nalokho engakwenzi — ziwusizo ngaphambi kokuthi uthembe umphumela we-Misa."
+  "faqCommonIntro": "Izimpendulo ezimfushane ngalokho i-buusdo eyikwenzayo nalokho engakwenzi — ziwusizo ngaphambi kokuthi uthembe umphumela we-Misa.",
+  "themeLabel": "Appearance",
+  "themeDark": "Dark",
+  "themeLight": "Light",
+  "themeHint": "Stored only in this browser. Default follows the instrument dark field.",
+  "navDownloads": "Downloads"
 }

@@ -449,5 +449,10 @@
   "downloadA4PosterShort": "A4",
   "downloadA4PosterHint": "Printa A4 · 100% · go se be le margin · digrafiki tša ka morago di butšwe.",
   "faqCommonTitle": "Dipotšišo tše tlwaelegilego",
-  "faqCommonIntro": "Dikarabo tše dikopana ka seo buusdo e se dirago le seo e sa se dirego — di thuša pele o tshepa sephetho sa Ema."
+  "faqCommonIntro": "Dikarabo tše dikopana ka seo buusdo e se dirago le seo e sa se dirego — di thuša pele o tshepa sephetho sa Ema.",
+  "themeLabel": "Appearance",
+  "themeDark": "Dark",
+  "themeLight": "Light",
+  "themeHint": "Stored only in this browser. Default follows the instrument dark field.",
+  "navDownloads": "Downloads"
 }

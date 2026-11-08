@@ -66,3 +66,22 @@ for (const id of ["nb", "fi"] as const) {
     assert.equal(pack.timingAmbiguousProbe, en.timingAmbiguousProbe);
   });
 }
+
+for (const id of ["nb", "fi"] as const) {
+  test(`${id} historyFilterProbeBlocked* are localized`, () => {
+    const pack = JSON.parse(readFileSync(path.join("i18n/packs", `${id}.json`), "utf8")) as Record<
+      string,
+      string
+    >;
+    const en = getMessages("en");
+    const bag = getMessages(id);
+    assert.ok(pack.historyFilterProbeBlocked?.trim(), `${id}.historyFilterProbeBlocked`);
+    assert.ok(pack.historyFilterProbeBlockedEmpty?.trim(), `${id}.historyFilterProbeBlockedEmpty`);
+    assert.notEqual(bag.historyFilterProbeBlocked, en.historyFilterProbeBlocked, `${id}.historyFilterProbeBlocked still EN`);
+    assert.notEqual(
+      bag.historyFilterProbeBlockedEmpty,
+      en.historyFilterProbeBlockedEmpty,
+      `${id}.historyFilterProbeBlockedEmpty still EN`
+    );
+  });
+}

@@ -31,7 +31,7 @@
   "privacyPolicyLimitsBody": "Ingen TLS-dekryptering — HTTPS CONNECT er kun værtsnavn; intet MITM-certifikat. Ingen procesafslutning — kørende programmer fortsætter. Systemmapper er kun-rapport — /usr, /etc, Windows-systemstier og Program Files flyttes eller ændres aldrig. Ingen AV-/signaturmotor og ingen optagelse af loginoplysninger eller browserhistorik.",
   "privacyPolicyUpdated": "Senest gennemgået: 2026-11-07 · webstedslancering",
   "desktopDownloadsTitle": "Downloads af skrivebordsappen",
-  "desktopDownloadsIntro": "Installer buusdo på denne computer fra GitHub Release (browserskal + systembakke). Pakkerne er usignerede — se installationsvejledningen. Åbn ved login forbliver slået fra, indtil du slår det til.",
+  "desktopDownloadsIntro": "Installer buusdo Cybersecurity Service Tool på denne computer fra GitHub Release (browserskal + systembakke). Pakkerne er usignerede — se installationsvejledningen. Åbn ved login forbliver slået fra, indtil du slår det til.",
   "desktopDownloadWindows": "Windows x64 (.exe)",
   "desktopDownloadMac": "macOS-app (zip)",
   "desktopDownloadLinux": "Linux amd64 (.deb)",
@@ -449,5 +449,10 @@
   "downloadA4PosterShort": "A4",
   "downloadA4PosterHint": "Udskriv A4 · 100 % · ingen margener · baggrundsgrafik til.",
   "faqCommonTitle": "Ofte stillede spørgsmål",
-  "faqCommonIntro": "Korte svar om, hvad buusdo gør og ikke gør — nyttigt, før du stoler på et Stop-resultat."
+  "faqCommonIntro": "Korte svar om, hvad buusdo gør og ikke gør — nyttigt, før du stoler på et Stop-resultat.",
+  "themeLabel": "Appearance",
+  "themeDark": "Dark",
+  "themeLight": "Light",
+  "themeHint": "Stored only in this browser. Default follows the instrument dark field.",
+  "navDownloads": "Downloads"
 }

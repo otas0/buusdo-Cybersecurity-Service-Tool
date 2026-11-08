@@ -31,7 +31,7 @@
   "privacyPolicyLimitsBody": "無 TLS 解密——HTTPS CONNECT 僅使用主機名稱；沒有 MITM 憑證。不會結束行程——正在執行的程式繼續執行。系統目錄僅報告——/usr、/etc、Windows 系統路徑和 Program Files 從不會被移動或編輯。沒有防毒/特徵引擎，也不擷取帳密或瀏覽紀錄。",
   "privacyPolicyUpdated": "最近審閱：2026-11-07 · 網站上線",
   "desktopDownloadsTitle": "桌面應用程式下載",
-  "desktopDownloadsIntro": "從 GitHub Release 在本機安裝 buusdo（瀏覽器外殼 + 系統匣）。建置未簽署——請參閱安裝指南。「登入時開啟」預設關閉，直到您啟用。",
+  "desktopDownloadsIntro": "從 GitHub Release 在本機安裝 buusdo Cybersecurity Service Tool（瀏覽器外殼 + 系統匣）。建置未簽署——請參閱安裝指南。「登入時開啟」預設關閉，直到您啟用。",
   "desktopDownloadWindows": "Windows 安裝程式（NSIS）",
   "desktopDownloadMac": "macOS 應用程式（zip）",
   "desktopDownloadLinux": "Linux amd64（.deb）",
@@ -449,5 +449,10 @@
   "downloadA4PosterShort": "A4",
   "downloadA4PosterHint": "列印 A4 · 100% · 無邊距 · 開啟背景圖形。",
   "faqCommonTitle": "常見問題",
-  "faqCommonIntro": "關於本工具能做什麼、不能做什麼的簡短說明——在信任「停止」結果前值得一讀。"
+  "faqCommonIntro": "關於本工具能做什麼、不能做什麼的簡短說明——在信任「停止」結果前值得一讀。",
+  "themeLabel": "Appearance",
+  "themeDark": "Dark",
+  "themeLight": "Light",
+  "themeHint": "Stored only in this browser. Default follows the instrument dark field.",
+  "navDownloads": "Downloads"
 }

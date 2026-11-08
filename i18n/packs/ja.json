@@ -31,7 +31,7 @@
   "privacyPolicyLimitsBody": "TLS 復号なし — HTTPS CONNECT はホスト名のみで、MITM 証明書はありません。プロセス終了なし — 実行中のプログラムはそのまま動きます。システムディレクトリは報告のみ — /usr、/etc、Windows のシステムパス、Program Files は移動も編集もしません。AV / シグネチャエンジンはなく、資格情報や閲覧履歴の取得もありません。",
   "privacyPolicyUpdated": "最終確認：2026-11-07 · サイト公開",
   "desktopDownloadsTitle": "デスクトップアプリのダウンロード",
-  "desktopDownloadsIntro": "GitHub Release からこのコンピュータに buusdo をインストールします（ブラウザシェル + トレイ）。ビルドは未署名です — セットアップガイドを見てください。ログイン時に開くは、有効にするまでオフのままです。",
+  "desktopDownloadsIntro": "GitHub Release からこのコンピュータに buusdo Cybersecurity Service Tool をインストールします（ブラウザシェル + トレイ）。ビルドは未署名です — セットアップガイドを見てください。ログイン時に開くは、有効にするまでオフのままです。",
   "desktopDownloadWindows": "Windows インストーラー（NSIS）",
   "desktopDownloadMac": "macOS アプリ（zip）",
   "desktopDownloadLinux": "Linux amd64（.deb）",
@@ -449,5 +449,10 @@
   "downloadA4PosterShort": "A4",
   "downloadA4PosterHint": "A4で印刷 · 100% · 余白なし · 背景グラフィックオン。",
   "faqCommonTitle": "よくある質問",
-  "faqCommonIntro": "buusdo ができること／できないことの短い説明です。「停止」の結果を信頼する前に確認してください。"
+  "faqCommonIntro": "buusdo ができること／できないことの短い説明です。「停止」の結果を信頼する前に確認してください。",
+  "themeLabel": "Appearance",
+  "themeDark": "Dark",
+  "themeLight": "Light",
+  "themeHint": "Stored only in this browser. Default follows the instrument dark field.",
+  "navDownloads": "Downloads"
 }

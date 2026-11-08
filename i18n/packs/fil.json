@@ -449,5 +449,10 @@
   "downloadA4PosterShort": "A4",
   "downloadA4PosterHint": "I-print ang A4 · 100% · walang margin · background graphics on.",
   "faqCommonTitle": "Mga madalas itanong",
-  "faqCommonIntro": "Maikling sagot kung ano ang ginagawa at hindi ginagawa ng buusdo — kapaki-pakinabang bago kang magtiwala sa resulta ng Halt."
+  "faqCommonIntro": "Maikling sagot kung ano ang ginagawa at hindi ginagawa ng buusdo — kapaki-pakinabang bago kang magtiwala sa resulta ng Halt.",
+  "themeLabel": "Appearance",
+  "themeDark": "Dark",
+  "themeLight": "Light",
+  "themeHint": "Stored only in this browser. Default follows the instrument dark field.",
+  "navDownloads": "Downloads"
 }

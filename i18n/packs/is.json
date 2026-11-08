@@ -78,5 +78,10 @@
   "downloadA4PosterShort": "A4",
   "downloadA4PosterHint": "Prenta A4 · 100% · engin spássía · bakgrunnsmyndir á.",
   "faqCommonTitle": "Algengar spurningar",
-  "faqCommonIntro": "Stutt svör um hvað buusdo gerir og gerir ekki — gagnlegt áður en þú treystir Halt-niðurstöðu."
+  "faqCommonIntro": "Stutt svör um hvað buusdo gerir og gerir ekki — gagnlegt áður en þú treystir Halt-niðurstöðu.",
+  "themeLabel": "Appearance",
+  "themeDark": "Dark",
+  "themeLight": "Light",
+  "themeHint": "Stored only in this browser. Default follows the instrument dark field.",
+  "navDownloads": "Downloads"
 }

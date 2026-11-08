@@ -78,5 +78,10 @@
   "downloadA4PosterShort": "A4",
   "downloadA4PosterHint": "Εκτύπωση A4 · 100% · χωρίς περιθώρια · γραφικά φόντου ενεργά.",
   "faqCommonTitle": "Συχνές ερωτήσεις",
-  "faqCommonIntro": "Σύντομες απαντήσεις για το τι κάνει και τι δεν κάνει το buusdo — χρήσιμες πριν εμπιστευτείτε ένα αποτέλεσμα Διακοπή."
+  "faqCommonIntro": "Σύντομες απαντήσεις για το τι κάνει και τι δεν κάνει το buusdo — χρήσιμες πριν εμπιστευτείτε ένα αποτέλεσμα Διακοπή.",
+  "themeLabel": "Appearance",
+  "themeDark": "Dark",
+  "themeLight": "Light",
+  "themeHint": "Stored only in this browser. Default follows the instrument dark field.",
+  "navDownloads": "Downloads"
 }

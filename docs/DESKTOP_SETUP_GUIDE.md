@@ -55,6 +55,68 @@ Builds **não assinadas** (sem notarização Apple / sem Authenticode). Descarre
 
 Abrir ao iniciar sessão fica desligado até o ativar. Limites honestos: Privacy no site.
 
+
+## Supported languages (website + in-app setup path)
+
+Setup and desktop download copy ship in **every** UI locale below. Open Settings → Desktop app downloads in that locale:
+
+`https://buusdocst.mtsu.workers.dev/{locale}/settings#settings-desktop`
+
+| Locale | Native name | English name | Region | Settings downloads |
+|--------|-------------|--------------|--------|--------------------|
+| `en` | English | English | global | [/en/settings#settings-desktop](https://buusdocst.mtsu.workers.dev/en/settings#settings-desktop) |
+| `zh-Hans` | 简体中文 | Chinese (Simplified) | east-asia | [/zh-Hans/settings#settings-desktop](https://buusdocst.mtsu.workers.dev/zh-Hans/settings#settings-desktop) |
+| `zh-Hant` | 繁體中文 | Chinese (Traditional) | east-asia | [/zh-Hant/settings#settings-desktop](https://buusdocst.mtsu.workers.dev/zh-Hant/settings#settings-desktop) |
+| `ja` | 日本語 | Japanese | east-asia | [/ja/settings#settings-desktop](https://buusdocst.mtsu.workers.dev/ja/settings#settings-desktop) |
+| `pt-PT` | Português (Portugal) | Portuguese (Portugal) | europe | [/pt-PT/settings#settings-desktop](https://buusdocst.mtsu.workers.dev/pt-PT/settings#settings-desktop) |
+| `pt-BR` | Português (Brasil) | Portuguese (Brazil) | europe | [/pt-BR/settings#settings-desktop](https://buusdocst.mtsu.workers.dev/pt-BR/settings#settings-desktop) |
+| `de` | Deutsch | German | europe | [/de/settings#settings-desktop](https://buusdocst.mtsu.workers.dev/de/settings#settings-desktop) |
+| `fr` | Français | French | europe | [/fr/settings#settings-desktop](https://buusdocst.mtsu.workers.dev/fr/settings#settings-desktop) |
+| `es` | Español | Spanish | europe | [/es/settings#settings-desktop](https://buusdocst.mtsu.workers.dev/es/settings#settings-desktop) |
+| `it` | Italiano | Italian | europe | [/it/settings#settings-desktop](https://buusdocst.mtsu.workers.dev/it/settings#settings-desktop) |
+| `nl` | Nederlands | Dutch | europe | [/nl/settings#settings-desktop](https://buusdocst.mtsu.workers.dev/nl/settings#settings-desktop) |
+| `pl` | Polski | Polish | europe | [/pl/settings#settings-desktop](https://buusdocst.mtsu.workers.dev/pl/settings#settings-desktop) |
+| `sv` | Svenska | Swedish | europe | [/sv/settings#settings-desktop](https://buusdocst.mtsu.workers.dev/sv/settings#settings-desktop) |
+| `da` | Dansk | Danish | europe | [/da/settings#settings-desktop](https://buusdocst.mtsu.workers.dev/da/settings#settings-desktop) |
+| `fi` | Suomi | Finnish | europe | [/fi/settings#settings-desktop](https://buusdocst.mtsu.workers.dev/fi/settings#settings-desktop) |
+| `nb` | Norsk bokmål | Norwegian Bokmål | europe | [/nb/settings#settings-desktop](https://buusdocst.mtsu.workers.dev/nb/settings#settings-desktop) |
+| `el` | Ελληνικά | Greek | europe | [/el/settings#settings-desktop](https://buusdocst.mtsu.workers.dev/el/settings#settings-desktop) |
+| `cs` | Čeština | Czech | europe | [/cs/settings#settings-desktop](https://buusdocst.mtsu.workers.dev/cs/settings#settings-desktop) |
+| `sk` | Slovenčina | Slovak | europe | [/sk/settings#settings-desktop](https://buusdocst.mtsu.workers.dev/sk/settings#settings-desktop) |
+| `hu` | Magyar | Hungarian | europe | [/hu/settings#settings-desktop](https://buusdocst.mtsu.workers.dev/hu/settings#settings-desktop) |
+| `ro` | Română | Romanian | europe | [/ro/settings#settings-desktop](https://buusdocst.mtsu.workers.dev/ro/settings#settings-desktop) |
+| `bg` | Български | Bulgarian | europe | [/bg/settings#settings-desktop](https://buusdocst.mtsu.workers.dev/bg/settings#settings-desktop) |
+| `hr` | Hrvatski | Croatian | europe | [/hr/settings#settings-desktop](https://buusdocst.mtsu.workers.dev/hr/settings#settings-desktop) |
+| `sl` | Slovenščina | Slovenian | europe | [/sl/settings#settings-desktop](https://buusdocst.mtsu.workers.dev/sl/settings#settings-desktop) |
+| `lt` | Lietuvių | Lithuanian | europe | [/lt/settings#settings-desktop](https://buusdocst.mtsu.workers.dev/lt/settings#settings-desktop) |
+| `lv` | Latviešu | Latvian | europe | [/lv/settings#settings-desktop](https://buusdocst.mtsu.workers.dev/lv/settings#settings-desktop) |
+| `et` | Eesti | Estonian | europe | [/et/settings#settings-desktop](https://buusdocst.mtsu.workers.dev/et/settings#settings-desktop) |
+| `ga` | Gaeilge | Irish | europe | [/ga/settings#settings-desktop](https://buusdocst.mtsu.workers.dev/ga/settings#settings-desktop) |
+| `mt` | Malti | Maltese | europe | [/mt/settings#settings-desktop](https://buusdocst.mtsu.workers.dev/mt/settings#settings-desktop) |
+| `uk` | Українська | Ukrainian | europe | [/uk/settings#settings-desktop](https://buusdocst.mtsu.workers.dev/uk/settings#settings-desktop) |
+| `is` | Íslenska | Icelandic | europe | [/is/settings#settings-desktop](https://buusdocst.mtsu.workers.dev/is/settings#settings-desktop) |
+| `ca` | Català | Catalan | europe | [/ca/settings#settings-desktop](https://buusdocst.mtsu.workers.dev/ca/settings#settings-desktop) |
+| `af` | Afrikaans | Afrikaans | southern-africa | [/af/settings#settings-desktop](https://buusdocst.mtsu.workers.dev/af/settings#settings-desktop) |
+| `zu` | isiZulu | Zulu | southern-africa | [/zu/settings#settings-desktop](https://buusdocst.mtsu.workers.dev/zu/settings#settings-desktop) |
+| `xh` | isiXhosa | Xhosa | southern-africa | [/xh/settings#settings-desktop](https://buusdocst.mtsu.workers.dev/xh/settings#settings-desktop) |
+| `nso` | Sesotho sa Leboa | Northern Sotho | southern-africa | [/nso/settings#settings-desktop](https://buusdocst.mtsu.workers.dev/nso/settings#settings-desktop) |
+| `st` | Sesotho | Southern Sotho | southern-africa | [/st/settings#settings-desktop](https://buusdocst.mtsu.workers.dev/st/settings#settings-desktop) |
+| `tn` | Setswana | Tswana | southern-africa | [/tn/settings#settings-desktop](https://buusdocst.mtsu.workers.dev/tn/settings#settings-desktop) |
+| `ss` | siSwati | Swati | southern-africa | [/ss/settings#settings-desktop](https://buusdocst.mtsu.workers.dev/ss/settings#settings-desktop) |
+| `ve` | Tshivenḓa | Venda | southern-africa | [/ve/settings#settings-desktop](https://buusdocst.mtsu.workers.dev/ve/settings#settings-desktop) |
+| `ts` | Xitsonga | Tsonga | southern-africa | [/ts/settings#settings-desktop](https://buusdocst.mtsu.workers.dev/ts/settings#settings-desktop) |
+| `nr` | isiNdebele | Southern Ndebele | southern-africa | [/nr/settings#settings-desktop](https://buusdocst.mtsu.workers.dev/nr/settings#settings-desktop) |
+| `mi` | Te reo Māori | Māori | pacific | [/mi/settings#settings-desktop](https://buusdocst.mtsu.workers.dev/mi/settings#settings-desktop) |
+| `id` | Bahasa Indonesia | Indonesian | southeast-asia | [/id/settings#settings-desktop](https://buusdocst.mtsu.workers.dev/id/settings#settings-desktop) |
+| `ms` | Bahasa Melayu | Malay | southeast-asia | [/ms/settings#settings-desktop](https://buusdocst.mtsu.workers.dev/ms/settings#settings-desktop) |
+| `th` | ไทย | Thai | southeast-asia | [/th/settings#settings-desktop](https://buusdocst.mtsu.workers.dev/th/settings#settings-desktop) |
+| `vi` | Tiếng Việt | Vietnamese | southeast-asia | [/vi/settings#settings-desktop](https://buusdocst.mtsu.workers.dev/vi/settings#settings-desktop) |
+| `fil` | Filipino | Filipino | southeast-asia | [/fil/settings#settings-desktop](https://buusdocst.mtsu.workers.dev/fil/settings#settings-desktop) |
+| `km` | ភាសាខ្មែរ | Khmer | southeast-asia | [/km/settings#settings-desktop](https://buusdocst.mtsu.workers.dev/km/settings#settings-desktop) |
+| `lo` | ລາວ | Lao | southeast-asia | [/lo/settings#settings-desktop](https://buusdocst.mtsu.workers.dev/lo/settings#settings-desktop) |
+| `my` | မြန်မာ | Burmese | southeast-asia | [/my/settings#settings-desktop](https://buusdocst.mtsu.workers.dev/my/settings#settings-desktop) |
+
+Canonical English steps stay in this file. Locale packs carry `desktopDownloads*` + setup-guide link labels for the same Release URLs.
 ## Slack / ops
 
 Slack webhook is **not** configured for this product ops path (skipped). Health failures still go through GitHub Actions email / watch notifications — see [`HEALTH_ALERTS.md`](HEALTH_ALERTS.md).

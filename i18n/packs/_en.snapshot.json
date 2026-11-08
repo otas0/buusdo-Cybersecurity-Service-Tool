@@ -31,7 +31,7 @@
   "privacyPolicyLimitsBody": "No TLS decryption — HTTPS CONNECT is hostname-only; there is no MITM certificate. No process kill — running programs keep running. System directories are report-only — /usr, /etc, Windows system paths, and Program Files are never moved or edited. There is no AV / signature engine and no credential or browsing-history capture.",
   "privacyPolicyUpdated": "Last reviewed: 2026-11-07 · website launch",
   "desktopDownloadsTitle": "Desktop app downloads",
-  "desktopDownloadsIntro": "Install buusdo on this computer from the GitHub Release (browser shell + tray). Builds are unsigned — see the setup guide. Open-at-login stays off until you enable it.",
+  "desktopDownloadsIntro": "Install buusdo Cybersecurity Service Tool on this computer from the GitHub Release (browser shell + tray). Builds are unsigned — see the setup guide. Open-at-login stays off until you enable it.",
   "desktopDownloadWindows": "Windows installer (NSIS)",
   "desktopDownloadMac": "macOS app (zip)",
   "desktopDownloadLinux": "Linux amd64 (.deb)",
@@ -449,5 +449,10 @@
   "downloadA4PosterShort": "A4",
   "downloadA4PosterHint": "Print A4 · 100% · margins none · background graphics on.",
   "faqCommonTitle": "Common questions",
-  "faqCommonIntro": "Short answers on what buusdo does and does not — useful before you trust a Halt result."
+  "faqCommonIntro": "Short answers on what buusdo does and does not — useful before you trust a Halt result.",
+  "themeLabel": "Appearance",
+  "themeDark": "Dark",
+  "themeLight": "Light",
+  "themeHint": "Stored only in this browser. Default follows the instrument dark field.",
+  "navDownloads": "Downloads"
 }

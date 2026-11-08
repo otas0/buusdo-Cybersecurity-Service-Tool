@@ -78,5 +78,10 @@
   "downloadA4PosterShort": "A4",
   "downloadA4PosterHint": "Prindi A4 · 100% · ilma veeristeta · taustagraafika sees.",
   "faqCommonTitle": "Korduma kippuvad küsimused",
-  "faqCommonIntro": "Lühikesed vastused selle kohta, mida buusdo teeb ja ei tee — kasulik enne Halt-tulemuse usaldamist."
+  "faqCommonIntro": "Lühikesed vastused selle kohta, mida buusdo teeb ja ei tee — kasulik enne Halt-tulemuse usaldamist.",
+  "themeLabel": "Appearance",
+  "themeDark": "Dark",
+  "themeLight": "Light",
+  "themeHint": "Stored only in this browser. Default follows the instrument dark field.",
+  "navDownloads": "Downloads"
 }

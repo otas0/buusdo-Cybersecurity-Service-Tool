@@ -42,6 +42,7 @@ import {
 import { buildRiskNotes, summarizeExportPlan } from "../security/feedback-batch";
 import { maxProbeAmongTimeouts, suggestProbeTimeoutMs } from "../security/probe-budget-suggest";
 import { CopyEnvLine } from "./CopyEnvLine";
+import { ThemeSwitch } from "./ThemeSwitch";
 import extensionStores from "../shared/extension-stores.json" with { type: "json" };
 import desktopDownloads from "../shared/desktop-downloads.json" with { type: "json" };
 import {
@@ -430,6 +431,129 @@ export function SettingsPanel({
       ) : null}
       <p className="light-note">{t.settingsIntro}</p>
 
+
+      <section
+        className="settings-block"
+        id="settings-desktop"
+        data-testid="settings-desktop-downloads"
+        aria-labelledby="settings-desktop-heading"
+      >
+        {/* id must stay unique page-wide (assert-desktop-download-messages). */}
+        <h2 id="settings-desktop-heading">{t.desktopDownloadsTitle}</h2>
+        <p className="hint">{t.desktopDownloadsIntro}</p>
+        <p className="hint" data-testid="settings-desktop-download-row">
+          <a
+            className="text-button"
+            href={DESKTOP_WIN_URL || DESKTOP_PACKAGING_URL}
+            target="_blank"
+            rel="noreferrer"
+          >
+            {DESKTOP_WIN_URL ? t.desktopDownloadWindows : `${t.desktopDownloadWindows} — ${t.desktopDownloadSoon}`}
+          </a>
+          {" · "}
+          <a
+            className="text-button"
+            href={macHref || DESKTOP_PACKAGING_URL}
+            target="_blank"
+            rel="noreferrer"
+            data-testid="settings-desktop-download-mac"
+            aria-describedby={macCdnDesc ? "settings-desktop-mac-cdn-desc" : undefined}
+          >
+            {macHref ? t.desktopDownloadMac : `${t.desktopDownloadMac} — ${t.desktopDownloadSoon}`}
+          </a>
+          {macCdnDesc ? (
+            <span
+              id="settings-desktop-mac-cdn-desc"
+              data-testid="settings-desktop-mac-cdn-desc"
+              className="visually-hidden"
+            >
+              {macCdnDesc}
+            </span>
+          ) : null}
+          {macPromoteNote !== "none" ? (
+            <span
+              className="hint"
+              data-testid={
+                macPromoteNote === "ready-to-promote"
+                  ? "settings-desktop-mac-ready-to-promote"
+                  : "settings-desktop-mac-unsigned-note"
+              }
+              style={{ display: "block", marginTop: "0.35rem" }}
+            >
+              {macPromoteNote === "ready-to-promote"
+                ? t.desktopDownloadReadyToPromote
+                : t.desktopDownloadUnsignedUntilPromote}
+            </span>
+          ) : null}
+          {" · "}
+          <a
+            className="text-button"
+            href={DESKTOP_LINUX_URL || DESKTOP_PACKAGING_URL}
+            target="_blank"
+            rel="noreferrer"
+          >
+            {DESKTOP_LINUX_URL ? t.desktopDownloadLinux : `${t.desktopDownloadLinux} — ${t.desktopDownloadSoon}`}
+          </a>
+        </p>
+        {DESKTOP_RELEASE_TAG ? (
+          <p className="scope-note" data-testid="settings-desktop-release-tag">
+            {t.desktopDownloadReleaseTag.replace("{tag}", DESKTOP_RELEASE_TAG)}
+          </p>
+        ) : null}
+        {showMacSource ? (
+          <p
+            className="scope-note"
+            data-testid="settings-desktop-mac-source"
+            title={macCdnDesc || undefined}
+          >
+            {t.desktopDownloadMacSource.replace(
+              "{source}",
+              `${t.desktopDownloadSourceCdn} · ${t.desktopDownloadSourceGithub}`
+            )}
+          </p>
+        ) : null}
+        <p className="hint">
+          <a
+            className="text-button"
+            href={DESKTOP_SETUP_GUIDE_URL}
+            target="_blank"
+            rel="noreferrer"
+            data-testid="settings-desktop-setup-guide"
+          >
+            {t.desktopDownloadSetupGuide}
+          </a>
+          {" · "}
+          <a className="text-button" href={DESKTOP_PACKAGING_URL} target="_blank" rel="noreferrer">
+            {t.desktopDownloadPackaging}
+          </a>
+          {" · "}
+          <a className="text-button" href={DESKTOP_RELEASE_URL} target="_blank" rel="noreferrer">
+            {t.desktopDownloadRelease}
+          </a>
+          {" · "}
+          <a className="text-button" href={DESKTOP_PACKAGING_URL} target="_blank" rel="noreferrer">
+            {t.blockListsInstallDesktop}
+          </a>
+          {" · "}
+          <a
+            className="text-button"
+            href={`/${locale}/privacy#privacy-honest-limits`}
+            data-testid="settings-desktop-honest-limits"
+            onClick={(e) => {
+              if (!onOpenHonestLimits) return;
+              e.preventDefault();
+              onOpenHonestLimits();
+            }}
+          >
+            {t.desktopHonestLimitsLink}
+          </a>
+        </p>
+      </section>
+
+      <section className="settings-block" id="settings-appearance" data-testid="settings-appearance">
+        <ThemeSwitch locale={locale} />
+      </section>
+
       <section className="settings-block" id="settings-data">
         <h2>{t.intelTitle}</h2>
         {/* Timing legend first so it stays above the fold on 390px pt-PT (before long intelBody). */}
@@ -652,124 +776,6 @@ export function SettingsPanel({
               : "With Never store, check history and feedback drafts are not saved in this browser."}
           </p>
         )}
-      </section>
-
-      <section
-        className="settings-block"
-        id="settings-desktop"
-        data-testid="settings-desktop-downloads"
-        aria-labelledby="settings-desktop-heading"
-      >
-        {/* id must stay unique page-wide (assert-desktop-download-messages). */}
-        <h2 id="settings-desktop-heading">{t.desktopDownloadsTitle}</h2>
-        <p className="hint">{t.desktopDownloadsIntro}</p>
-        <p className="hint" data-testid="settings-desktop-download-row">
-          <a
-            className="text-button"
-            href={DESKTOP_WIN_URL || DESKTOP_PACKAGING_URL}
-            target="_blank"
-            rel="noreferrer"
-          >
-            {DESKTOP_WIN_URL ? t.desktopDownloadWindows : `${t.desktopDownloadWindows} — ${t.desktopDownloadSoon}`}
-          </a>
-          {" · "}
-          <a
-            className="text-button"
-            href={macHref || DESKTOP_PACKAGING_URL}
-            target="_blank"
-            rel="noreferrer"
-            data-testid="settings-desktop-download-mac"
-            aria-describedby={macCdnDesc ? "settings-desktop-mac-cdn-desc" : undefined}
-          >
-            {macHref ? t.desktopDownloadMac : `${t.desktopDownloadMac} — ${t.desktopDownloadSoon}`}
-          </a>
-          {macCdnDesc ? (
-            <span
-              id="settings-desktop-mac-cdn-desc"
-              data-testid="settings-desktop-mac-cdn-desc"
-              className="visually-hidden"
-            >
-              {macCdnDesc}
-            </span>
-          ) : null}
-          {macPromoteNote !== "none" ? (
-            <span
-              className="hint"
-              data-testid={
-                macPromoteNote === "ready-to-promote"
-                  ? "settings-desktop-mac-ready-to-promote"
-                  : "settings-desktop-mac-unsigned-note"
-              }
-              style={{ display: "block", marginTop: "0.35rem" }}
-            >
-              {macPromoteNote === "ready-to-promote"
-                ? t.desktopDownloadReadyToPromote
-                : t.desktopDownloadUnsignedUntilPromote}
-            </span>
-          ) : null}
-          {" · "}
-          <a
-            className="text-button"
-            href={DESKTOP_LINUX_URL || DESKTOP_PACKAGING_URL}
-            target="_blank"
-            rel="noreferrer"
-          >
-            {DESKTOP_LINUX_URL ? t.desktopDownloadLinux : `${t.desktopDownloadLinux} — ${t.desktopDownloadSoon}`}
-          </a>
-        </p>
-        {DESKTOP_RELEASE_TAG ? (
-          <p className="scope-note" data-testid="settings-desktop-release-tag">
-            {t.desktopDownloadReleaseTag.replace("{tag}", DESKTOP_RELEASE_TAG)}
-          </p>
-        ) : null}
-        {showMacSource ? (
-          <p
-            className="scope-note"
-            data-testid="settings-desktop-mac-source"
-            title={macCdnDesc || undefined}
-          >
-            {t.desktopDownloadMacSource.replace(
-              "{source}",
-              `${t.desktopDownloadSourceCdn} · ${t.desktopDownloadSourceGithub}`
-            )}
-          </p>
-        ) : null}
-        <p className="hint">
-          <a
-            className="text-button"
-            href={DESKTOP_SETUP_GUIDE_URL}
-            target="_blank"
-            rel="noreferrer"
-            data-testid="settings-desktop-setup-guide"
-          >
-            {t.desktopDownloadSetupGuide}
-          </a>
-          {" · "}
-          <a className="text-button" href={DESKTOP_PACKAGING_URL} target="_blank" rel="noreferrer">
-            {t.desktopDownloadPackaging}
-          </a>
-          {" · "}
-          <a className="text-button" href={DESKTOP_RELEASE_URL} target="_blank" rel="noreferrer">
-            {t.desktopDownloadRelease}
-          </a>
-          {" · "}
-          <a className="text-button" href={DESKTOP_PACKAGING_URL} target="_blank" rel="noreferrer">
-            {t.blockListsInstallDesktop}
-          </a>
-          {" · "}
-          <a
-            className="text-button"
-            href={`/${locale}/privacy#privacy-honest-limits`}
-            data-testid="settings-desktop-honest-limits"
-            onClick={(e) => {
-              if (!onOpenHonestLimits) return;
-              e.preventDefault();
-              onOpenHonestLimits();
-            }}
-          >
-            {t.desktopHonestLimitsLink}
-          </a>
-        </p>
       </section>
 
       <section className="settings-block" id="settings-block-lists">

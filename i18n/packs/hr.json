@@ -78,5 +78,10 @@
   "downloadA4PosterShort": "A4",
   "downloadA4PosterHint": "Ispiši A4 · 100% · bez margina · pozadinska grafika uključena.",
   "faqCommonTitle": "Česta pitanja",
-  "faqCommonIntro": "Kratki odgovori o tome što buusdo radi, a što ne — korisni prije nego što vjerujete rezultatu Halt."
+  "faqCommonIntro": "Kratki odgovori o tome što buusdo radi, a što ne — korisni prije nego što vjerujete rezultatu Halt.",
+  "themeLabel": "Appearance",
+  "themeDark": "Dark",
+  "themeLight": "Light",
+  "themeHint": "Stored only in this browser. Default follows the instrument dark field.",
+  "navDownloads": "Downloads"
 }

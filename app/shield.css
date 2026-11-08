@@ -1053,3 +1053,21 @@
     margin-top: 8px;
   }
 }
+
+/* Appearance switch (Settings) */
+.theme-switch-row {
+  display: flex;
+  gap: 12px;
+  margin: 8px 0;
+}
+.theme-opt.is-active {
+  color: var(--halt);
+  outline: 1px solid var(--halt);
+  outline-offset: 2px;
+}
+
+
+/* Light theme uses on-light wordmark plate; dark field keeps transparent cream mark. */
+.brand-logo-on-light { display: none; }
+:root[data-theme="light"] .brand-logo-on-dark { display: none; }
+:root[data-theme="light"] .brand-logo-on-light { display: block; }

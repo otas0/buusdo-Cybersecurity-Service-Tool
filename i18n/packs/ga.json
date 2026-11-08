@@ -78,5 +78,10 @@
   "downloadA4PosterShort": "A4",
   "downloadA4PosterHint": "Priontáil A4 · 100% · gan imeall · grafaicí cúlra ar.",
   "faqCommonTitle": "Ceisteanna coitianta",
-  "faqCommonIntro": "Freagraí gairide ar cad a dhéanann agus nach ndéanann buusdo — úsáideach sula gcuireann tú muinín i dtoradh Halt."
+  "faqCommonIntro": "Freagraí gairide ar cad a dhéanann agus nach ndéanann buusdo — úsáideach sula gcuireann tú muinín i dtoradh Halt.",
+  "themeLabel": "Appearance",
+  "themeDark": "Dark",
+  "themeLight": "Light",
+  "themeHint": "Stored only in this browser. Default follows the instrument dark field.",
+  "navDownloads": "Downloads"
 }

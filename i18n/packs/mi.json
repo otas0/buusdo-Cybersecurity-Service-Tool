@@ -449,5 +449,10 @@
   "downloadA4PosterShort": "A4",
   "downloadA4PosterHint": "Tāia A4 · 100% · kāore he tapa · whakakā ngā kauwhata papamuri.",
   "faqCommonTitle": "Pātai auau",
-  "faqCommonIntro": "Ngā whakautu poto mō tā buusdo e mahi ai, e kore ai e mahi — hei āwhina i mua i tō whakawhirinaki ki tētahi hua Tū."
+  "faqCommonIntro": "Ngā whakautu poto mō tā buusdo e mahi ai, e kore ai e mahi — hei āwhina i mua i tō whakawhirinaki ki tētahi hua Tū.",
+  "themeLabel": "Appearance",
+  "themeDark": "Dark",
+  "themeLight": "Light",
+  "themeHint": "Stored only in this browser. Default follows the instrument dark field.",
+  "navDownloads": "Downloads"
 }

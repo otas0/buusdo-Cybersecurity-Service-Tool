@@ -449,5 +449,10 @@
   "downloadA4PosterShort": "A4",
   "downloadA4PosterHint": "បោះពុម្ព A4 · 100% · គ្មានរឹម · បើកក្រាហ្វិកផ្ទៃខាងក្រោយ។",
   "faqCommonTitle": "សំណួរញឹកញាប់",
-  "faqCommonIntro": "ចម្លើយខ្លីអំពីអ្វីដែល buusdo ធ្វើ និងមិនធ្វើ — មានប្រយោជន៍មុនពេលអ្នកទុកចិត្តលទ្ធផល បញ្ឈប់។"
+  "faqCommonIntro": "ចម្លើយខ្លីអំពីអ្វីដែល buusdo ធ្វើ និងមិនធ្វើ — មានប្រយោជន៍មុនពេលអ្នកទុកចិត្តលទ្ធផល បញ្ឈប់។",
+  "themeLabel": "Appearance",
+  "themeDark": "Dark",
+  "themeLight": "Light",
+  "themeHint": "Stored only in this browser. Default follows the instrument dark field.",
+  "navDownloads": "Downloads"
 }

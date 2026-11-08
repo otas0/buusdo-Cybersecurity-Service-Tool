@@ -449,5 +449,10 @@
   "downloadA4PosterShort": "A4",
   "downloadA4PosterHint": "A4 ပရင့် · 100% · အနားမရှိ · နောက်ခံဂရပ်ဖစ်ဖွင့်။",
   "faqCommonTitle": "မေးလေ့ရှိသော မေးခွန်းများ",
-  "faqCommonIntro": "buusdo လုပ်နိုင်သည်နှင့် မလုပ်နိုင်သည်ကို အတိုချုပ် ရှင်းပြချက် — Halt ရလဒ်ကို မယုံမီ အသုံးဝင်သည်။"
+  "faqCommonIntro": "buusdo လုပ်နိုင်သည်နှင့် မလုပ်နိုင်သည်ကို အတိုချုပ် ရှင်းပြချက် — Halt ရလဒ်ကို မယုံမီ အသုံးဝင်သည်။",
+  "themeLabel": "Appearance",
+  "themeDark": "Dark",
+  "themeLight": "Light",
+  "themeHint": "Stored only in this browser. Default follows the instrument dark field.",
+  "navDownloads": "Downloads"
 }

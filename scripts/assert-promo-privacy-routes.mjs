@@ -5,11 +5,13 @@
  *   PROMO_ORIGIN=https://buusdocst.mtsu.workers.dev npm run assert:promo-privacy-routes
  *   PROMO_ORIGIN=http://127.0.0.1:3000 npm run assert:promo-privacy-routes
  *
- * Offline soft-skip: when the origin is unreachable (timeout / DNS / fetch failed),
+ * Offline soft-skip: when the origin is unreachable (timeout / DNS / fetch failed / HTTP 0),
  * that URL is skipped with a notice — hard-fail only on non-2xx responses.
+ * Soft-skips append to GITHUB_STEP_SUMMARY when set (Actions job summary).
  * Network-independent survey absence: tests/privacy-fixture-no-survey.test.ts
  */
 import { spawnSync } from "node:child_process";
+import fs from "node:fs";
 
 const origin = (process.env.PROMO_ORIGIN || "https://buusdocst.mtsu.workers.dev").replace(/\/$/, "");
 const paths = [
@@ -49,6 +51,7 @@ async function fetchStatus(url) {
 }
 
 let failed = false;
+const softSkips = [];
 const preferCurl = !/^https?:\/\/(127\.0\.0\.1|localhost)\b/i.test(origin);
 
 for (const p of paths) {
@@ -74,6 +77,7 @@ for (const p of paths) {
       ].join(" | ");
       if (isUnreachable(msg)) {
         console.info(`[assert-promo-privacy-routes] soft-skip ${url} (${msg})`);
+        softSkips.push(`${url} (${msg})`);
         continue;
       }
       console.error(`[assert-promo-privacy-routes] FAIL ${url}`, msg);
@@ -84,6 +88,7 @@ for (const p of paths) {
   // curl often prints 000 (→ 0) when the TCP connect fails — treat as soft-skip.
   if (!status || status === 0) {
     console.info(`[assert-promo-privacy-routes] soft-skip ${url} (HTTP ${status} via ${via})`);
+    softSkips.push(`${url} (HTTP ${status} via ${via})`);
     continue;
   }
   if (status < 200 || status >= 300) {
@@ -94,5 +99,24 @@ for (const p of paths) {
   }
 }
 
+if (softSkips.length) {
+  const lines = [
+    "### assert:promo-privacy-routes soft-skips",
+    "",
+    `Origin \`${origin}\` had ${softSkips.length} unreachable URL(s) (timeout / DNS / HTTP 0). Treated as soft-skip — not a product failure.`,
+    "",
+    ...softSkips.map((s) => `- ${s}`),
+    "",
+  ];
+  const summary = process.env.GITHUB_STEP_SUMMARY;
+  if (summary) {
+    try {
+      fs.appendFileSync(summary, lines.join("\n") + "\n");
+    } catch {
+      /* ignore */
+    }
+  }
+  console.info(`[assert-promo-privacy-routes] soft-skips=${softSkips.length} (also → GITHUB_STEP_SUMMARY when set)`);
+}
 if (failed) process.exit(1);
 console.info(`[assert-promo-privacy-routes] OK origin=${origin}`);

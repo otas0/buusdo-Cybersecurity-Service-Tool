@@ -31,7 +31,7 @@
   "privacyPolicyLimitsBody": "Pas de déchiffrement TLS — HTTPS CONNECT est limité au nom d’hôte ; aucun certificat MITM. Pas d’arrêt de processus — les programmes en cours continuent. Les dossiers système sont en lecture seule — /usr, /etc, chemins Windows système et Program Files ne sont jamais déplacés ni modifiés. Pas de moteur AV / signatures et pas de capture d’identifiants ou d’historique de navigation.",
   "privacyPolicyUpdated": "Dernière revue : 2026-11-07 · lancement du site",
   "desktopDownloadsTitle": "Téléchargements de l’app de bureau",
-  "desktopDownloadsIntro": "Installez buusdo sur cet ordinateur depuis la release GitHub (shell navigateur + plateau). Les builds ne sont pas signés — voir le guide d’installation. L’ouverture à la connexion reste désactivée jusqu’à ce que vous l’activiez.",
+  "desktopDownloadsIntro": "Installez buusdo Cybersecurity Service Tool sur cet ordinateur depuis la release GitHub (shell navigateur + plateau). Les builds ne sont pas signés — voir le guide d’installation. L’ouverture à la connexion reste désactivée jusqu’à ce que vous l’activiez.",
   "desktopDownloadWindows": "Installeur Windows (NSIS)",
   "desktopDownloadMac": "App macOS (zip)",
   "desktopDownloadLinux": "Paquet Linux amd64 (.deb)",
@@ -449,5 +449,10 @@
   "downloadA4PosterShort": "A4",
   "downloadA4PosterHint": "Imprimer A4 · 100 % · sans marges · graphismes d’arrière-plan activés.",
   "faqCommonTitle": "Questions fréquentes",
-  "faqCommonIntro": "Réponses courtes sur ce que buusdo fait et ne fait pas — utiles avant de faire confiance à un résultat Stop."
+  "faqCommonIntro": "Réponses courtes sur ce que buusdo fait et ne fait pas — utiles avant de faire confiance à un résultat Stop.",
+  "themeLabel": "Appearance",
+  "themeDark": "Dark",
+  "themeLight": "Light",
+  "themeHint": "Stored only in this browser. Default follows the instrument dark field.",
+  "navDownloads": "Downloads"
 }

@@ -449,5 +449,10 @@
   "downloadA4PosterShort": "A4",
   "downloadA4PosterHint": "Printa A4 · 100% · ntle le margin · digrafiki tsa ka morao di butswe.",
   "faqCommonTitle": "Lipotso tse tloaelehileng",
-  "faqCommonIntro": "Likarabo tse khutšoanyane ka seo buusdo e se etsang le seo e sa se etse — li thusa pele u tšepa sephetho sa Ema."
+  "faqCommonIntro": "Likarabo tse khutšoanyane ka seo buusdo e se etsang le seo e sa se etse — li thusa pele u tšepa sephetho sa Ema.",
+  "themeLabel": "Appearance",
+  "themeDark": "Dark",
+  "themeLight": "Light",
+  "themeHint": "Stored only in this browser. Default follows the instrument dark field.",
+  "navDownloads": "Downloads"
 }

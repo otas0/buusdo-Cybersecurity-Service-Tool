@@ -17,6 +17,8 @@ const path = require("path");
 /** Legacy on-disk product folder (do not rename without a migrate path). */
 const PRODUCT = "Preventive Shield";
 const PRODUCT_SLUG = "preventive-shield";
+/** User-facing tray / UI title — formal product name. */
+const DISPLAY_NAME = "buusdo Cybersecurity Service Tool";
 
 function defaultDataDir() {
   if (process.env.SHIELD_DATA_DIR) {
@@ -44,5 +46,6 @@ module.exports = {
   defaultDataDir,
   ensureDataDir,
   PRODUCT,
-  PRODUCT_SLUG
+  PRODUCT_SLUG,
+  DISPLAY_NAME
 };

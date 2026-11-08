@@ -5,6 +5,7 @@ import type { Analysis, CheckTiming } from "../security/analyse";
 import { getMessages, type Locale } from "../i18n/messages";
 import { localeHtmlLang, localeIntl } from "../i18n/locales";
 import { LanguageSwitcher } from "./LanguageSwitcher";
+import { hydrateThemeFromStorage } from "./ThemeSwitch";
 import { LocaleRecommendModal, maybeAcceptLanguageRedirect } from "./LocaleRecommendModal";
 import { UrlCheckForm } from "./UrlCheckForm";
 import { RiskResult } from "./RiskResult";
@@ -100,6 +101,9 @@ function Header({
   const t = getMessages(locale);
   const [viewHash, setViewHash] = useState("");
   useEffect(() => {
+    hydrateThemeFromStorage();
+  }, []);
+  useEffect(() => {
     if (view !== "privacy" && view !== "settings") {
       setViewHash("");
       return;
@@ -129,12 +133,21 @@ function Header({
       <div className="brand">
         <h1 className="brand-lockup">
           <img
-            className="brand-logo"
+            className="brand-logo brand-logo-on-dark"
             src="/brand/buusdo-wordmark.png"
             width={117}
             height={40}
             decoding="async"
             alt={t.prototype}
+          />
+          <img
+            className="brand-logo brand-logo-on-light"
+            src="/brand/buusdo-wordmark-on-light.png"
+            width={117}
+            height={40}
+            decoding="async"
+            alt=""
+            aria-hidden="true"
           />
           <span className="visually-hidden">{t.prototype}</span>
         </h1>
@@ -168,7 +181,22 @@ function Header({
           data-testid="nav-lists-offline"
         >
           {t.navListsOffline}
-        </a>        <LanguageSwitcher locale={locale} view={view} hash={switchHash} />
+        </a>
+        <a
+          className={`nav-link ${view === "settings" ? "is-active" : ""}`}
+          href={`/${locale}/settings#settings-desktop`}
+          data-testid="nav-downloads"
+          onClick={(e) => {
+            if (view === "settings") {
+              e.preventDefault();
+              window.location.hash = "settings-desktop";
+              document.getElementById("settings-desktop")?.scrollIntoView({ block: "start" });
+            }
+          }}
+        >
+          {t.navDownloads}
+        </a>
+        <LanguageSwitcher locale={locale} view={view} hash={switchHash} />
       </nav>
     </header>
   );

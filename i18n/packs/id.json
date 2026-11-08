@@ -449,5 +449,10 @@
   "downloadA4PosterShort": "A4",
   "downloadA4PosterHint": "Cetak A4 · 100% · tanpa margin · grafik latar aktif.",
   "faqCommonTitle": "Pertanyaan umum",
-  "faqCommonIntro": "Jawaban singkat tentang apa yang dilakukan dan tidak dilakukan buusdo — berguna sebelum Anda mempercayai hasil Berhenti."
+  "faqCommonIntro": "Jawaban singkat tentang apa yang dilakukan dan tidak dilakukan buusdo — berguna sebelum Anda mempercayai hasil Berhenti.",
+  "themeLabel": "Appearance",
+  "themeDark": "Dark",
+  "themeLight": "Light",
+  "themeHint": "Stored only in this browser. Default follows the instrument dark field.",
+  "navDownloads": "Downloads"
 }

@@ -79,7 +79,10 @@ async function toDarkTransparent(pngBuf) {
     out[j] = Math.round((ir / 255) * TEXT_RGB[0]);
     out[j + 1] = Math.round((ig / 255) * TEXT_RGB[1]);
     out[j + 2] = Math.round((ib / 255) * TEXT_RGB[2]);
-    out[j + 3] = Math.round(Math.min(255, ((255 - lum) / 255) * 255 * 1.05));
+    let a = Math.round(((255 - lum) / 255) * 255);
+    if (a < 18) a = 0;
+    else if (a > 240) a = 255;
+    out[j + 3] = a;
   }
   return sharp(out, { raw: { width: w, height: h, channels: 4 } }).png().toBuffer();
 }
@@ -98,15 +101,9 @@ async function toLightTransparent(pngBuf) {
     const lum = 0.299 * r + 0.587 * g + 0.114 * b;
     // Drop paper only. Keep ink (including charcoal u-card #545454) fully opaque —
     // do not scale alpha by luminance (that washed the u-card to a lighter gray).
-    if (lum >= 250) {
+    // Hard cut paper — soft fringes caused rough logo edges on dark/light plates.
+    if (lum >= 242) {
       out[j] = out[j + 1] = out[j + 2] = out[j + 3] = 0;
-      continue;
-    }
-    if (lum >= 235) {
-      out[j] = r;
-      out[j + 1] = g;
-      out[j + 2] = b;
-      out[j + 3] = Math.round(((250 - lum) / 15) * 255);
       continue;
     }
     out[j] = r;

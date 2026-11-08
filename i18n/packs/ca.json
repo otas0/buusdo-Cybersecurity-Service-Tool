@@ -78,5 +78,10 @@
   "downloadA4PosterShort": "A4",
   "downloadA4PosterHint": "Imprimeix A4 · 100% · sense marges · gràfics de fons activats.",
   "faqCommonTitle": "Preguntes freqüents",
-  "faqCommonIntro": "Respostes breus sobre què fa i què no fa buusdo — útils abans de confiar en un resultat Atura."
+  "faqCommonIntro": "Respostes breus sobre què fa i què no fa buusdo — útils abans de confiar en un resultat Atura.",
+  "themeLabel": "Appearance",
+  "themeDark": "Dark",
+  "themeLight": "Light",
+  "themeHint": "Stored only in this browser. Default follows the instrument dark field.",
+  "navDownloads": "Downloads"
 }

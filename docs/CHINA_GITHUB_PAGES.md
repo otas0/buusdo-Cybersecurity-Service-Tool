@@ -32,6 +32,16 @@ Actions **Pages China** 将 `china-pages/` 发布到 `otas0/buusdocst`（secret 
 
 **本地验证默认中文：** 打开 Pages 任意页 → DevTools → Application → Local Storage → 删除 `buusdocst-china-lang`（并清 `sessionStorage` 的 `buusdocst-china-lang-nav`）→ 再打开 `/` 或 `install.html`，应停在中文页。
 
+
+## Nav-only China entry (no A4, no site-config)
+
+China Pages is a **static explain / privacy / install** entry — not a second product UI.
+
+- **Do** ship: top-bar `中文 · EN` + site nav (入口/安装/隐私), reachability to Workers, Halt next-steps summary.
+- **Do not** revive `china-pages/site-config.js` (dropped; `tests/china-no-a4-poster.test.ts` keeps it absent).
+- **Do not** link `/promo/poster.html` or show an A4 海报 CTA on any `china-pages/**/*.html` page (Pages China workflow greps for this).
+- Poster print handoff stays on Workers `/promo/` only — never from China nav.
+
 ## 与 Workers 的关系
 
 | 表面 | 宿主 |

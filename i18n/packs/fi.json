@@ -31,7 +31,7 @@
   "privacyPolicyLimitsBody": "Ei TLS-purkua — HTTPS CONNECT on vain isäntänimi; MITM-varmennetta ei ole. Ei prosessin tappamista — käynnissä olevat ohjelmat jatkavat. Järjestelmäkansiot ovat vain raporttia — /usr, /etc, Windowsin järjestelmäpolkuja ja Program Filesia ei siirretä eikä muokata. Ei AV-/allekirjoitusmoottoria eikä tunnusten tai selaushistorian kaappausta.",
   "privacyPolicyUpdated": "Viimeksi tarkistettu: 2026-11-07 · sivuston julkaisu",
   "desktopDownloadsTitle": "Työpöytäsovelluksen lataukset",
-  "desktopDownloadsIntro": "Asenna buusdo tälle tietokoneelle GitHub Releasesta (selainkuori + ilmoitusalue). Koontiversiot ovat allekirjoittamattomia — katso asennusopas. Avaa kirjautuessa pysyy pois päältä, kunnes otat sen käyttöön.",
+  "desktopDownloadsIntro": "Asenna buusdo Cybersecurity Service Tool tälle tietokoneelle GitHub Releasesta (selainkuori + ilmoitusalue). Koontiversiot ovat allekirjoittamattomia — katso asennusopas. Avaa kirjautuessa pysyy pois päältä, kunnes otat sen käyttöön.",
   "desktopDownloadWindows": "Windows-asennusohjelma (NSIS)",
   "desktopDownloadMac": "macOS-sovellus (zip)",
   "desktopDownloadLinux": "Linux amd64 (.deb)",
@@ -449,5 +449,10 @@
   "downloadA4PosterShort": "A4",
   "downloadA4PosterHint": "Tulosta A4 · 100 % · ei marginaaleja · taustagrafiikka päällä.",
   "faqCommonTitle": "Usein kysytyt kysymykset",
-  "faqCommonIntro": "Lyhyitä vastauksia siitä, mitä buusdo tekee ja ei tee — hyödyllistä ennen kuin luotat Seis-tulokseen."
+  "faqCommonIntro": "Lyhyitä vastauksia siitä, mitä buusdo tekee ja ei tee — hyödyllistä ennen kuin luotat Seis-tulokseen.",
+  "themeLabel": "Appearance",
+  "themeDark": "Dark",
+  "themeLight": "Light",
+  "themeHint": "Stored only in this browser. Default follows the instrument dark field.",
+  "navDownloads": "Downloads"
 }

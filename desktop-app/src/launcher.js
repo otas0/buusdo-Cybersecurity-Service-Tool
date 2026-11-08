@@ -12,7 +12,7 @@
 const { spawn } = require("child_process");
 const http = require("http");
 const path = require("path");
-const { ensureDataDir, PRODUCT } = require("./user-data");
+const { ensureDataDir, PRODUCT, DISPLAY_NAME } = require("./user-data");
 const lock = require("./instance-lock");
 const { quitGraceMs } = require("./quit-grace");
 
@@ -162,8 +162,8 @@ function startTray() {
       menu: {
         icon: hasIcon ? iconPath : "",
         isTemplateIcon: process.platform === "darwin" && hasIcon,
-        title: PRODUCT,
-        tooltip: `${PRODUCT} — Open dashboard / Quit`,
+        title: DISPLAY_NAME,
+        tooltip: `${DISPLAY_NAME} — Open dashboard / Quit`,
         items: [
           { title: "Open dashboard", tooltip: DASHBOARD_FOCUS, checked: false, enabled: true },
           { title: "Quit", tooltip: "Stop dashboard and proxy", checked: false, enabled: true }
@@ -185,7 +185,7 @@ function startTray() {
       ensureSystrayBinExecutable();
       global.__shieldTrayAvailable = true;
       console.log(
-        `[desktop] Tray ready (${hasIcon ? "icon" : "title-only"}) — ${PRODUCT}`
+        `[desktop] Tray ready (${hasIcon ? "icon" : "title-only"}) — ${DISPLAY_NAME}`
       );
     })
     .catch((err) => {

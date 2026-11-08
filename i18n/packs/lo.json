@@ -449,5 +449,10 @@
   "downloadA4PosterShort": "A4",
   "downloadA4PosterHint": "ພິມ A4 · 100% · ບໍ່ມີขอบ · ເປີດກຣາຟິກພື້ນຫຼັງ.",
   "faqCommonTitle": "ຄຳຖາມທີ່ພົບເລື້ອຍ",
-  "faqCommonIntro": "ຄຳຕອບສັ້ນເກືອບສິ່ງທີ່ buusdo ເຮັດ ແລະ ບໍ່ເຮັດ — ມີປະໂຫຍດກ່ອນທີ່ທ່ານຈະເຊື່ອຜົນ ຢຸດ."
+  "faqCommonIntro": "ຄຳຕອບສັ້ນເກືອບສິ່ງທີ່ buusdo ເຮັດ ແລະ ບໍ່ເຮັດ — ມີປະໂຫຍດກ່ອນທີ່ທ່ານຈະເຊື່ອຜົນ ຢຸດ.",
+  "themeLabel": "Appearance",
+  "themeDark": "Dark",
+  "themeLight": "Light",
+  "themeHint": "Stored only in this browser. Default follows the instrument dark field.",
+  "navDownloads": "Downloads"
 }

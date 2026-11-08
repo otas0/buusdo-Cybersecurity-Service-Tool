@@ -39,6 +39,19 @@ jobs:
           fi
           echo "::notice::china-pages publish tree has no survey-round2.html"
 
+      - name: Assert china-pages HTML has no A4 / promo poster links
+        run: |
+          set -euo pipefail
+          if rg -n '/promo/poster\.html|china-a4-poster|data-china-poster|A4\s*海报' china-pages --glob '*.html'; then
+            echo "::error::china-pages HTML must not link /promo/poster.html or ship A4 poster CTAs"
+            exit 1
+          fi
+          if [ -e china-pages/site-config.js ]; then
+            echo "::error::china-pages/site-config.js must stay dropped"
+            exit 1
+          fi
+          echo "::notice::china-pages HTML has zero A4 / promo poster CTAs; site-config.js absent"
+
       - name: Publish china-pages to otas0/buusdocst
         uses: peaceiris/actions-gh-pages@v4
         with:

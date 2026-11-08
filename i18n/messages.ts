@@ -44,7 +44,7 @@ export const messages = {
     privacyPolicyUpdated: "Last reviewed: 2026-11-07 · website launch",
     desktopDownloadsTitle: "Desktop app downloads",
     desktopDownloadsIntro:
-      "Install buusdo on this computer from the GitHub Release (browser shell + tray). Builds are unsigned — see the setup guide. Open-at-login stays off until you enable it.",
+      "Install buusdo Cybersecurity Service Tool on this computer from the GitHub Release (browser shell + tray). Builds are unsigned — see the setup guide. Open-at-login stays off until you enable it.",
     desktopDownloadWindows: "Windows installer (NSIS)",
     desktopDownloadMac: "macOS app (zip)",
     desktopDownloadLinux: "Linux amd64 (.deb)",
@@ -61,6 +61,11 @@ export const messages = {
     desktopDownloadReadyToPromote:
       "Legacy note: notarized promote is not used on this ship path — keep the unsigned GitHub zip as primary.",
     desktopHonestLimitsLink: "Desktop honest limits",
+    themeLabel: "Appearance",
+    themeDark: "Dark",
+    themeLight: "Light",
+    themeHint: "Stored only in this browser. Default follows the instrument dark field.",
+    navDownloads: "Downloads",
     downloadA4Poster: "Download A4 poster",
     downloadA4PosterShort: "A4",
     downloadA4PosterHint: "Print A4 · 100% · margins none · background graphics on.",
@@ -528,7 +533,7 @@ export const messages = {
     privacyPolicyUpdated: "Última revisão: 2026-11-07 · lançamento do site",
     desktopDownloadsTitle: "Transferências da app de ambiente de trabalho",
     desktopDownloadsIntro:
-      "Instale o buusdo neste computador a partir do GitHub Release (browser + tabuleiro). As builds não estão assinadas — veja o guia de instalação. Abrir ao iniciar sessão fica desligado até o ativar.",
+      "Instale o buusdo Cybersecurity Service Tool neste computador a partir do GitHub Release (browser + tabuleiro). As builds não estão assinadas — veja o guia de instalação. Abrir ao iniciar sessão fica desligado até o ativar.",
     desktopDownloadWindows: "Instalador Windows (NSIS)",
     desktopDownloadMac: "App macOS (zip)",
     desktopDownloadLinux: "Linux amd64 (.deb)",
@@ -545,6 +550,11 @@ export const messages = {
     desktopDownloadReadyToPromote:
       "Nota legada: a promoção notarizada não é usada neste canal — mantenha o zip não assinado do GitHub como primário.",
     desktopHonestLimitsLink: "Limites honestos da app",
+    themeLabel: "Aspeto",
+    themeDark: "Escuro",
+    themeLight: "Claro",
+    themeHint: "Guardado só neste navegador. O predefinição é o campo escuro do instrumento.",
+    navDownloads: "Transferências",
     downloadA4Poster: "Descarregar cartaz A4",
     downloadA4PosterShort: "A4",
     downloadA4PosterHint: "Imprimir A4 · 100% · margens nenhuma · gráficos de fundo ligados.",

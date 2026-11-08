@@ -449,5 +449,10 @@
   "downloadA4PosterShort": "A4",
   "downloadA4PosterHint": "Printa i-A4 · 100% · akukho margini · iigrafiki tangemuva tivuliwe.",
   "faqCommonTitle": "Imibuto levamile",
-  "faqCommonIntro": "Timpendvulo letimfisha ngaloko i-buusdo leikwentako naloko leingakwenti — tiwusito ngaphambi kwekutsi uthembe umphumela we-Misa."
+  "faqCommonIntro": "Timpendvulo letimfisha ngaloko i-buusdo leikwentako naloko leingakwenti — tiwusito ngaphambi kwekutsi uthembe umphumela we-Misa.",
+  "themeLabel": "Appearance",
+  "themeDark": "Dark",
+  "themeLight": "Light",
+  "themeHint": "Stored only in this browser. Default follows the instrument dark field.",
+  "navDownloads": "Downloads"
 }

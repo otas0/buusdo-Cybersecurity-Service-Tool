@@ -78,5 +78,10 @@
   "downloadA4PosterShort": "A4",
   "downloadA4PosterHint": "Tlačiť A4 · 100 % · bez okrajov · zapnúť grafiku pozadia.",
   "faqCommonTitle": "Časté otázky",
-  "faqCommonIntro": "Krátke odpovede o tom, čo buusdo robí a nerobí — užitočné predtým, než dôverujete výsledku Halt."
+  "faqCommonIntro": "Krátke odpovede o tom, čo buusdo robí a nerobí — užitočné predtým, než dôverujete výsledku Halt.",
+  "themeLabel": "Appearance",
+  "themeDark": "Dark",
+  "themeLight": "Light",
+  "themeHint": "Stored only in this browser. Default follows the instrument dark field.",
+  "navDownloads": "Downloads"
 }

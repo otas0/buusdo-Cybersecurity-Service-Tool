@@ -31,7 +31,7 @@
   "privacyPolicyLimitsBody": "Geen TLS-ontcijfering — HTTPS CONNECT is alleen hostnaam; er is geen MITM-certificaat. Geen process-kill — draaiende programma’s blijven draaien. Systeemdirectories zijn alleen-rapportage — /usr, /etc, Windows-systeempaden en Program Files worden nooit verplaatst of gewijzigd. Geen AV-/handtekeningmotor en geen vastleggen van inloggegevens of browsegeschiedenis.",
   "privacyPolicyUpdated": "Laatst beoordeeld: 2026-11-07 · websitelancering",
   "desktopDownloadsTitle": "Downloads van de desktop-app",
-  "desktopDownloadsIntro": "Installeer buusdo op deze computer vanuit de GitHub Release (browsershell + tray). Builds zijn ongesigneerd — zie de installatiegids. Openen bij inloggen blijft uit tot u het inschakelt.",
+  "desktopDownloadsIntro": "Installeer buusdo Cybersecurity Service Tool op deze computer vanuit de GitHub Release (browsershell + tray). Builds zijn ongesigneerd — zie de installatiegids. Openen bij inloggen blijft uit tot u het inschakelt.",
   "desktopDownloadWindows": "Windows-installer (NSIS)",
   "desktopDownloadMac": "macOS-app (zip)",
   "desktopDownloadLinux": "Linux amd64 (.deb)",
@@ -449,5 +449,10 @@
   "downloadA4PosterShort": "A4",
   "downloadA4PosterHint": "Print A4 · 100% · geen marges · achtergrondafbeeldingen aan.",
   "faqCommonTitle": "Veelgestelde vragen",
-  "faqCommonIntro": "Korte antwoorden over wat buusdo wel en niet doet — nuttig voordat u een Stop-resultaat vertrouwt."
+  "faqCommonIntro": "Korte antwoorden over wat buusdo wel en niet doet — nuttig voordat u een Stop-resultaat vertrouwt.",
+  "themeLabel": "Appearance",
+  "themeDark": "Dark",
+  "themeLight": "Light",
+  "themeHint": "Stored only in this browser. Default follows the instrument dark field.",
+  "navDownloads": "Downloads"
 }
