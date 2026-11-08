@@ -22,6 +22,20 @@ function fill(template: string, vars: Record<string, string> = {}): string {
   return template.replace(/\{(\w+)\}/g, (_, key: string) => vars[key] ?? "");
 }
 
+test("Halt fixture host stays on curated list (no live Workers)", () => {
+  const fixture = JSON.parse(
+    readFileSync(path.join(root, "security/data/fixtures/halt-known-threat.json"), "utf8")
+  ) as { host: string };
+  const curated = JSON.parse(
+    readFileSync(path.join(root, "security/data/curated-threats.json"), "utf8")
+  ) as { hosts: Record<string, string> };
+  expect(fixture.host?.trim(), "halt-known-threat fixture must declare host").toBeTruthy();
+  expect(
+    curated.hosts[fixture.host],
+    `fixture host ${fixture.host} must remain on curated-threats.json for CI`
+  ).toBeTruthy();
+});
+
 test("zh-Hans Halt fixture shows Chinese evidence bag + probe-blocked", async ({ page }) => {
   const knownTitle = zh.evidenceKnownThreatTitle;
   const knownDetail = zh.evidenceKnownThreatDetail;

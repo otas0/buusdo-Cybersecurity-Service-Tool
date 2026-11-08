@@ -52,9 +52,17 @@ Pages **不能**替代 `POST /api/check`。
 
 Pacific / SEA（`mi`、`id`、`ms`、`th`、`vi`、`fil`、`km`、`lo`、`my`）已恢复真实文案包（无 EN stub）。
 
-### EN entry secondary `/zh-Hans` CTA
+### EN entry secondary `/zh-Hans` CTA (required bilingual pattern)
 
-`en.html` keeps primary **Open full check (EN)** → `/en`, plus a secondary ghost button `data-testid="china-workers-zh-hans"` → `https://buusdocst.mtsu.workers.dev/zh-Hans`（简体中文 /zh-Hans）so English-landing users can jump to the Simplified UI without leaving Pages.
+English China Pages must expose Workers Simplified Chinese as a **secondary** CTA (primary stays `/en`):
+
+| Surface | Primary | Secondary `/zh-Hans` |
+|---------|---------|----------------------|
+| `en.html` | Open full check (EN) → `/en` | ghost button `data-testid="china-workers-zh-hans"` + foot-note `data-testid="china-workers-zh-hans-footnote"` |
+| `privacy-en.html` | Workers `/en/privacy` summary links | same foot-note test id → `https://buusdocst.mtsu.workers.dev/zh-Hans` |
+| `install-en.html` | Workers `/en` when reachable | optional; match en.html when adding CTAs |
+
+`privacy.html` (zh) documents the same Workers `/zh-Hans` secondary pattern so EN/zh twins stay aligned. Do not ship an EN entry that only links `/en` with no `/zh-Hans` escape hatch.
 
 ### Halt next-steps on Pages
 

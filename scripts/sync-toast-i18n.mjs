@@ -50,14 +50,21 @@ function localesFromLangSelect() {
 }
 
 const EXTRA_PACKS = ["pt-BR", "zh-Hant", "ja", "de", "fr", "es"];
-const locales = [...new Set([...localesFromLangSelect(), ...EXTRA_PACKS])];
+const langSelectOrder = localesFromLangSelect();
+const locales = [...new Set([...langSelectOrder, ...EXTRA_PACKS])];
 
 const COPY = {};
-COPY.en = toastFromBag(en, "en");
-COPY["pt-PT"] = toastFromBag(pt, "pt-PT");
-
+// Emit in langSelect order first so option↔COPY key order stays aligned for parity tests.
 for (const id of locales) {
-  if (id === "en" || id === "pt-PT") continue;
+  if (COPY[id]) continue;
+  if (id === "en") {
+    COPY.en = toastFromBag(en, "en");
+    continue;
+  }
+  if (id === "pt-PT") {
+    COPY["pt-PT"] = toastFromBag(pt, "pt-PT");
+    continue;
+  }
   const packPath = path.join(packsDir, `${id}.json`);
   if (!fs.existsSync(packPath)) continue;
   const pack = JSON.parse(fs.readFileSync(packPath, "utf8"));

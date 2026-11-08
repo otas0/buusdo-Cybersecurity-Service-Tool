@@ -32,14 +32,23 @@ test.describe("locale recommend soft prompt", () => {
     await waitForReactHydration(page, '[data-testid="locale-select"]').catch(() => undefined);
 
     const dialog = page.getByTestId("locale-recommend");
+    const suppressed = page.getByTestId("locale-recommend-suppressed");
+    if ((await dialog.count()) === 0) {
+      const reason = (await suppressed.getAttribute("data-reason").catch(() => null)) || "unknown";
+      throw new Error(
+        `locale-recommend never opened when navigator.languages prefers zh on /en (suppress reason: ${reason})`
+      );
+    }
     await expect(dialog, "locale-recommend must open when navigator.languages prefers zh on /en").toBeVisible({
       timeout: 15_000
     });
 
     await page.getByTestId("locale-recommend-dismiss").click();
     await expect(dialog).toBeHidden({ timeout: 10_000 });
+    await expect(page.getByTestId("locale-recommend-suppressed")).toHaveAttribute("data-reason", "dismissed");
 
     await page.reload({ waitUntil: "domcontentloaded" });
     await expect(page.getByTestId("locale-recommend")).toHaveCount(0);
+    await expect(page.getByTestId("locale-recommend-suppressed")).toHaveAttribute("data-reason", /dismissed|already-chose/);
   });
 });

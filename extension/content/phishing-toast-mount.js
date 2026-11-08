@@ -26,16 +26,6 @@
     "nextNoCreds": "Do not enter passwords, card numbers, codes from SMS/email, or other personal data on this site.",
     "nextVerify": "Verify independently: open the organisation’s official domain or app you already trust (bookmark, bank card, known app store). Do not use phone numbers or emails shown on the suspect page."
   },
-  "pt-PT": {
-    "phishing": "Padrão de phishing bloqueado",
-    "dismiss": "Dispensar aviso",
-    "dangerLevel": "Nível de perigo: Parar",
-    "ignoreRisk": "Pode entregar palavras-passe, dados de pagamento ou outra informação pessoal a quem controla este endereço. Feche o separador antes de escrever ou pagar o que quer que seja.",
-    "nextStepsTitle": "O que fazer a seguir — passo a passo",
-    "nextLeave": "Saia já desta página — não continue no endereço que verificou.",
-    "nextNoCreds": "Não introduza palavras-passe, números de cartão, códigos de SMS/email ou outros dados pessoais neste site.",
-    "nextVerify": "Verifique de forma independente: abra o domínio ou a app oficial da organização em que já confia (marcador, cartão do banco, loja de apps conhecida). Não use telefones nem emails mostrados na página suspeita."
-  },
   "zh-Hans": {
     "phishing": "已拦截钓鱼模式",
     "dismiss": "关闭提示",
@@ -45,6 +35,16 @@
     "nextLeave": "立即离开此页面——不要继续使用您检查过的地址。",
     "nextNoCreds": "不要在此网站输入密码、卡号、短信/邮件验证码或其他个人数据。",
     "nextVerify": "独立核实：打开您已信任的该组织官方域名或应用（书签、银行卡、已知应用商店）。不要使用可疑页面上显示的电话或邮箱。"
+  },
+  "pt-PT": {
+    "phishing": "Padrão de phishing bloqueado",
+    "dismiss": "Dispensar aviso",
+    "dangerLevel": "Nível de perigo: Parar",
+    "ignoreRisk": "Pode entregar palavras-passe, dados de pagamento ou outra informação pessoal a quem controla este endereço. Feche o separador antes de escrever ou pagar o que quer que seja.",
+    "nextStepsTitle": "O que fazer a seguir — passo a passo",
+    "nextLeave": "Saia já desta página — não continue no endereço que verificou.",
+    "nextNoCreds": "Não introduza palavras-passe, números de cartão, códigos de SMS/email ou outros dados pessoais neste site.",
+    "nextVerify": "Verifique de forma independente: abra o domínio ou a app oficial da organização em que já confia (marcador, cartão do banco, loja de apps conhecida). Não use telefones nem emails mostrados na página suspeita."
   },
   "mi": {
     "phishing": "Kua ārai te tauira tinihanga",

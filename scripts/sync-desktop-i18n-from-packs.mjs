@@ -143,6 +143,13 @@ if (src.includes(markerStart) && src.includes(markerEnd)) {
 }
 
 if (checkOnly) {
+  const zhHansAssigns = src.match(/STRINGS\["zh-Hans"\]\s*=/g) || [];
+  if (zhHansAssigns.length !== 1) {
+    console.error(
+      `[sync-desktop-i18n] expected exactly one STRINGS["zh-Hans"] assign, found ${zhHansAssigns.length}`
+    );
+    process.exit(1);
+  }
   if (src !== next) {
     console.error("[sync-desktop-i18n] drift — run: node scripts/sync-desktop-i18n-from-packs.mjs");
     process.exit(1);

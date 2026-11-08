@@ -1,6 +1,8 @@
 /**
  * Keys every non-EN locale pack must cover (chrome + Halt path).
  * Longer Settings / Privacy bodies may fall back to English until a full pack lands.
+ * SEA/Pacific packs (mi/th/vi/id/ms/…) are real translator packs — localeRecommend*
+ * and probeBlockedGeneric* stay required here (asserted by tests/i18n-locales.test.ts).
  */
 export const CORE_MESSAGE_KEYS = [
   "prototype",

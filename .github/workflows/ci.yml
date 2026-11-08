@@ -736,6 +736,16 @@ jobs:
         env:
           PLAYWRIGHT_SKIP_WEBSERVER: "1"
 
+      # Soft: live Workers privacy (skip inside spec if unreachable). Brand/formal-name stay hard above.
+      - name: Soft privacy-prod /zh-Hans/privacy
+        if: steps.pw_install.outcome == 'success'
+        continue-on-error: true
+        env:
+          PLAYWRIGHT_SKIP_WEBSERVER: "1"
+          PLAYWRIGHT_BASE_URL: ${{ vars.PRODUCTION_HEALTH_URL || 'https://buusdocst.mtsu.workers.dev' }}
+          PRODUCTION_HEALTH_URL: ${{ vars.PRODUCTION_HEALTH_URL || 'https://buusdocst.mtsu.workers.dev' }}
+        run: npm run test:playwright:privacy
+
       - name: Extension phishing toast fixture
         if: steps.pw_install.outcome == 'success'
         run: npm run test:playwright:extension-toast-phishing

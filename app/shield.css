@@ -43,7 +43,8 @@
   flex-shrink: 1;
 }
 
-/* 320px: long wordmark + locale badge must not crush the top bar */
+/* 320/375: long wordmark + locale badge must not crush the top bar.
+ * Geometry locked by playwright/__screenshots__/top-bar-narrow.spec.ts/ — refresh PNGs if this shifts. */
 @media (max-width: 360px) {
   .shell .top {
     gap: 8px;
@@ -99,6 +100,11 @@
 
 .shell .lang-badge {
   display: none;
+}
+
+.locale-recommend-suppressed {
+  margin: 0 0 12px;
+  font-size: 12px;
 }
 
 .locale-recommend {
