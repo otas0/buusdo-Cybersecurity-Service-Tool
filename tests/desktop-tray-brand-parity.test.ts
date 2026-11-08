@@ -56,3 +56,54 @@ test("extension popup wordmark asset is muted u on dark (no orange)", async () =
   assert.ok(dark.orange < 40, `extension wordmark orange=${dark.orange}`);
   assert.ok(dark.muted > 200, `extension muted u missing (${dark.muted})`);
 });
+
+test("desktop About strip screenshot sits beside tray parity assets", async () => {
+  const outRel = "docs/store-screenshots/FRAME-desktop-about-tray.png";
+  const out = path.join(root, outRel);
+  const tray = path.join(root, "desktop-app/assets/tray-icon.png");
+  const wordmark = path.join(root, "desktop-app/public/brand/buusdo-wordmark.png");
+  const mark = path.join(root, "desktop-app/public/brand/buusdo-mark.svg");
+  assert.ok(existsSync(tray), "missing tray-icon.png");
+  assert.ok(existsSync(wordmark), "missing About wordmark");
+  assert.ok(existsSync(mark), "missing About mark");
+
+  const trayPng = await sharp(tray).resize({ height: 48, fit: "inside" }).png().toBuffer();
+  const markPng = await sharp(mark).resize({ height: 48, fit: "inside" }).png().toBuffer();
+  const wmPng = await sharp(wordmark).resize({ height: 40, fit: "inside" }).png().toBuffer();
+  const trayMeta = await sharp(trayPng).metadata();
+  const markMeta = await sharp(markPng).metadata();
+  const wmMeta = await sharp(wmPng).metadata();
+  const gap = 16;
+  const width =
+    (trayMeta.width || 48) + gap + (markMeta.width || 32) + gap + (wmMeta.width || 120) + 32;
+  const height = 80;
+  await sharp({
+    create: {
+      width,
+      height,
+      channels: 3,
+      background: { r: 14, g: 14, b: 14 }
+    }
+  })
+    .composite([
+      { input: trayPng, left: 16, top: Math.round((height - (trayMeta.height || 48)) / 2) },
+      {
+        input: markPng,
+        left: 16 + (trayMeta.width || 48) + gap,
+        top: Math.round((height - (markMeta.height || 48)) / 2)
+      },
+      {
+        input: wmPng,
+        left: 16 + (trayMeta.width || 48) + gap + (markMeta.width || 32) + gap,
+        top: Math.round((height - (wmMeta.height || 40)) / 2)
+      }
+    ])
+    .png()
+    .toFile(out);
+
+  assert.ok(existsSync(out), `missing ${outRel}`);
+  const strip = await sample(outRel);
+  // Tray / mark may use Halt orange; wordmark portion must still carry muted u.
+  assert.ok(strip.muted > 80, `About+tray strip muted u missing (${strip.muted})`);
+  assert.ok(strip.w >= 120 && strip.h >= 40, `About+tray strip too small ${strip.w}x${strip.h}`);
+});

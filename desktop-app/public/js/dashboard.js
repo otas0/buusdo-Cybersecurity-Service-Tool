@@ -332,6 +332,10 @@ function applyI18n() {
       ? t(lang, "footAboutVersion", { version: desktopAppVersion })
       : t(lang, "footAbout");
   }
+  const footPoster = document.getElementById("footA4Poster");
+  if (footPoster) {
+    footPoster.textContent = t(lang, "footA4Poster") || "A4 poster";
+  }
   els.logTitle.textContent = t(lang, "logTitle");
   els.logHint.textContent = t(lang, "logHint");
   els.checkLabel.textContent = t(lang, "checkLabel");
@@ -765,6 +769,10 @@ async function fetchState() {
     els.footAboutText.textContent = desktopAppVersion
       ? t(lang, "footAboutVersion", { version: desktopAppVersion })
       : t(lang, "footAbout");
+  }
+  {
+    const footPoster = document.getElementById("footA4Poster");
+    if (footPoster) footPoster.textContent = t(lang, "footA4Poster") || "A4 poster";
   }
   if (typeof data.websiteHealthPollMs === "number" && data.websiteHealthPollMs >= 5000) {
     websiteHealthPollMs = data.websiteHealthPollMs;

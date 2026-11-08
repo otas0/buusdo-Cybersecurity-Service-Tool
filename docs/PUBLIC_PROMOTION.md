@@ -10,8 +10,12 @@ Until a custom domain replaces workers.dev, the **only** public links are:
 | Privacy (EN) | `https://buusdocst.mtsu.workers.dev/en/privacy` |
 | Privacy (optional locale) | `https://buusdocst.mtsu.workers.dev/pt-PT/privacy` |
 | China entry (GitHub Pages) | `https://otas0.github.io/buusdocst/` — explain/privacy/install when Workers is hard to reach ([CHINA_GITHUB_PAGES.md](CHINA_GITHUB_PAGES.md)) |
+| A4 poster (print) | `https://buusdocst.mtsu.workers.dev/promo/poster.html` — EN / pt-PT / 中文 |
+| A4 poster (legacy pt URL) | `…/promo/poster-pt.html` → meta-refresh redirect to `poster.html` (keep for old links; see [promo/README.md](promo/README.md)) |
 
 After a custom domain, `npm run production:origin -- https://YOUR_CANONICAL` rewrites this table. Also set GitHub `NEXT_PUBLIC_SITE_URL` + `PRODUCTION_HEALTH_URL` ([CUSTOM_DOMAIN_REDEPLOY.md](CUSTOM_DOMAIN_REDEPLOY.md)).
+
+**Print QA:** one physical A4 at **100%** / margins **None** / background graphics On ([promo/README.md](promo/README.md)).
 
 ## Ready-to-paste (EN)
 
@@ -20,6 +24,7 @@ buusdo Cybersecurity Service Tool (Buusdo product line).
 Check a website before you trust it.
 Product (Workers): https://buusdocst.mtsu.workers.dev
 China entry (GitHub Pages): https://otas0.github.io/buusdocst/
+A4 poster: https://buusdocst.mtsu.workers.dev/promo/poster.html
 Privacy: https://buusdocst.mtsu.workers.dev/en/privacy
 ```
 
@@ -30,6 +35,7 @@ buusdo Cybersecurity Service Tool (linha Buusdo).
 Verifique um site antes de confiar.
 Produto (Workers): https://buusdocst.mtsu.workers.dev
 Entrada China (GitHub Pages): https://otas0.github.io/buusdocst/
+Cartaz A4: https://buusdocst.mtsu.workers.dev/promo/poster.html
 Privacidade: https://buusdocst.mtsu.workers.dev/en/privacy
 ```
 
@@ -40,6 +46,7 @@ buusdo Cybersecurity Service Tool（Buusdo 产品线）。
 访问网站前先核查地址。
 产品（Workers）：https://buusdocst.mtsu.workers.dev
 中国入口（GitHub Pages）：https://otas0.github.io/buusdocst/
+A4 海报：https://buusdocst.mtsu.workers.dev/promo/poster.html
 隐私：https://buusdocst.mtsu.workers.dev/en/privacy
 ```
 

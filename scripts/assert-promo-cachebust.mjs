@@ -16,10 +16,14 @@ const before = fs.existsSync(path.join(promoPublic, ".cachebust"))
   ? fs.readFileSync(path.join(promoPublic, ".cachebust"), "utf8").trim()
   : "";
 
-const run = spawnSync(process.execPath, [path.join(root, "scripts/build-promo-posters.mjs")], {
-  cwd: root,
-  encoding: "utf8",
-});
+const run = spawnSync(
+  process.execPath,
+  ["--import", "tsx", path.join(root, "scripts/build-promo-posters.mjs")],
+  {
+    cwd: root,
+    encoding: "utf8",
+  },
+);
 if (run.status !== 0) {
   console.error(run.stderr || run.stdout || "build-promo-posters failed");
   process.exit(run.status || 1);

@@ -44,13 +44,15 @@ App de ambiente de trabalho (opcional, GitHub Release): builds **não assinadas*
 
 ## Screenshots (upload order)
 
-Instrument FRAMEs from `npm run capture:store-halt-frame` (also copied next to the zip by `npm run pack:chrome-store`):
+Instrument FRAMEs from `npm run capture:store-halt-frame` (also copied next to the zip by `npm run pack:chrome-store`). **Upload these paths** (charcoal→muted wordmark after `sync:brand-web`):
 
 | Order | File | Role |
 |------:|------|------|
-| 1 | `docs/store-screenshots/FRAME-formal-name.png` | Halt readout (primary) |
-| 2 | `docs/store-screenshots/FRAME-clear.png` **and** `FRAME-hold.png` | Shot 2 pair — Clear + Hold |
+| 1 | [`docs/store-screenshots/FRAME-formal-name.png`](store-screenshots/FRAME-formal-name.png) | Halt readout (primary) |
+| 2 | [`docs/store-screenshots/FRAME-clear.png`](store-screenshots/FRAME-clear.png) **and** [`FRAME-hold.png`](store-screenshots/FRAME-hold.png) | Shot 2 pair — Clear + Hold |
 | 3+ | Live popup / Settings / privacy captures | Prefer product UI for final submit |
+
+Rebuild FRAMEs after brand sync: `npm run sync:brand-web && npm run capture:store-halt-frame && npm run assert:store-halt-frame-floors`.
 
 ## Screenshot captions (paste under each store screenshot)
 

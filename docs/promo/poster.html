@@ -9,18 +9,12 @@
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Noto+Sans+SC:wght@400;500;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <style>
     :root {
-      --bg: #ffffff;
-      --ink: #111111;
-      --muted: #6b6b6b;
-      --line: #111111;
-      --hair: #d8d8d8;
-      --halt: #ff4d00;
-      --wash: #f7f7f7;
+      --bg: #ffffff; --ink: #111111; --muted: #6b6b6b; --line: #111111;
+      --hair: #d8d8d8; --halt: #ff4d00; --wash: #f4f4f4;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
     html, body {
-      background: #cfcfcf;
-      color: var(--ink);
+      background: #cfcfcf; color: var(--ink);
       font-family: "Space Grotesk", "Noto Sans SC", "PingFang SC", sans-serif;
       -webkit-font-smoothing: antialiased;
     }
@@ -29,264 +23,326 @@
       font-family: "IBM Plex Mono", ui-monospace, monospace;
       font-size: 10px; text-align: center; color: #333;
     }
-    /* Exact A4 content box (padding inside 210×297). */
     .sheet {
-      width: 210mm;
-      height: 297mm;
-      margin: 0 auto 12px;
-      padding: 6.5mm 6mm 5.5mm;
-      background: var(--bg);
-      border: 1px solid #111;
-      display: flex;
-      flex-direction: column;
-      overflow: hidden;
-      color: var(--ink);
+      width: 210mm; height: 297mm; margin: 0 auto 12px;
+      padding: 7mm 7mm 6mm; background: var(--bg); border: 1px solid #111;
+      display: flex; flex-direction: column; overflow: hidden; color: var(--ink);
     }
     .topbar {
-      display: grid;
-      grid-template-columns: auto 1fr auto;
-      align-items: center;
-      gap: 4mm;
-      padding-bottom: 3.5mm;
-      border-bottom: 1px solid var(--line);
-      flex: 0 0 auto;
+      display: grid; grid-template-columns: auto 1fr auto; align-items: center;
+      gap: 5mm; padding-bottom: 4mm; border-bottom: 1px solid var(--line); flex: 0 0 auto;
     }
-    .logo {
-      width: 34mm; height: auto; max-height: 12mm;
-      object-fit: contain; object-position: left center; display: block;
-    }
-    .top-mid { display: flex; flex-direction: column; gap: 1.5mm; min-width: 0; }
+    .logo { width: 38mm; height: auto; max-height: 13mm; object-fit: contain; object-position: left center; display: block; }
+    .top-mid { display: flex; flex-direction: column; gap: 1.8mm; min-width: 0; }
     .id-row { display: flex; align-items: center; gap: 2.5mm; flex-wrap: wrap; }
     .id-row .name {
       font-family: "IBM Plex Mono", ui-monospace, monospace;
-      font-size: 8px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase;
+      font-size: 8.5px; font-weight: 600; letter-spacing: 0.07em; text-transform: uppercase;
     }
-    .boost { display: inline-flex; align-items: center; height: 7px; }
-    .boost i { display: block; width: 5px; height: 7px; background: var(--ink); transform: skewX(-18deg); }
+    .boost { display: inline-flex; align-items: center; height: 8px; }
+    .boost i { display: block; width: 5px; height: 8px; background: var(--ink); transform: skewX(-18deg); }
     .boost i:nth-child(2) { margin-left: 1.5px; background: var(--muted); }
     .boost i:nth-child(3) { width: 3px; margin-left: 1.5px; background: var(--halt); }
-    .top-mid h1 { font-size: 14px; font-weight: 600; letter-spacing: -0.03em; line-height: 1.15; }
+    .top-mid h1 { font-size: 15px; font-weight: 600; letter-spacing: -0.03em; line-height: 1.15; }
     .top-side {
       text-align: right; font-family: "IBM Plex Mono", ui-monospace, monospace;
-      font-size: 7.5px; line-height: 1.45; letter-spacing: 0.04em; text-transform: uppercase; color: var(--muted);
+      font-size: 8px; line-height: 1.45; letter-spacing: 0.04em; text-transform: uppercase; color: var(--muted);
     }
-    .top-side strong { display: block; color: var(--ink); font-weight: 600; margin-bottom: 0.6mm; }
+    .top-side strong { display: block; color: var(--ink); font-weight: 600; margin-bottom: 0.8mm; }
     .signal {
       display: grid; grid-template-columns: repeat(5, 1fr);
       border: 1px solid var(--line); border-top: 0; flex: 0 0 auto;
     }
     .sig {
-      padding: 2.2mm 2mm; border-right: 1px solid var(--line); min-height: 13mm;
-      display: flex; flex-direction: column; justify-content: space-between; gap: 1.5mm;
+      /* −2mm vs prior strip: bilingual small type only */
+      padding: 1.1mm 1.6mm 1.2mm; border-right: 1px solid var(--line); min-height: 10mm;
+      display: flex; flex-direction: column; justify-content: space-between; gap: 0.6mm;
     }
-    .sig:last-child { border-right: 0; }
+    .sig:last-child { border-right: 0; background: var(--ink); color: #fff; }
     .sig .code {
       font-family: "IBM Plex Mono", ui-monospace, monospace;
-      font-size: 7px; font-weight: 500; letter-spacing: 0.08em; color: var(--muted);
+      font-size: 6px; font-weight: 500; letter-spacing: 0.08em; color: var(--muted);
     }
-    .sig .label { font-size: 10px; font-weight: 600; letter-spacing: -0.02em; line-height: 1.1; }
-    .sig .mark { width: 100%; height: 2.5px; background: var(--hair); position: relative; overflow: hidden; }
+    .sig:last-child .code { color: #9a9a9a; }
+    .sig .label {
+      font-size: 7px; font-weight: 600; letter-spacing: 0.01em; line-height: 1.2;
+      font-family: "IBM Plex Mono", "Noto Sans SC", ui-monospace, monospace;
+    }
+    .sig .mark { width: 100%; height: 1.5px; background: var(--hair); position: relative; overflow: hidden; }
     .sig .mark::after { content: ""; position: absolute; inset: 0 auto 0 0; width: 55%; background: var(--ink); }
     .sig:nth-child(2) .mark::after { width: 70%; }
     .sig:nth-child(3) .mark::after { width: 85%; }
     .sig:nth-child(4) .mark::after { width: 92%; background: var(--halt); }
-    .sig:last-child { background: var(--ink); color: #fff; }
-    .sig:last-child .code { color: #9a9a9a; }
     .sig:last-child .mark { background: #333; }
     .sig:last-child .mark::after { width: 100%; background: var(--halt); }
     .body {
-      flex: 1 1 auto;
-      display: grid;
-      grid-template-columns: 1fr 1fr 1fr;
-      border: 1px solid var(--line);
-      border-top: 0;
-      min-height: 0;
+      flex: 1 1 auto; min-height: 0;
+      display: grid; grid-template-columns: 1fr 1fr 1fr;
+      border: 1px solid var(--line); border-top: 0;
     }
     .pane {
-      padding: 3.2mm 2.8mm 3mm;
-      display: flex; flex-direction: column; gap: 2.8mm;
-      min-width: 0; min-height: 0; background: var(--bg);
-      border-right: 1px solid var(--line);
+      padding: 3mm 2.8mm 2.8mm; border-right: 1px solid var(--line);
+      display: flex; flex-direction: column; gap: 2.2mm; min-width: 0; min-height: 0; background: var(--bg);
     }
     .pane:last-child { border-right: 0; }
+    .pane .fill { margin-top: auto; padding-top: 2mm; border-top: 1px solid var(--hair); }
+    .pane .sub { margin-top: 1mm; font-size: 7.8px; line-height: 1.3; color: #333; }
+    .pane .print-tip {
+      margin-top: 1.5mm; padding: 1.2mm 1.5mm; background: var(--wash);
+      font-family: "IBM Plex Mono", ui-monospace, monospace; font-size: 7px; letter-spacing: 0.02em;
+    }
     .pane-head {
-      display: flex; align-items: center; justify-content: space-between; gap: 2mm;
+      display: flex; align-items: center; justify-content: space-between;
       padding-bottom: 1.6mm; border-bottom: 1px solid var(--hair); flex: 0 0 auto;
     }
     .pane-head .lang {
       font-family: "IBM Plex Mono", ui-monospace, monospace;
-      font-size: 8px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase;
+      font-size: 8.5px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase;
     }
-    .pane-head .led { width: 5px; height: 5px; background: var(--halt); transform: skewX(-18deg); flex: 0 0 auto; }
-    .pane h2 { font-size: 11px; font-weight: 600; letter-spacing: -0.02em; line-height: 1.2; flex: 0 0 auto; }
-    .zh h2 { font-family: "Noto Sans SC", "PingFang SC", "Space Grotesk", sans-serif; font-size: 11px; letter-spacing: 0; font-weight: 700; }
+    .pane-head .led { width: 5px; height: 5px; background: var(--halt); transform: skewX(-18deg); }
+    .pane h2 { font-size: 12px; font-weight: 600; letter-spacing: -0.02em; line-height: 1.2; }
+    .zh h2 { font-family: "Noto Sans SC", "PingFang SC", sans-serif; font-weight: 700; letter-spacing: 0; }
+    .lede { font-size: 8.6px; line-height: 1.35; color: #222; }
+    .zh .lede, .zh .mod p, .zh .mod li, .zh .mod { font-family: "Noto Sans SC", "PingFang SC", sans-serif; }
+    .mod { flex: 0 0 auto; }
     .mod h3 {
       font-family: "IBM Plex Mono", ui-monospace, monospace;
       font-size: 7.5px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase;
       color: var(--muted); margin-bottom: 1.2mm;
       display: flex; align-items: center; gap: 1.5mm;
     }
-    .mod h3::before { content: ""; width: 4.5px; height: 4.5px; background: var(--halt); transform: skewX(-18deg); flex: 0 0 auto; }
-    .mod p, .mod li { font-size: 8.5px; line-height: 1.32; font-weight: 400; }
-    .zh .mod p, .zh .mod li, .zh .mod { font-family: "Noto Sans SC", "PingFang SC", "Space Grotesk", sans-serif; }
+    .mod h3::before { content: ""; width: 4.5px; height: 4.5px; background: var(--halt); transform: skewX(-18deg); }
+    .mod p { font-size: 8.4px; line-height: 1.35; }
     .steps { list-style: none; border: 1px solid var(--hair); }
-    .steps li { display: grid; grid-template-columns: 6.5mm 1fr; border-bottom: 1px solid var(--hair); min-height: 7mm; }
+    .steps li {
+      display: grid; grid-template-columns: 6.5mm 1fr; border-bottom: 1px solid var(--hair); min-height: 0;
+    }
     .steps li:last-child { border-bottom: 0; }
     .steps .n {
       font-family: "IBM Plex Mono", ui-monospace, monospace; font-size: 8px; font-weight: 600;
-      display: grid; place-items: center; border-right: 1px solid var(--hair); color: var(--muted); background: var(--wash);
+      display: grid; place-items: center; border-right: 1px solid var(--hair);
+      color: var(--muted); background: var(--wash); padding: 1.2mm 0;
     }
-    .steps .txt { padding: 1.2mm 1.6mm; display: flex; align-items: center; font-size: 8.2px; line-height: 1.25; }
-    .see { border-left: 2px solid var(--halt); padding: 0.8mm 0 0.8mm 2mm; }
-    .see p { font-size: 8.8px; font-weight: 500; line-height: 1.3; }
-    .facts { margin-top: auto; display: grid; gap: 1.5mm; padding-top: 2mm; border-top: 1px solid var(--hair); }
-    .facts p { font-size: 7.8px; line-height: 1.3; color: #222; }
-    .facts a {
+    .steps .txt { padding: 1.4mm 1.8mm; font-size: 8.2px; line-height: 1.3; display: flex; align-items: center; }
+    .see { border-left: 2px solid var(--halt); padding: 1mm 0 1mm 2.2mm; background: #fff8f5; }
+    .see p { font-size: 8.4px; line-height: 1.35; font-weight: 500; }
+    .fill a {
       font-family: "IBM Plex Mono", ui-monospace, monospace;
-      font-size: 7.2px; color: var(--ink); word-break: break-all; text-underline-offset: 1px;
+      font-size: 7.4px; color: var(--ink); word-break: break-all; text-underline-offset: 1px;
     }
     .dock {
-      display: grid; grid-template-columns: 1fr auto auto 1fr;
-      gap: 3mm; align-items: center;
-      border: 1px solid var(--line); border-top: 0;
-      padding: 3mm 3.5mm; flex: 0 0 auto; background: var(--bg);
+      display: grid; grid-template-columns: 1fr auto auto 1fr; gap: 3mm; align-items: stretch;
+      border: 1px solid var(--line); border-top: 0; padding: 3.5mm 3mm 3mm; flex: 0 0 auto;
+      background: var(--wash);
     }
     .dock .side h3 {
       font-family: "IBM Plex Mono", ui-monospace, monospace;
       font-size: 7.5px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase;
-      color: var(--muted); margin-bottom: 1mm;
-      display: flex; align-items: center; gap: 1.5mm;
+      color: var(--muted); margin-bottom: 1mm; display: flex; align-items: center; gap: 1.5mm;
     }
     .dock .side h3::before { content: ""; width: 4.5px; height: 4.5px; background: var(--halt); transform: skewX(-18deg); }
     .dock .side p { font-size: 8px; line-height: 1.3; }
-    .dock .side.zh { text-align: right; font-family: "Noto Sans SC", "PingFang SC", "Space Grotesk", sans-serif; }
+    .dock .side.zh { text-align: right; font-family: "Noto Sans SC", "PingFang SC", sans-serif; }
     .dock .side.zh h3 { justify-content: flex-end; }
     .dock .url { margin-top: 1mm; font-family: "IBM Plex Mono", ui-monospace, monospace; font-size: 7px; color: var(--muted); }
     .qr-box {
-      width: 22mm; border: 1px solid var(--line); padding: 1.5mm;
-      background: #fff; display: grid; gap: 0.8mm; justify-items: center;
+      width: 28mm; border: 1px solid var(--line); padding: 2mm; background: #fff;
+      display: grid; gap: 1mm; justify-items: center; align-content: center;
     }
-    .qr-box img { width: 17mm; height: 17mm; display: block; }
+    .qr-box img { width: 22mm; height: 22mm; display: block; }
     .qr-box span {
       font-family: "IBM Plex Mono", ui-monospace, monospace;
       font-size: 6.5px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted);
     }
+    .foot {
+      border: 1px solid var(--line); border-top: 0; flex: 0 0 auto;
+      display: grid; grid-template-columns: 1.2fr 1fr 1fr; gap: 0;
+      background: #fff;
+    }
+    .foot .cell {
+      padding: 2.8mm 2.8mm 3mm; border-right: 1px solid var(--hair);
+      font-size: 7.6px; line-height: 1.35; min-height: 18mm;
+    }
+    .foot .cell:last-child { border-right: 0; }
+    .foot .cell h3 {
+      font-family: "IBM Plex Mono", ui-monospace, monospace;
+      font-size: 7px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--muted); margin-bottom: 1.2mm;
+      display: flex; align-items: center; gap: 1.5mm;
+    }
+    .foot .cell h3::before { content: ""; width: 4px; height: 4px; background: var(--halt); transform: skewX(-18deg); }
+    .foot .cell a {
+      font-family: "IBM Plex Mono", ui-monospace, monospace;
+      font-size: 7px; color: var(--ink); word-break: break-all;
+    }
+    .foot .cell .zh-line { font-family: "Noto Sans SC", "PingFang SC", sans-serif; }
+    .foot .cell strong {
+      font-family: "IBM Plex Mono", ui-monospace, monospace;
+      font-size: 8px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase;
+      display: block; margin-bottom: 1mm;
+    }
     @media print {
       html, body {
-        background: #fff !important;
-        width: 210mm;
-        height: 297mm;
-        margin: 0 !important;
-        padding: 0 !important;
-        overflow: hidden;
+        background: #fff !important; width: 210mm; height: 297mm;
+        margin: 0 !important; padding: 0 !important; overflow: hidden;
       }
       .screen-hint { display: none !important; }
       .sheet {
-        width: 210mm !important;
-        height: 297mm !important;
-        max-width: 210mm;
-        max-height: 297mm;
-        margin: 0 !important;
-        border: none !important;
-        box-shadow: none !important;
-        page-break-after: avoid;
-        page-break-inside: avoid;
-        -webkit-print-color-adjust: exact;
-        print-color-adjust: exact;
+        width: 210mm !important; height: 297mm !important; max-width: 210mm; max-height: 297mm;
+        margin: 0 !important; border: none !important;
+        page-break-inside: avoid; -webkit-print-color-adjust: exact; print-color-adjust: exact;
       }
       @page { size: A4 portrait; margin: 0; }
     }
   </style>
 </head>
 <body>
-  <p class="screen-hint">A4 · Print → Paper A4 · Scale 100% · Margins None · Background graphics On · v=16b7c7407d</p>
+  <p class="screen-hint">A4 · Paper A4 · Scale 100% · Margins None · Background graphics On · v=7ecc43e9fe</p>
   <article class="sheet">
     <header class="topbar">
-      <img class="logo" src="buusdo-wordmark-on-light.png?v=16b7c7407d" alt="buusdo Cybersecurity Service Tool" width="405" height="138" />
+      <img class="logo" src="buusdo-wordmark-on-light.png?v=7ecc43e9fe" alt="buusdo Cybersecurity Service Tool" width="405" height="138" />
       <div class="top-mid">
         <div class="id-row">
           <span class="name">buusdo Cybersecurity Service Tool</span>
           <span class="boost" aria-hidden="true"><i></i><i></i><i></i></span>
         </div>
-        <h1>Check a website before you trust it.</h1>
+        <h1>Cybersecurity Service Tool — Check a website</h1>
       </div>
       <div class="top-side">
         <strong>Spec</strong>
         Web · Extension · Desktop<br />
         EN / pt-PT / 中文<br />
-        Local · Reversible
+        Never store · This device only
       </div>
     </header>
 
-    <section class="signal" aria-label="Flow">
-      <div class="sig"><span class="code">CH 01</span><span class="label">Open</span><span class="mark" aria-hidden="true"></span></div>
-      <div class="sig"><span class="code">CH 02</span><span class="label">Threats</span><span class="mark" aria-hidden="true"></span></div>
-      <div class="sig"><span class="code">CH 03</span><span class="label">Probe</span><span class="mark" aria-hidden="true"></span></div>
-      <div class="sig"><span class="code">CH 04</span><span class="label">Risk</span><span class="mark" aria-hidden="true"></span></div>
-      <div class="sig"><span class="code">OUT</span><span class="label">Halt</span><span class="mark" aria-hidden="true"></span></div>
+    <section class="signal" aria-label="Status">
+      <div class="sig"><span class="code">CH 01</span><span class="label">Standby · Pronto · 待命</span><span class="mark" aria-hidden="true"></span></div>
+      <div class="sig"><span class="code">CH 02</span><span class="label">Clear · Limpo · 通过</span><span class="mark" aria-hidden="true"></span></div>
+      <div class="sig"><span class="code">CH 03</span><span class="label">Hold · Pausar · 暂缓</span><span class="mark" aria-hidden="true"></span></div>
+      <div class="sig"><span class="code">CH 04</span><span class="label">Check · Verificar · 检查</span><span class="mark" aria-hidden="true"></span></div>
+      <div class="sig"><span class="code">OUT</span><span class="label">Halt · Parar · 停止</span><span class="mark" aria-hidden="true"></span></div>
     </section>
 
     <div class="body">
+      
       <section class="pane" lang="en">
         <div class="pane-head"><span class="lang">English</span><span class="led" aria-hidden="true"></span></div>
-        <h2>Real signals. Clear risk. Leave when you should.</h2>
+        <h2>Check a website</h2>
+        <p class="lede">Type any website address. We check our own threat list, structure, brand lookalikes, DNS and live response. On Halt: leave, verify on an official channel you already trust, then optionally report.</p>
         <div class="mod">
-          <h3>Use</h3>
+          <h3>Next</h3>
           <ol class="steps">
-            <li><span class="n">01</span><span class="txt">Open the site → paste a URL or open a page in the extension</span></li>
-            <li><span class="n">02</span><span class="txt">Match own threat lists → probe the host → read the risk</span></li>
-            <li><span class="n">03</span><span class="txt">On Halt, leave — lists stay local and reversible</span></li>
+            <li><span class="n">01</span><span class="txt">Leave this page now — do not continue on the address you checked.</span></li>
+            <li><span class="n">02</span><span class="txt">Do not enter passwords, card numbers, codes from SMS/email, or other personal data on this site.</span></li>
+            <li><span class="n">03</span><span class="txt">Verify independently: open the organisation’s official domain or app you already trust (bookmark, bank card, known app store). Do not use phone numbers or emails shown on the suspect page.</span></li>
+            <li><span class="n">04</span><span class="txt">Optional: block the host in the buusdo extension or desktop app so it is harder to reopen by mistake.</span></li>
+            <li><span class="n">05</span><span class="txt">Optional: save a local report draft below so an operator can review the host for the curated threat list.</span></li>
           </ol>
         </div>
-        <div class="mod"><h3>See it</h3><div class="see"><p>Sharp instrument layout, one orange Halt — evidence to act on.</p></div></div>
-        <div class="mod facts">
-          <h3>What it is</h3>
-          <p>First-party threat match, host probe, and risk UX on web, extension, and desktop. Privacy choices stay on this device.</p>
+        <div class="mod">
+          <h3>Halt</h3>
+          <div class="see"><p><strong>Leave this check</strong> — You may hand over passwords, payment details, or other personal data to whoever controls this address. Close the tab before typing or paying anything.</p></div>
+        </div>
+        <div class="mod">
+          <h3>Data</h3>
+          <p>Default: nothing is stored. Diagnostics only help fix technical problems — never the address, and never for public release.</p>
+          <p class="sub">buusdo does not offer a cloud account or cross-device list sync. Personal block/trust lists stay on this device. Move them with export/import of shield-lists-v1 JSON or QR, or sync the desktop shield-backup.json file yourself (USB, Drive, Syncthing).</p>
+        </div>
+        <div class="mod">
+          <h3>Honest limits of this tool</h3>
+          <p>buusdo cannot erase personal information a website already collected from you. Change passwords on the real official site if you entered anything, and watch bank/email alerts.</p>
+          <p class="sub">Clear means no strong warning from the checks run — not a promise that the site is safe.</p>
+        </div>
+        <div class="mod fill">
+          <h3>Surfaces</h3>
+          <p>Web · browser extension · desktop — local lists, reversible choices.</p>
+          <p class="sub">Scam pages often look polished and use HTTPS. Visual quality is not proof the site is legitimate.</p>
           <h3>Open</h3>
           <p><a href="https://buusdocst.mtsu.workers.dev">buusdocst.mtsu.workers.dev</a></p>
-          <p><a href="https://otas0.github.io/buusdocst/">otas0.github.io/buusdocst</a> · China</p>
+          <p><a href="https://otas0.github.io/buusdocst/">otas0.github.io/buusdocst</a> · China mirror</p>
+          <p><a href="https://buusdocst.mtsu.workers.dev/en/privacy">/en/privacy</a></p>
+          <p class="sub print-tip">Print: A4 · 100% · margins none · background graphics on.</p>
         </div>
       </section>
-
+      
       <section class="pane" lang="pt-PT">
         <div class="pane-head"><span class="lang">Português</span><span class="led" aria-hidden="true"></span></div>
-        <h2>Sinais reais. Risco claro. Saia quando deve.</h2>
+        <h2>Verificar um site</h2>
+        <p class="lede">Escreva qualquer endereço de site. Verificamos a lista própria de ameaças, estrutura, marcas parecidas, DNS e resposta em direto. Em Parar: saia, verifique num canal oficial em que já confia e, se quiser, denuncie.</p>
         <div class="mod">
-          <h3>Usar</h3>
+          <h3>A seguir</h3>
           <ol class="steps">
-            <li><span class="n">01</span><span class="txt">Abra o site → cole um URL ou abra na extensão</span></li>
-            <li><span class="n">02</span><span class="txt">Listas próprias → probe do host → leia o risco</span></li>
-            <li><span class="n">03</span><span class="txt">Em Halt, saia — listas locais e reversíveis</span></li>
+            <li><span class="n">01</span><span class="txt">Saia já desta página — não continue no endereço que verificou.</span></li>
+            <li><span class="n">02</span><span class="txt">Não introduza palavras-passe, números de cartão, códigos de SMS/email ou outros dados pessoais neste site.</span></li>
+            <li><span class="n">03</span><span class="txt">Verifique de forma independente: abra o domínio ou a app oficial da organização em que já confia (marcador, cartão do banco, loja de apps conhecida). Não use telefones nem emails mostrados na página suspeita.</span></li>
+            <li><span class="n">04</span><span class="txt">Opcional: bloqueie o anfitrião na extensão ou app desktop buusdo para ser mais difícil reabri-lo por engano.</span></li>
+            <li><span class="n">05</span><span class="txt">Opcional: guarde abaixo um rascunho de denúncia local para um operador rever o anfitrião na lista curada de ameaças.</span></li>
           </ol>
         </div>
-        <div class="mod"><h3>Ver</h3><div class="see"><p>Instrumento nítido, um Halt laranja — evidência para agir.</p></div></div>
-        <div class="mod facts">
-          <h3>O que é</h3>
-          <p>Ameaça própria, probe e UX de risco na web, extensão e desktop. Privacidade neste dispositivo.</p>
+        <div class="mod">
+          <h3>Parar</h3>
+          <div class="see"><p><strong>Sair desta verificação</strong> — Pode entregar palavras-passe, dados de pagamento ou outra informação pessoal a quem controla este endereço. Feche o separador antes de escrever ou pagar o que quer que seja.</p></div>
+        </div>
+        <div class="mod">
+          <h3>Dados</h3>
+          <p>Predefinição: nada é guardado. O diagnóstico só ajuda a corrigir problemas técnicos — nunca o endereço, e nunca para divulgação pública.</p>
+          <p class="sub">O buusdo não oferece conta na nuvem nem sincronização de listas entre dispositivos. As listas pessoais de bloqueio/confiança ficam neste dispositivo. Transfira-as com exportar/importar JSON shield-lists-v1 ou QR, ou sincronize o ficheiro shield-backup.json da app (USB, Drive, Syncthing).</p>
+        </div>
+        <div class="mod">
+          <h3>Limites honestos desta ferramenta</h3>
+          <p>O buusdo não consegue apagar informação pessoal que um site já tenha recolhido. Se introduziu dados, altere palavras-passe no site oficial verdadeiro e acompanhe alertas do banco/email.</p>
+          <p class="sub">Limpo significa que não houve alerta forte nas verificações feitas — não é uma promessa de que o site é seguro.</p>
+        </div>
+        <div class="mod fill">
+          <h3>Superfícies</h3>
+          <p>Web · extensão · desktop — listas locais, escolhas reversíveis.</p>
+          <p class="sub">Páginas de fraude costumam parecer cuidadas e usar HTTPS. Qualidade visual não prova que o site seja legítimo.</p>
           <h3>Abrir</h3>
           <p><a href="https://buusdocst.mtsu.workers.dev">buusdocst.mtsu.workers.dev</a></p>
-          <p><a href="https://otas0.github.io/buusdocst/">otas0.github.io/buusdocst</a> · China</p>
+          <p><a href="https://otas0.github.io/buusdocst/">otas0.github.io/buusdocst</a> · espelho China</p>
+          <p><a href="https://buusdocst.mtsu.workers.dev/pt-PT/privacy">/pt-PT/privacy</a></p>
+          <p class="sub print-tip">Imprimir: A4 · 100% · margens nenhuma · gráficos de fundo ligados.</p>
         </div>
       </section>
-
+      
       <section class="pane zh" lang="zh-Hans">
         <div class="pane-head"><span class="lang">中文</span><span class="led" aria-hidden="true"></span></div>
-        <h2>真实信号。清晰风险。该离开时离开。</h2>
+        <h2>检查网站</h2>
+        <p class="lede">输入任意网站地址。我们会核对自有威胁列表、结构、品牌仿冒、DNS 与实时响应。若出现「停止」：离开页面，通过您已信任的官方渠道核实，然后可选择举报。</p>
         <div class="mod">
-          <h3>使用</h3>
+          <h3>下一步</h3>
           <ol class="steps">
-            <li><span class="n">01</span><span class="txt">打开站点 → 粘贴 URL，或在扩展里打开</span></li>
-            <li><span class="n">02</span><span class="txt">自有威胁列表 → 探测主机 → 查看风险</span></li>
-            <li><span class="n">03</span><span class="txt">Halt 时离开 — 列表本机可逆</span></li>
+            <li><span class="n">01</span><span class="txt">立即离开此页面——不要继续使用您检查过的地址。</span></li>
+            <li><span class="n">02</span><span class="txt">不要在此网站输入密码、卡号、短信/邮件验证码或其他个人数据。</span></li>
+            <li><span class="n">03</span><span class="txt">独立核实：打开您已信任的该组织官方域名或应用（书签、银行卡、已知应用商店）。不要使用可疑页面上显示的电话或邮箱。</span></li>
+            <li><span class="n">04</span><span class="txt">可选：在 buusdo 扩展或桌面应用中拦截该主机，以免误重新打开。</span></li>
+            <li><span class="n">05</span><span class="txt">可选：在下方保存本地举报导稿，供运营人员审核该主机是否列入整理的威胁列表。</span></li>
           </ol>
         </div>
-        <div class="mod"><h3>效果</h3><div class="see"><p>清晰仪器版式、一处 Halt 橙 — 可据以行动的证据。</p></div></div>
-        <div class="mod facts">
-          <h3>它是什么</h3>
-          <p>自有威胁匹配、主机探测与风险界面，覆盖网页、扩展与桌面。隐私选择留在本机。</p>
+        <div class="mod">
+          <h3>停止</h3>
+          <div class="see"><p><strong>离开此次检查</strong> — 您可能把密码、付款信息或其他个人数据交给控制此地址的人。在输入或支付任何内容之前请关闭标签页。</p></div>
+        </div>
+        <div class="mod">
+          <h3>数据</h3>
+          <p>默认：不存储任何内容。诊断仅用于修复技术问题——从不包含地址，也不用于公开发布。</p>
+          <p class="sub">buusdo 不提供云端账户或跨设备列表同步。个人拦截/信任列表留在本设备。请通过导出/导入 shield-lists-v1 JSON 或二维码转移，或自行同步桌面端的 shield-backup.json（USB、Drive、Syncthing）。</p>
+        </div>
+        <div class="mod">
+          <h3>本工具的诚实限度</h3>
+          <p>buusdo 无法抹除网站已经从您处收集的个人信息。若已输入任何内容，请在真正的官方网站更改密码，并留意银行/邮件提醒。</p>
+          <p class="sub">「畅通」表示已运行的检查未发出强烈警告——并不保证该网站安全。</p>
+        </div>
+        <div class="mod fill">
+          <h3>覆盖</h3>
+          <p>网页 · 浏览器扩展 · 桌面端 — 本机列表，选择可撤销。</p>
+          <p class="sub">诈骗页面往往看起来精致并使用 HTTPS。视觉质量不能证明网站合法。</p>
           <h3>打开</h3>
           <p><a href="https://buusdocst.mtsu.workers.dev">buusdocst.mtsu.workers.dev</a></p>
           <p><a href="https://otas0.github.io/buusdocst/">otas0.github.io/buusdocst</a> · 中国镜像</p>
+          <p><a href="https://buusdocst.mtsu.workers.dev/zh-Hans/privacy">/zh-Hans/privacy</a></p>
+          <p class="sub print-tip">打印：A4 · 100% · 无边距 · 打开背景图形。</p>
         </div>
       </section>
     </div>
@@ -294,23 +350,45 @@
     <footer class="dock">
       <div class="side" lang="en">
         <h3>Get it</h3>
-        <p>Scan live site or China mirror. Web · extension · desktop.</p>
+        <p>Scan live Worker or China Pages. EN / pt-PT / 中文.</p>
         <p class="url">buusdocst.mtsu.workers.dev</p>
+        <p class="url" lang="pt-PT">Leia o QR do Worker ou Pages China. EN / pt-PT / 中文.</p>
       </div>
       <div class="qr-box">
-        <img src="product-qr.svg?v=16b7c7407d" alt="QR live site" width="100" height="100" />
+        <img src="product-qr.svg?v=7ecc43e9fe" alt="QR live" width="100" height="100" />
         <span>live</span>
       </div>
       <div class="qr-box">
-        <img src="china-qr.svg?v=16b7c7407d" alt="QR China mirror" width="100" height="100" />
+        <img src="china-qr.svg?v=7ecc43e9fe" alt="QR China" width="100" height="100" />
         <span>china</span>
       </div>
       <div class="side zh" lang="zh-Hans">
         <h3>获取</h3>
-        <p>扫码打开线上或中国镜像。网页 · 扩展 · 桌面。</p>
+        <p>扫码打开线上 Worker 或中国 Pages。EN / pt-PT / 中文。</p>
         <p class="url">otas0.github.io/buusdocst</p>
       </div>
     </footer>
+
+    <section class="foot" aria-label="Privacy · print">
+      <div class="cell">
+        <strong>buusdo Cybersecurity Service Tool</strong>
+        <p>Never store · This device only</p>
+        <p class="zh-line" lang="zh-Hans">永不存储 · 仅本设备</p>
+        <p lang="pt-PT">Nunca guardar · Só neste dispositivo</p>
+      </div>
+      <div class="cell">
+        <h3>Data / Dados / 数据</h3>
+        <p><a href="https://buusdocst.mtsu.workers.dev/en/privacy">/en/privacy</a></p>
+        <p><a href="https://buusdocst.mtsu.workers.dev/pt-PT/privacy">/pt-PT/privacy</a></p>
+        <p><a href="https://buusdocst.mtsu.workers.dev/zh-Hans/privacy">/zh-Hans/privacy</a></p>
+      </div>
+      <div class="cell">
+        <h3>Print</h3>
+        <p>Print: A4 · 100% · margins none · background graphics on.</p>
+        <p lang="pt-PT">Imprimir: A4 · 100% · margens nenhuma · gráficos de fundo ligados.</p>
+        <p class="zh-line" lang="zh-Hans">打印：A4 · 100% · 无边距 · 打开背景图形。</p>
+      </div>
+    </section>
   </article>
 </body>
 </html>

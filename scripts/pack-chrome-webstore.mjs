@@ -100,10 +100,28 @@ for (const name of frames) {
     draft.split("## Screenshot captions")[1]?.split("## Privacy policy URL")[0]?.trim() ||
     "See docs/CHROME_STORE_LISTING_DRAFT.md";
   writeFileSync(join(shotDir, "CAPTIONS.txt"), `${chunk}\n`, "utf8");
+  writeFileSync(
+    join(shotDir, "README.txt"),
+    [
+      "Chrome Web Store listing screenshots (upload order)",
+      "1. FRAME-formal-name.png  — Halt",
+      "2. FRAME-clear.png + FRAME-hold.png — Clear / Hold pair",
+      "Captions: CAPTIONS.txt (from docs/CHROME_STORE_LISTING_DRAFT.md)",
+      "Rebuild: npm run capture:store-halt-frame && npm run pack:chrome-store",
+      "",
+    ].join("\n"),
+    "utf8",
+  );
 }
 
+// Companion zip for dashboard upload (extension zip must stay MV3-clean).
+const listingZipName = `buusdo-cybersecurity-service-tool-${version}-listing-frames.zip`;
+const listingZipPath = join(outDir, listingZipName);
+execFileSync("zip", ["-r", "-q", listingZipPath, "."], { cwd: shotDir, stdio: "inherit" });
+
 console.info(`[pack:chrome-store] OK ${zipPath}`);
-console.info(`[pack:chrome-store] listing shots → ${shotDir} (Halt + Clear/Hold shot 2)`);
+console.info(`[pack:chrome-store] listing shots → ${shotDir}`);
+console.info(`[pack:chrome-store] listing FRAME zip → ${listingZipPath} (3 FRAMEs + captions)`);
 console.info(
   "[pack:chrome-store] Upload in Chrome Web Store Developer Dashboard → new item / package"
 );

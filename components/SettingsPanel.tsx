@@ -769,6 +769,19 @@ export function SettingsPanel({
           >
             {t.desktopHonestLimitsLink}
           </a>
+          {" · "}
+          <a
+            className="text-button"
+            href="/promo/poster.html"
+            target="_blank"
+            rel="noreferrer"
+            data-testid="settings-download-a4-poster"
+          >
+            {t.downloadA4Poster}
+          </a>
+        </p>
+        <p className="hint" data-testid="settings-a4-poster-print-hint">
+          {t.downloadA4PosterHint}
         </p>
       </section>
 

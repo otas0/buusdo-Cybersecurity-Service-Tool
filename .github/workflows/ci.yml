@@ -85,6 +85,16 @@ jobs:
             docs/store-screenshots/FRAME-hold.png
           echo "::notice::FRAME Halt/Clear/Hold structural floors OK (working tree restored)"
 
+      - name: Pack Chrome store listing FRAMEs zip
+        run: npm run pack:chrome-store
+
+      - name: Upload listing-frames.zip
+        uses: actions/upload-artifact@v4
+        with:
+          name: listing-frames
+          path: dist/chrome-webstore/*-listing-frames.zip
+          if-no-files-found: error
+
       - name: Cache Playwright browsers (quality Chromium)
         id: pw_quality_cache
         uses: actions/cache@v4
@@ -412,6 +422,38 @@ jobs:
           echo "LaunchAgent absent — ok"
       - name: Install-accept smoke
         run: npm run smoke:desktop-install-accept
+
+  graphics-charcoal-optional:
+    name: graphics wordmark charcoal (optional)
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+      - name: Install
+        run: npm ci || npm install --no-fund --no-audit
+      - name: Assert Graphics Enhancement Tool wordmark charcoal
+        id: charcoal
+        continue-on-error: true
+        run: |
+          # Sibling clone is optional on CI runners; soft-skip when absent.
+          CANDIDATES=(
+            "${GRAPHICS_WORDMARK:-}"
+            "$HOME/buusdo/docs/promo/logo-wordmark.png"
+            "../buusdo/docs/promo/logo-wordmark.png"
+          )
+          FOUND=""
+          for p in "${CANDIDATES[@]}"; do
+            [ -n "$p" ] && [ -f "$p" ] && FOUND="$p" && break
+          done
+          if [ -z "$FOUND" ]; then
+            echo "::notice::Graphics wordmark absent — skip charcoal assert (optional job)"
+            exit 0
+          fi
+          GRAPHICS_WORDMARK="$FOUND" npm run assert:graphics-wordmark-charcoal
 
   check-desktop-optional:
     name: check:desktop (dispatch / nightly)
@@ -746,8 +788,8 @@ jobs:
         env:
           PLAYWRIGHT_SKIP_WEBSERVER: "1"
 
-      # Soft: live Workers privacy (skip inside spec if unreachable). Brand/formal-name stay hard above.
-      - name: Soft privacy-prod /zh-Hans/privacy
+      # Soft: live Workers privacy (skip inside spec if unreachable). Includes /en/privacy zero /survey/ links.
+      - name: Soft privacy-prod (/en/privacy no /survey/)
         if: steps.pw_install.outcome == 'success'
         continue-on-error: true
         env:

@@ -446,5 +446,8 @@
   "detailKindTiming": "耗时",
   "detailKindLimit": "限制",
   "probeBlockedGenericTitle": "网站阻止了自动探测",
-  "probeBlockedGenericDetail": "收到 HTTP {status}。网站阻止或限制了此次检查——这不能证明钓鱼。如需要，请在普通浏览器中打开该地址。"
+  "probeBlockedGenericDetail": "收到 HTTP {status}。网站阻止或限制了此次检查——这不能证明钓鱼。如需要，请在普通浏览器中打开该地址。",
+  "downloadA4Poster": "下载 A4 海报",
+  "downloadA4PosterShort": "A4",
+  "downloadA4PosterHint": "打印 A4 · 100% · 无边距 · 打开背景图形。"
 }

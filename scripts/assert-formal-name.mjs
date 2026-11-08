@@ -124,5 +124,26 @@ for (const file of chinaPages) {
   }
 }
 
+/** Website + Settings poster control must exist with formal product framing. */
+const messagesTs = readFileSync(join(root, "i18n/messages.ts"), "utf8");
+if (!/downloadA4Poster:\s*"Download A4 poster"/.test(messagesTs)) {
+  console.error("[assert-formal-name] i18n/messages.ts must define downloadA4Poster (EN)");
+  process.exit(1);
+}
+if (!/downloadA4PosterShort:\s*"A4"/.test(messagesTs)) {
+  console.error("[assert-formal-name] i18n/messages.ts must define downloadA4PosterShort");
+  process.exit(1);
+}
+const appShell = readFileSync(join(root, "components/AppShell.tsx"), "utf8");
+if (!appShell.includes("downloadA4Poster") || !appShell.includes("/promo/poster.html")) {
+  console.error("[assert-formal-name] AppShell must link /promo/poster.html via downloadA4Poster");
+  process.exit(1);
+}
+const settings = readFileSync(join(root, "components/SettingsPanel.tsx"), "utf8");
+if (!settings.includes("downloadA4Poster") || !settings.includes("/promo/poster.html")) {
+  console.error("[assert-formal-name] SettingsPanel must link /promo/poster.html via downloadA4Poster");
+  process.exit(1);
+}
+
 await checkGithubDescription();
 console.info(`[assert-formal-name] OK formalName=${JSON.stringify(formal)}`);

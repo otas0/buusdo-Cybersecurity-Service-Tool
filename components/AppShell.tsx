@@ -170,13 +170,18 @@ function Header({
           {t.navListsOffline}
         </a>
         <a
-          className="nav-link"
+          className="nav-link nav-link-a4"
           href="/promo/poster.html"
           target="_blank"
           rel="noreferrer"
           data-testid="nav-download-a4-poster"
+          title={t.downloadA4Poster}
+          aria-label={t.downloadA4Poster}
         >
-          {t.downloadA4Poster}
+          <span className="nav-a4-full">{t.downloadA4Poster}</span>
+          <span className="nav-a4-short" aria-hidden="true">
+            {t.downloadA4PosterShort}
+          </span>
         </a>
         <LanguageSwitcher locale={locale} view={view} hash={switchHash} />
       </nav>

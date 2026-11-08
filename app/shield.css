@@ -61,10 +61,26 @@
     flex-wrap: nowrap;
   }
 
+  .shell .nav-link-a4 .nav-a4-full {
+    display: none;
+  }
+
+  .shell .nav-link-a4 .nav-a4-short {
+    display: inline;
+  }
+
   .shell .lang-switch {
     max-width: 2.75rem;
     min-width: 2.5rem;
   }
+}
+
+.shell .nav-link-a4 .nav-a4-short {
+  display: none;
+}
+
+.shell .nav-link-a4 .nav-a4-full {
+  display: inline;
 }
 
 .shell .kicker,

@@ -28,7 +28,11 @@ const HALT = "#ff4d00";
 const MUTED = "#8d897f";
 const label = "buusdo Cybersecurity Service Tool";
 
-/** Wordmark u-card on light plates is charcoal #545454 — never Halt orange, never invert to cream. */
+/**
+ * Wordmark u-card on light plates is charcoal #545454 — never Halt orange, never invert to cream.
+ * REMOVE this heuristic when `shared/brand/source/buusdo-wordmark-paths.svg` ships
+ * (vector fills carry charcoal/muted explicitly — see docs/BRAND_U_CARD.md).
+ */
 function isCharcoalUCard(r, g, b) {
   const max = Math.max(r, g, b);
   const min = Math.min(r, g, b);

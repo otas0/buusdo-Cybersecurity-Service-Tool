@@ -1,56 +1,97 @@
 /**
- * Extension popup header wordmark — dark-field asset with muted u (no Halt-orange u-card).
- * Pixel parity for muted u is asserted in tests/desktop-tray-brand-parity.test.ts.
+ * Extension popup — real popup.html fixture (not a mini header stub).
+ * Dark-field wordmark muted-u pixel parity: tests/desktop-tray-brand-parity.test.ts.
  *
  *   PLAYWRIGHT_SKIP_WEBSERVER=1 npx playwright test playwright/extension-popup-wordmark.spec.ts
  */
 import { createServer } from "node:http";
-import { readFileSync } from "node:fs";
+import { readFileSync, existsSync } from "node:fs";
 import path from "node:path";
 import { expect, test } from "@playwright/test";
 
 const root = process.cwd();
-const wordmark = readFileSync(path.join(root, "extension/icons/buusdo-wordmark.png"));
+const popupHtmlPath = path.join(root, "extension/popup/popup.html");
+const mime: Record<string, string> = {
+  ".html": "text/html; charset=utf-8",
+  ".css": "text/css; charset=utf-8",
+  ".js": "text/javascript; charset=utf-8",
+  ".png": "image/png",
+  ".svg": "image/svg+xml",
+  ".woff2": "font/woff2"
+};
 
-test("extension popup header mounts dark wordmark", async ({ page }) => {
-  const html = `<!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8" />
-  <style>
-    body { margin: 0; background: #0e0e0e; }
-    .popup-top {
-      display: flex; align-items: center; gap: 8px;
-      padding: 12px 14px; border-bottom: 1px solid rgba(243,241,234,0.16);
+function resolveUnderExtension(urlPath: string): string | null {
+  const clean = urlPath.split("?")[0] || "/";
+  // popup.html references ../icons/… and ../shared/…
+  const rel = clean === "/" || clean === "/popup.html" ? "popup/popup.html" : clean.replace(/^\//, "");
+  const candidates = [
+    path.join(root, "extension", rel),
+    path.join(root, "extension/popup", rel),
+    // ../icons from popup/ → extension/icons
+    path.join(root, "extension", rel.replace(/^\.\.\//, ""))
+  ];
+  for (const c of candidates) {
+    const resolved = path.resolve(c);
+    if (!resolved.startsWith(path.resolve(root, "extension")) && !resolved.startsWith(path.resolve(root, "shared"))) {
+      continue;
     }
-    .popup-top img { height: 28px; width: auto; display: block; }
-  </style>
-</head>
-<body>
-  <header class="popup-top" data-testid="extension-popup-top">
-    <img data-testid="extension-popup-wordmark" alt="buusdo Cybersecurity Service Tool" src="/wm.png" />
-  </header>
-</body>
-</html>`;
+    if (existsSync(resolved)) return resolved;
+  }
+  // Map /icons/… and /shared/… absolute-ish
+  const icon = path.join(root, "extension/icons", path.basename(clean));
+  if (existsSync(icon)) return icon;
+  const shared = path.join(root, "shared", clean.replace(/^\/?shared\//, "").replace(/^\.\.\/shared\//, ""));
+  if (clean.includes("shared") && existsSync(shared)) return shared;
+  return null;
+}
+
+test("extension popup.html mounts real header wordmark", async ({ page }) => {
+  const raw = readFileSync(popupHtmlPath, "utf8");
+  // Rewrite relative asset roots so the fixture server can resolve them.
+  const html = raw
+    .replaceAll('href="../shared/', 'href="/shared/')
+    .replaceAll('src="../icons/', 'src="/icons/')
+    .replaceAll('src="../shared/', 'src="/shared/')
+    .replaceAll('href="popup.css"', 'href="/popup/popup.css"')
+    .replaceAll('src="popup.js"', 'src="/popup/popup.js"');
 
   const server = createServer((req, res) => {
-    if (req.url?.startsWith("/wm.png")) {
-      res.writeHead(200, { "Content-Type": "image/png" });
-      res.end(wordmark);
+    const url = req.url || "/";
+    if (url === "/" || url.startsWith("/popup.html")) {
+      res.writeHead(200, { "Content-Type": "text/html; charset=utf-8" });
+      res.end(html);
       return;
     }
-    res.writeHead(200, { "Content-Type": "text/html; charset=utf-8" });
-    res.end(html);
+    let file: string | null = null;
+    if (url.startsWith("/icons/")) {
+      file = path.join(root, "extension/icons", path.basename(url.split("?")[0]));
+    } else if (url.startsWith("/shared/")) {
+      file = path.join(root, "shared", url.slice("/shared/".length).split("?")[0]);
+    } else if (url.startsWith("/popup/")) {
+      file = path.join(root, "extension/popup", url.slice("/popup/".length).split("?")[0]);
+    } else {
+      file = resolveUnderExtension(url);
+    }
+    if (!file || !existsSync(file)) {
+      res.writeHead(404);
+      res.end(`missing ${url}`);
+      return;
+    }
+    const ext = path.extname(file).toLowerCase();
+    res.writeHead(200, { "Content-Type": mime[ext] || "application/octet-stream" });
+    res.end(readFileSync(file));
   });
+
   await new Promise<void>((resolve) => server.listen(0, "127.0.0.1", resolve));
   const { port } = server.address() as { port: number };
   try {
-    await page.setViewportSize({ width: 360, height: 520 });
-    await page.goto(`http://127.0.0.1:${port}/`);
-    await expect(page.getByTestId("extension-popup-wordmark")).toBeVisible();
-    await expect(page.getByTestId("extension-popup-top")).toBeVisible();
-    const alt = await page.getByTestId("extension-popup-wordmark").getAttribute("alt");
-    expect(alt).toMatch(/buusdo Cybersecurity Service Tool/i);
+    await page.setViewportSize({ width: 360, height: 560 });
+    await page.goto(`http://127.0.0.1:${port}/`, { waitUntil: "domcontentloaded" });
+    const wordmark = page.locator("header.top img.brand-logo");
+    await expect(wordmark).toBeVisible();
+    await expect(wordmark).toHaveAttribute("alt", /buusdo Cybersecurity Service Tool/i);
+    await expect(page.locator("header.top")).toBeVisible();
+    await expect(page.locator("#scanBtn")).toBeVisible();
   } finally {
     await new Promise<void>((resolve, reject) => server.close((err) => (err ? reject(err) : resolve())));
   }

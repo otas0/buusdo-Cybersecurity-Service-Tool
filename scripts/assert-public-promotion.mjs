@@ -46,6 +46,12 @@ for (let i = 0; i < blocks.length; i += 1) {
     );
     failed = true;
   }
+  if (!/\/promo\/poster\.html/.test(block)) {
+    console.error(
+      `[assert-public-promotion] paste block #${i + 1} missing /promo/poster.html A4 entry`,
+    );
+    failed = true;
+  }
 }
 
 if (failed) process.exit(1);

@@ -42,4 +42,4 @@ npm run build:promo-posters
 npm run assert:graphics-wordmark-charcoal
 ```
 
-When `shared/brand/source/buusdo-wordmark-paths.svg` lands, prefer that vector and remove charcoal-detection heuristics from `scripts/sync-brand-web-assets.mjs`.
+When `shared/brand/source/buusdo-wordmark-paths.svg` lands, `sync:brand-web` already prefers it over the light-plate PNG. Then **delete** `isCharcoalUCard` / charcoal→muted remap in `scripts/sync-brand-web-assets.mjs` once the SVG encodes light charcoal `#545454` and dark muted `#8d897f` explicitly (no raster guess).
