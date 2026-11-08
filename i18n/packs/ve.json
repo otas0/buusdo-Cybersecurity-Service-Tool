@@ -78,8 +78,6 @@
   "feedbackReportExportHint": "Ṅwalwa lwa hayani lwo vhulungwa. Vulani Nzudzanyo → Ṅwalwa dza mbuno u bvisa faela ya batches/*.json uri mushumi a ṱole — a hu rumiwi tshithu.",
   "feedbackReportExportSettings": "Vulani Nzudzanyo → Ṅwalwa dza mbuno",
   "timingTotalChip": "u ṱola {ms}ms",
-  "faqParentsTitle": "Kha vhabebi na vhadededzi",
-  "faqParentsIntro": "Phindulo pfufhi nga zwe tshishumiswa itshi tsha ita na zwe tshi sa iti — dzi thusa phanḓa ha musi ni tshi humbela mugudi kana ṅwana uri a fulufhedze mvelelo ya Ima.",
   "faqNoWipeTitle": "Na buusdo i nga fhela datha ye saiti yo no i dzhia?",
   "faqNoWipeBody": "Hai. Shandulani phaswede kha saiti ya vhukuma ya mulayo arali ho ṅwalwa tshithu, nahone ni sedze tsivhudzo dza bangi kana dza imeili.",
   "faqNoAvTitle": "Na hezwi ndi antivirus?",
@@ -449,5 +447,7 @@
   "probeBlockedGenericDetail": "Ho ṱanganedzwa HTTP {status}. Saiti yo thivhela kana ya fhungudza u ṱola uhu — zwenezwo a zwi vhuṱanzi ha u kanda. Lingedzani adreseni kha bhurauza yo doweleaho arali zwi tshi ṱoḓea.",
   "downloadA4Poster": "Downloada phousetara ya A4",
   "downloadA4PosterShort": "A4",
-  "downloadA4PosterHint": "Printa A4 · 100% · hu si na margin · digrafiki dza nga murahu dzi vuliwaho."
+  "downloadA4PosterHint": "Printa A4 · 100% · hu si na margin · digrafiki dza nga murahu dzi vuliwaho.",
+  "faqCommonTitle": "Mibudziso i wanalaho",
+  "faqCommonIntro": "Phindulo pfufhi nga zwe buusdo ya ita na zwe i sa iti — dzi thusa phanḓa ha musi ni tshi fulufhedza mvelelo ya Ima."
 }

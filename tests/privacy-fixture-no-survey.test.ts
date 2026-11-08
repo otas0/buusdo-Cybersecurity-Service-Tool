@@ -40,7 +40,7 @@ test("EN / pt-PT / zh-Hans privacy message bodies never mention /survey/", () =>
       t.privacyPolicyContactBody,
       t.privacyPolicyLimitsBody,
       t.privacyPolicyUpdated,
-      t.faqParentsIntro,
+      t.faqCommonIntro,
       t.faqNoWipeBody,
       t.faqNoAvBody,
       t.faqNoCrowdBody

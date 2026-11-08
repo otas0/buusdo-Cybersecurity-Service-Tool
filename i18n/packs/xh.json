@@ -78,8 +78,6 @@
   "feedbackReportExportHint": "Uyilo lugciniwe. Vula iiSetingi → Uyilo lwengxelo ukuze ukhuphele ifayile ye-batches/*.json ukuze umsebenzi ahlaziye — akukho nto ithunyelwayo.",
   "feedbackReportExportSettings": "Vula iiSetingi → Uyilo lwengxelo",
   "timingTotalChip": "uhlolo {ms}ms",
-  "faqParentsTitle": "Kubazali nootitshala",
-  "faqParentsIntro": "Iimpendulo ezimfutshane malunga nento esi sixhobo esiyenzayo nesingayenziyo — ziluncedo phambi kokuba ucele umfundi okanye umntwana ukuba athembe isiphumo seNqumama.",
   "faqNoWipeTitle": "Ingaba i-buusdo inokucima idatha isayithi esele iyithathile?",
   "faqNoWipeBody": "Hayi. Tshintsha amagama okugqithisa kwisayithi yokwenene esemthethweni ukuba kufakwe nantoni na, kwaye ubukele izilumkiso zebhanki okanye ze-imeyile.",
   "faqNoAvTitle": "Ingaba le yimveliso yokulwa iintsholongwane?",
@@ -449,5 +447,7 @@
   "probeBlockedGenericDetail": "Kufunyenwe i-HTTP {status}. Isayithi ithintele okanye ithothise olu hlolo — oko akubobungqina bobuqhophololo. Zama idilesi kwibhrawuza eqhelekileyo ukuba kuyimfuneko.",
   "downloadA4Poster": "Khuphela ipowusta ye-A4",
   "downloadA4PosterShort": "A4",
-  "downloadA4PosterHint": "Printa i-A4 · 100% · akukho imida · iigrafiki zangemuva zivuliwe."
+  "downloadA4PosterHint": "Printa i-A4 · 100% · akukho imida · iigrafiki zangemuva zivuliwe.",
+  "faqCommonTitle": "Imibuzo eqhelekileyo",
+  "faqCommonIntro": "Iimpendulo ezimfutshane malunga nento i-buusdo eyenzayo nesingenziyo — ziluncedo phambi kokuba uthembe isiphumo seNqumama."
 }

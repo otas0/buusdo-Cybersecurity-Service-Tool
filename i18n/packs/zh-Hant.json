@@ -78,8 +78,6 @@
   "feedbackReportExportHint": "草稿已儲存。開啟設定 → 意見回饋草稿，匯出 batches/*.json 供營運審核——不會上傳任何內容。",
   "feedbackReportExportSettings": "開啟設定 → 意見回饋草稿",
   "timingTotalChip": "檢查 {ms}ms",
-  "faqParentsTitle": "給家長和教師",
-  "faqParentsIntro": "關於本工具能做什麼、不能做什麼的簡短說明——在請學生或孩子相信「停止」結果之前很有用。",
   "faqNoWipeTitle": "buusdo 能抹除網站已經拿走的資料嗎？",
   "faqNoWipeBody": "不能。若已輸入任何內容，請在真正的官方網站變更密碼，並留意銀行或電子郵件提醒。",
   "faqNoAvTitle": "這是防毒軟體嗎？",
@@ -449,5 +447,7 @@
   "probeBlockedGenericDetail": "收到 HTTP {status}。網站阻止或限制了此次檢查——這不能證明釣魚。如需要，請在一般瀏覽器中開啟該地址。",
   "downloadA4Poster": "下載 A4 海報",
   "downloadA4PosterShort": "A4",
-  "downloadA4PosterHint": "列印 A4 · 100% · 無邊距 · 開啟背景圖形。"
+  "downloadA4PosterHint": "列印 A4 · 100% · 無邊距 · 開啟背景圖形。",
+  "faqCommonTitle": "常見問題",
+  "faqCommonIntro": "關於本工具能做什麼、不能做什麼的簡短說明——在信任「停止」結果前值得一讀。"
 }

@@ -29,6 +29,50 @@ export function packCoverageRatio(locale: string): number {
   return EN_KEYS.length ? hit / EN_KEYS.length : 0;
 }
 
+/**
+ * Locales that must stay full once shipped — CI hard-fails if any drop below
+ * FULL_PACK_MIN_KEYS (regression guard).
+ */
+export const MUST_STAY_FULL_LOCALES: readonly string[] = [
+  "zh-Hans",
+  "zh-Hant",
+  "ja",
+  "pt-BR",
+  "de",
+  "fr",
+  "es",
+  "it",
+  "nl",
+  "pl",
+  "sv",
+  "da",
+  "fi",
+  "nb",
+  "af",
+  "zu",
+  "xh",
+  "nso",
+  "st",
+  "tn",
+  "ss",
+  "ve",
+  "ts",
+  "nr",
+  "mi",
+  "id",
+  "ms",
+  "th",
+  "vi",
+  "fil",
+  "km",
+  "lo",
+  "my"
+];
+
+export function assertMustStayFullLocales(): string[] {
+  return MUST_STAY_FULL_LOCALES.filter((id) => !isFullLocalePack(id));
+}
+
 /** One-line CI summary: locale=ratio (full|partial). */
 export function formatPackCoverageSummary(
   localeIds: string[] = Object.keys(LOCALE_PACKS)

@@ -16,7 +16,12 @@ test.describe("multi-locale switcher", () => {
   test("select lists regions and switches EN → zh-Hans → mi → pt-PT", async ({ page }) => {
     await page.goto(`${base}/en`, { waitUntil: "domcontentloaded" });
     const select = page.getByTestId("locale-select");
-    await expect(select).toBeVisible();
+    // Native select is visually hidden; panel is the product picker.
+    await expect(page.getByTestId("locale-toggle")).toBeVisible();
+    await page.getByTestId("locale-toggle").click();
+    await expect(page.getByTestId("locale-panel")).toBeVisible();
+    await expect(page.getByTestId("locale-search")).toBeVisible();
+    await expect(page.getByTestId("locale-region-europe")).toBeVisible();
 
     const labels = await select.locator("optgroup").evaluateAll((groups) =>
       groups.map((g) => g.getAttribute("label") || "")
@@ -24,6 +29,7 @@ test.describe("multi-locale switcher", () => {
     expect(labels.join(" ")).toMatch(/Europe/i);
     expect(labels.join(" ")).toMatch(/Southeast Asia|Southern Africa|Pacific|East Asia/i);
 
+    await page.keyboard.press("Escape");
     await selectLocale(page, "zh-Hans");
     await expect(page.getByRole("navigation")).toContainText(/设置|設定|检查|檢查/);
 

@@ -84,24 +84,155 @@
   position: relative;
   display: inline-flex;
   align-items: center;
-  max-width: 11rem;
+  max-width: 3.2rem;
+  min-width: 2.75rem;
+}
+
+/* Native select stays for a11y / Playwright; panel is the visible picker. */
+.shell .lang-switch > .visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 }
 
 .shell .lang-select {
   appearance: none;
   background: transparent;
-  border: 1px solid color-mix(in srgb, var(--muted) 45%, transparent);
+  border: 0;
   color: var(--text);
-  padding: 4px 22px 4px 8px;
+  padding: 0;
   max-width: 100%;
   cursor: pointer;
-  text-transform: none;
-  letter-spacing: 0.04em;
-  font-size: 12px;
 }
 
-.shell .lang-badge {
-  display: none;
+.shell .lang-badge,
+.shell .lang-badge-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2.75rem;
+  min-height: 2rem;
+  padding: 4px 8px;
+  border: 1px solid color-mix(in srgb, var(--muted) 45%, transparent);
+  background: transparent;
+  color: var(--text);
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.shell .lang-badge-btn:hover,
+.shell .lang-badge-btn[aria-expanded="true"] {
+  border-color: color-mix(in srgb, var(--halt, #e85d04) 55%, var(--muted));
+  color: var(--text);
+}
+
+.shell .lang-panel {
+  position: absolute;
+  top: calc(100% + 6px);
+  right: 0;
+  z-index: 90;
+  width: min(18.5rem, calc(100vw - 24px));
+  max-height: min(22rem, 70vh);
+  display: flex;
+  flex-direction: column;
+  background: var(--panel, #12161c);
+  border: 1px solid color-mix(in srgb, var(--muted) 40%, transparent);
+  box-shadow: 0 12px 32px color-mix(in srgb, #000 45%, transparent);
+}
+
+.shell .lang-panel-search {
+  flex: 0 0 auto;
+  margin: 8px 8px 4px;
+  padding: 7px 8px;
+  background: transparent;
+  border: 1px solid color-mix(in srgb, var(--muted) 45%, transparent);
+  color: var(--text);
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: 0.02em;
+}
+
+.shell .lang-panel-regions {
+  overflow: auto;
+  padding: 4px 0 8px;
+}
+
+.shell .lang-region-toggle {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 10px;
+  border: 0;
+  background: transparent;
+  color: var(--muted);
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  cursor: pointer;
+  text-align: left;
+}
+
+.shell .lang-region-toggle:hover {
+  color: var(--text);
+}
+
+.shell .lang-region-count {
+  opacity: 0.7;
+}
+
+.shell .lang-region-list {
+  list-style: none;
+  margin: 0;
+  padding: 0 0 4px;
+}
+
+.shell .lang-option {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1px;
+  padding: 7px 12px;
+  border: 0;
+  background: transparent;
+  color: var(--text);
+  cursor: pointer;
+  text-align: left;
+}
+
+.shell .lang-option:hover,
+.shell .lang-option.is-current {
+  background: color-mix(in srgb, var(--halt, #e85d04) 12%, transparent);
+}
+
+.shell .lang-option-native {
+  font-size: 13px;
+  line-height: 1.25;
+}
+
+.shell .lang-option-en {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  color: var(--muted);
+}
+
+.shell .lang-panel-empty {
+  margin: 8px 12px;
+  color: var(--muted);
+  font-size: 12px;
 }
 
 .locale-recommend {
@@ -138,33 +269,6 @@
     max-width: 3.2rem;
     min-width: 2.75rem;
     min-height: 2rem;
-  }
-
-  .shell .lang-select {
-    position: absolute;
-    inset: 0;
-    opacity: 0;
-    width: 100%;
-    height: 100%;
-    padding: 0;
-    border: 0;
-    z-index: 1;
-  }
-
-  .shell .lang-badge {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    min-width: 2.5rem;
-    min-height: 1.75rem;
-    padding: 4px 8px;
-    border: 1px solid color-mix(in srgb, var(--muted) 45%, transparent);
-    color: var(--text);
-    font-family: var(--mono);
-    font-size: 11px;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    pointer-events: none;
   }
 }
 

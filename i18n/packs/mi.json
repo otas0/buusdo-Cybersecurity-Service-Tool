@@ -78,8 +78,6 @@
   "feedbackReportExportHint": "Kua tiakina te hukihuki. Whakatuwheratia ngā Tautuhinga → Ngā hukihuki urupare hei kaweake i tētahi kōnae batches/*.json mō te arotake kaiwhakahaere — kāore he mea e tukuna ake.",
   "feedbackReportExportSettings": "Whakatuwheratia ngā Tautuhinga → Ngā hukihuki urupare",
   "timingTotalChip": "tirotiro {ms}ms",
-  "faqParentsTitle": "Mō ngā mātua me ngā kaiako",
-  "faqParentsIntro": "Ngā whakautu poto mō ngā mahi, ngā mahi-kore hoki a tēnei taputapu — he pai i mua i tō tono ki te ākonga, ki te tamaiti rānei kia whakapono ki tētahi hua Tū.",
   "faqNoWipeTitle": "Ka taea e buusdo te muku raraunga kua riro kē i te pae?",
   "faqNoWipeBody": "Kāo. Whakawhitia ngā kupu huna i te pae ōkawa tūturu mēnā i tāurua tētahi mea, ā, mātai ngā whakamōhiotanga pēke, īmēra rānei.",
   "faqNoAvTitle": "He paturopi tēnei?",
@@ -449,5 +447,7 @@
   "probeBlockedGenericDetail": "Received HTTP {status}. The site blocked or throttled this check — that is not proof of phishing. Try the address in a normal browser if needed.",
   "downloadA4Poster": "Tikiake te pānui A4",
   "downloadA4PosterShort": "A4",
-  "downloadA4PosterHint": "Tāia A4 · 100% · kāore he tapa · whakakā ngā kauwhata papamuri."
+  "downloadA4PosterHint": "Tāia A4 · 100% · kāore he tapa · whakakā ngā kauwhata papamuri.",
+  "faqCommonTitle": "Pātai auau",
+  "faqCommonIntro": "Ngā whakautu poto mō tā buusdo e mahi ai, e kore ai e mahi — hei āwhina i mua i tō whakawhirinaki ki tētahi hua Tū."
 }

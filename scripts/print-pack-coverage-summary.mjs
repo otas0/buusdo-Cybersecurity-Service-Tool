@@ -42,3 +42,45 @@ const rows = ids.map((id) => {
   return `${id}=${(r * 100).toFixed(0)}%:${isFull(id) ? "full" : "partial"}`;
 });
 console.log(`[pack-coverage] minKeys=${FULL_PACK_MIN_KEYS} ${rows.join(" ")}`);
+
+/** Keep in sync with i18n/pack-coverage.ts MUST_STAY_FULL_LOCALES */
+const MUST_STAY_FULL = [
+  "zh-Hans",
+  "zh-Hant",
+  "ja",
+  "pt-BR",
+  "de",
+  "fr",
+  "es",
+  "it",
+  "nl",
+  "pl",
+  "sv",
+  "da",
+  "fi",
+  "nb",
+  "af",
+  "zu",
+  "xh",
+  "nso",
+  "st",
+  "tn",
+  "ss",
+  "ve",
+  "ts",
+  "nr",
+  "mi",
+  "id",
+  "ms",
+  "th",
+  "vi",
+  "fil",
+  "km",
+  "lo",
+  "my"
+];
+const dropped = MUST_STAY_FULL.filter((id) => !isFull(id));
+if (dropped.length) {
+  console.error(`[pack-coverage] FULL regression: ${dropped.join(", ")}`);
+  process.exit(1);
+}

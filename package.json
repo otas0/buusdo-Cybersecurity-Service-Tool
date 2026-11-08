@@ -87,7 +87,7 @@
     "test:playwright:extension-toast-phishing": "PLAYWRIGHT_SKIP_WEBSERVER=1 playwright test playwright/extension-toast-phishing.spec.ts",
     "test:playwright:desktop-halt-ignore-risk": "PLAYWRIGHT_SKIP_WEBSERVER=1 playwright test playwright/desktop-halt-ignore-risk.spec.ts",
     "test:playwright:settings-feedback-after-report": "playwright test playwright/settings-feedback-after-report.spec.ts",
-    "test:playwright:privacy-faq-scroll": "playwright test playwright/privacy-faq-parents-scroll.spec.ts",
+    "test:playwright:privacy-faq-scroll": "playwright test playwright/privacy-faq-common-scroll.spec.ts",
     "test:playwright:settings-mac-ready-to-promote": "PLAYWRIGHT_SKIP_WEBSERVER=1 playwright test playwright/settings-mac-ready-to-promote.spec.ts",
     "test:playwright:settings-mac-ready-to-promote-live": "playwright test playwright/settings-mac-ready-to-promote-live.spec.ts",
     "test:playwright:desktop-account-auto-sync-toast": "PLAYWRIGHT_SKIP_WEBSERVER=1 playwright test playwright/desktop-account-auto-sync-toast.spec.ts",

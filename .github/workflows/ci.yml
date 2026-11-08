@@ -43,11 +43,13 @@ jobs:
           npm run test
           echo "::notice::shield-lists classic fixture covered in tests/shield-lists.test.ts (mjs + shield-lists.classic.js parity)"
 
-      - name: Pack coverage ratios (locale notice)
+      - name: Pack coverage ratios (locale notice + hard-fail regression)
         run: |
           summary="$(node scripts/print-pack-coverage-summary.mjs)"
           echo "$summary"
           echo "::notice::$summary"
+          # Hard-fail when a previously-full locale drops below FULL_PACK_MIN_KEYS.
+          npx tsx --test tests/pack-coverage-threshold.test.ts
 
       - name: QR browser bundle soft-check
         run: |

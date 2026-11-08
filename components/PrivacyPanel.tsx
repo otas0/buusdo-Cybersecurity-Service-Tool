@@ -87,9 +87,9 @@ export function PrivacyPanel({
         <p className="hint">{t.privacyPolicyContactBody}</p>
       </section>
 
-      <section className="settings-block" data-testid="privacy-faq-parents" id="privacy-faq-parents">
-        <h3 className="settings-subhead">{t.faqParentsTitle}</h3>
-        <p className="hint">{t.faqParentsIntro}</p>
+      <section className="settings-block" data-testid="privacy-faq-common" id="privacy-faq-common">
+        <h3 className="settings-subhead">{t.faqCommonTitle}</h3>
+        <p className="hint">{t.faqCommonIntro}</p>
         <ul className="why-list">
           <li>
             <strong>{t.faqNoWipeTitle}</strong>

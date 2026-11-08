@@ -78,8 +78,6 @@
   "feedbackReportExportHint": "Mokwalo o bolokilwe. Bula Dithulaganyo → Mekwalo ya dikakgelo go romela kwa ntle faele ya batches/*.json gore modiri a tlhatlhobe — ga go tsenngwe sepe.",
   "feedbackReportExportSettings": "Bula Dithulaganyo → Mekwalo ya dikakgelo",
   "timingTotalChip": "teko {ms}ms",
-  "faqParentsTitle": "Go batsadi le barutabana",
-  "faqParentsIntro": "Dikarabo tse dikhutshwane ka se sediriswa seno se se dirang le se se sa se dire — di thusa pele o kopa moithuti kgotsa ngwana gore a tshepe maduo a Ema.",
   "faqNoWipeTitle": "A buusdo e ka phimola datha e saete e setseng e e tsere?",
   "faqNoWipeBody": "Nnyaa. Fetola diphasewete mo saeteng ya nnete ya semmuso fa go tsentse sepe, mme o lebelele ditsiboso tsa banka kgotsa tsa imeile.",
   "faqNoAvTitle": "A seno ke antivirus?",
@@ -449,5 +447,7 @@
   "probeBlockedGenericDetail": "Go amogetswe HTTP {status}. Saete e thibetse kgotsa e fokoditse teko eno — seo ga se bosupi jwa tsietso. Leka aterese mo sebatling se se tlwaelegileng fa go tlhokega.",
   "downloadA4Poster": "Downloada phousetara ya A4",
   "downloadA4PosterShort": "A4",
-  "downloadA4PosterHint": "Printa A4 · 100% · go se na margin · digrafiki tsa kwa morago di butswe."
+  "downloadA4PosterHint": "Printa A4 · 100% · go se na margin · digrafiki tsa kwa morago di butswe.",
+  "faqCommonTitle": "Dipotso tse di tlwaelegileng",
+  "faqCommonIntro": "Dikarabo tse dikhutshwane ka se buusdo e se dirang le se e sa se dire — di thusa pele o tshepa maduo a Ema."
 }

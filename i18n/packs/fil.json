@@ -78,8 +78,6 @@
   "feedbackReportExportHint": "Na-save ang draft. Buksan ang Mga setting → Mga draft ng feedback para mag-export ng batches/*.json para sa operator — walang ina-upload.",
   "feedbackReportExportSettings": "Buksan ang Mga setting → Mga draft ng feedback",
   "timingTotalChip": "check {ms}ms",
-  "faqParentsTitle": "Para sa mga magulang at guro",
-  "faqParentsIntro": "Maikling sagot kung ano ang ginagawa at hindi ginagawa ng tool — kapaki-pakinabang bago mo hilingin sa estudyante o anak na pagkatiwalaan ang resulta ng Huminto.",
   "faqNoWipeTitle": "Nabubura ba ng buusdo ang datos na nakuha na ng site?",
   "faqNoWipeBody": "Hindi. Palitan ang password sa tunay na opisyal na site kung may nailagay, at bantayan ang alert ng bangko o email.",
   "faqNoAvTitle": "Antivirus ba ito?",
@@ -449,5 +447,7 @@
   "probeBlockedGenericDetail": "Received HTTP {status}. The site blocked or throttled this check — that is not proof of phishing. Try the address in a normal browser if needed.",
   "downloadA4Poster": "I-download ang A4 na poster",
   "downloadA4PosterShort": "A4",
-  "downloadA4PosterHint": "I-print ang A4 · 100% · walang margin · background graphics on."
+  "downloadA4PosterHint": "I-print ang A4 · 100% · walang margin · background graphics on.",
+  "faqCommonTitle": "Mga madalas itanong",
+  "faqCommonIntro": "Maikling sagot kung ano ang ginagawa at hindi ginagawa ng buusdo — kapaki-pakinabang bago kang magtiwala sa resulta ng Halt."
 }

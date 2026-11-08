@@ -22,5 +22,8 @@ test("af FAQ strings match SA wave semantics (not legacy short titles)", () => {
   assert.notEqual(pack.faqNoWipeBody, en.faqNoWipeBody);
   assert.notEqual(pack.faqNoAvBody, en.faqNoAvBody);
   assert.notEqual(pack.faqNoCrowdBody, en.faqNoCrowdBody);
-  assert.match(pack.faqParentsIntro, /Halt|leerling|kind/i);
+  // Commercial / general-audience framing (not parents/teachers / leerling/kind).
+  assert.match(pack.faqCommonIntro, /buusdo|Stop|vertrou/i);
+  assert.doesNotMatch(pack.faqCommonTitle, /ouer|onderwyser|leraar/i);
+  assert.doesNotMatch(pack.faqCommonIntro, /leerling|kind/i);
 });

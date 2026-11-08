@@ -2,6 +2,8 @@
 
 Use with `npm run pack:chrome-store` and [EXTENSION_STORE_DISTRIBUTE.md](./EXTENSION_STORE_DISTRIBUTE.md).
 
+Audience: **general commercial users** (not parents/teachers, schools, or classroom demos). Keep listing copy in that voice.
+
 ## Store name (required)
 
 **buusdo Cybersecurity Service Tool**

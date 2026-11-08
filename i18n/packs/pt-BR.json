@@ -78,8 +78,6 @@
   "feedbackReportExportHint": "Rascunho salvo. Abra Configurações → Rascunhos de feedback para exportar um arquivo batches/*.json para revisão — nada é enviado.",
   "feedbackReportExportSettings": "Abrir Configurações → Rascunhos de feedback",
   "timingTotalChip": "verificação {ms}ms",
-  "faqParentsTitle": "Para pais e professores",
-  "faqParentsIntro": "Respostas curtas sobre o que esta ferramenta faz e não faz — úteis antes de pedir a um aluno ou filho que confie num resultado Parar.",
   "faqNoWipeTitle": "O buusdo consegue apagar dados que um site já coletou?",
   "faqNoWipeBody": "Não. Se você digitou dados, altere senhas no site oficial verdadeiro e acompanhe alertas do banco ou e-mail.",
   "faqNoAvTitle": "Isto é antivírus?",
@@ -449,5 +447,7 @@
   "probeBlockedGenericDetail": "Recebido HTTP {status}. O site bloqueou ou limitou esta verificação — isso não prova phishing. Abra o endereço num browser normal se precisar.",
   "downloadA4Poster": "Baixar cartaz A4",
   "downloadA4PosterShort": "A4",
-  "downloadA4PosterHint": "Imprimir A4 · 100% · margens nenhuma · gráficos de fundo ligados."
+  "downloadA4PosterHint": "Imprimir A4 · 100% · margens nenhuma · gráficos de fundo ligados.",
+  "faqCommonTitle": "Perguntas frequentes",
+  "faqCommonIntro": "Respostas curtas sobre o que o buusdo faz e não faz — úteis antes de confiar em um resultado Parar."
 }

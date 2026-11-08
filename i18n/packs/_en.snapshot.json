@@ -78,8 +78,6 @@
   "feedbackReportExportHint": "Draft saved. Open Settings → Feedback drafts to export a batches/*.json file for operator review — nothing is uploaded.",
   "feedbackReportExportSettings": "Open Settings → Feedback drafts",
   "timingTotalChip": "check {ms}ms",
-  "faqParentsTitle": "For parents and teachers",
-  "faqParentsIntro": "Short answers about what this tool does and does not do — useful before you ask a student or child to trust a Halt result.",
   "faqNoWipeTitle": "Can buusdo erase data a site already took?",
   "faqNoWipeBody": "No. Change passwords on the real official site if anything was entered, and watch bank or email alerts.",
   "faqNoAvTitle": "Is this antivirus?",
@@ -449,5 +447,7 @@
   "probeBlockedGenericDetail": "Received HTTP {status}. The site blocked or throttled this check — that is not proof of phishing. Try the address in a normal browser if needed.",
   "downloadA4Poster": "Download A4 poster",
   "downloadA4PosterShort": "A4",
-  "downloadA4PosterHint": "Print A4 · 100% · margins none · background graphics on."
+  "downloadA4PosterHint": "Print A4 · 100% · margins none · background graphics on.",
+  "faqCommonTitle": "Common questions",
+  "faqCommonIntro": "Short answers on what buusdo does and does not — useful before you trust a Halt result."
 }

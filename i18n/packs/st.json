@@ -78,8 +78,6 @@
   "feedbackReportExportHint": "Sengoloa se bolokiloe. Bula Litlhophiso → Lingoloa tsa maikutlo ho romela ntle faele ea batches/*.json hore mosebeletsi a hlahlobe — ha ho letho le kenngoang.",
   "feedbackReportExportSettings": "Bula Litlhophiso → Lingoloa tsa maikutlo",
   "timingTotalChip": "tlhahlobo {ms}ms",
-  "faqParentsTitle": "Bakeng sa batsoali le matitjhere",
-  "faqParentsIntro": "Likarabo tse khutšoanyane ka seo sesebelisoa sena se se etsang le seo se sa se etse — li thusa pele u kopa moithuti kapa ngoana ho tšepa sephetho sa Ema.",
   "faqNoWipeTitle": "Na buusdo e ka hlakola datha eo sebaka se seng se e nkile?",
   "faqNoWipeBody": "Che. Fetola liphasewete sebakeng sa ’nete sa semmuso haeba ho kentsoe letho, ’me u shebe litemoso tsa banka kapa tsa imeile.",
   "faqNoAvTitle": "Na sena ke antivirus?",
@@ -449,5 +447,7 @@
   "probeBlockedGenericDetail": "Ho amohetsoe HTTP {status}. Sebaka se thibetse kapa se fokolitse tlhahlobo ena — seo ha se bopaki ba bolotsana. Leka aterese sebaling se tloaelehileng ha ho hlokahala.",
   "downloadA4Poster": "Downloada phousetara ya A4",
   "downloadA4PosterShort": "A4",
-  "downloadA4PosterHint": "Printa A4 · 100% · ntle le margin · digrafiki tsa ka morao di butswe."
+  "downloadA4PosterHint": "Printa A4 · 100% · ntle le margin · digrafiki tsa ka morao di butswe.",
+  "faqCommonTitle": "Lipotso tse tloaelehileng",
+  "faqCommonIntro": "Likarabo tse khutšoanyane ka seo buusdo e se etsang le seo e sa se etse — li thusa pele u tšepa sephetho sa Ema."
 }

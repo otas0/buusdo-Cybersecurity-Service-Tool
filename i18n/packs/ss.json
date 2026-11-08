@@ -78,8 +78,6 @@
   "feedbackReportExportHint": "Umbhalo wesikhashana ugciniwe. Vula Tinhlelo → Imibhalo yesikhashana yempendvulo kute ukhiphe ifayela le-batches/*.json kute umsebeni abuyekeze — kute lokuthunyelwako.",
   "feedbackReportExportSettings": "Vula Tinhlelo → Imibhalo yesikhashana yempendvulo",
   "timingTotalChip": "kuhlola {ms}ms",
-  "faqParentsTitle": "Kubatali nabafundisi",
-  "faqParentsIntro": "Timpendvulo letimfisha ngaloko leli lithulusi lelikwentako naloko lelingakwenti — tiwusito ngaphambi kwekutsi ucele umfundzi noma umntfwana kutsi athembe umphumela we-Misa.",
   "faqNoWipeTitle": "Ingabe i-buusdo ingasula idatha isayithi leseyiyitfole?",
   "faqNoWipeBody": "Cha. Shintja emaphasewedi kusayithi yangempela lesemtfweti uma kufakwe lutfo, bese ubheka tixwayiso tebhanga noma te-imeyili.",
   "faqNoAvTitle": "Ingabe lena yi-antivirus?",
@@ -449,5 +447,7 @@
   "probeBlockedGenericDetail": "Kutfole i-HTTP {status}. Isayithi ivimbele noma inciphise loku kuhlola — loko akusibo bufakazi bekukhwabanisa. Zama likheli kusiphequluli lesijwayelekile uma kudzingeka.",
   "downloadA4Poster": "Dawuniloda i-phosta ye-A4",
   "downloadA4PosterShort": "A4",
-  "downloadA4PosterHint": "Printa i-A4 · 100% · akukho margini · iigrafiki tangemuva tivuliwe."
+  "downloadA4PosterHint": "Printa i-A4 · 100% · akukho margini · iigrafiki tangemuva tivuliwe.",
+  "faqCommonTitle": "Imibuto levamile",
+  "faqCommonIntro": "Timpendvulo letimfisha ngaloko i-buusdo leikwentako naloko leingakwenti — tiwusito ngaphambi kwekutsi uthembe umphumela we-Misa."
 }

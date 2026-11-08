@@ -78,8 +78,6 @@
   "feedbackReportExportHint": "Brouillon enregistré. Ouvrez Réglages → Brouillons de retour pour exporter batches/*.json — rien n’est téléversé.",
   "feedbackReportExportSettings": "Ouvrir Réglages → Brouillons de retour",
   "timingTotalChip": "vérification {ms}ms",
-  "faqParentsTitle": "Pour les parents et enseignants",
-  "faqParentsIntro": "Réponses courtes sur ce que cet outil fait et ne fait pas — utiles avant de demander à un élève ou un enfant de faire confiance à un résultat Stop.",
   "faqNoWipeTitle": "buusdo peut-il effacer des données qu’un site a déjà prises ?",
   "faqNoWipeBody": "Non. Changez les mots de passe sur le vrai site officiel si quelque chose a été saisi, et surveillez les alertes bancaires ou e-mail.",
   "faqNoAvTitle": "Est-ce un antivirus ?",
@@ -449,5 +447,7 @@
   "probeBlockedGenericDetail": "HTTP {status} reçu. Le site a bloqué ou limité ce contrôle — ce n’est pas une preuve de phishing. Ouvrez l’adresse dans un navigateur normal si besoin.",
   "downloadA4Poster": "Télécharger l’affiche A4",
   "downloadA4PosterShort": "A4",
-  "downloadA4PosterHint": "Imprimer A4 · 100 % · sans marges · graphismes d’arrière-plan activés."
+  "downloadA4PosterHint": "Imprimer A4 · 100 % · sans marges · graphismes d’arrière-plan activés.",
+  "faqCommonTitle": "Questions fréquentes",
+  "faqCommonIntro": "Réponses courtes sur ce que buusdo fait et ne fait pas — utiles avant de faire confiance à un résultat Stop."
 }

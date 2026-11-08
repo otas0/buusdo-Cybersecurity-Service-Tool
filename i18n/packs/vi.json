@@ -78,8 +78,6 @@
   "feedbackReportExportHint": "Đã lưu nháp. Mở Cài đặt → Nháp phản hồi để xuất tệp batches/*.json cho người vận hành xem — không tải gì lên.",
   "feedbackReportExportSettings": "Mở Cài đặt → Nháp phản hồi",
   "timingTotalChip": "kiểm tra {ms}ms",
-  "faqParentsTitle": "Dành cho phụ huynh và giáo viên",
-  "faqParentsIntro": "Câu trả lời ngắn về việc công cụ này làm gì và không làm gì — hữu ích trước khi bạn nhờ học sinh hoặc con tin một kết quả Dừng.",
   "faqNoWipeTitle": "buusdo có xóa được dữ liệu trang đã lấy không?",
   "faqNoWipeBody": "Không. Đổi mật khẩu trên trang chính thức thật nếu đã nhập gì, và theo dõi cảnh báo ngân hàng hoặc email.",
   "faqNoAvTitle": "Đây có phải diệt virus không?",
@@ -449,5 +447,7 @@
   "probeBlockedGenericDetail": "Received HTTP {status}. The site blocked or throttled this check — that is not proof of phishing. Try the address in a normal browser if needed.",
   "downloadA4Poster": "Tải áp phích A4",
   "downloadA4PosterShort": "A4",
-  "downloadA4PosterHint": "In A4 · 100% · không lề · bật đồ họa nền."
+  "downloadA4PosterHint": "In A4 · 100% · không lề · bật đồ họa nền.",
+  "faqCommonTitle": "Câu hỏi thường gặp",
+  "faqCommonIntro": "Câu trả lời ngắn về việc buusdo làm gì và không làm gì — hữu ích trước khi bạn tin một kết quả Dừng."
 }

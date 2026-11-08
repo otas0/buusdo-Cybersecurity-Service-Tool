@@ -78,8 +78,6 @@
   "feedbackReportExportHint": "บันทึกร่างแล้ว เปิดตั้งค่า → ร่างข้อเสนอแนะ เพื่อส่งออกไฟล์ batches/*.json ให้ผู้ดูแลตรวจ — ไม่ได้อัปโหลด",
   "feedbackReportExportSettings": "เปิดตั้งค่า → ร่างข้อเสนอแนะ",
   "timingTotalChip": "ตรวจ {ms}ms",
-  "faqParentsTitle": "สำหรับผู้ปกครองและครู",
-  "faqParentsIntro": "คำตอบสั้นว่าเครื่องมือนี้ทำอะไรและไม่ทำอะไร — มีประโยชน์ก่อนให้เด็กหรือนักเรียนเชื่อผลหยุด",
   "faqNoWipeTitle": "buusdo ลบข้อมูลที่เว็บเอาไปแล้วได้ไหม",
   "faqNoWipeBody": "ไม่ได้ เปลี่ยนรหัสผ่านบนเว็บทางการจริงถ้ามีการพิมพ์ และดูการแจ้งเตือนธนาคารหรืออีเมล",
   "faqNoAvTitle": "นี่แอนตี้ไวรัสไหม",
@@ -449,5 +447,7 @@
   "probeBlockedGenericDetail": "Received HTTP {status}. The site blocked or throttled this check — that is not proof of phishing. Try the address in a normal browser if needed.",
   "downloadA4Poster": "ดาวน์โหลดโปสเตอร์ A4",
   "downloadA4PosterShort": "A4",
-  "downloadA4PosterHint": "พิมพ์ A4 · 100% · ไม่มีขอบ · เปิดกราฟิกพื้นหลัง"
+  "downloadA4PosterHint": "พิมพ์ A4 · 100% · ไม่มีขอบ · เปิดกราฟิกพื้นหลัง",
+  "faqCommonTitle": "คำถามที่พบบ่อย",
+  "faqCommonIntro": "คำตอบสั้นว่า buusdo ทำอะไรและไม่ทำอะไร — มีประโยชน์ก่อนที่คุณจะเชื่อผลหยุด"
 }

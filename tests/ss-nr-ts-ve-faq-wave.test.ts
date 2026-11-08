@@ -22,6 +22,6 @@ for (const id of ["ss", "nr", "ts", "ve"] as const) {
     assert.notEqual(pack.faqNoWipeBody, en.faqNoWipeBody);
     assert.notEqual(pack.faqNoAvBody, en.faqNoAvBody);
     assert.notEqual(pack.faqNoCrowdBody, en.faqNoCrowdBody);
-    assert.ok(pack.faqParentsIntro?.length > 40);
+    assert.ok(pack.faqCommonIntro?.length > 40);
   });
 }

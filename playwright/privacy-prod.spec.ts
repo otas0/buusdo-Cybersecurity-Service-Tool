@@ -62,8 +62,8 @@ test.describe("production privacy pages", () => {
     await expect(page.getByRole("heading", { name: /No cloud account sync/i })).toBeVisible();
     await expect(page.getByTestId("privacy-contact")).toBeVisible();
     await expect(page.getByTestId("privacy-contact")).toContainText(/official email|Cloudflare Worker/i);
-    await expect(page.getByTestId("privacy-faq-parents")).toBeVisible();
-    await expect(page.getByTestId("privacy-faq-parents")).toContainText(/antivirus|votes/i);
+    await expect(page.getByTestId("privacy-faq-common")).toBeVisible();
+    await expect(page.getByTestId("privacy-faq-common")).toContainText(/antivirus|votes/i);
     // Round-2 survey removed — privacy must not link /survey/
     await expect(page.locator('a[href*="/survey/"]')).toHaveCount(0);
   });
@@ -74,11 +74,11 @@ test.describe("production privacy pages", () => {
     await expect(page.getByTestId("privacy-honest-limits")).toBeVisible();
   });
 
-  test("/en/privacy#privacy-faq-parents deep-link", async ({ page }) => {
-    await page.goto(`${base}/en/privacy#privacy-faq-parents`, { waitUntil: "domcontentloaded" });
-    await expect(page.locator("#privacy-faq-parents")).toBeVisible();
-    await expect(page.getByTestId("privacy-faq-parents")).toBeVisible();
-    await expect(page.getByTestId("privacy-faq-parents")).toContainText(/antivirus|votes/i);
+  test("/en/privacy#privacy-faq-common deep-link", async ({ page }) => {
+    await page.goto(`${base}/en/privacy#privacy-faq-common`, { waitUntil: "domcontentloaded" });
+    await expect(page.locator("#privacy-faq-common")).toBeVisible();
+    await expect(page.getByTestId("privacy-faq-common")).toBeVisible();
+    await expect(page.getByTestId("privacy-faq-common")).toContainText(/antivirus|votes/i);
   });
 
   test("/pt-PT/privacy shows policy", async ({ page }) => {
@@ -91,7 +91,7 @@ test.describe("production privacy pages", () => {
       page.getByRole("heading", { name: /Sem sincronização de conta na nuvem/i })
     ).toBeVisible();
     await expect(page.getByTestId("privacy-contact")).toBeVisible();
-    await expect(page.getByTestId("privacy-faq-parents")).toBeVisible();
+    await expect(page.getByTestId("privacy-faq-common")).toBeVisible();
     // Round-2 survey removed — privacy must not link /survey/
     await expect(page.locator('a[href*="/survey/"]')).toHaveCount(0);
   });

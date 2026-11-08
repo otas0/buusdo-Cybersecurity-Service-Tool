@@ -78,8 +78,6 @@
   "feedbackReportExportHint": "Umbhalo wesikhashana ugciniwe. Vula Izilungiselelo → Imibhalo yesikhashana yempendulo ukuze ukhiphe ifayela le-batches/*.json ukuze umsebenzi abuyekeze — akukho okuthunyelwayo.",
   "feedbackReportExportSettings": "Vula Izilungiselelo → Imibhalo yesikhashana yempendulo",
   "timingTotalChip": "ukuhlola {ms}ms",
-  "faqParentsTitle": "Kubazali nabafundisi",
-  "faqParentsIntro": "Izimpendulo ezimfushane ngalokho leli thuluzi elikwenzayo nalokho elingakwenzi — ziwusizo ngaphambi kokuthi ucele umfundi noma ingane ukuthi ithembe umphumela we-Misa.",
   "faqNoWipeTitle": "Ingabe i-buusdo ingasula idatha isayithi eseyiyithathile?",
   "faqNoWipeBody": "Cha. Shintsha amaphasiwedi kusayithi yangempela esemthethweni uma kufakwe lutho, bese ubheka izexwayiso zebhanga noma ze-imeyili.",
   "faqNoAvTitle": "Ingabe lena yi-antivirus?",
@@ -449,5 +447,7 @@
   "probeBlockedGenericDetail": "Kutholwe i-HTTP {status}. Isayithi ivimbele noma inciphise lokhu kuhlola — lokho akubona ubufakazi bokukhwabanisa. Zama ikheli kusiphequluli esijwayelekile uma kudingeka.",
   "downloadA4Poster": "Landa iphowusta ye-A4",
   "downloadA4PosterShort": "A4",
-  "downloadA4PosterHint": "Phrinta i-A4 · 100% · akukho amamajini · iigrafiki zangemuva zivuliwe."
+  "downloadA4PosterHint": "Phrinta i-A4 · 100% · akukho amamajini · iigrafiki zangemuva zivuliwe.",
+  "faqCommonTitle": "Imibuzo ejwayelekile",
+  "faqCommonIntro": "Izimpendulo ezimfushane ngalokho i-buusdo eyikwenzayo nalokho engakwenzi — ziwusizo ngaphambi kokuthi uthembe umphumela we-Misa."
 }

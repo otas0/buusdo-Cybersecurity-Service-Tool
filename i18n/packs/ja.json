@@ -78,8 +78,6 @@
   "feedbackReportExportHint": "下書きを保存しました。設定 → フィードバック下書き を開き、運営確認用の batches/*.json を書き出します — 何もアップロードしません。",
   "feedbackReportExportSettings": "設定 → フィードバック下書き を開く",
   "timingTotalChip": "確認 {ms}ms",
-  "faqParentsTitle": "保護者と教員向け",
-  "faqParentsIntro": "このツールができること・できないことの短い回答です。「停止」結果を児童や生徒に信じてもらう前に役立ちます。",
   "faqNoWipeTitle": "buusdo はサイトがすでに取ったデータを消せますか？",
   "faqNoWipeBody": "いいえ。何か入力した場合は本物の公式サイトでパスワードを変更し、銀行やメールの通知を見てください。",
   "faqNoAvTitle": "これはアンチウイルスですか？",
@@ -449,5 +447,7 @@
   "probeBlockedGenericDetail": "HTTP {status} を受信しました。サイトがこの検査をブロックまたは制限したのであり、フィッシングの証明ではありません。必要なら通常のブラウザでアドレスを開いてください。",
   "downloadA4Poster": "A4ポスターをダウンロード",
   "downloadA4PosterShort": "A4",
-  "downloadA4PosterHint": "A4で印刷 · 100% · 余白なし · 背景グラフィックオン。"
+  "downloadA4PosterHint": "A4で印刷 · 100% · 余白なし · 背景グラフィックオン。",
+  "faqCommonTitle": "よくある質問",
+  "faqCommonIntro": "buusdo ができること／できないことの短い説明です。「停止」の結果を信頼する前に確認してください。"
 }

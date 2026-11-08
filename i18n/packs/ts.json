@@ -78,8 +78,6 @@
   "feedbackReportExportHint": "Xirungulwana xa le kaya xi hlayisiwile. Pfula Swihlawulekisi → Swirungulwana swa mavonelo ku humesa fayili ya batches/*.json leswaku mutirhi a kambela — a ku rumeriwi nchumu.",
   "feedbackReportExportSettings": "Pfula Swihlawulekisi → Swirungulwana swa mavonelo",
   "timingTotalChip": "ku kambela {ms}ms",
-  "faqParentsTitle": "Eka vatswari na vadyondzisi",
-  "faqParentsIntro": "Tinhlamulo to koma hi leswi xitirho lexi xi swi endlaka na leswi xi nga swi endli — swi pfuna emahlweni ko kombela mudyondzi kumbe n’wana leswaku a tshemba mbuyelo wa Yima.",
   "faqNoWipeTitle": "Xana buusdo yi nga sula datha leyi sayiti yi nga se yi yi teka?",
   "faqNoWipeBody": "E-e. Cinca tiphasewete eka sayiti ya ntiyiso ya ximfumo loko ku nghenisiwile nchumu, naswona u languta swilemukiso swa bangi kumbe swa imeyili.",
   "faqNoAvTitle": "Xana lexi i antivirus?",
@@ -449,5 +447,7 @@
   "probeBlockedGenericDetail": "Ku amukeriwe HTTP {status}. Sayiti yi siverile kumbe yi hungutise ku kambela loku — sweswo a hi vumbhoni bya vuxisi. Ringeta adirese eka bhurawuza yo toloveleka loko swi laveka.",
   "downloadA4Poster": "Downloada phousetara ya A4",
   "downloadA4PosterShort": "A4",
-  "downloadA4PosterHint": "Printa A4 · 100% · ku nga ri na margin · digrafiki ta le ndzhaku ti pfuriwile."
+  "downloadA4PosterHint": "Printa A4 · 100% · ku nga ri na margin · digrafiki ta le ndzhaku ti pfuriwile.",
+  "faqCommonTitle": "Swivutiso leswi tolovelekeke",
+  "faqCommonIntro": "Tinhlamulo to koma hi leswi buusdo yi swi endlaka na leswi yi nga swi endli — swi pfuna emahlweni ko tshemba mbuyelo wa Yima."
 }

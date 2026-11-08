@@ -24,7 +24,7 @@ const SURVEY_KEYS = [
   "feedbackReportExportHint",
   "feedbackDraftsAfterReport",
   "timingTotalChip",
-  "faqParentsTitle",
+  "faqCommonTitle",
   "faqNoWipeTitle",
   "faqNoAvTitle",
   "faqNoCrowdTitle"

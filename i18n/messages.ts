@@ -109,9 +109,9 @@ export const messages = {
       "Draft saved. Open Settings → Feedback drafts to export a batches/*.json file for operator review — nothing is uploaded.",
     feedbackReportExportSettings: "Open Settings → Feedback drafts",
     timingTotalChip: "check {ms}ms",
-    faqParentsTitle: "For parents and teachers",
-    faqParentsIntro:
-      "Short answers about what this tool does and does not do — useful before you ask a student or child to trust a Halt result.",
+    faqCommonTitle: "Common questions",
+    faqCommonIntro:
+      "Short answers on what buusdo does and does not — useful before you trust a Halt result.",
     faqNoWipeTitle: "Can buusdo erase data a site already took?",
     faqNoWipeBody:
       "No. Change passwords on the real official site if anything was entered, and watch bank or email alerts.",
@@ -593,9 +593,9 @@ export const messages = {
       "Rascunho guardado. Abra Definições → Rascunhos de feedback para exportar um ficheiro batches/*.json para revisão — nada é enviado.",
     feedbackReportExportSettings: "Abrir Definições → Rascunhos de feedback",
     timingTotalChip: "verificação {ms}ms",
-    faqParentsTitle: "Para pais e professores",
-    faqParentsIntro:
-      "Respostas curtas sobre o que esta ferramenta faz e não faz — úteis antes de pedir a um aluno ou filho que confie num resultado Parar.",
+    faqCommonTitle: "Perguntas frequentes",
+    faqCommonIntro:
+      "Respostas curtas sobre o que o buusdo faz e não faz — úteis antes de confiar num resultado Parar.",
     faqNoWipeTitle: "O buusdo consegue apagar dados que um site já recolheu?",
     faqNoWipeBody:
       "Não. Se introduziu dados, altere palavras-passe no site oficial verdadeiro e acompanhe alertas do banco ou email.",

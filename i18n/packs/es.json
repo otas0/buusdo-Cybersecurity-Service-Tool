@@ -78,8 +78,6 @@
   "feedbackReportExportHint": "Borrador guardado. Abra Ajustes → Borradores de comentarios para exportar batches/*.json — no se sube nada.",
   "feedbackReportExportSettings": "Abrir Ajustes → Borradores de comentarios",
   "timingTotalChip": "comprobación {ms}ms",
-  "faqParentsTitle": "Para padres y docentes",
-  "faqParentsIntro": "Respuestas breves sobre lo que esta herramienta hace y no hace — útiles antes de pedir a un alumno o a un niño que confíe en un resultado Alto.",
   "faqNoWipeTitle": "¿Puede buusdo borrar datos que un sitio ya tomó?",
   "faqNoWipeBody": "No. Cambie las contraseñas en el sitio oficial verdadero si se introdujo algo, y vigile las alertas del banco o del correo.",
   "faqNoAvTitle": "¿Es esto un antivirus?",
@@ -449,5 +447,7 @@
   "probeBlockedGenericDetail": "Recibido HTTP {status}. El sitio bloqueó o limitó esta comprobación — eso no prueba phishing. Abra la dirección en un navegador normal si lo necesita.",
   "downloadA4Poster": "Descargar póster A4",
   "downloadA4PosterShort": "A4",
-  "downloadA4PosterHint": "Imprimir A4 · 100 % · sin márgenes · gráficos de fondo activados."
+  "downloadA4PosterHint": "Imprimir A4 · 100 % · sin márgenes · gráficos de fondo activados.",
+  "faqCommonTitle": "Preguntas frecuentes",
+  "faqCommonIntro": "Respuestas breves sobre lo que buusdo hace y no hace — útiles antes de confiar en un resultado Alto."
 }
