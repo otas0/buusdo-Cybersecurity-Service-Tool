@@ -56,11 +56,14 @@
   </head>
   <body>
     <main>
+      <p class="kicker" data-testid="round2-open" style="color:var(--halt);letter-spacing:0.12em;text-transform:uppercase;font-size:11px;margin:0 0 8px;">
+        Round-2 · OPEN for responses
+      </p>
       <h1>buusdo Round-2 survey</h1>
       <p class="lede">
-        Local-only form — downloads a CSV row for operators. Does not upload.
-        Instrument: <code>docs/survey-round2-instrument.md</code>.
-        Compare: <code>npm run survey:round2-compare -- path/to.csv</code>.
+        <strong>Now open for filling.</strong> Each submit downloads one CSV row (nothing is uploaded).
+        Merge rows → <code>npm run survey:round2-compare -- merged.csv</code>.
+        Live URLs: Workers <code>/survey/round2.html</code> · China Pages <code>survey-round2.html</code>.
       </p>
 
       <form id="round2">

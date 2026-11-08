@@ -24,17 +24,17 @@ Verifique um site antes de confiar — lista própria de ameaças, EN / portugu�
 
 buusdo Cybersecurity Service Tool (Buusdo product line) helps you check a website address before you enter sensitive information. Checks use our own curated threat list and live reachability — not third-party reputation APIs.
 
-Privacy default: nothing is stored. Optional this-device-only block and trust lists stay on your computer; you can export or import them as JSON or QR.
+Privacy default: nothing is stored. Optional this-device-only block and trust lists stay on your computer; you can export or import them as JSON or QR. There is no cloud account or cross-device list sync.
 
-Companion desktop app (optional): no TLS decryption, no process kill, system folders report-only — see Privacy → Honest limits on the website.
+Companion desktop app (optional, GitHub Release): builds are **unsigned** (no Apple notarization / no Windows Authenticode on the current ship path). macOS Gatekeeper or Windows SmartScreen may warn on first open — expected; follow the setup guide on the website Settings → Desktop. Honest limits: no TLS decryption, no process kill, system folders report-only — see Privacy → Honest limits.
 
 ## Detailed description (alternate locale)
 
 O buusdo Cybersecurity Service Tool (linha Buusdo) ajuda a verificar um endereço de site antes de introduzir informação sensível. As verificações usam a nossa lista curada de ameaças e acessibilidade em direto — não APIs de reputação de terceiros.
 
-Predefinição de privacidade: nada é guardado. Listas de bloqueio/confiança opcionais só neste dispositivo ficam no seu computador; pode exportá-las ou importá-las em JSON ou QR.
+Predefinição de privacidade: nada é guardado. Listas de bloqueio/confiança opcionais só neste dispositivo ficam no seu computador; pode exportá-las ou importá-las em JSON ou QR. Não há conta na nuvem nem sincronização de listas entre dispositivos.
 
-App de ambiente de trabalho (opcional): sem desencriptação TLS, sem terminar processos, pastas de sistema só reportadas — ver Privacidade → Limites honestos no site.
+App de ambiente de trabalho (opcional, GitHub Release): builds **não assinadas** (sem notarização Apple / sem Authenticode Windows neste canal). O Gatekeeper (macOS) ou o SmartScreen (Windows) pode avisar na primeira abertura — esperado; siga o guia nas Definições → Ambiente de trabalho. Limites honestos: sem desencriptação TLS, sem terminar processos, pastas de sistema só reportadas — ver Privacidade → Limites honestos.
 
 ## Screenshots (upload order)
 
@@ -54,7 +54,7 @@ Instrument FRAMEs from `npm run capture:store-halt-frame` (also copied next to t
 | 2a — Clear | Clear: no strong first-party threat signals on this address — still decide carefully. | Clear: sem sinais fortes na lista própria neste endereço — decida com cuidado. |
 | 2b — Hold | Hold: mixed or incomplete signals — confirm the address before you continue. | Hold: sinais mistos ou incompletos — confirme o endereço antes de continuar. |
 | Settings | Reversible privacy and list choices on this device. | Escolhas de privacidade e listas reversíveis neste dispositivo. |
-| Privacy / desktop note | Companion desktop app: no TLS decryption, no process kill, system folders report-only — see Privacy → Honest limits. | App de ambiente de trabalho: sem desencriptação TLS, sem terminar processos, pastas de sistema só reportadas — ver Privacidade → Limites honestos. |
+| Privacy / desktop note | Companion desktop (unsigned GitHub Release): Gatekeeper/SmartScreen may warn — expected. No TLS decryption, no process kill, system folders report-only. | App (Release não assinado): Gatekeeper/SmartScreen pode avisar — esperado. Sem desencriptação TLS, sem terminar processos, pastas de sistema só reportadas. |
 
 ## Privacy policy URL
 

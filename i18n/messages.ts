@@ -115,6 +115,7 @@ export const messages = {
     faqNoCrowdTitle: "Does the score come from other users’ votes?",
     faqNoCrowdBody:
       "No. Results use buusdo’s curated threat list and address signals — not a public “how many people flagged this” count.",
+    faqSurveyRound2Link: "Round-2 survey (open — local CSV)",
     // EVAL surface-copy keys (no website block UI): protection, blockedInPrototype, removed, currentlyBlocked
     verified: "Open the listed domain",
     protection: "Use the extension or desktop app to update protection lists.",
@@ -475,6 +476,7 @@ export const messages = {
     faqNoCrowdTitle: "O resultado vem de votos de outros utilizadores?",
     faqNoCrowdBody:
       "Não. Os resultados usam a lista curada do buusdo e sinais do endereço — não um contador público de denúncias.",
+    faqSurveyRound2Link: "Inquérito Round-2 (aberto — CSV local)",
     verified: "Abrir o domínio listado",
     protection: "Use a extensão ou a app para atualizar as listas de proteção.",
     currentlyBlocked: "fica bloqueado na extensão ou na app quando o adicionar aí.",

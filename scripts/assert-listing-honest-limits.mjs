@@ -41,15 +41,26 @@ need("Privacy pt-PT: Sem terminar processos", ptBody.includes("Sem terminar proc
 need("Privacy pt-PT: reportadas", ptBody.includes("reportadas"));
 
 need(
-  "Draft EN caption",
-  draft.includes("Companion desktop app: no TLS decryption, no process kill, system folders report-only")
+  "Draft EN caption unsigned + honest limits",
+  /unsigned GitHub Release/i.test(draft) &&
+    /Gatekeeper\/SmartScreen/i.test(draft) &&
+    /no TLS decryption/i.test(draft) &&
+    /no process kill/i.test(draft) &&
+    /report-only/i.test(draft)
 );
 need(
-  "Draft pt-PT caption",
-  draft.includes("sem desencriptação TLS, sem terminar processos, pastas de sistema só reportadas")
+  "Draft pt-PT caption unsigned + honest limits",
+  /não assinad/i.test(draft) &&
+    /Gatekeeper\/SmartScreen/i.test(draft) &&
+    /sem desencriptação TLS/i.test(draft) &&
+    /sem terminar processos/i.test(draft) &&
+    /só reportadas/i.test(draft)
 );
-need("Draft EN detailed: no TLS decryption", draft.includes("no TLS decryption"));
+need("Draft EN detailed: unsigned", /builds are \*\*unsigned\*\*/i.test(draft));
+need("Draft EN detailed: no TLS decryption", /no TLS decryption/i.test(draft));
+need("Draft EN detailed: no cloud account", /no cloud account/i.test(draft));
 need("Draft pt-PT detailed stem", /sem desencriptação TLS/i.test(draft));
+need("Draft pt-PT detailed: não assinadas", /não assinadas/i.test(draft));
 
 // Ready for localized CDN copy later — keep the SR describedby hook in Settings.
 need(

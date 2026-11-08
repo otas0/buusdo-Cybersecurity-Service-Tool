@@ -99,6 +99,17 @@ export function PrivacyPanel({
             <span>{t.faqNoCrowdBody}</span>
           </li>
         </ul>
+        <p className="hint">
+          <a
+            className="text-button"
+            href="/survey/round2.html"
+            target="_blank"
+            rel="noreferrer"
+            data-testid="privacy-round2-survey"
+          >
+            {t.faqSurveyRound2Link}
+          </a>
+        </p>
       </section>
 
       <p className="scope-note" data-testid="privacy-policy-updated">
