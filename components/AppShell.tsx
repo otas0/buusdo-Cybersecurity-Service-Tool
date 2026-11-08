@@ -153,51 +153,34 @@ function Header({
         </h1>
       </div>
       <nav className="top-nav" aria-label={t.navAriaLabel || "Navigation"}>
-        <button
-          type="button"
-          className={`nav-link ${view === "check" ? "is-active" : ""}`}
-          onClick={() => onNavigate("check")}
-        >
-          {t.navCheck}
-        </button>
-        <button
-          type="button"
-          className={`nav-link ${view === "settings" ? "is-active" : ""}`}
-          onClick={() => onNavigate("settings")}
-        >
-          {t.navSettings}
-        </button>
-        <button
-          type="button"
-          className={`nav-link ${view === "privacy" ? "is-active" : ""}`}
-          onClick={() => onNavigate("privacy")}
-          data-testid="nav-privacy"
-        >
-          {t.navPrivacy}
-        </button>
-        <a
-          className={`nav-link ${view === "lists-offline" ? "is-active" : ""}`}
-          href={`/${locale}/lists-offline`}
-          data-testid="nav-lists-offline"
-        >
-          {t.navListsOffline}
-        </a>
-        <a
-          className={`nav-link ${view === "settings" ? "is-active" : ""}`}
-          href={`/${locale}/settings#settings-desktop`}
-          data-testid="nav-downloads"
-          onClick={(e) => {
-            if (view === "settings") {
-              e.preventDefault();
-              window.location.hash = "settings-desktop";
-              document.getElementById("settings-desktop")?.scrollIntoView({ block: "start" });
-            }
-          }}
-        >
-          {t.navDownloads}
-        </a>
-        <ThemeToggle locale={locale} />
-        <LanguageSwitcher locale={locale} view={view} hash={switchHash} />
+        <div className="top-nav-primary">
+          <button
+            type="button"
+            className={`nav-link ${view === "check" ? "is-active" : ""}`}
+            onClick={() => onNavigate("check")}
+          >
+            {t.navCheck}
+          </button>
+          <button
+            type="button"
+            className={`nav-link ${view === "settings" ? "is-active" : ""}`}
+            onClick={() => onNavigate("settings")}
+          >
+            {t.navSettings}
+          </button>
+          <button
+            type="button"
+            className={`nav-link ${view === "privacy" ? "is-active" : ""}`}
+            onClick={() => onNavigate("privacy")}
+            data-testid="nav-privacy"
+          >
+            {t.navPrivacy}
+          </button>
+        </div>
+        <div className="top-nav-tools">
+          <ThemeToggle locale={locale} />
+          <LanguageSwitcher locale={locale} view={view} hash={switchHash} />
+        </div>
       </nav>
     </header>
   );
@@ -526,12 +509,17 @@ function Home({ locale }: { locale: Locale }) {
           locale={locale}
           onReset={() => setAnalysis(null)}
         />
+        <p className="hint home-downloads-cta" data-testid="home-downloads-cta">
+          <a className="text-button" href={`/${locale}/settings#settings-desktop`}>
+            {t.homeDownloadsCta}
+          </a>
+        </p>
       </main>
     );
   }
 
   return (
-    <main className="stage">
+    <main className="stage stage-check">
       <p className="kicker">{getMessages(locale).statusKicker}</p>
       <TrafficLights
         level="idle"
@@ -541,18 +529,25 @@ function Home({ locale }: { locale: Locale }) {
         danger={t.lightDanger}
       />
       <p className="light-note">{t.lightIdle}</p>
-      {probeBudgetMs != null && (
-        <p className="scope-note" role="status">
-          {t.idleProbeBudget} {probeBudgetMs}
-          {t.timingMs}
-        </p>
-      )}
       <UrlCheckForm t={t} bare disabled={checkDisabled} onCheck={check} />
-      <p className="hint home-downloads-cta" data-testid="home-downloads-cta">
-        <a className="text-button" href={`/${locale}/settings#settings-desktop`}>
-          {t.homeDownloadsCta}
-        </a>
-      </p>
+      <div className="stage-secondary">
+        {probeBudgetMs != null && (
+          <p className="scope-note" role="status">
+            {t.idleProbeBudget} {probeBudgetMs}
+            {t.timingMs}
+          </p>
+        )}
+        <p className="hint home-downloads-cta" data-testid="home-downloads-cta">
+          <a className="text-button" href={`/${locale}/settings#settings-desktop`}>
+            {t.homeDownloadsCta}
+          </a>
+        </p>
+        <p className="hint home-lists-cta" data-testid="home-lists-cta">
+          <a className="text-button" href={`/${locale}/lists-offline`}>
+            {t.navListsOffline}
+          </a>
+        </p>
+      </div>
       {checkDisabled && rateLimitSec != null && rateLimitTotal != null && (
         <RateLimitBar
           sec={rateLimitSec}

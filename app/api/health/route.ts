@@ -19,8 +19,25 @@ import {
   isSqlStoreConfigured
 } from "../../../security/account-sync/enabled";
 import { isCuratedListPresent } from "../../../security/threat-intel";
+import {
+  LOCALE_CATALOG,
+  LOCALE_REGION_ORDER,
+  localesInRegion
+} from "../../../i18n/locales";
 
 export const runtime = "nodejs";
+
+function catalogLocaleCounts() {
+  const byRegion: Record<string, number> = {};
+  for (const region of LOCALE_REGION_ORDER) {
+    byRegion[region] = localesInRegion(region).length;
+  }
+  return {
+    localeCount: LOCALE_CATALOG.length,
+    regionCount: LOCALE_REGION_ORDER.length,
+    localesByRegion: byRegion
+  };
+}
 
 function corsHeaders(request: Request): HeadersInit {
   const origin = request.headers.get("origin") || "*";
@@ -61,6 +78,7 @@ export async function GET(request: Request) {
       thirdPartyReputation: false,
       /** Static JSON import — true on Workers when curated-threats.json is in the bundle. */
       curatedListPresent: isCuratedListPresent(),
+      ...catalogLocaleCounts(),
       ownThreatMergePt,
       ownThreatMergePtEnv: "OWN_THREAT_MERGE_PT",
       probeTimeoutMs,

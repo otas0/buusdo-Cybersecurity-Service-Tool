@@ -466,12 +466,11 @@
   "homeDownloadsCta": "Prenosi za namizje",
   "langPanelNoMatches": "Ni zadetkov",
   "desktopHonestLimitsGateTitle": "Preden se ta računalnik pregleda",
-  "langRegionGlobal": "Globalno",
-  "langRegionEastAsia": "Vzhodna Azija",
-  "langRegionEurope": "Evropa",
-  "langRegionPacific": "Pacifik",
-  "langRegionSoutheastAsia": "JV Azija",
-  "langRegionSouthernAfrica": "Južna Afrika",
-  "themeHeaderHint": "Use the one Appearance button in the header (next to language).",
-  "localeRecommendSearchHint": "Pinned suggestions below. Search to browse the full language list."
+  "langRegionGlobal": "Global",
+  "langRegionEastAsia": "East Asia",
+  "langRegionEurope": "Europe",
+  "langRegionPacific": "Pacific",
+  "langRegionSoutheastAsia": "Southeast Asia",
+  "langRegionSouthernAfrica": "Southern Africa",
+  "themeHeaderHint": "Use the one Appearance button in the header (next to language)."
 }

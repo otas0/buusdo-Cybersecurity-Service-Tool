@@ -1,7 +1,8 @@
 #!/usr/bin/env node
 /**
  * Rebuild extension toast COPY from website packs (toast-sized keys only).
- * Locales = every <option> in extension/popup/popup.html #langSelect, plus pt-BR/zh-Hant/ja/de/fr/es when packs exist.
+ * Locales = every <option> in extension/popup/popup.html #langSelect, plus EXTRA_PACKS
+ * (pt-BR / ja). af / zu / zh-Hant / de / fr / es / it / nl live in #langSelect — not EXTRA.
  * Patches only the TOAST_COPY_START/END block in phishing-toast-mount.js (never drops buildPhishingToast).
  *
  *   node scripts/sync-toast-i18n.mjs
@@ -45,7 +46,7 @@ function localesFromLangSelect() {
 }
 
 // Overlay Halt chips beyond the popup #langSelect set (af/zu + BR/ja extras).
-const EXTRA_PACKS = ["pt-BR", "ja", "af", "zu"];
+const EXTRA_PACKS = ["pt-BR", "ja"];
 const langSelectOrder = localesFromLangSelect();
 const locales = [...new Set([...langSelectOrder, ...EXTRA_PACKS])];
 

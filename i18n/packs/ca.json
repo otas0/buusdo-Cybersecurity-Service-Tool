@@ -467,11 +467,10 @@
   "langPanelNoMatches": "Cap coincidència",
   "desktopHonestLimitsGateTitle": "Abans d’analitzar aquest ordinador",
   "langRegionGlobal": "Global",
-  "langRegionEastAsia": "Àsia Oriental",
-  "langRegionEurope": "Europa",
-  "langRegionPacific": "Pacífic",
-  "langRegionSoutheastAsia": "Sud-est asiàtic",
-  "langRegionSouthernAfrica": "Àfrica austral",
-  "themeHeaderHint": "Use the one Appearance button in the header (next to language).",
-  "localeRecommendSearchHint": "Pinned suggestions below. Search to browse the full language list."
+  "langRegionEastAsia": "East Asia",
+  "langRegionEurope": "Europe",
+  "langRegionPacific": "Pacific",
+  "langRegionSoutheastAsia": "Southeast Asia",
+  "langRegionSouthernAfrica": "Southern Africa",
+  "themeHeaderHint": "Use the one Appearance button in the header (next to language)."
 }

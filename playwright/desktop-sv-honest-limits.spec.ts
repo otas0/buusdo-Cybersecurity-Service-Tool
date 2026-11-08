@@ -12,8 +12,10 @@ import { expect, test } from "@playwright/test";
 import { readFileSync } from "node:fs";
 
 const svTitle = (
-  JSON.parse(readFileSync("i18n/packs/sv.json", "utf8")) as { honestLimitsTitle: string }
-).honestLimitsTitle;
+  JSON.parse(readFileSync("i18n/packs/sv.json", "utf8")) as {
+    desktopHonestLimitsGateTitle: string;
+  }
+).desktopHonestLimitsGateTitle;
 const enTitle = "Before this computer is scanned";
 
 async function waitForState(uiPort: number) {

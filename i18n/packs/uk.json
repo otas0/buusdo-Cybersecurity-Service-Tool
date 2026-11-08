@@ -466,12 +466,11 @@
   "homeDownloadsCta": "Завантаження для ПК",
   "langPanelNoMatches": "Немає збігів",
   "desktopHonestLimitsGateTitle": "Перш ніж сканувати цей комп’ютер",
-  "langRegionGlobal": "Глобально",
-  "langRegionEastAsia": "Східна Азія",
-  "langRegionEurope": "Європа",
-  "langRegionPacific": "Тихий океан",
-  "langRegionSoutheastAsia": "Південно-Східна Азія",
-  "langRegionSouthernAfrica": "Південна Африка",
-  "themeHeaderHint": "Use the one Appearance button in the header (next to language).",
-  "localeRecommendSearchHint": "Pinned suggestions below. Search to browse the full language list."
+  "langRegionGlobal": "Глобальні",
+  "langRegionEastAsia": "East Asia",
+  "langRegionEurope": "Europe",
+  "langRegionPacific": "Pacific",
+  "langRegionSoutheastAsia": "Southeast Asia",
+  "langRegionSouthernAfrica": "Southern Africa",
+  "themeHeaderHint": "Use the one Appearance button in the header (next to language)."
 }

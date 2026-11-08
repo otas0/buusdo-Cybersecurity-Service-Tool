@@ -81,7 +81,13 @@ export const CORE_MESSAGE_KEYS = [
   "localeRecommendDismiss",
   "langPanelSearchPlaceholder",
   "langPanelNoMatches",
+  "langRegionGlobal",
+  "langRegionEurope",
   "localeRecommendSearchHint",
+  "langRegionSoutheastAsia",
+  "langRegionPacific",
+  "langRegionSouthernAfrica",
+  "langRegionEastAsia",
   "whyEmpty",
   "probeBlockedGenericTitle",
   "probeBlockedGenericDetail"

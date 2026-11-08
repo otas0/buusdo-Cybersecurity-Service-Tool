@@ -11,10 +11,10 @@
 
 .shell .top {
   display: flex;
-  align-items: baseline;
+  align-items: center;
   justify-content: space-between;
-  gap: 16px;
-  padding: 0 0 18px;
+  gap: 20px;
+  padding: 0 0 22px;
   border-bottom: 1px solid var(--line);
 }
 
@@ -79,15 +79,9 @@
     padding: 4px 5px;
   }
 
-  .shell .top-nav .nav-link[data-testid="nav-lists-offline"],
-  .shell .top-nav a[data-testid="nav-downloads"] {
-    /* Compact chrome: hide secondary nav; home Downloads CTA + Settings remain reachable. */
-    display: none;
-  }
-
-  .shell .home-downloads-cta {
+  .shell .home-downloads-cta,
+  .shell .home-lists-cta {
     display: block;
-    margin-top: 14px;
   }
 }
 
@@ -368,7 +362,27 @@
 .shell .top-nav {
   display: flex;
   align-items: center;
-  gap: 14px;
+  justify-content: flex-end;
+  flex: 1 1 auto;
+  gap: 0;
+  min-width: 0;
+}
+
+.shell .top-nav-primary {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  min-width: 0;
+}
+
+.shell .top-nav-tools {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-shrink: 0;
+  margin-left: 22px;
+  padding-left: 18px;
+  border-left: 1px solid color-mix(in srgb, var(--muted) 35%, transparent);
 }
 
 .shell .nav-link {
@@ -383,7 +397,26 @@
 }
 
 .shell .stage {
-  padding: 36px 0 0;
+  padding: 44px 0 0;
+}
+
+.shell .stage-check .light-note {
+  margin: 0 0 28px;
+  max-width: 36rem;
+}
+
+.shell .stage-secondary {
+  margin-top: 28px;
+  padding-top: 18px;
+  border-top: 1px solid color-mix(in srgb, var(--muted) 22%, transparent);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.shell .stage-secondary .hint,
+.shell .stage-secondary .scope-note {
+  margin: 0;
 }
 
 .shell .kicker {

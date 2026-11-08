@@ -10,7 +10,16 @@ import {
   type LocaleEntry,
   type LocaleRegion
 } from "../i18n/locales";
-import { getMessages, type Locale } from "../i18n/messages";
+import { getMessages, type Locale, type MessageBag } from "../i18n/messages";
+
+const REGION_MESSAGE_KEY: Record<LocaleRegion, keyof MessageBag> = {
+  global: "langRegionGlobal",
+  "east-asia": "langRegionEastAsia",
+  europe: "langRegionEurope",
+  "southern-africa": "langRegionSouthernAfrica",
+  pacific: "langRegionPacific",
+  "southeast-asia": "langRegionSoutheastAsia"
+};
 
 type ShellView = "check" | "settings" | "privacy" | "lists-offline";
 
@@ -57,7 +66,8 @@ export function LanguageSwitcher({
   const rootRef = useRef<HTMLDivElement>(null);
   const searchRef = useRef<HTMLInputElement>(null);
 
-  const regionLabel = (region: LocaleRegion) => LOCALE_REGION_LABELS[region].en;
+  const regionLabel = (region: LocaleRegion) =>
+    t[REGION_MESSAGE_KEY[region]] || LOCALE_REGION_LABELS[region].en;
 
   const filteredByRegion = useMemo(() => {
     const q = query.trim().toLowerCase();

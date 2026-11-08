@@ -19,7 +19,21 @@ const checkOnly = process.argv.includes("--check");
 const i18nPath = path.join(root, "extension/shared/i18n.js");
 const packsDir = path.join(root, "i18n/packs");
 /** Overlay bags (hand bags en / pt-PT / zh-Hans stay above the marker). */
-const LOCALES = ["mi", "th", "vi", "ja", "de", "fr", "es", "it", "nl", "zh-Hant", "pt-BR"];
+const LOCALES = [
+  "mi",
+  "th",
+  "vi",
+  "ja",
+  "de",
+  "fr",
+  "es",
+  "it",
+  "nl",
+  "zh-Hant",
+  "pt-BR",
+  "af",
+  "zu"
+];
 
 /** extension key → website pack key */
 const MAP = {
@@ -40,6 +54,13 @@ const MAP = {
   toastPhishing: "lightDanger",
   toastTracker: "lightCaution",
   toastTrackers: "lightCaution",
+  // Region optgroup labels for popup #langSelect (MessageBag / pack keys)
+  langRegionGlobal: "langRegionGlobal",
+  langRegionEastAsia: "langRegionEastAsia",
+  langRegionEurope: "langRegionEurope",
+  langRegionPacific: "langRegionPacific",
+  langRegionSoutheastAsia: "langRegionSoutheastAsia",
+  langRegionSouthernAfrica: "langRegionSouthernAfrica",
 };
 
 const markerStart = "/* __EXTENSION_SEA_PACK_OVERLAY_START__ */";

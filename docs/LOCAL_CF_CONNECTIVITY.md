@@ -1,5 +1,17 @@
 # Local Cloudflare connectivity (do not misread timeouts)
 
+## What happened (2026-11-08) — repeat timeout
+
+From the same Asia laptop path, HTTPS to `https://buusdocst.mtsu.workers.dev` again **TCP timed out** (`curl` exit 28; `/api/health`, `/en`, `/sl`, `/ca` all `http_code=000`).
+
+At the same wall-clock window, GitHub Actions **Deploy Cloudflare** on `ubuntu-latest` completed **success** (deploy + Health smoke + Check smoke green) — e.g. [run 42482441353](https://github.com/otas0/buusdo-Cybersecurity-Service-Tool/actions/runs/42482441353).
+
+| Symptom | Classification |
+|---------|----------------|
+| Local `curl` exit 28 / `http_code=000` + Actions health OK | **Connectivity** (client → `*.workers.dev`), not Worker outage |
+| Actions `/api/health` or locale routes **5xx** / `ok:false` | **Application** — investigate deploy / Worker logs |
+| Soft EU-route / soft-live prints `::notice::skipped-live` with `000` | Expected on filtered laptops; trust Actions soft job |
+
 ## What happened (2026-11-01)
 
 From some operator networks (e.g. Asia laptop), HTTPS to:

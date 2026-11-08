@@ -99,38 +99,52 @@ function escapeHtml(s: string): string {
     .replaceAll('"', "&quot;");
 }
 
-const liveBase = (
-  process.env.PLAYWRIGHT_LIVE_BASE_URL ||
-  process.env.PRODUCTION_HEALTH_URL ||
-  process.env.STAGING_HEALTH_URL ||
-  ""
-)
-  .trim()
-  .replace(/\/$/, "");
+/** Resolved in beforeAll from LIVE → PROD → STAGING → PREVIEW. */
+let liveBase = "";
 
-async function liveReachable(): Promise<boolean> {
-  if (!liveBase) return false;
-  try {
-    const res = await fetch(`${liveBase}/api/health`, {
-      signal: AbortSignal.timeout(12_000),
-      headers: { Accept: "application/json" }
-    });
-    if (!res.ok) return false;
-    const data = (await res.json()) as { ok?: boolean; curatedListPresent?: boolean };
-    return data?.ok === true && data?.curatedListPresent === true;
-  } catch {
-    return false;
+async function resolveSoftLiveBase(): Promise<{
+  base: string;
+  probes: Array<{
+    url: string;
+    http_code: string;
+    time_total: string;
+    err?: string;
+    ok: boolean;
+  }>;
+}> {
+  const { resolveLiveOrigin, formatProbeTable, appendStepSummaryAsync, maybeTimeoutWebhook } =
+    await import("../scripts/lib/live-origin.mjs");
+  const { base, probes } = await resolveLiveOrigin();
+  const probeMd = formatProbeTable(probes);
+  // Always echo curl-w style table to stdout (not only GITHUB_STEP_SUMMARY).
+  console.log(probeMd);
+  await appendStepSummaryAsync(probeMd);
+  if (!base) {
+    console.log("::notice::skipped-live soft Halt evidence — origin unreachable");
+    const timedOut = probes.some((p) => p.http_code === "000" || p.err === "timeout");
+    if (timedOut) {
+      await maybeTimeoutWebhook({
+        text: `[soft-live Halt] connectivity timeout`,
+        probes
+      });
+    }
   }
+  return { base, probes };
 }
 
 test.describe("live Halt evidence (soft)", () => {
   test.beforeAll(async () => {
+    const resolved = await resolveSoftLiveBase();
+    liveBase = resolved.base;
     if (!liveBase) {
-      test.skip(true, "Set PLAYWRIGHT_LIVE_BASE_URL or PRODUCTION_HEALTH_URL");
-    }
-    const ok = await liveReachable();
-    if (!ok) {
-      test.skip(true, `Origin unreachable: ${liveBase}`);
+      if (!resolved.probes.length) {
+        console.log("::notice::skipped-live Set PLAYWRIGHT_LIVE_BASE_URL or PRODUCTION_HEALTH_URL");
+        test.skip(true, "Set PLAYWRIGHT_LIVE_BASE_URL or PRODUCTION_HEALTH_URL");
+      }
+      const detail = resolved.probes
+        .map((p) => `${p.http_code}/${p.time_total}s`)
+        .join(" ");
+      test.skip(true, `Origin unreachable (${detail})`);
     }
   });
 
@@ -156,7 +170,7 @@ test.describe("live Halt evidence (soft)", () => {
     await input.first().fill(host);
     const go = page
       .getByRole("button", {
-        name: /运行|Go|Run|檢查|检查|Ausführen|ตรวจ|เริ่ม|Voer uit|Qalisa|Lancer|Ejecutar|Spustit|Εκτέλεση|Esegui|Uitvoeren|Zaženi|Executa/i
+        name: /运行|Go|Run|檢查|检查|Ausführen|ตรวจ|เริ่ม|Voer uit|Qalisa|Lancer|Ejecutar|Spustit|Εκτέλεση|Esegui|Uitvoeren|Zaženi|Executa|Запустити|Keyra|Rith|Mexxi/i
       })
       .first();
     await go.click();
@@ -235,5 +249,21 @@ test.describe("live Halt evidence (soft)", () => {
 
   test("known-threat Halt shows evidence-known-threat on /is", async ({ page }) => {
     await runKnownThreatOnLocale(page, "/is", /ógn|þekkt|Merki/i);
+  });
+
+  test("known-threat Halt shows evidence-known-threat on /ga", async ({ page }) => {
+    await runKnownThreatOnLocale(page, "/ga", /bagairt|aitheanta|Comhartha/i);
+  });
+
+  test("known-threat Halt shows evidence-known-threat on /mt", async ({ page }) => {
+    await runKnownThreatOnLocale(page, "/mt", /theddid|magħruf|Sinjal/i);
+  });
+
+  test("known-threat Halt shows evidence-known-threat on /ro", async ({ page }) => {
+    await runKnownThreatOnLocale(page, "/ro", /ameninț|cunoscut|Semnal/i);
+  });
+
+  test("known-threat Halt shows evidence-known-threat on /bg", async ({ page }) => {
+    await runKnownThreatOnLocale(page, "/bg", /заплах|извест|Сигнал/i);
   });
 });

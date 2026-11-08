@@ -12,6 +12,7 @@ export function normalizeUiLang(lang) {
   if (!raw) return "en";
   if (raw === "pt-PT" || raw === "pt") return "pt-PT";
   if (raw === "zh-Hans" || raw === "zh" || raw === "zh-CN" || raw === "zh-SG") return "zh-Hans";
+  if (raw === "zh-Hant" || raw === "zh-TW" || raw === "zh-HK" || raw === "zh-MO") return "zh-Hant";
   if (raw === "en") return "en";
   // mi / th / vi (and other catalog ids): keep for prefs; toast mount resolves pack COPY.
   if (/^[a-z]{2,3}(-[A-Za-z0-9]+)?$/.test(raw)) return raw;
@@ -37,6 +38,12 @@ export const STRINGS = {
     trackersBlocked: "Trackers",
     phishingHits: "Signals",
     langLabel: "Language",
+    langRegionGlobal: "Global",
+    langRegionEastAsia: "East Asia",
+    langRegionEurope: "Europe",
+    langRegionPacific: "Pacific",
+    langRegionSoutheastAsia: "Southeast Asia",
+    langRegionSouthernAfrica: "Southern Africa",
     privacyLabel: "Data",
     privacyOff: "Never store",
     privacyLocal: "This device only",
@@ -143,6 +150,12 @@ export const STRINGS = {
     trackersBlocked: "Rastreadores",
     phishingHits: "Sinais",
     langLabel: "Idioma",
+    langRegionGlobal: "Global",
+    langRegionEastAsia: "Ásia Oriental",
+    langRegionEurope: "Europa",
+    langRegionPacific: "Pacífico",
+    langRegionSoutheastAsia: "Sudeste Asiático",
+    langRegionSouthernAfrica: "África Austral",
     privacyLabel: "Dados",
     privacyOff: "Nunca guardar",
     privacyLocal: "Só neste dispositivo",
@@ -249,6 +262,12 @@ export const STRINGS = {
     "trackersBlocked": "跟踪器",
     "phishingHits": "信号",
     "langLabel": "语言",
+    langRegionGlobal: "全球",
+    langRegionEastAsia: "东亚",
+    langRegionEurope: "欧洲",
+    langRegionPacific: "太平洋",
+    langRegionSoutheastAsia: "东南亚",
+    langRegionSouthernAfrica: "南部非洲",
     "privacyLabel": "数据",
     "privacyOff": "永不存储",
     "privacyLocal": "仅本设备",
@@ -435,7 +454,13 @@ export const STRINGS = {
     "listsQrTooBig": "He nui rawa ngā tūāpapa mō te QR (max {limit}).",
     "listsQrFail": "Kāore i taea te QR — tukuatu JSON.",
     "listsDnrTruncated": "DNR ārai ki {limit} (rārangi {total}).",
-    "listsRemove": "Tango"
+    "listsRemove": "Tango",
+    "langRegionGlobal": "Global",
+    "langRegionEastAsia": "East Asia",
+    "langRegionEurope": "Europe",
+    "langRegionPacific": "Pacific",
+    "langRegionSoutheastAsia": "Southeast Asia",
+    "langRegionSouthernAfrica": "Southern Africa"
   },
   th: {
     "appTitle": "buusdo Cybersecurity Service Tool",
@@ -537,7 +562,13 @@ export const STRINGS = {
     "listsQrTooBig": "โฮสต์มากเกินไปสำหรับ QR (สูงสุด {limit})",
     "listsQrFail": "วาด QR ไม่ได้ — ส่งออก JSON",
     "listsDnrTruncated": "กฎ DNR จำกัดที่ {limit} (รายการ {total})",
-    "listsRemove": "ลบ"
+    "listsRemove": "ลบ",
+    "langRegionGlobal": "Global",
+    "langRegionEastAsia": "East Asia",
+    "langRegionEurope": "Europe",
+    "langRegionPacific": "Pacific",
+    "langRegionSoutheastAsia": "Southeast Asia",
+    "langRegionSouthernAfrica": "Southern Africa"
   },
   vi: {
     "appTitle": "buusdo Cybersecurity Service Tool",
@@ -639,7 +670,13 @@ export const STRINGS = {
     "listsQrTooBig": "Quá nhiều máy chủ cho QR (tối đa {limit}).",
     "listsQrFail": "Không vẽ được QR — xuất JSON.",
     "listsDnrTruncated": "Quy tắc DNR giới hạn {limit} (danh sách {total}).",
-    "listsRemove": "Xóa"
+    "listsRemove": "Xóa",
+    "langRegionGlobal": "Global",
+    "langRegionEastAsia": "East Asia",
+    "langRegionEurope": "Europe",
+    "langRegionPacific": "Pacific",
+    "langRegionSoutheastAsia": "Southeast Asia",
+    "langRegionSouthernAfrica": "Southern Africa"
   },
   ja: {
     "appTitle": "buusdo Cybersecurity Service Tool",
@@ -741,7 +778,13 @@ export const STRINGS = {
     "listsQrTooBig": "Too many hosts for on-canvas QR (max {limit}). Export JSON instead.",
     "listsQrFail": "Could not draw QR — export JSON instead.",
     "listsDnrTruncated": "Personal DNR rules capped at {limit} (list has {total}). Export still keeps the full list.",
-    "listsRemove": "Remove"
+    "listsRemove": "Remove",
+    "langRegionGlobal": "グローバル",
+    "langRegionEastAsia": "東アジア",
+    "langRegionEurope": "ヨーロッパ",
+    "langRegionPacific": "太平洋",
+    "langRegionSoutheastAsia": "東南アジア",
+    "langRegionSouthernAfrica": "南部アフリカ"
   },
   de: {
     "appTitle": "buusdo Cybersecurity Service Tool",
@@ -843,7 +886,13 @@ export const STRINGS = {
     "listsQrTooBig": "Too many hosts for on-canvas QR (max {limit}). Export JSON instead.",
     "listsQrFail": "Could not draw QR — export JSON instead.",
     "listsDnrTruncated": "Personal DNR rules capped at {limit} (list has {total}). Export still keeps the full list.",
-    "listsRemove": "Remove"
+    "listsRemove": "Remove",
+    "langRegionGlobal": "Global",
+    "langRegionEastAsia": "Ostasien",
+    "langRegionEurope": "Europa",
+    "langRegionPacific": "Pazifik",
+    "langRegionSoutheastAsia": "Südostasien",
+    "langRegionSouthernAfrica": "Südliches Afrika"
   },
   fr: {
     "appTitle": "buusdo Cybersecurity Service Tool",
@@ -945,7 +994,13 @@ export const STRINGS = {
     "listsQrTooBig": "Too many hosts for on-canvas QR (max {limit}). Export JSON instead.",
     "listsQrFail": "Could not draw QR — export JSON instead.",
     "listsDnrTruncated": "Personal DNR rules capped at {limit} (list has {total}). Export still keeps the full list.",
-    "listsRemove": "Remove"
+    "listsRemove": "Remove",
+    "langRegionGlobal": "Mondial",
+    "langRegionEastAsia": "Asie de l’Est",
+    "langRegionEurope": "Europe",
+    "langRegionPacific": "Pacifique",
+    "langRegionSoutheastAsia": "Asie du Sud-Est",
+    "langRegionSouthernAfrica": "Afrique australe"
   },
   es: {
     "appTitle": "buusdo Cybersecurity Service Tool",
@@ -1047,7 +1102,13 @@ export const STRINGS = {
     "listsQrTooBig": "Too many hosts for on-canvas QR (max {limit}). Export JSON instead.",
     "listsQrFail": "Could not draw QR — export JSON instead.",
     "listsDnrTruncated": "Personal DNR rules capped at {limit} (list has {total}). Export still keeps the full list.",
-    "listsRemove": "Remove"
+    "listsRemove": "Remove",
+    "langRegionGlobal": "Global",
+    "langRegionEastAsia": "Asia oriental",
+    "langRegionEurope": "Europa",
+    "langRegionPacific": "Pacífico",
+    "langRegionSoutheastAsia": "Sudeste asiático",
+    "langRegionSouthernAfrica": "África austral"
   },
   it: {
     "appTitle": "buusdo Cybersecurity Service Tool",
@@ -1149,7 +1210,13 @@ export const STRINGS = {
     "listsQrTooBig": "Too many hosts for on-canvas QR (max {limit}). Export JSON instead.",
     "listsQrFail": "Could not draw QR — export JSON instead.",
     "listsDnrTruncated": "Personal DNR rules capped at {limit} (list has {total}). Export still keeps the full list.",
-    "listsRemove": "Remove"
+    "listsRemove": "Remove",
+    "langRegionGlobal": "Globale",
+    "langRegionEastAsia": "Asia orientale",
+    "langRegionEurope": "Europa",
+    "langRegionPacific": "Pacifico",
+    "langRegionSoutheastAsia": "Sud-est asiatico",
+    "langRegionSouthernAfrica": "Africa australe"
   },
   nl: {
     "appTitle": "buusdo Cybersecurity Service Tool",
@@ -1251,7 +1318,13 @@ export const STRINGS = {
     "listsQrTooBig": "Too many hosts for on-canvas QR (max {limit}). Export JSON instead.",
     "listsQrFail": "Could not draw QR — export JSON instead.",
     "listsDnrTruncated": "Personal DNR rules capped at {limit} (list has {total}). Export still keeps the full list.",
-    "listsRemove": "Remove"
+    "listsRemove": "Remove",
+    "langRegionGlobal": "Wereldwijd",
+    "langRegionEastAsia": "Oost-Azië",
+    "langRegionEurope": "Europa",
+    "langRegionPacific": "Pacific",
+    "langRegionSoutheastAsia": "Zuidoost-Azië",
+    "langRegionSouthernAfrica": "Zuidelijk Afrika"
   },
   "zh-Hant": {
     "appTitle": "buusdo Cybersecurity Service Tool",
@@ -1353,7 +1426,13 @@ export const STRINGS = {
     "listsQrTooBig": "Too many hosts for on-canvas QR (max {limit}). Export JSON instead.",
     "listsQrFail": "Could not draw QR — export JSON instead.",
     "listsDnrTruncated": "Personal DNR rules capped at {limit} (list has {total}). Export still keeps the full list.",
-    "listsRemove": "Remove"
+    "listsRemove": "Remove",
+    "langRegionGlobal": "全球",
+    "langRegionEastAsia": "東亞",
+    "langRegionEurope": "歐洲",
+    "langRegionPacific": "太平洋",
+    "langRegionSoutheastAsia": "東南亞",
+    "langRegionSouthernAfrica": "南部非洲"
   },
   "pt-BR": {
     "appTitle": "buusdo Cybersecurity Service Tool",
@@ -1455,7 +1534,13 @@ export const STRINGS = {
     "listsQrTooBig": "Too many hosts for on-canvas QR (max {limit}). Export JSON instead.",
     "listsQrFail": "Could not draw QR — export JSON instead.",
     "listsDnrTruncated": "Personal DNR rules capped at {limit} (list has {total}). Export still keeps the full list.",
-    "listsRemove": "Remove"
+    "listsRemove": "Remove",
+    "langRegionGlobal": "Global",
+    "langRegionEastAsia": "Ásia Oriental",
+    "langRegionEurope": "Europa",
+    "langRegionPacific": "Pacífico",
+    "langRegionSoutheastAsia": "Sudeste Asiático",
+    "langRegionSouthernAfrica": "África Austral"
   },
 /* __EXTENSION_SEA_PACK_OVERLAY_END__ */
 };

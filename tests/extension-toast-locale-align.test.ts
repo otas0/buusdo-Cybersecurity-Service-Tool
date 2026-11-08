@@ -16,9 +16,22 @@ test("content TRACKER_COPY covers toast 12-locale set", () => {
   const toast = Object.keys(
     JSON.parse(readFileSync(join(root, "extension/content/phishing-toast-i18n.json"), "utf8"))
   );
-  // Popup #langSelect (11) + EXTRA_PACKS (pt-BR/zh-Hant/ja/af/zu).
+  // Popup #langSelect (12 with zh-Hant) + EXTRA_PACKS (pt-BR/ja/af/zu).
   assert.ok(toast.length >= 14, `expected ≥14 toast locales, got ${toast.length}`);
-  for (const id of ["en", "pt-PT", "zh-Hans", "mi", "th", "vi", "it", "nl", "de", "fr", "es"]) {
+  for (const id of [
+    "en",
+    "pt-PT",
+    "zh-Hans",
+    "zh-Hant",
+    "mi",
+    "th",
+    "vi",
+    "it",
+    "nl",
+    "de",
+    "fr",
+    "es"
+  ]) {
     assert.ok(toast.includes(id), `toast JSON missing langSelect core ${id}`);
   }
   for (const id of ["af", "zu"]) {
@@ -28,6 +41,9 @@ test("content TRACKER_COPY covers toast 12-locale set", () => {
   const tracker = trackerLocales(content);
   for (const id of ["en", "pt-PT", "zh-Hans", "mi", "th", "vi", "it", "nl", "de", "fr", "es"]) {
     assert.ok(tracker.includes(id), `TRACKER_COPY missing langSelect locale ${id}`);
+  }
+  for (const id of ["af", "zu"]) {
+    assert.ok(tracker.includes(id), `TRACKER_COPY missing EXTRA toast locale ${id}`);
   }
 });
 

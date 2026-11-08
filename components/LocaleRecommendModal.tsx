@@ -183,9 +183,14 @@ export function LocaleRecommendModal({
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             autoComplete="off"
+            aria-describedby={!query.trim() ? "locale-recommend-search-hint" : undefined}
           />
           {!query.trim() ? (
-            <p className="hint locale-recommend-search-hint" data-testid="locale-recommend-search-hint">
+            <p
+              id="locale-recommend-search-hint"
+              className="hint locale-recommend-search-hint"
+              data-testid="locale-recommend-search-hint"
+            >
               {t.localeRecommendSearchHint}
             </p>
           ) : null}
@@ -202,7 +207,11 @@ export function LocaleRecommendModal({
               </option>
             ))}
           </select>
-          <ul className="locale-recommend-list" data-testid="locale-recommend-list">
+          <ul
+            className="locale-recommend-list"
+            data-testid="locale-recommend-list"
+            aria-describedby={!query.trim() ? "locale-recommend-search-hint" : undefined}
+          >
             {filtered.map((item, index) => (
               <li key={item.id}>
                 <button
@@ -212,6 +221,7 @@ export function LocaleRecommendModal({
                   }}
                   className={item.id === suggested ? "lang-option is-current" : "lang-option"}
                   data-testid={`locale-recommend-option-${item.id}`}
+                  aria-describedby={!query.trim() ? "locale-recommend-search-hint" : undefined}
                   onClick={() => accept(item.id)}
                   onKeyDown={(e) => onOptionKeyDown(e, index)}
                 >

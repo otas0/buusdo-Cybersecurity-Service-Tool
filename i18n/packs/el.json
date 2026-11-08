@@ -466,12 +466,11 @@
   "homeDownloadsCta": "Λήψεις επιφάνειας εργασίας",
   "langPanelNoMatches": "Καμία αντιστοιχία",
   "desktopHonestLimitsGateTitle": "Πριν σαρωθεί αυτός ο υπολογιστής",
-  "langRegionGlobal": "Παγκόσμια",
-  "langRegionEastAsia": "Ανατολική Ασία",
-  "langRegionEurope": "Ευρώπη",
-  "langRegionPacific": "Ειρηνικός",
-  "langRegionSoutheastAsia": "ΝΑ Ασία",
-  "langRegionSouthernAfrica": "Νότια Αφρική",
-  "themeHeaderHint": "Use the one Appearance button in the header (next to language).",
-  "localeRecommendSearchHint": "Pinned suggestions below. Search to browse the full language list."
+  "langRegionGlobal": "Global",
+  "langRegionEastAsia": "East Asia",
+  "langRegionEurope": "Europe",
+  "langRegionPacific": "Pacific",
+  "langRegionSoutheastAsia": "Southeast Asia",
+  "langRegionSouthernAfrica": "Southern Africa",
+  "themeHeaderHint": "Use the one Appearance button in the header (next to language)."
 }

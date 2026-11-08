@@ -340,6 +340,19 @@ components:
           type: boolean
         curatedListPresent:
           type: boolean
+        localeCount:
+          type: integer
+          minimum: 1
+          description: Shipped UI locale catalog size (LOCALE_CATALOG.length).
+        regionCount:
+          type: integer
+          minimum: 1
+          description: Locale region count (LOCALE_REGION_ORDER.length).
+        localesByRegion:
+          type: object
+          additionalProperties:
+            type: integer
+          description: Per-region locale counts for smoke dashboards.
         ownThreatMergePt:
           type: boolean
         ownThreatMergePtEnv:

@@ -466,12 +466,12 @@
   "homeDownloadsCta": "Skrivebordsnedlastinger",
   "langPanelNoMatches": "Ingen treff",
   "desktopHonestLimitsGateTitle": "Før denne datamaskinen skannes",
-  "langRegionGlobal": "Globalt",
-  "langRegionEastAsia": "Øst-Asia",
-  "langRegionEurope": "Europa",
-  "langRegionPacific": "Stillehavet",
-  "langRegionSoutheastAsia": "Sørøst-Asia",
-  "langRegionSouthernAfrica": "Sørlige Afrika",
+  "langRegionGlobal": "Global",
+  "langRegionEastAsia": "East Asia",
+  "langRegionEurope": "Europe",
+  "langRegionPacific": "Pacific",
+  "langRegionSoutheastAsia": "Southeast Asia",
+  "langRegionSouthernAfrica": "Southern Africa",
   "themeHeaderHint": "Bruk Utseende-knappen i toppteksten (ved siden av språk).",
   "localeRecommendSearchHint": "Forslag nedenfor. Søk for hele språklisten."
 }

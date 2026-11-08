@@ -35,6 +35,10 @@ Wrangler OAuth / `wrangler login` cannot be copied into GH secrets — use an AP
 | `NEXT_PUBLIC_SITE_URL` | Deploy build public origin. **Live:** `https://buusdocst.mtsu.workers.dev`. Override when the custom domain is live ([CUSTOM_DOMAIN_REDEPLOY.md](CUSTOM_DOMAIN_REDEPLOY.md) + [POST_LAUNCH_48H.md](POST_LAUNCH_48H.md)). |
 | `PRODUCTION_HEALTH_URL` | Same origin for [health-monitor.yml](../.github/workflows/health-monitor.yml). **Live:** `https://buusdocst.mtsu.workers.dev` |
 | `STAGING_HEALTH_URL` | Non-prod Worker origin. **Live:** `https://buusdocst-staging.mtsu.workers.dev`. `assert-staging-health` requires `ok: true` and **`accountSyncEnabled: false`**. Must **not** equal `PRODUCTION_HEALTH_URL`. |
+| `PLAYWRIGHT_LIVE_BASE_URL` | Optional override for soft-live Halt + EU locale 200 (highest priority). Usually unset in Actions — Deploy soft job passes the smoke URL. |
+| `PLAYWRIGHT_PREVIEW_BASE_URL` | Optional **preview** Worker / pages origin. Soft probes fall back here after LIVE → PRODUCTION → STAGING. |
+| `HEALTH_TIMEOUT_MS` | Health probe budget for soft scripts (default `8000`). Separate from locale HTML probes. |
+| `LOCALE_TIMEOUT_MS` | Per-locale HTML probe budget (default `12000`). |
 | `CHECKLIST_CI_WRITE` | Set to `0` to disable bot commits that append check:prod rows to LAUNCH_CHECKLIST |
 | `RUN_PLAYWRIGHT_SETTINGS` | Optional CI job `playwright-settings`. Keep **`false`** until offline Settings narrow (`npm run test:playwright:settings`) is green; only then `gh variable set RUN_PLAYWRIGHT_SETTINGS --body true`. |
 
@@ -45,6 +49,8 @@ Cloud Account sync is **not shipping**. See [ACCOUNT_SYNC_GATE.md](ACCOUNT_SYNC_
 - Prod + staging `wrangler.jsonc`: `ACCOUNT_SYNC_ENABLED=0` (no `ACCOUNT_SYNC_DEV_RETURN_LINK`)
 - Do **not** create Turso / Resend / Postmark / `AUTH_MAGIC_SECRET` / `LISTS_ENC_KEY` for sync
 - Optional staging Worker still useful for website preview; health must report `accountSyncEnabled: false`
+
+**Optional secret:** `WORKERS_TIMEOUT_WEBHOOK_URL` — Incoming Webhook for **connectivity timeouts** only from soft EU-route / soft-live probes. Leave unset by default. Distinct from skipped `SLACK_WEBHOOK_URL` ([HEALTH_ALERTS.md](HEALTH_ALERTS.md)).
 
 **Slack:** **skipped** — do not set `SLACK_WEBHOOK_URL`. Health failures use GitHub Actions email / watch ([HEALTH_ALERTS.md](HEALTH_ALERTS.md)). Soft_warn without webhook stays `skipped-no-webhook`.
 

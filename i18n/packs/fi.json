@@ -466,12 +466,12 @@
   "homeDownloadsCta": "Työpöytälataukset",
   "langPanelNoMatches": "Ei osumia",
   "desktopHonestLimitsGateTitle": "Ennen kuin tämä tietokone skannataan",
-  "langRegionGlobal": "Globaali",
-  "langRegionEastAsia": "Itä-Aasia",
-  "langRegionEurope": "Eurooppa",
-  "langRegionPacific": "Tyynimeri",
-  "langRegionSoutheastAsia": "Kaakkois-Aasia",
-  "langRegionSouthernAfrica": "Eteläinen Afrikka",
+  "langRegionGlobal": "Maailmanlaajuinen",
+  "langRegionEastAsia": "East Asia",
+  "langRegionEurope": "Europe",
+  "langRegionPacific": "Pacific",
+  "langRegionSoutheastAsia": "Southeast Asia",
+  "langRegionSouthernAfrica": "Southern Africa",
   "themeHeaderHint": "Käytä Ulkoasu-painiketta yläpalkissa (kielen vieressä).",
   "localeRecommendSearchHint": "Ehdotukset alla. Hae koko kieliluettelo."
 }

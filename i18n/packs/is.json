@@ -466,12 +466,11 @@
   "homeDownloadsCta": "Skjáborðsniðurhal",
   "langPanelNoMatches": "Engar niðurstöður",
   "desktopHonestLimitsGateTitle": "Áður en þessi tölva er skönnuð",
-  "langRegionGlobal": "Alþjóðlegt",
-  "langRegionEastAsia": "Austur-Asía",
-  "langRegionEurope": "Evrópa",
-  "langRegionPacific": "Kyrrahaf",
-  "langRegionSoutheastAsia": "Suðaustur-Asía",
-  "langRegionSouthernAfrica": "Suður-Afríka",
-  "themeHeaderHint": "Use the one Appearance button in the header (next to language).",
-  "localeRecommendSearchHint": "Pinned suggestions below. Search to browse the full language list."
+  "langRegionGlobal": "Global",
+  "langRegionEastAsia": "East Asia",
+  "langRegionEurope": "Europe",
+  "langRegionPacific": "Pacific",
+  "langRegionSoutheastAsia": "Southeast Asia",
+  "langRegionSouthernAfrica": "Southern Africa",
+  "themeHeaderHint": "Use the one Appearance button in the header (next to language)."
 }

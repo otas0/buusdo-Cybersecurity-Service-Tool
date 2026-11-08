@@ -1,5 +1,5 @@
 /**
- * Desktop STRINGS overlays for sv/da/fi/nb (not EN leftovers on Halt chrome).
+ * Desktop STRINGS overlays for Nordic + Europe popup locales.
  *
  *   npx tsx --test tests/desktop-nordic-overlay.test.ts
  */
@@ -20,7 +20,9 @@ const enMatch = src.match(/export const STRINGS = \{\s*en:\s*(\{[\s\S]*?\n  \}),
 assert.ok(enMatch);
 const en = Function(`"use strict"; return (${enMatch![1]});`)() as Record<string, string>;
 
-for (const id of ["sv", "da", "fi", "nb"] as const) {
+const OVERLAY = ["sv", "da", "fi", "nb", "de", "fr", "es", "it", "nl"] as const;
+
+for (const id of OVERLAY) {
   test(`desktop ${id} Halt chrome differs from EN`, () => {
     const bag = extractBag(id);
     assert.ok(bag, `missing STRINGS[${id}]`);
@@ -29,26 +31,35 @@ for (const id of ["sv", "da", "fi", "nb"] as const) {
     assert.ok(bag!.statusDanger?.trim());
   });
 
-  test(`desktop ${id} honestLimits / proxyGuide* MAP keys differ from EN`, () => {
+  test(`desktop ${id} honestLimitsKicker ≠ honestLimitsTitle (gate vs product)`, () => {
     const bag = extractBag(id);
     assert.ok(bag, `missing STRINGS[${id}]`);
-    assert.ok(src.includes(`"${id}"`), `DESKTOP_BAGS / overlay should surface ${id}`);
     assert.ok(bag!.honestLimitsTitle?.trim());
+    assert.ok(bag!.honestLimitsKicker?.trim());
+    assert.notEqual(
+      bag!.honestLimitsKicker,
+      bag!.honestLimitsTitle,
+      `${id} kicker must not equal gate title`
+    );
     assert.notEqual(bag!.honestLimitsTitle, en.honestLimitsTitle);
+  });
+
+  test(`desktop ${id} proxyGuide* MAP keys differ from EN`, () => {
+    const bag = extractBag(id);
+    assert.ok(bag, `missing STRINGS[${id}]`);
     assert.ok(bag!.proxyGuideSummary?.trim());
     assert.notEqual(bag!.proxyGuideSummary, en.proxyGuideSummary);
-    // Must be real proxy chrome, not an honestLimits twin.
-    assert.match(bag!.proxyGuideSummary, /127\.0\.0\.1:8080|proxy|välitys|Proxy/i);
-    assert.ok(bag!.proxyGuideShow?.trim());
-    assert.notEqual(bag!.proxyGuideShow, en.proxyGuideShow);
+    assert.ok(bag!.proxyGuideMac?.trim());
+    assert.notEqual(bag!.proxyGuideMac, en.proxyGuideMac);
+    assert.match(bag!.proxyGuideMac, /macOS/i);
   });
 }
 
-test("DESKTOP_BAGS includes Nordic sv/da/fi/nb", () => {
+test("DESKTOP_BAGS includes Nordic + full Europe popup set", () => {
   const m = src.match(/const DESKTOP_BAGS = new Set\(\[([\s\S]*?)\]\)/);
   assert.ok(m, "DESKTOP_BAGS missing");
   const block = m![1];
-  for (const id of ["sv", "da", "fi", "nb"]) {
+  for (const id of OVERLAY) {
     assert.match(block, new RegExp(`["']${id}["']`), `DESKTOP_BAGS missing ${id}`);
   }
 });

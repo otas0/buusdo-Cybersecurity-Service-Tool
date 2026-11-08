@@ -464,14 +464,13 @@
   "proxyGuideAfterBlock": "Hosts were blocked. Set the HTTP proxy to 127.0.0.1:8080 or the log stays empty.",
   "extensionToastPhishing": "ဖစ်ရှင်းပုံစံကို ပိတ်ထားသည်",
   "homeDownloadsCta": "ဒက်စတော့ ဒေါင်းလုဒ်",
-  "langPanelNoMatches": "မတွေ့ပါ",
+  "langPanelNoMatches": "ကိုက်ညီသော ဘာသာစကား မရှိပါ",
   "desktopHonestLimitsGateTitle": "Before this computer is scanned",
   "langRegionGlobal": "Global",
   "langRegionEastAsia": "East Asia",
   "langRegionEurope": "Europe",
   "langRegionPacific": "Pacific",
-  "langRegionSoutheastAsia": "Southeast Asia",
+  "langRegionSoutheastAsia": "အရှေ့တောင်အာရှ",
   "langRegionSouthernAfrica": "Southern Africa",
-  "themeHeaderHint": "Use the one Appearance button in the header (next to language).",
-  "localeRecommendSearchHint": "Pinned suggestions below. Search to browse the full language list."
+  "themeHeaderHint": "Use the one Appearance button in the header (next to language)."
 }

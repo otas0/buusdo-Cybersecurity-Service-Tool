@@ -466,12 +466,12 @@
   "homeDownloadsCta": "Pobieranie aplikacji",
   "langPanelNoMatches": "Brak wyników",
   "desktopHonestLimitsGateTitle": "Zanim ten komputer zostanie przeskanowany",
-  "langRegionGlobal": "Globalnie",
-  "langRegionEastAsia": "Azja Wschodnia",
-  "langRegionEurope": "Europa",
-  "langRegionPacific": "Pacyfik",
-  "langRegionSoutheastAsia": "Azja Południowo-Wschodnia",
-  "langRegionSouthernAfrica": "Afryka Południowa",
+  "langRegionGlobal": "Globalne",
+  "langRegionEastAsia": "East Asia",
+  "langRegionEurope": "Europe",
+  "langRegionPacific": "Pacific",
+  "langRegionSoutheastAsia": "Southeast Asia",
+  "langRegionSouthernAfrica": "Southern Africa",
   "themeHeaderHint": "Użyj jednego przycisku Wygląd w nagłówku (obok języka).",
   "localeRecommendSearchHint": "Sugestie poniżej. Szukaj, by zobaczyć pełną listę."
 }

@@ -95,6 +95,16 @@
       tracker: "{n} tracker geblokkeerd",
       trackers: "{n} trackers geblokkeerd",
       dismiss: "Sluiten"
+    },
+    af: {
+      tracker: "{n} naspoor geblokkeer",
+      trackers: "{n} naspoors geblokkeer",
+      dismiss: "Maak toe"
+    },
+    zu: {
+      tracker: "Kuvinjwe {n} umlandeli",
+      trackers: "Kuvinjwe {n} abalandeli",
+      dismiss: "Vala"
     }
   };
 

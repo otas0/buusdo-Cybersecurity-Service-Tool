@@ -467,11 +467,11 @@
   "langPanelNoMatches": "Inga träffar",
   "desktopHonestLimitsGateTitle": "Innan den här datorn skannas",
   "langRegionGlobal": "Globalt",
-  "langRegionEastAsia": "Östasien",
-  "langRegionEurope": "Europa",
-  "langRegionPacific": "Stillahavet",
-  "langRegionSoutheastAsia": "Sydostasien",
-  "langRegionSouthernAfrica": "Södra Afrika",
+  "langRegionEastAsia": "East Asia",
+  "langRegionEurope": "Europe",
+  "langRegionPacific": "Pacific",
+  "langRegionSoutheastAsia": "Southeast Asia",
+  "langRegionSouthernAfrica": "Southern Africa",
   "themeHeaderHint": "Använd Utseende-knappen i sidhuvudet (bredvid språk).",
   "localeRecommendSearchHint": "Förslag nedan. Sök för hela språklistan."
 }

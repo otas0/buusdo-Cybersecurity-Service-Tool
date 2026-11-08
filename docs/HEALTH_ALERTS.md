@@ -19,6 +19,10 @@ Notarized HEAD soft_warns are also expected while the ship channel stays on the 
 
 **Do not confuse workflows:** **Health monitor** = soft_warn + optional Slack + download HEAD + checklist write-back. **Production health smoke** = thin `/api/health` + `/api/check` only.
 
+## Optional Workers timeout webhook
+
+Opt-in secret `WORKERS_TIMEOUT_WEBHOOK_URL` (not `SLACK_WEBHOOK_URL`). Soft jobs (`assert:eu-locale-routes-200`, soft-live Halt) POST a short JSON payload only when health probes return **connectivity timeout** (`http_code=000`). Application **5xx** failures stay in the Actions job summary / email path — they do not fire this webhook. Leave unset unless you explicitly want a chat ping for path timeouts.
+
 ## Checklist write-back
 
 Successful/failed CI runs append a row under `docs/LAUNCH_CHECKLIST.md` § check:prod log and push (bot commit).  

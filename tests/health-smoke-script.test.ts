@@ -10,6 +10,8 @@ test("health-smoke.mjs documents --url and required assertions", () => {
   const src = readFileSync(script, "utf8");
   assert.match(src, /--url/);
   assert.match(src, /curatedListPresent/);
+  assert.match(src, /localeCount/);
+  assert.match(src, /localeCount < 40|localeCount must be a number ≥ 40/);
   assert.match(src, /thirdPartyReputation/);
   assert.match(src, /accountSyncEnabled/);
 });

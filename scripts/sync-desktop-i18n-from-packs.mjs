@@ -84,7 +84,7 @@ const jaExtraPath = path.join(root, "desktop-app/public/js/i18n-ja-extra.json");
 const markerStart = "/* __DESKTOP_PACK_OVERLAY_START__ */";
 const markerEnd = "/* __DESKTOP_PACK_OVERLAY_END__ */";
 const NORDIC = ["sv", "da", "fi", "nb"];
-const EUROPE_DESKTOP = ["de", "fr", "es"];
+const EUROPE_DESKTOP = ["de", "fr", "es", "it", "nl"];
 const OVERLAY_LOCALES = [...NORDIC, ...EUROPE_DESKTOP];
 
 function parseEnBag(src) {

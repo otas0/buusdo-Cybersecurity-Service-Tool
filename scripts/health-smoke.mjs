@@ -64,6 +64,12 @@ async function main() {
   if (data?.curatedListPresent !== true) {
     fail("curatedListPresent must be true (bundle missing curated-threats.json?)");
   }
+  if (typeof data?.localeCount !== "number" || data.localeCount < 40) {
+    fail("localeCount must be a number ≥ 40 (catalog smoke)", data?.localeCount);
+  }
+  if (typeof data?.regionCount !== "number" || data.regionCount < 1) {
+    fail("regionCount missing or invalid", data?.regionCount);
+  }
   if (typeof data?.probeTimeoutMs !== "number" || data.probeTimeoutMs <= 0) {
     fail("probeTimeoutMs missing or invalid", data?.probeTimeoutMs);
   }
@@ -72,7 +78,7 @@ async function main() {
   }
 
   console.info(
-    `[health-smoke] OK service=${data.service} probeTimeoutMs=${data.probeTimeoutMs} accountSyncEnabled=${data.accountSyncEnabled} checkedAt=${data.checkedAt}`
+    `[health-smoke] OK service=${data.service} localeCount=${data.localeCount} regionCount=${data.regionCount} probeTimeoutMs=${data.probeTimeoutMs} accountSyncEnabled=${data.accountSyncEnabled} checkedAt=${data.checkedAt}`
   );
   process.exit(0);
 }
