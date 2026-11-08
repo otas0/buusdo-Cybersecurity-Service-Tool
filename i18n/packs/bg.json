@@ -76,7 +76,7 @@
   "whyEmpty": "No strong signals beyond the usual limitations.",
   "probeBlockedGenericTitle": "Site blocked the automated probe",
   "probeBlockedGenericDetail": "Received HTTP {status}. The site blocked or throttled this check — that is not proof of phishing. Try the address in a normal browser if needed.",
-  "downloadA4Poster": "Download A4 poster",
+  "downloadA4Poster": "Изтегли A4 плакат",
   "downloadA4PosterShort": "A4",
-  "downloadA4PosterHint": "Print A4 · 100% · margins none · background graphics on."
+  "downloadA4PosterHint": "Печат A4 · 100% · без полета · фонова графика включена."
 }

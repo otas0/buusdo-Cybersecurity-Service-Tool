@@ -26,5 +26,6 @@ test("build:promo-posters keeps offline soft-skip docs in promo README", () => {
     assert.match(md, /soft-skips/i, rel);
     assert.match(md, /privacy-fixture-no-survey/, rel);
     assert.match(md, /poster-pt\.html/, rel);
+    assert.match(md, /PROMO_CACHEBUST_REBUILD=1/, rel);
   }
 });

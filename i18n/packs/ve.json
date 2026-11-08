@@ -447,7 +447,7 @@
   "detailKindLimit": "Mielano",
   "probeBlockedGenericTitle": "Saiti yo thivhela u ṱola ho ḓiitaho",
   "probeBlockedGenericDetail": "Ho ṱanganedzwa HTTP {status}. Saiti yo thivhela kana ya fhungudza u ṱola uhu — zwenezwo a zwi vhuṱanzi ha u kanda. Lingedzani adreseni kha bhurauza yo doweleaho arali zwi tshi ṱoḓea.",
-  "downloadA4Poster": "Download A4 poster",
+  "downloadA4Poster": "Downloada phousetara ya A4",
   "downloadA4PosterShort": "A4",
-  "downloadA4PosterHint": "Print A4 · 100% · margins none · background graphics on."
+  "downloadA4PosterHint": "Printa A4 · 100% · hu si na margin · digrafiki dza nga murahu dzi vuliwaho."
 }

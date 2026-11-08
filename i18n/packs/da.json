@@ -125,7 +125,7 @@
   "feedbackChecklistHosts": "hostsReviewed — hver vært er gennemgået",
   "feedbackChecklistFp": "falsePositivesConfirmed — FP-fjernelser er bevidste",
   "feedbackChecklistReady": "readyToApply — klar til threat:apply",
-  "downloadA4Poster": "Download A4 poster",
+  "downloadA4Poster": "Download A4-plakat",
   "downloadA4PosterShort": "A4",
-  "downloadA4PosterHint": "Print A4 · 100% · margins none · background graphics on."
+  "downloadA4PosterHint": "Udskriv A4 · 100 % · ingen margener · baggrundsgrafik til."
 }

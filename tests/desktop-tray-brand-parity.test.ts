@@ -139,4 +139,14 @@ test("desktop About live footer FRAME exists with muted wordmark (beyond tray co
   const frame = await sample(aboutRel);
   assert.ok(frame.muted > 40, `FRAME-desktop-about muted u missing (${frame.muted})`);
   assert.ok(frame.orange < 80, `FRAME-desktop-about orange too high (${frame.orange})`);
+  // Pixel sample of the committed About FRAME (parity with popup muted-u assert).
+  assert.ok(frame.w >= 80 && frame.h >= 24, `FRAME-desktop-about too small ${frame.w}x${frame.h}`);
+});
+
+test("FRAME-desktop-about.png muted-u pixel sample (unit parity)", async () => {
+  const rel = "docs/store-screenshots/FRAME-desktop-about.png";
+  assert.ok(existsSync(path.join(root, rel)), `missing ${rel}`);
+  const frame = await sample(rel);
+  assert.ok(frame.muted > 40, `About FRAME muted u (#8d897f) missing (${frame.muted})`);
+  assert.ok(frame.orange < 80, `About FRAME Halt-orange too high (${frame.orange})`);
 });

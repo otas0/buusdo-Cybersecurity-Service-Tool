@@ -36,15 +36,20 @@ async function originReachable(): Promise<boolean> {
 test.describe("production privacy pages", () => {
   test.beforeAll(async () => {
     if (!base) {
+      console.info("[privacy-prod] soft-skip Workers: PLAYWRIGHT_BASE_URL / PRODUCTION_HEALTH_URL unset");
       test.skip(true, "Set PLAYWRIGHT_BASE_URL or PRODUCTION_HEALTH_URL to the Cloudflare origin");
     }
     const ok = await originReachable();
     if (!ok) {
+      console.info(
+        `[privacy-prod] soft-skip Workers: unreachable or unhealthy ${base} (China Pages suite may still run)`,
+      );
       test.skip(
         true,
         `Origin unreachable or unhealthy: ${base} (see docs/LOCAL_CF_CONNECTIVITY.md)`
       );
     }
+    console.info(`[privacy-prod] Workers privacy checks active at ${base}`);
   });
 
   test("/en/privacy shows policy", async ({ page }) => {
@@ -172,9 +177,17 @@ test.describe("China Pages privacy mirrors (soft)", () => {
         redirect: "follow"
       });
       if (!res.ok) {
+        console.info(
+          `[privacy-prod] soft-skip China Pages: ${chinaBase} HTTP ${res.status} (Workers suite may still run)`,
+        );
         test.skip(true, `China Pages unreachable: ${chinaBase} HTTP ${res.status}`);
       }
-    } catch {
+      console.info(`[privacy-prod] China Pages privacy checks active at ${chinaBase}`);
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : String(err);
+      console.info(
+        `[privacy-prod] soft-skip China Pages: ${chinaBase} (${msg}) (Workers suite may still run)`,
+      );
       test.skip(true, `China Pages unreachable: ${chinaBase}`);
     }
   });

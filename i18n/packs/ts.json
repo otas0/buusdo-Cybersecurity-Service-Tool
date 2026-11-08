@@ -447,7 +447,7 @@
   "detailKindLimit": "Mpimo",
   "probeBlockedGenericTitle": "Sayiti yi siverile ku kambela loku itirhaka",
   "probeBlockedGenericDetail": "Ku amukeriwe HTTP {status}. Sayiti yi siverile kumbe yi hungutise ku kambela loku — sweswo a hi vumbhoni bya vuxisi. Ringeta adirese eka bhurawuza yo toloveleka loko swi laveka.",
-  "downloadA4Poster": "Download A4 poster",
+  "downloadA4Poster": "Downloada phousetara ya A4",
   "downloadA4PosterShort": "A4",
-  "downloadA4PosterHint": "Print A4 · 100% · margins none · background graphics on."
+  "downloadA4PosterHint": "Printa A4 · 100% · ku nga ri na margin · digrafiki ta le ndzhaku ti pfuriwile."
 }

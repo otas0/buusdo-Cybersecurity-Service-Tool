@@ -140,5 +140,9 @@
   "probeBlocked429Title": "Sivusto rajoitti automaattista tunnistusta",
   "probeBlocked429Detail": "Vastaanotettiin HTTP 429 (Too Many Requests). Sivusto rajoitti tätä tarkistusta — se ei todista phishingiä. Odota ja yritä uudelleen, tai avaa osoite tavallisessa selaimessa.",
   "probeBlocked503Title": "Sivusto on tilapäisesti poissa käytöstä tunnistukselta",
-  "probeBlocked503Detail": "Vastaanotettiin HTTP 503 (Service Unavailable). Sivusto tai reunapalvelu voi olla ruuhkautunut — se ei todista phishingiä. Yritä myöhemmin uudelleen tavallisessa selaimessa tarvittaessa."
+  "probeBlocked503Detail": "Vastaanotettiin HTTP 503 (Service Unavailable). Sivusto tai reunapalvelu voi olla ruuhkautunut — se ei todista phishingiä. Yritä myöhemmin uudelleen tavallisessa selaimessa tarvittaessa.",
+  "ambiguousProbeNotPhishing": "Bot-esto / rajoitus tunnistuksessa ei ole phishing-todiste — avaa sivusto tavallisessa selaimessa, jos yhä tarvitset sitä.",
+  "evidenceProbeTimeoutTitle": "Live-tarkistus aikakatkaistiin",
+  "evidenceProbeTimeoutDetail": "Sivusto ei vastannut ajoissa.",
+  "timingAmbiguousProbe": "ambiguousProbeStatus"
 }

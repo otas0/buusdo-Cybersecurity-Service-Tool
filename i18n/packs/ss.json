@@ -447,7 +447,7 @@
   "detailKindLimit": "Umkhawulo",
   "probeBlockedGenericTitle": "Isayithi ivimbele inhlolo leyenzakalelayo",
   "probeBlockedGenericDetail": "Kutfole i-HTTP {status}. Isayithi ivimbele noma inciphise loku kuhlola — loko akusibo bufakazi bekukhwabanisa. Zama likheli kusiphequluli lesijwayelekile uma kudzingeka.",
-  "downloadA4Poster": "Download A4 poster",
+  "downloadA4Poster": "Dawuniloda i-phosta ye-A4",
   "downloadA4PosterShort": "A4",
-  "downloadA4PosterHint": "Print A4 · 100% · margins none · background graphics on."
+  "downloadA4PosterHint": "Printa i-A4 · 100% · akukho margini · iigrafiki tangemuva tivuliwe."
 }

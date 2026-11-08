@@ -447,7 +447,7 @@
   "detailKindLimit": "ដែនកំណត់",
   "probeBlockedGenericTitle": "គេហទំព័របានរារាំងការស៊ើបអង្កេតស្វ័យប្រវត្តិ",
   "probeBlockedGenericDetail": "ទទួលបាន HTTP {status}។ គេហទំព័របានរារាំង ឬកំណត់ការត្រួតពិនិត្យនេះ — នោះមិនមែនជាភស្តុតាងនៃការឆបោកទេ។ សាកល្បងអាសយដ្ឋានក្នុងកម្មវិធីរុករកធម្មតាប្រសិនបើចាំបាច់។",
-  "downloadA4Poster": "Download A4 poster",
+  "downloadA4Poster": "ទាញយកផ្ទាំង A4",
   "downloadA4PosterShort": "A4",
-  "downloadA4PosterHint": "Print A4 · 100% · margins none · background graphics on."
+  "downloadA4PosterHint": "បោះពុម្ព A4 · 100% · គ្មានរឹម · បើកក្រាហ្វិកផ្ទៃខាងក្រោយ។"
 }

@@ -4,12 +4,15 @@
  *
  *   npm run capture:store-halt-frame && node scripts/assert-store-halt-frame-floors.mjs
  */
+import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import sharp from "sharp";
 import { haltFrameStats, assertHaltFrameFloors } from "./store-halt-frame-stats.mjs";
 
 const root = path.join(path.dirname(fileURLToPath(import.meta.url)), "..");
 const dir = path.join(root, "docs/store-screenshots");
+
 const files = [
   "FRAME-formal-name.png",
   "FRAME-clear.png",
@@ -50,5 +53,49 @@ for (const name of files) {
   }
 }
 
+// Companion: Desktop About footer FRAME (packed into listing-frames.zip).
+{
+  const aboutName = "FRAME-desktop-about.png";
+  const about = path.join(dir, aboutName);
+  if (!fs.existsSync(about)) {
+    console.error(
+      `[assert-store-halt-frame-floors] missing ${aboutName} — run npm run capture:desktop-about-frame`,
+    );
+    failed = true;
+  } else {
+    const { data, info } = await sharp(about).ensureAlpha().raw().toBuffer({ resolveWithObject: true });
+    let muted = 0;
+    let orange = 0;
+    for (let i = 0; i < data.length; i += info.channels) {
+      if (data[i + 3] < 180) continue;
+      const r = data[i];
+      const g = data[i + 1];
+      const b = data[i + 2];
+      if (Math.abs(r - 0x8d) <= 22 && Math.abs(g - 0x89) <= 22 && Math.abs(b - 0x7f) <= 22) muted += 1;
+      if (r >= 160 && g <= 120 && b <= 60 && r > g + 40) orange += 1;
+    }
+    if (info.width < 80 || info.height < 24) {
+      console.error(
+        `[assert-store-halt-frame-floors] ${aboutName} too small ${info.width}x${info.height}`,
+      );
+      failed = true;
+    } else if (muted < 20) {
+      console.error(
+        `[assert-store-halt-frame-floors] ${aboutName} muted u missing (muted=${muted})`,
+      );
+      failed = true;
+    } else if (orange > 120) {
+      console.error(
+        `[assert-store-halt-frame-floors] ${aboutName} Halt-orange too high (orange=${orange})`,
+      );
+      failed = true;
+    } else {
+      console.info(
+        `[assert-store-halt-frame-floors] OK ${aboutName} ${info.width}x${info.height} muted=${muted}`,
+      );
+    }
+  }
+}
+
 if (failed) process.exit(1);
-console.info("[assert-store-halt-frame-floors] OK (platform-stable structural floors)");
+console.info("[assert-store-halt-frame-floors] OK (platform-stable structural floors + About FRAME)");

@@ -49,4 +49,20 @@ for (const id of ["nb", "fi"] as const) {
       assert.notEqual(bag[key], en[key], `${id}.${key} still EN`);
     }
   });
+
+  test(`${id} ambiguousProbe + evidenceProbeTimeout are localized`, () => {
+    const pack = JSON.parse(readFileSync(path.join("i18n/packs", `${id}.json`), "utf8")) as Record<
+      string,
+      string
+    >;
+    const en = getMessages("en");
+    const bag = getMessages(id);
+    assert.ok(pack.ambiguousProbeNotPhishing?.trim());
+    assert.ok(pack.evidenceProbeTimeoutTitle?.trim());
+    assert.ok(pack.evidenceProbeTimeoutDetail?.trim());
+    assert.notEqual(bag.ambiguousProbeNotPhishing, en.ambiguousProbeNotPhishing);
+    assert.notEqual(bag.evidenceProbeTimeoutTitle, en.evidenceProbeTimeoutTitle);
+    assert.notEqual(bag.evidenceProbeTimeoutDetail, en.evidenceProbeTimeoutDetail);
+    assert.equal(pack.timingAmbiguousProbe, en.timingAmbiguousProbe);
+  });
 }

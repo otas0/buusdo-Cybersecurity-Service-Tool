@@ -140,5 +140,9 @@
   "probeBlocked429Title": "Nettstedet begrenset den automatiske sondagen",
   "probeBlocked429Detail": "Mottok HTTP 429 (Too Many Requests). Nettstedet begrenset denne sjekken — det er ikke bevis på phishing. Vent og prøv igjen, eller åpne adressen i en vanlig nettleser.",
   "probeBlocked503Title": "Nettstedet er midlertidig utilgjengelig for sondagen",
-  "probeBlocked503Detail": "Mottok HTTP 503 (Service Unavailable). Nettstedet eller kanten kan være overbelastet — det er ikke bevis på phishing. Prøv igjen senere i en vanlig nettleser om nødvendig."
+  "probeBlocked503Detail": "Mottok HTTP 503 (Service Unavailable). Nettstedet eller kanten kan være overbelastet — det er ikke bevis på phishing. Prøv igjen senere i en vanlig nettleser om nødvendig.",
+  "ambiguousProbeNotPhishing": "Bot-blokkering / begrensning på sondagen er ikke phishing-bevis — åpne nettstedet i en vanlig nettleser hvis du fortsatt trenger det.",
+  "evidenceProbeTimeoutTitle": "Live-sjekken ble tidsavbrutt",
+  "evidenceProbeTimeoutDetail": "Nettstedet svarte ikke i tide.",
+  "timingAmbiguousProbe": "ambiguousProbeStatus"
 }

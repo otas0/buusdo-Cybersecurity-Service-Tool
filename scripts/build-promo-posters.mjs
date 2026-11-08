@@ -428,6 +428,7 @@ fs.writeFileSync(
 - Copy keys: \`check\`, \`lightIdle\`, \`nextStep*\`, \`leave\`, \`ignoreRiskBody\`, \`privacyNote\`, \`lightLimited\`, status words
 - QRs: live Worker + China Pages
 - Rebuild: \`npm run build:promo-posters\` then \`npm run assert:promo-i18n\`
+- Cachebust gate: \`npm run assert:promo-cachebust\` fails when \`.cachebust\` / poster \`?v=\` lag the on-light wordmark hash. After brand sync, regen and commit, or in CI use \`PROMO_CACHEBUST_REBUILD=1 npm run assert:promo-cachebust\` then ensure \`git diff\` on \`public/promo\` is clean.
 - Optional PDF: \`npm run export:promo-poster-pdf\`
   - \`PLAYWRIGHT_BROWSERS_PATH\`: if unset on macOS and \`~/Library/Caches/ms-playwright\` exists, the export script uses that; else Playwright default (\`~/.cache/ms-playwright\` on Linux). Launch tries bundled Chromium, then \`channel=chrome\`.
   - Explicit: \`PLAYWRIGHT_BROWSERS_PATH="$HOME/Library/Caches/ms-playwright" npm run export:promo-poster-pdf\`

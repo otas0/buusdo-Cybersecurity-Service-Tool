@@ -447,7 +447,7 @@
   "detailKindLimit": "Molelwane",
   "probeBlockedGenericTitle": "Saete e thibetse teko e e itiragalelang",
   "probeBlockedGenericDetail": "Go amogetswe HTTP {status}. Saete e thibetse kgotsa e fokoditse teko eno — seo ga se bosupi jwa tsietso. Leka aterese mo sebatling se se tlwaelegileng fa go tlhokega.",
-  "downloadA4Poster": "Download A4 poster",
+  "downloadA4Poster": "Downloada phousetara ya A4",
   "downloadA4PosterShort": "A4",
-  "downloadA4PosterHint": "Print A4 · 100% · margins none · background graphics on."
+  "downloadA4PosterHint": "Printa A4 · 100% · go se na margin · digrafiki tsa kwa morago di butswe."
 }

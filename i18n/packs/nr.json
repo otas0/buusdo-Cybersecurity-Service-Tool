@@ -447,7 +447,7 @@
   "detailKindLimit": "Umkhawulo",
   "probeBlockedGenericTitle": "Isayithi ivimbele inhlolo ezenzakalelayo",
   "probeBlockedGenericDetail": "Kutholwe i-HTTP {status}. Isayithi ivimbele nanyana inciphise lokhu kuhlola — lokho akubona ubufakazi bokukhwabanisa. Zama ikheli kusiphequluli esijwayelekileko nanyana kudingeka.",
-  "downloadA4Poster": "Download A4 poster",
+  "downloadA4Poster": "Dawuniloda i-phosta ye-A4",
   "downloadA4PosterShort": "A4",
-  "downloadA4PosterHint": "Print A4 · 100% · margins none · background graphics on."
+  "downloadA4PosterHint": "Printa i-A4 · 100% · akukho margini · iigrafiki zangemuva zivuliwe."
 }

@@ -15,6 +15,22 @@ const wordmark = path.join(root, "public/brand/buusdo-wordmark-on-light.png");
 const before = fs.existsSync(path.join(promoPublic, ".cachebust"))
   ? fs.readFileSync(path.join(promoPublic, ".cachebust"), "utf8").trim()
   : "";
+const expectedPre = createHash("sha256").update(fs.readFileSync(wordmark)).digest("hex").slice(0, 10);
+const posterPre = fs.existsSync(path.join(promoPublic, "poster.html"))
+  ? fs.readFileSync(path.join(promoPublic, "poster.html"), "utf8")
+  : "";
+if (
+  process.env.PROMO_CACHEBUST_REBUILD !== "1" &&
+  expectedPre &&
+  (!before || before !== expectedPre || !posterPre.includes(`?v=${expectedPre}`))
+) {
+  console.error(
+    `[assert-promo-cachebust] FAIL: poster ?v= / .cachebust lags on-light hash ${expectedPre}. ` +
+      `Run: npm run build:promo-posters && commit public/promo (+ docs/promo). ` +
+      `CI regen: PROMO_CACHEBUST_REBUILD=1 npm run assert:promo-cachebust`,
+  );
+  process.exit(1);
+}
 
 const run = spawnSync(
   process.execPath,

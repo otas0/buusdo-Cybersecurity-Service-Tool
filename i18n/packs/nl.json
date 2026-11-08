@@ -89,7 +89,7 @@
   "whyEmpty": "Geen sterk signaal buiten de gebruikelijke limieten.",
   "probeBlockedGenericTitle": "De site heeft de automatische sonde geblokkeerd",
   "probeBlockedGenericDetail": "HTTP {status} ontvangen. De site heeft deze check geblokkeerd of beperkt — dat is geen phishingbewijs. Open het adres in een normale browser indien nodig.",
-  "downloadA4Poster": "Download A4 poster",
+  "downloadA4Poster": "Download A4-poster",
   "downloadA4PosterShort": "A4",
-  "downloadA4PosterHint": "Print A4 · 100% · margins none · background graphics on."
+  "downloadA4PosterHint": "Print A4 · 100% · geen marges · achtergrondafbeeldingen aan."
 }
