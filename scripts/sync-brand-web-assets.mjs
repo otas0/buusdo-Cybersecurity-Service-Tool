@@ -28,10 +28,21 @@ const HALT = "#ff4d00";
 const MUTED = "#8d897f";
 const label = "buusdo Cybersecurity Service Tool";
 
-/** Light-plate Halt accent (u-card / mark parallelogram) — do not invert to cyan. */
-function isHaltAccent(r, g, b) {
-  return r >= 160 && g <= 120 && b <= 60 && r > g + 40 && r > b + 80;
+/** Wordmark u-card on light plates is charcoal #545454 — never Halt orange, never invert to cream. */
+function isCharcoalUCard(r, g, b) {
+  const max = Math.max(r, g, b);
+  const min = Math.min(r, g, b);
+  const lum = 0.299 * r + 0.587 * g + 0.114 * b;
+  return max - min <= 18 && lum >= 55 && lum <= 120;
 }
+
+function parseHex(hex) {
+  const h = hex.replace("#", "");
+  return [parseInt(h.slice(0, 2), 16), parseInt(h.slice(2, 4), 16), parseInt(h.slice(4, 6), 16)];
+}
+
+const MUTED_RGB = parseHex(MUTED);
+const TEXT_RGB = parseHex(TEXT);
 
 async function toDarkTransparent(pngBuf) {
   const { data, info } = await sharp(pngBuf)
@@ -49,20 +60,21 @@ async function toDarkTransparent(pngBuf) {
       out[j] = out[j + 1] = out[j + 2] = out[j + 3] = 0;
       continue;
     }
-    // Preserve Halt orange on the u-card (light plate ships #ff4d00).
-    if (isHaltAccent(r, g, b)) {
-      out[j] = 0xff;
-      out[j + 1] = 0x4d;
-      out[j + 2] = 0x00;
-      out[j + 3] = Math.round(Math.min(255, ((255 - Math.min(lum, 180)) / 255) * 255 * 1.15));
+    // Charcoal u-card → instrument MUTED on dark field (do not cream-invert).
+    if (isCharcoalUCard(r, g, b)) {
+      out[j] = MUTED_RGB[0];
+      out[j + 1] = MUTED_RGB[1];
+      out[j + 2] = MUTED_RGB[2];
+      out[j + 3] = 255;
       continue;
     }
+    // Black ink → cream text (invert onto instrument TEXT).
     const ir = 255 - r;
     const ig = 255 - g;
     const ib = 255 - b;
-    out[j] = Math.round(ir * (243 / 255));
-    out[j + 1] = Math.round(ig * (241 / 255));
-    out[j + 2] = Math.round(ib * (234 / 255));
+    out[j] = Math.round((ir / 255) * TEXT_RGB[0]);
+    out[j + 1] = Math.round((ig / 255) * TEXT_RGB[1]);
+    out[j + 2] = Math.round((ib / 255) * TEXT_RGB[2]);
     out[j + 3] = Math.round(Math.min(255, ((255 - lum) / 255) * 255 * 1.05));
   }
   return sharp(out, { raw: { width: w, height: h, channels: 4 } }).png().toBuffer();

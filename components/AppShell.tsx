@@ -679,7 +679,6 @@ export function AppShell({ locale, slug }: { locale: Locale; slug: string[] }) {
 
   return (
     <div className="shell">
-      <LocaleRecommendModal locale={locale} view={view} hash={viewHash} />
       <Header locale={locale} view={view} onNavigate={navigate} />
       {view === "settings" ? (
         <SettingsPanel
@@ -702,6 +701,8 @@ export function AppShell({ locale, slug }: { locale: Locale; slug: string[] }) {
       ) : (
         <Home locale={locale} />
       )}
+      {/* Overlay only — never inline near brand; returns null when suppressed */}
+      <LocaleRecommendModal locale={locale} view={view} hash={viewHash} />
     </div>
   );
 }

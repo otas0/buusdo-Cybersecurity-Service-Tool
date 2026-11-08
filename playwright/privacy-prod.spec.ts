@@ -59,6 +59,8 @@ test.describe("production privacy pages", () => {
     await expect(page.getByTestId("privacy-contact")).toContainText(/official email|Cloudflare Worker/i);
     await expect(page.getByTestId("privacy-faq-parents")).toBeVisible();
     await expect(page.getByTestId("privacy-faq-parents")).toContainText(/antivirus|votes/i);
+    // Round-2 survey removed — privacy must not link /survey/
+    await expect(page.locator('a[href*="/survey/"]')).toHaveCount(0);
   });
 
   test("/en/privacy#privacy-honest-limits deep-link", async ({ page }) => {

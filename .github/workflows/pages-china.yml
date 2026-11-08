@@ -25,6 +25,20 @@ jobs:
           cp shared/tokens.css china-pages/assets/tokens.css
           cmp -s shared/tokens.css china-pages/assets/tokens.css
 
+      - name: Assert no Round-2 survey leftovers in publish tree
+        run: |
+          set -euo pipefail
+          if [ -e china-pages/survey-round2.html ]; then
+            echo "::error::china-pages/survey-round2.html must not ship (Round-2 survey removed)"
+            exit 1
+          fi
+          if find china-pages -iname '*round2*' -print -quit | grep -q .; then
+            echo "::error::china-pages still contains round2 paths"
+            find china-pages -iname '*round2*'
+            exit 1
+          fi
+          echo "::notice::china-pages publish tree has no survey-round2.html"
+
       - name: Publish china-pages to otas0/buusdocst
         uses: peaceiris/actions-gh-pages@v4
         with:

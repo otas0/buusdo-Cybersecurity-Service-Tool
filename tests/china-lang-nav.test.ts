@@ -64,7 +64,7 @@ test("bilingual pages mark 中文/EN with data-china-lang and locale Workers CTA
         assert.match(html, /data-testid="china-workers-zh-hans"/);
         assert.match(html, /data-testid="china-workers-zh-hans-footnote"/);
         assert.match(html, /workers\.dev\/zh-Hans/);
-      } else if (file === "privacy-en.html") {
+      } else if (file === "privacy-en.html" || file === "install-en.html") {
         assert.match(html, /data-testid="china-workers-zh-hans-footnote"/);
         assert.match(html, /workers\.dev\/zh-Hans/);
       } else {

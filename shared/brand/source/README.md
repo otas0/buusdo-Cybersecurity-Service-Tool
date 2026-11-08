@@ -2,8 +2,18 @@
 
 | File | Role |
 |------|------|
-| `buusdo-wordmark-light-plate.png` | Light-plate master for `npm run sync:brand-web` (black type + charcoal `#545454` u-card) |
-| `buusdo-logo-light-plate.png` | Square logo light-plate master (same charcoal u-card) |
-| `buusdo-wordmark-paths.svg` | **Optional designer path wordmark** — when present, sync may adopt it; until then web UI uses transparent PNG derived from the light plate |
+| `designer/buusdo-cst-wordmark-reference.png` | **Designer still** (do not guess colors — replace plates from this) |
+| `buusdo-wordmark-light-plate.png` | Cropped light-plate master for `npm run sync:brand-web` |
+| `buusdo-logo-light-plate.png` | Square logo light-plate master (same u-card) |
+| `buusdo-wordmark-paths.svg` | **Optional designer path wordmark** — when present, sync may adopt it |
 
-Do not commit UTF-8-corrupted binaries. Rebuild with `npm run sync:brand-web` then `npm run assert:brand-web-alpha`.
+## u-card color (required)
+
+See [docs/BRAND_U_CARD.md](../../docs/BRAND_U_CARD.md) (shared with Graphics product line).
+
+| Surface | u parallelograms | Notes |
+|---------|------------------|-------|
+| Light plate / on-light PNG | **`#545454`** charcoal | Designer reference — **never Halt orange `#ff4d00`** |
+| Dark-field PNG | **`#8d897f`** instrument muted | Sync maps charcoal → muted; do not cream-invert |
+
+Rebuild: `npm run sync:brand-web` then `npm run assert:brand-web-alpha`.

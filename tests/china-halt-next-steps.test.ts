@@ -11,6 +11,7 @@ test("China Pages index + en expose Halt next-steps section", () => {
     assert.match(src, /data-testid="china-halt-next-steps"/);
     assert.match(src, /id="halt-next-steps"/);
     assert.match(src, /halt-steps/);
+    assert.doesNotMatch(src, /survey-round2|\/survey\/|Round-2/i);
   }
   assert.match(zh, /立刻离开/);
   assert.match(en, /Leave the page now/i);
