@@ -28,6 +28,8 @@ Actions **Pages China** 将 `china-pages/` 发布到 `otas0/buusdocst`（secret 
 
 每一页顶栏统一：`中文 · EN`（`data-testid="china-lang-switch"`）+ 站点导航（入口/安装/隐私 或 Entry/Install/Privacy）。三对中英页面内容对等，无「仅中文子页」死链。
 
+语言偏好：`lang-persist.js` 把选择写入 `localStorage`（`buusdocst-china-lang`）。选 EN 后即使打开中文 URL（如 `/` 或 `install.html`）也会落到对应英文页；顶栏 / 正文站内链按当前语言保持，不会点回中文。
+
 ## 与 Workers 的关系
 
 | 表面 | 宿主 |
