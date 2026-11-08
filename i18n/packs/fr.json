@@ -72,7 +72,6 @@
   "localeRecommendTitle": "Choisissez votre langue",
   "localeRecommendBody": "D’après votre navigateur, nous suggérons {lang}. Vous pouvez changer à tout moment dans l’en-tête.",
   "localeRecommendAccept": "Utiliser {lang}",
-  "localeRecommendStay": "Garder l’anglais",
   "localeRecommendDismiss": "Pas maintenant",
   "whyEmpty": "Aucun signal fort au-delà des limites habituelles.",
   "privacyPolicyIntro": "buusdo Cybersecurity Service Tool (gamme Buusdo — produit distinct) vous aide à vérifier une adresse de site avant de lui faire confiance. Les contrôles utilisent des signaux first-party et notre liste de menaces. Cette page est l’avis de confidentialité du site, de l’extension et de l’app bureau.",

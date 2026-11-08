@@ -72,7 +72,6 @@
   "localeRecommendTitle": "Wybierz język",
   "localeRecommendBody": "Na podstawie przeglądarki sugerujemy {lang}. Możesz to zmienić w nagłówku.",
   "localeRecommendAccept": "Użyj {lang}",
-  "localeRecommendStay": "Zostaw angielski",
   "localeRecommendDismiss": "Nie teraz",
   "whyEmpty": "Brak silnych sygnałów poza zwykłymi ograniczeniami.",
   "probeBlockedGenericTitle": "Witryna zablokowała automatyczną sondę",

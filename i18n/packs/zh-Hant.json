@@ -312,7 +312,6 @@
   "localeRecommendTitle": "選擇語言",
   "localeRecommendBody": "根據瀏覽器，我們建議 {lang}。可隨時在頁首變更。",
   "localeRecommendAccept": "使用 {lang}",
-  "localeRecommendStay": "保持英文",
   "localeRecommendDismiss": "暫時不用",
   "whyEmpty": "除了平常的限度之外，沒有更強的訊號。",
   "levelCriticalLabel": "嚴重風險",

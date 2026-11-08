@@ -12,8 +12,6 @@ import { getMessages, type Locale } from "../i18n/messages";
 const CHOICE_KEY = "buusdocst-locale-choice";
 const DISMISS_KEY = "buusdocst-locale-recommend-dismiss";
 
-type SuppressReason = "already-chose" | "dismissed" | "matches-locale" | "private-mode" | null;
-
 function regionHintsFromBrowser(): LocaleRegion[] {
   const langs = typeof navigator !== "undefined" ? navigator.languages || [navigator.language] : ["en"];
   const regions = new Set<LocaleRegion>();
@@ -45,13 +43,6 @@ function suggestLocale(): string {
   return normalizeLocale(langs[0] || "en");
 }
 
-function suppressCopy(reason: Exclude<SuppressReason, null>, t: ReturnType<typeof getMessages>): string {
-  // Visible chrome for Playwright diagnostics when the dialog is suppressed.
-  if (reason === "dismissed") return t.localeRecommendDismiss;
-  if (reason === "already-chose" || reason === "matches-locale") return t.localeRecommendStay;
-  return t.localeRecommendTitle;
-}
-
 export function LocaleRecommendModal({
   locale,
   view,
@@ -63,7 +54,6 @@ export function LocaleRecommendModal({
 }) {
   const t = getMessages(locale);
   const [open, setOpen] = useState(false);
-  const [suppressReason, setSuppressReason] = useState<SuppressReason>(null);
   const suggested = useMemo(() => suggestLocale(), []);
   const suggestedEntry = getLocaleEntry(suggested);
   const regionLocales = useMemo(() => {
@@ -88,26 +78,17 @@ export function LocaleRecommendModal({
 
   useEffect(() => {
     try {
-      if (localStorage.getItem(CHOICE_KEY)) {
-        setSuppressReason("already-chose");
-        setOpen(false);
-        return;
-      }
-      if (localStorage.getItem(DISMISS_KEY)) {
-        setSuppressReason("dismissed");
+      if (localStorage.getItem(CHOICE_KEY) || localStorage.getItem(DISMISS_KEY)) {
         setOpen(false);
         return;
       }
       if (suggested === locale) {
         localStorage.setItem(CHOICE_KEY, locale);
-        setSuppressReason("matches-locale");
         setOpen(false);
         return;
       }
-      setSuppressReason(null);
       setOpen(true);
     } catch {
-      setSuppressReason("private-mode");
       setOpen(false);
     }
   }, [locale, suggested]);
@@ -136,24 +117,10 @@ export function LocaleRecommendModal({
     } catch {
       /* ignore */
     }
-    setSuppressReason("dismissed");
     setOpen(false);
   }
 
-  if (!open) {
-    if (!suppressReason) return null;
-    return (
-      <p
-        className="hint locale-recommend-suppressed"
-        data-testid="locale-recommend-suppressed"
-        data-reason={suppressReason}
-        role="status"
-      >
-        {suppressCopy(suppressReason, t)}
-        <span className="visually-hidden"> ({suppressReason})</span>
-      </p>
-    );
-  }
+  if (!open) return null;
 
   const body = t.localeRecommendBody.replace("{lang}", suggestedEntry.nativeName);
   const acceptLabel = t.localeRecommendAccept.replace("{lang}", suggestedEntry.nativeName);
@@ -166,9 +133,6 @@ export function LocaleRecommendModal({
         <div className="action-row">
           <button type="button" className="text-button" data-testid="locale-recommend-accept" onClick={() => accept(suggested)}>
             {acceptLabel}
-          </button>
-          <button type="button" className="text-button" data-testid="locale-recommend-stay" onClick={() => accept("en")}>
-            {t.localeRecommendStay}
           </button>
           <button type="button" className="text-button" data-testid="locale-recommend-dismiss" onClick={dismiss}>
             {t.localeRecommendDismiss}

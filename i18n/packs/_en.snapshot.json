@@ -312,7 +312,6 @@
   "localeRecommendTitle": "Choose your language",
   "localeRecommendBody": "Based on your browser, we suggest {lang}. You can change this anytime in the header.",
   "localeRecommendAccept": "Use {lang}",
-  "localeRecommendStay": "Keep English",
   "localeRecommendDismiss": "Not now",
   "whyEmpty": "No strong signals beyond the usual limitations.",
   "levelCriticalLabel": "Critical risk",

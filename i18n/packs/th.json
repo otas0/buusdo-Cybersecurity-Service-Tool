@@ -312,7 +312,6 @@
   "localeRecommendTitle": "เลือกภาษา",
   "localeRecommendBody": "จากเบราว์เซอร์ เราแนะนำ {lang} คุณเปลี่ยนได้ทุกเมื่อที่ส่วนหัว",
   "localeRecommendAccept": "ใช้ {lang}",
-  "localeRecommendStay": "คงภาษาอังกฤษ",
   "localeRecommendDismiss": "ยังไม่ใช้",
   "whyEmpty": "ไม่มีสัญญาณแรงกว่าขอบเขตปกติ",
   "levelCriticalLabel": "ความเสี่ยงวิกฤต",

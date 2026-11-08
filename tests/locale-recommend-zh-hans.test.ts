@@ -9,6 +9,6 @@ test("zh-Hans Accept-Language soft prompt copy is Chinese", () => {
   assert.match(zh.localeRecommendTitle, /语言|選擇|选择/);
   assert.match(zh.localeRecommendBody, /浏览器|瀏覽器|\{lang\}/);
   assert.match(zh.localeRecommendAccept, /使用|\{lang\}/);
-  assert.match(zh.localeRecommendStay, /英文|英语/);
   assert.match(zh.localeRecommendDismiss, /不用|稍后|暫時|暂时/);
+  assert.equal("localeRecommendStay" in zh, false);
 });

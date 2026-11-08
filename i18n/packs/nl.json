@@ -85,7 +85,6 @@
   "localeRecommendTitle": "Kies je taal",
   "localeRecommendBody": "Op basis van je browser stellen we {lang} voor. Je kunt dit altijd wijzigen in de kop.",
   "localeRecommendAccept": "Gebruik {lang}",
-  "localeRecommendStay": "Engels houden",
   "localeRecommendDismiss": "Niet nu",
   "whyEmpty": "Geen sterk signaal buiten de gebruikelijke limieten.",
   "probeBlockedGenericTitle": "De site heeft de automatische sonde geblokkeerd",

@@ -312,7 +312,6 @@
   "localeRecommendTitle": "言語を選ぶ",
   "localeRecommendBody": "ブラウザに基づき {lang} を提案します。ヘッダーでいつでも変更できます。",
   "localeRecommendAccept": "{lang} を使う",
-  "localeRecommendStay": "英語のまま",
   "localeRecommendDismiss": "今はしない",
   "whyEmpty": "通常の限界以外に強い信号はありません。",
   "levelCriticalLabel": "重大なリスク",

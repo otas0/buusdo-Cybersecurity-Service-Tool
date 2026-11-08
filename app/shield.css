@@ -102,11 +102,6 @@
   display: none;
 }
 
-.locale-recommend-suppressed {
-  margin: 0 0 12px;
-  font-size: 12px;
-}
-
 .locale-recommend {
   position: fixed;
   inset: 0;

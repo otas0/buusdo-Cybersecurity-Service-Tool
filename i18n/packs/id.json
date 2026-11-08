@@ -312,7 +312,6 @@
   "localeRecommendTitle": "Pilih bahasa Anda",
   "localeRecommendBody": "Berdasarkan peramban Anda, kami menyarankan {lang}. Anda dapat mengubahnya kapan saja di tajuk.",
   "localeRecommendAccept": "Gunakan {lang}",
-  "localeRecommendStay": "Tetap bahasa Inggris",
   "localeRecommendDismiss": "Tidak sekarang",
   "whyEmpty": "Tidak ada sinyal lebih kuat di luar batas yang biasa.",
   "levelCriticalLabel": "Risiko kritis",

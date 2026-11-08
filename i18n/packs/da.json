@@ -72,9 +72,21 @@
   "localeRecommendTitle": "Choose your language",
   "localeRecommendBody": "Based on your browser, we suggest {lang}. You can change this anytime in the header.",
   "localeRecommendAccept": "Use {lang}",
-  "localeRecommendStay": "Keep English",
   "localeRecommendDismiss": "Not now",
   "whyEmpty": "No strong signals beyond the usual limitations.",
   "probeBlockedGenericTitle": "Site blocked the automated probe",
-  "probeBlockedGenericDetail": "Received HTTP {status}. The site blocked or throttled this check — that is not proof of phishing. Try the address in a normal browser if needed."
+  "probeBlockedGenericDetail": "Received HTTP {status}. The site blocked or throttled this check — that is not proof of phishing. Try the address in a normal browser if needed.",
+  "privacyPolicyIntro": "buusdo Cybersecurity Service Tool (Buusdo-produktlinje — separat produkt) hjælper dig med at tjekke en webadresse, før du stoler på den. Tjek bruger first-party-signaler og vores egen trusselsliste. Denne side er privatlivserklæringen for webstedet, browserudvidelsen og desktop-appen.",
+  "privacyPolicyWhatTitle": "Hvad et tjek bruger",
+  "privacyPolicyWhatBody": "Når du kører et tjek, behandles adressen på buusdo-serveren for at analysere struktur, sammenligne vores trusselsliste og eventuelt sonde tilgængelighed (DNS / HTTP). Vi sender ikke tjekkede URL’er til Google Safe Browsing eller andre tredjeparts-API’er for omdømme, og vi sælger ikke tjekdata.",
+  "privacyPolicyStoreTitle": "Hvad der gemmes",
+  "privacyPolicyStoreBody": "Standard: intet gemmes. Du kan vælge lagring kun på denne enhed (blok-/tillidslister, valgfri historik) i browseren, udvidelsen eller appen. Support-diagnostik indeholder kun kilde og trussestype — aldrig den fulde adresse, og aldrig til offentlig spredning eller reklame.",
+  "privacyPolicyAccountTitle": "Ingen cloud-kontosynk",
+  "privacyPolicyAccountBody": "buusdo tilbyder ikke en cloud-konto eller listesynk mellem enheder. Personlige lister bliver på denne enhed. Flyt dem via eksport/import af shield-lists-v1 JSON eller QR, eller synk selv desktopfilen shield-backup.json (USB, Drive, Syncthing).",
+  "privacyPolicyContactTitle": "Spørgsmål",
+  "privacyPolicyContactBody": "Ved privatliv eller produktspørgsmål kontakter du operatøren af din buusdo-udrulning via deres officielle e-mail eller supportkanal (personen eller organisationen, der driver Cloudflare Worker). Brug den kendte officielle adresse — ikke telefon eller e-mail på et site, du tjekker. Indsæt ikke følsomme tjekresultater i offentlige kanaler.",
+  "privacyPolicyLimitsBody": "Ingen TLS-dekryptering — HTTPS CONNECT er kun værtsnavn; intet MITM-certifikat. Ingen procesafslutning — kørende programmer fortsætter. Systemmapper er kun-rapport — /usr, /etc, Windows-systemstier og Program Files flyttes eller ændres aldrig. Ingen AV-/signaturmotor og ingen optagelse af loginoplysninger eller browserhistorik.",
+  "privacyPolicyUpdated": "Senest gennemgået: 2026-11-07 · webstedslancering",
+  "privacyDesktopMirrorNote": "Desktop macOS-download: CDN-spejl er aktivt; GitHub Release forbliver dokumenteret fallback.",
+  "settingsIntro": "Omvendelige beskyttelsesvalg, der kun gemmes i denne browser. Trusselstjek bruger buusdos egen liste — URL’er sendes ikke til tredjeparts-omdømmetjenester."
 }

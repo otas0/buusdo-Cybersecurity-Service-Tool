@@ -72,9 +72,21 @@
   "localeRecommendTitle": "Choose your language",
   "localeRecommendBody": "Based on your browser, we suggest {lang}. You can change this anytime in the header.",
   "localeRecommendAccept": "Use {lang}",
-  "localeRecommendStay": "Keep English",
   "localeRecommendDismiss": "Not now",
   "whyEmpty": "No strong signals beyond the usual limitations.",
   "probeBlockedGenericTitle": "Site blocked the automated probe",
-  "probeBlockedGenericDetail": "Received HTTP {status}. The site blocked or throttled this check — that is not proof of phishing. Try the address in a normal browser if needed."
+  "probeBlockedGenericDetail": "Received HTTP {status}. The site blocked or throttled this check — that is not proof of phishing. Try the address in a normal browser if needed.",
+  "privacyPolicyIntro": "buusdo Cybersecurity Service Tool (Buusdo-produktlinje — separat produkt) hjälper dig att kontrollera en webbadress innan du litar på den. Kontroller använder first-party-signaler och vår egen hotlista. Denna sida är integritetsmeddelandet för webbplatsen, webbläsartillägget och skrivbordsappen.",
+  "privacyPolicyWhatTitle": "Vad en kontroll använder",
+  "privacyPolicyWhatBody": "När du kör en kontroll bearbetas adressen på buusdo-servern för att analysera struktur, jämföra vår hotlista och eventuellt sondera nåbarhet (DNS / HTTP). Vi skickar inte kontrollerade URL:er till Google Safe Browsing eller andra tredjeparts-API:er för rykte, och vi säljer inte kontrolldata.",
+  "privacyPolicyStoreTitle": "Vad som lagras",
+  "privacyPolicyStoreBody": "Standard: ingenting lagras. Du kan välja lagring endast på den här enheten (block-/förtroendelistor, valfri historik) i webbläsaren, tillägget eller appen. Diagnostik för support innehåller bara källa och hottyp — aldrig hela adressen, och aldrig för offentlig spridning eller reklam.",
+  "privacyPolicyAccountTitle": "Ingen molnkontosynk",
+  "privacyPolicyAccountBody": "buusdo erbjuder inget molnkonto eller listsynk mellan enheter. Personliga listor stannar på den här enheten. Flytta dem via export/import av shield-lists-v1 JSON eller QR, eller synka själv skrivbordsfilen shield-backup.json (USB, Drive, Syncthing).",
+  "privacyPolicyContactTitle": "Frågor",
+  "privacyPolicyContactBody": "För integritet eller produktfrågor kontaktar du operatören av din buusdo-distribution via deras officiella e-post eller supportkanal (personen eller organisationen som driver Cloudflare Worker). Använd den kända officiella adressen — inte telefon eller e-post på en sida du kontrollerar. Klistra inte in känsliga kontrollresultat i offentliga kanaler.",
+  "privacyPolicyLimitsBody": "Ingen TLS-dekryptering — HTTPS CONNECT är endast värdnamn; inget MITM-certifikat. Ingen processavslutning — körande program fortsätter. Systemkataloger är endast rapport — /usr, /etc, Windows-systemsökvägar och Program Files flyttas eller ändras aldrig. Ingen AV-/signaturmotor och ingen inspelning av inloggningsuppgifter eller webbhistorik.",
+  "privacyPolicyUpdated": "Senast granskad: 2026-11-07 · webbplatslansering",
+  "privacyDesktopMirrorNote": "Desktop macOS-nedladdning: CDN-spegel är aktiv; GitHub Release förblir dokumenterad reserv.",
+  "settingsIntro": "Omvändbara skyddsval som bara lagras i den här webbläsaren. Hotkontroller använder buusdos egen lista — URL:er skickas inte till tredjepartsryktestjänster."
 }

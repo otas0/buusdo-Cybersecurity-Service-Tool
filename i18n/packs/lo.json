@@ -312,7 +312,6 @@
   "localeRecommendTitle": "ເລືອກພາສາເຈົ້າ",
   "localeRecommendBody": "ອີງໂປຣແກຣມທ່ອງເວັບເຈົ້າ ພວກເຮົາແນະນຳ {lang}. ເຈົ້າປ່ຽນໄດ້ທຸກເວລາທີ່ຫົວ.",
   "localeRecommendAccept": "ໃຊ້ {lang}",
-  "localeRecommendStay": "ຢູ່ພາສາອັງກິດ",
   "localeRecommendDismiss": "ບໍ່ແມ່ນດຽວນີ້",
   "whyEmpty": "ບໍ່ມີສັນຍານແຮງກວ່ານອກຂີດປົກກະຕິ.",
   "levelCriticalLabel": "ຄວາມສ່ຽງຮ້າຍແຮງ",

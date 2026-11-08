@@ -312,7 +312,6 @@
   "localeRecommendTitle": "Sprache wählen",
   "localeRecommendBody": "Anhand Ihres Browsers schlagen wir {lang} vor. Sie können das jederzeit in der Kopfzeile ändern.",
   "localeRecommendAccept": "{lang} verwenden",
-  "localeRecommendStay": "Englisch behalten",
   "localeRecommendDismiss": "Jetzt nicht",
   "whyEmpty": "Keine stärkeren Signale jenseits der üblichen Grenzen.",
   "levelCriticalLabel": "Kritisches Risiko",

@@ -72,7 +72,6 @@
   "localeRecommendTitle": "Elija su idioma",
   "localeRecommendBody": "Según el navegador, sugerimos {lang}. Puede cambiarlo cuando quiera en la cabecera.",
   "localeRecommendAccept": "Usar {lang}",
-  "localeRecommendStay": "Mantener inglés",
   "localeRecommendDismiss": "Ahora no",
   "whyEmpty": "Ninguna señal fuerte más allá de las limitaciones habituales.",
   "probeBlockedGenericTitle": "Site blocked the automated probe",

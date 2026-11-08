@@ -312,7 +312,6 @@
   "localeRecommendTitle": "Chọn ngôn ngữ",
   "localeRecommendBody": "Dựa trên trình duyệt, chúng tôi gợi ý {lang}. Bạn có thể đổi bất cứ lúc nào ở đầu trang.",
   "localeRecommendAccept": "Dùng {lang}",
-  "localeRecommendStay": "Giữ tiếng Anh",
   "localeRecommendDismiss": "Để sau",
   "whyEmpty": "Không có tín hiệu mạnh hơn ngoài các giới hạn thông thường.",
   "levelCriticalLabel": "Rủi ro nghiêm trọng",
