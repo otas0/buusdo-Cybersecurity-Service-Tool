@@ -31,6 +31,7 @@ Recorded via `npm run production:origin` → README + `shared/production-site.js
 
 | When (UTC) | Runner | Result | Notes |
 |------------|--------|--------|-------|
+| 2026-11-08 | github-actions/42455572101 | **OK** | `https://buusdocst.mtsu.workers.dev` — health+check · softDownloadWarn=0 · notarized=missing · https://github.com/otas0/buusdo-Cybersecurity-Service-Tool/actions/runs/42455572101 |
 | 2026-11-08 | github-actions/42439270767 | **OK** | `https://buusdocst.mtsu.workers.dev` — health+check · softDownloadWarn=0 · notarized=missing · https://github.com/otas0/buusdo-Cybersecurity-Service-Tool/actions/runs/42439270767 |
 | 2026-11-07 | github-actions/42424438865 | **OK** | `https://buusdocst.mtsu.workers.dev` — health+check · softDownloadWarn=0 · notarized=missing · https://github.com/otas0/buusdo-Cybersecurity-Service-Tool/actions/runs/42424438865 |
 | 2026-11-07 | github-actions/42407708067 | **OK** | `https://buusdocst.mtsu.workers.dev` — health+check · softDownloadWarn=0 · notarized=missing · https://github.com/otas0/buusdo-Cybersecurity-Service-Tool/actions/runs/42407708067 |
