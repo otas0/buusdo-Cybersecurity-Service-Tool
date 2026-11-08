@@ -17,7 +17,19 @@ test("showsPartialPackBanner is false for complete locale packs", () => {
   assert.equal(showsPartialPackBanner("nr"), false);
   assert.equal(showsPartialPackBanner("fr"), false);
   assert.equal(showsPartialPackBanner("es"), false);
-  assert.equal(showsPartialPackBanner("ca"), true);
+  assert.equal(showsPartialPackBanner("it"), false);
+  assert.equal(showsPartialPackBanner("nl"), false);
+  assert.equal(showsPartialPackBanner("pl"), false);
+  assert.equal(showsPartialPackBanner("sv"), false);
+  assert.equal(showsPartialPackBanner("da"), false);
+  assert.equal(showsPartialPackBanner("fi"), false);
+  assert.equal(showsPartialPackBanner("nb"), false);
+  assert.equal(showsPartialPackBanner("ca"), false);
+  assert.equal(showsPartialPackBanner("sl"), false);
+  assert.equal(showsPartialPackBanner("ga"), false);
+  assert.equal(showsPartialPackBanner("mt"), false);
+  assert.equal(showsPartialPackBanner("uk"), false);
+  assert.equal(showsPartialPackBanner("is"), false);
 });
 
 test("Settings and Privacy panels both render partialPackBanner", () => {

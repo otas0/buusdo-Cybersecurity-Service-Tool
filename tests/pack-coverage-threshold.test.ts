@@ -46,12 +46,17 @@ test("FULL_PACK_MIN_KEYS is exported and near EN snapshot size", () => {
     "hr",
     "lt",
     "lv",
-    "et"
+    "et",
+    "sl",
+    "ga",
+    "mt",
+    "uk",
+    "is",
+    "ca"
   ]) {
     assert.equal(isFullLocalePack(id), true, id);
     assert.equal(showsPartialPackBanner(id), false, id);
   }
-  assert.equal(showsPartialPackBanner("ca"), true);
 });
 
 test("MUST_STAY_FULL_LOCALES never regress below FULL_PACK_MIN_KEYS", () => {

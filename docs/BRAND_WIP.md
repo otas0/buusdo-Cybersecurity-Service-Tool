@@ -1,32 +1,26 @@
 # Brand WIP isolation
 
-Locale / i18n PRs must stay free of brand visual experiments.
+Product chrome i18n PRs must stay locale-clean. Brand / promo / wordmark experiments often dirty:
+
+- `app/shield.css`
+- `extension/popup/*`
+- `desktop-app/public/js/dashboard.js`
+- `docs/promo/*`, `public/promo/*`
+- `scripts/assert-formal-name.mjs`, poster PDF floors
 
 ## Policy
 
-- Put brand-only edits (wordmark, promo CSS experiments, popup chrome, desktop About frame, promo posters) on a **`brand/*`** branch (e.g. `brand/wip`, `brand/wordmark`).
-- Do **not** mix brand WIP into locale pack commits or i18n PRs.
-- Language-panel CSS in `app/shield.css` that ships with i18n UX is allowed on locale PRs; pure brand experiments are not.
-- If the working tree is dirty with brand files while shipping locales, **stash first**:
+1. Do **not** mix brand WIP into locale pack commits on `main`.
+2. Park brand work on `brand/<topic>` (example: `brand/wordmark-paths`).
+3. Before starting an i18n batch:
 
 ```bash
-git stash push -u -m "brand-wip" -- app/shield.css extension/popup docs/promo public/promo desktop-app/public
-# …ship locale PR on main…
-git stash pop
-# continue on brand/* if needed
+git status -sb
+# If brand files are dirty and unrelated:
+git stash push -u -m "brand-wip" -- app/shield.css extension/popup docs/promo public/promo desktop-app/public/js/dashboard.js
+# or discard if disposable:
+git checkout -- app/shield.css extension/popup/popup.html desktop-app/public/js/dashboard.js
 ```
 
-Or keep a long-lived branch:
-
-```bash
-git switch -c brand/wip
-# brand experiments only
-git switch main
-```
-
-## Do not commit from locale work
-
-- `app/shield.css` visual experiments unrelated to the language panel
-- `extension/popup/*` brand-only
-- `docs/promo/*`, `public/promo/*`
-- Desktop About / wordmark capture scripts unless the PR is brand-scoped
+4. After the locale PR lands, restore with `git stash pop` on the brand branch only.
+5. Never `git stash` brand WIP onto a locale working tree and leave it — it re-pollutes the next pack PR.

@@ -140,8 +140,8 @@
   top: calc(100% + 6px);
   right: 0;
   z-index: 90;
-  width: min(18.5rem, calc(100vw - 24px));
-  max-height: min(22rem, 70vh);
+  width: min(17.5rem, calc(100vw - 24px));
+  max-height: min(20rem, 65vh);
   display: flex;
   flex-direction: column;
   background: var(--panel);
@@ -163,9 +163,28 @@
   letter-spacing: 0.02em;
 }
 
+.shell .lang-panel-kicker {
+  margin: 6px 10px 2px;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.shell .lang-panel-frequent {
+  flex: 0 0 auto;
+  max-height: 11rem;
+  overflow: auto;
+  border-bottom: 1px solid color-mix(in srgb, var(--muted) 28%, transparent);
+  padding-bottom: 4px;
+}
+
 .shell .lang-panel-regions {
   overflow: auto;
   padding: 4px 0 8px;
+  flex: 1 1 auto;
+  min-height: 0;
 }
 
 .shell .lang-region-toggle {

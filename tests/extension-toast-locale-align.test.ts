@@ -47,5 +47,14 @@ test("extension shared i18n has toast Halt chips for mi/th/vi (SEA overlay)", ()
   toastChip("de", "Halt");
   toastChip("fr", "Stop");
   toastChip("es", "Alto");
+  // Pack lightDanger → toastPhishing overlay (Stop / Alto must survive pack edits)
+  const frPack = JSON.parse(readFileSync(join(root, "i18n/packs/fr.json"), "utf8")) as {
+    lightDanger?: string;
+  };
+  const esPack = JSON.parse(readFileSync(join(root, "i18n/packs/es.json"), "utf8")) as {
+    lightDanger?: string;
+  };
+  assert.equal(frPack.lightDanger, "Stop");
+  assert.equal(esPack.lightDanger, "Alto");
   assert.match(shared, /toastPhishing:\s*"Halt"|toastPhishing:\s*"停止"|toastPhishing:\s*"Parar"/);
 });
