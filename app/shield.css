@@ -144,9 +144,11 @@
   max-height: min(22rem, 70vh);
   display: flex;
   flex-direction: column;
-  background: var(--panel, #12161c);
+  background: var(--panel);
+  color: var(--text);
   border: 1px solid color-mix(in srgb, var(--muted) 40%, transparent);
   box-shadow: 0 12px 32px color-mix(in srgb, #000 45%, transparent);
+  color-scheme: inherit;
 }
 
 .shell .lang-panel-search {
@@ -248,10 +250,12 @@
 
 .locale-recommend-card {
   width: min(420px, 100%);
-  background: var(--panel, #12161c);
+  background: var(--panel);
+  color: var(--text);
   border: 1px solid color-mix(in srgb, var(--muted) 40%, transparent);
   padding: 18px 16px 14px;
   margin-bottom: 12px;
+  color-scheme: inherit;
 }
 
 .locale-recommend-card select {
@@ -261,6 +265,35 @@
   color: var(--text);
   border: 1px solid color-mix(in srgb, var(--muted) 45%, transparent);
   padding: 6px 8px;
+}
+
+.locale-recommend-picker {
+  display: block;
+  margin-top: 10px;
+}
+
+.locale-recommend-search {
+  width: 100%;
+  margin-bottom: 6px;
+  padding: 7px 8px;
+  background: transparent;
+  border: 1px solid color-mix(in srgb, var(--muted) 45%, transparent);
+  color: var(--text);
+  font-family: var(--mono);
+  font-size: 12px;
+}
+
+.locale-recommend-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  max-height: 11rem;
+  overflow: auto;
+  border: 1px solid color-mix(in srgb, var(--muted) 35%, transparent);
+}
+
+.locale-recommend-list .lang-option {
+  width: 100%;
 }
 
 /* Narrow nav: badge only (select stays full-size invisible hit target). */
@@ -1054,7 +1087,12 @@
   }
 }
 
-/* Appearance switch (Settings) */
+/* Appearance — header toggle (primary) + Settings copy (secondary) */
+.theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+}
 .theme-switch-row {
   display: flex;
   gap: 12px;
@@ -1067,7 +1105,8 @@
 }
 
 
-/* Light theme uses on-light wordmark plate; dark field keeps transparent cream mark. */
-.brand-logo-on-light { display: none; }
-:root[data-theme="light"] .brand-logo-on-dark { display: none; }
-:root[data-theme="light"] .brand-logo-on-light { display: block; }
+/* Light theme uses on-light wordmark plate; dark field keeps transparent cream mark.
+ * Specificity must beat `.shell .brand-logo { display: block }` or both marks show. */
+.shell .brand-logo-on-light { display: none; }
+:root[data-theme="light"] .shell .brand-logo-on-dark { display: none; }
+:root[data-theme="light"] .shell .brand-logo-on-light { display: block; }

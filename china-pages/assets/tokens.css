@@ -17,6 +17,8 @@
   --bg: #0e0e0e;
   --bg-elev: #161616;
   --bg-soft: #1c1c1c;
+  /* Popovers / lang panel / locale recommend — must track theme (never hardcode dark). */
+  --panel: #161616;
   --text: #f3f1ea;
   /* --muted is secondary chrome; desktop .hint / .lists-path use #a39e93 (AA on --bg). */
   --muted: #8d897f;
@@ -40,6 +42,7 @@
   --bg: #f3f1ea;
   --bg-elev: #ebe8df;
   --bg-soft: #e4e0d6;
+  --panel: #ebe8df;
   --text: #1a1916;
   --muted: #5c584f;
   --line: rgba(26, 25, 22, 0.16);
