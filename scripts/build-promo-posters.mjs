@@ -258,28 +258,39 @@ const html = `<!DOCTYPE html>
       font-size: 7.4px; color: var(--ink); word-break: break-all; text-underline-offset: 1px;
     }
     .dock {
-      display: grid; grid-template-columns: 1fr auto auto 1fr; gap: 3mm; align-items: stretch;
-      border: 1px solid var(--line); border-top: 0; padding: 3.5mm 3mm 3mm; flex: 0 0 auto;
-      background: var(--wash);
+      /* minmax(0,1fr) so long URLs wrap instead of shoving QR over copy */
+      display: grid; grid-template-columns: minmax(0, 1fr) min-content minmax(0, 1fr);
+      gap: 3.5mm; align-items: center;
+      border: 1px solid var(--line); border-top: 0; padding: 3mm; flex: 0 0 auto;
+      background: var(--wash); overflow: hidden;
     }
+    .dock .side { min-width: 0; overflow-wrap: anywhere; }
     .dock .side h3 {
       font-family: "IBM Plex Mono", ui-monospace, monospace;
       font-size: 7.5px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase;
       color: var(--muted); margin-bottom: 1mm; display: flex; align-items: center; gap: 1.5mm;
     }
     .dock .side h3::before { content: ""; width: 4.5px; height: 4.5px; background: var(--halt); transform: skewX(-18deg); }
-    .dock .side p { font-size: 8px; line-height: 1.3; }
+    .dock .side p { font-size: 7.6px; line-height: 1.3; }
     .dock .side.zh { text-align: right; font-family: "Noto Sans SC", "PingFang SC", sans-serif; }
     .dock .side.zh h3 { justify-content: flex-end; }
-    .dock .url { margin-top: 1mm; font-family: "IBM Plex Mono", ui-monospace, monospace; font-size: 7px; color: var(--muted); }
-    .qr-box {
-      width: 28mm; border: 1px solid var(--line); padding: 2mm; background: #fff;
-      display: grid; gap: 1mm; justify-items: center; align-content: center;
+    .dock .url {
+      margin-top: 1mm; font-family: "IBM Plex Mono", ui-monospace, monospace;
+      font-size: 6.5px; color: var(--muted); word-break: break-all;
     }
-    .qr-box img { width: 22mm; height: 22mm; display: block; }
+    .dock .qrs {
+      display: flex; flex-direction: row; gap: 2.5mm; flex: 0 0 auto;
+      align-items: stretch;
+    }
+    .qr-box {
+      width: 22mm; border: 1px solid var(--line); padding: 1.5mm; background: #fff;
+      display: grid; gap: 0.8mm; justify-items: center; align-content: center;
+      flex: 0 0 auto;
+    }
+    .qr-box img { width: 17mm; height: 17mm; display: block; }
     .qr-box span {
       font-family: "IBM Plex Mono", ui-monospace, monospace;
-      font-size: 6.5px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted);
+      font-size: 6px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted);
     }
     .foot {
       border: 1px solid var(--line); border-top: 0; flex: 0 0 auto;
@@ -362,15 +373,17 @@ const html = `<!DOCTYPE html>
         <h3>${esc(labels.en.get)}</h3>
         <p>${esc(labels.en.getBody)}</p>
         <p class="url">buusdocst.mtsu.workers.dev</p>
-        <p class="url" lang="pt-PT">${esc(labels.pt.getBody)}</p>
+        <p class="url" lang="pt-PT">${esc(labels.pt.get)} · ${esc(labels.pt.china)}</p>
       </div>
-      <div class="qr-box">
-        <img src="product-qr.svg?v=${v}" alt="QR live" width="100" height="100" />
-        <span>live</span>
-      </div>
-      <div class="qr-box">
-        <img src="china-qr.svg?v=${v}" alt="QR China" width="100" height="100" />
-        <span>china</span>
+      <div class="qrs" aria-label="QR">
+        <div class="qr-box">
+          <img src="product-qr.svg?v=${v}" alt="QR live" width="100" height="100" />
+          <span>live</span>
+        </div>
+        <div class="qr-box">
+          <img src="china-qr.svg?v=${v}" alt="QR China" width="100" height="100" />
+          <span>china</span>
+        </div>
       </div>
       <div class="side zh" lang="zh-Hans">
         <h3>${esc(labels.zh.get)}</h3>
@@ -414,11 +427,31 @@ fs.writeFileSync(
   `# Promo posters (A4)
 
 - \`poster.html\` — dense **EN + pt-PT + 中文** from \`i18n/messages\` + \`zh-Hans\` pack
+- \`poster-pt.html\` — meta-refresh redirect → \`poster.html\` (legacy pt-only URL; keep for old links)
 - Copy keys: \`check\`, \`lightIdle\`, \`nextStep*\`, \`leave\`, \`ignoreRiskBody\`, \`privacyNote\`, \`lightLimited\`, status words
 - QRs: live Worker + China Pages
 - Rebuild: \`npm run build:promo-posters\` then \`npm run assert:promo-i18n\`
+- Optional PDF: \`npm run export:promo-poster-pdf\`
+  - \`PLAYWRIGHT_BROWSERS_PATH\`: if unset on macOS and \`~/Library/Caches/ms-playwright\` exists, the export script uses that; else Playwright default (\`~/.cache/ms-playwright\` on Linux). Launch tries bundled Chromium, then \`channel=chrome\`.
+  - Explicit: \`PLAYWRIGHT_BROWSERS_PATH="$HOME/Library/Caches/ms-playwright" npm run export:promo-poster-pdf\`
+  - Missing browsers: \`npx playwright install chromium\`
+- Local privacy routes: \`PROMO_ORIGIN=http://127.0.0.1:3000 npm run assert:promo-privacy-routes\` (CI quality starts vinext on :3000)
+- Dock: QR pair in \`min-content\` column; side copy uses \`minmax(0,1fr)\` so URLs wrap (no QR-over-text)
 
-Print: A4 · 100% · Margins **None** · Background graphics On
+## Offline soft-skip (\`assert:promo-privacy-routes\`)
+
+When \`PROMO_ORIGIN\` is unreachable (Workers timeout, no local vinext, DNS fail), the script **soft-skips** that URL and continues — it does **not** hard-fail the whole assert on network errors. Hard-fail only when the origin responds with a non-2xx status. For ship gates that must not depend on the network, use the local fixture:
+
+- \`tests/fixtures/privacy-no-survey.html\` + \`tests/privacy-fixture-no-survey.test.ts\` (zero \`/survey/\` links, no Workers).
+
+## Print QA (fit one page)
+
+1. Open \`poster.html\` (or \`/promo/poster.html\` on Workers).
+2. Print → Paper **A4** · Scale **100%** · Margins **None** · **Background graphics** On.
+3. Do not use “Fit to printable area” if margins are already None — sheet is exactly 210×297 mm.
+4. **Physical QA:** one hard-copy A4 at 100% / no margins; confirm QR scan (Workers + China), charcoal u-card (\`#545454\`), and no clipped footer.
+
+u-card: [BRAND_U_CARD.md](../BRAND_U_CARD.md) (\`#545454\` on light).
 `,
 );
 

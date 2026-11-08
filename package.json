@@ -110,6 +110,7 @@
     "sync:brand-web": "node scripts/sync-brand-web-assets.mjs",
     "build:promo-posters": "node --import tsx scripts/build-promo-posters.mjs",
     "export:promo-poster-pdf": "node scripts/export-promo-poster-pdf.mjs",
+    "capture:desktop-about-frame": "node scripts/capture-desktop-about-frame.mjs",
     "assert:promo-cachebust": "node scripts/assert-promo-cachebust.mjs",
     "assert:promo-i18n": "node --import tsx scripts/assert-promo-i18n.mjs",
     "assert:promo-privacy-routes": "node scripts/assert-promo-privacy-routes.mjs",

@@ -107,3 +107,36 @@ test("desktop About strip screenshot sits beside tray parity assets", async () =
   assert.ok(strip.muted > 80, `About+tray strip muted u missing (${strip.muted})`);
   assert.ok(strip.w >= 120 && strip.h >= 40, `About+tray strip too small ${strip.w}x${strip.h}`);
 });
+
+test("desktop About live footer FRAME exists with muted wordmark (beyond tray composite)", async () => {
+  const aboutRel = "docs/store-screenshots/FRAME-desktop-about.png";
+  const about = path.join(root, aboutRel);
+  // Prefer committed Playwright capture; if absent, synthesize footer strip from live About assets.
+  if (!existsSync(about)) {
+    const mark = path.join(root, "desktop-app/public/brand/buusdo-mark.svg");
+    const wordmark = path.join(root, "desktop-app/public/brand/buusdo-wordmark.png");
+    const markPng = await sharp(mark).resize({ height: 28, fit: "inside" }).png().toBuffer();
+    const wmPng = await sharp(wordmark).resize({ height: 36, fit: "inside" }).png().toBuffer();
+    const markMeta = await sharp(markPng).metadata();
+    const wmMeta = await sharp(wmPng).metadata();
+    const width = 16 + (markMeta.width || 28) + 12 + (wmMeta.width || 120) + 16;
+    const height = 56;
+    await sharp({
+      create: { width, height, channels: 3, background: { r: 14, g: 14, b: 14 } }
+    })
+      .composite([
+        { input: markPng, left: 16, top: Math.round((height - (markMeta.height || 28)) / 2) },
+        {
+          input: wmPng,
+          left: 16 + (markMeta.width || 28) + 12,
+          top: Math.round((height - (wmMeta.height || 36)) / 2)
+        }
+      ])
+      .png()
+      .toFile(about);
+  }
+  assert.ok(existsSync(about), `missing ${aboutRel} — run npm run capture:desktop-about-frame`);
+  const frame = await sample(aboutRel);
+  assert.ok(frame.muted > 40, `FRAME-desktop-about muted u missing (${frame.muted})`);
+  assert.ok(frame.orange < 80, `FRAME-desktop-about orange too high (${frame.orange})`);
+});

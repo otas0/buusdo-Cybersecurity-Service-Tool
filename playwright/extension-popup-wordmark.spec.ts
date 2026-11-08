@@ -1,6 +1,6 @@
 /**
  * Extension popup — real popup.html fixture (not a mini header stub).
- * Dark-field wordmark muted-u pixel parity: tests/desktop-tray-brand-parity.test.ts.
+ * Also samples rendered wordmark pixels for muted u (#8d897f), not Halt orange.
  *
  *   PLAYWRIGHT_SKIP_WEBSERVER=1 npx playwright test playwright/extension-popup-wordmark.spec.ts
  */
@@ -8,6 +8,7 @@ import { createServer } from "node:http";
 import { readFileSync, existsSync } from "node:fs";
 import path from "node:path";
 import { expect, test } from "@playwright/test";
+import sharp from "sharp";
 
 const root = process.cwd();
 const popupHtmlPath = path.join(root, "extension/popup/popup.html");
@@ -92,6 +93,22 @@ test("extension popup.html mounts real header wordmark", async ({ page }) => {
     await expect(wordmark).toHaveAttribute("alt", /buusdo Cybersecurity Service Tool/i);
     await expect(page.locator("header.top")).toBeVisible();
     await expect(page.locator("#scanBtn")).toBeVisible();
+
+    // Rendered pixels (not only on-disk asset) — muted u on dark, never Halt orange u-card.
+    const png = await wordmark.screenshot({ type: "png" });
+    const { data, info } = await sharp(png).ensureAlpha().raw().toBuffer({ resolveWithObject: true });
+    let muted = 0;
+    let orange = 0;
+    for (let i = 0; i < data.length; i += info.channels) {
+      if (data[i + 3] < 180) continue;
+      const r = data[i];
+      const g = data[i + 1];
+      const b = data[i + 2];
+      if (Math.abs(r - 0x8d) <= 22 && Math.abs(g - 0x89) <= 22 && Math.abs(b - 0x7f) <= 22) muted += 1;
+      if (r >= 160 && g <= 120 && b <= 60 && r > g + 40) orange += 1;
+    }
+    expect(muted, `rendered popup wordmark muted u (#8d897f) missing (muted=${muted})`).toBeGreaterThan(40);
+    expect(orange, `rendered popup wordmark must not show Halt-orange u (orange=${orange})`).toBeLessThan(40);
   } finally {
     await new Promise<void>((resolve, reject) => server.close((err) => (err ? reject(err) : resolve())));
   }

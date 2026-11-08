@@ -64,7 +64,17 @@ for (const name of [
 }
 
 if (before && before !== after) {
-  console.info(`[assert-promo-cachebust] cachebust updated ${before} → ${after} (committed rebuild)`);
+  console.info(
+    `[assert-promo-cachebust] cachebust updated ${before} → ${after} (committed rebuild)`,
+  );
+  console.info(
+    `[assert-promo-cachebust] NOTICE: on-light wordmark hash changed — brand sync/PNG regen; ` +
+      `re-run npm run build:promo-posters and commit public/promo + docs/promo (.cachebust, poster.html, wordmark).`,
+  );
+} else if (!before) {
+  console.info(
+    `[assert-promo-cachebust] NOTICE: no prior .cachebust — first regen from on-light PNG sha ${after}`,
+  );
 }
 
 console.info(`[assert-promo-cachebust] OK v=${after}`);

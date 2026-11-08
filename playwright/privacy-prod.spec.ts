@@ -87,6 +87,8 @@ test.describe("production privacy pages", () => {
     ).toBeVisible();
     await expect(page.getByTestId("privacy-contact")).toBeVisible();
     await expect(page.getByTestId("privacy-faq-parents")).toBeVisible();
+    // Round-2 survey removed — privacy must not link /survey/
+    await expect(page.locator('a[href*="/survey/"]')).toHaveCount(0);
   });
 
   test("/zh-Hans/privacy soft check (policy chrome)", async ({ page }) => {
@@ -103,6 +105,8 @@ test.describe("production privacy pages", () => {
     } else {
       await expect(limits).toBeVisible();
     }
+    // Round-2 survey removed — privacy must not link /survey/
+    await expect(page.locator('a[href*="/survey/"]')).toHaveCount(0);
   });
 
   test("/en/settings shows desktop download slots", async ({ page }) => {

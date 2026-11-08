@@ -116,7 +116,10 @@ jobs:
             npx playwright install --with-deps chromium
           fi
           npm run capture:store-halt-frame:playwright
+          npm run capture:desktop-about-frame
           npm run test:playwright:china-soft-fail
+          # Keep committed About FRAME if capture wrote a new one (review in PR).
+          test -f docs/store-screenshots/FRAME-desktop-about.png
 
       - name: Typecheck
         run: npm run typecheck
@@ -130,6 +133,56 @@ jobs:
             git diff --stat -- public/promo || true
             exit 1
           fi
+
+      - name: Promo privacy routes against local :3000
+        id: promo_routes
+        continue-on-error: true
+        run: |
+          set -euo pipefail
+          npm run dev -- --port 3000 > /tmp/vinext-promo-routes.log 2>&1 &
+          echo $! > /tmp/vinext-promo-routes.pid
+          ready=0
+          for i in $(seq 1 60); do
+            if curl -sf --max-time 2 "http://127.0.0.1:3000/api/health" >/dev/null 2>&1 \
+              || curl -sf --max-time 2 "http://127.0.0.1:3000/" >/dev/null 2>&1; then
+              ready=1
+              echo "::notice::vinext ready on :3000 after ${i}s for promo privacy routes"
+              break
+            fi
+            sleep 1
+          done
+          if [ "$ready" != "1" ]; then
+            echo "::warning::vinext not ready — soft-skip assert:promo-privacy-routes (see /tmp/vinext-promo-routes.log)"
+            kill "$(cat /tmp/vinext-promo-routes.pid)" 2>/dev/null || true
+            exit 0
+          fi
+          PROMO_ORIGIN=http://127.0.0.1:3000 npm run assert:promo-privacy-routes
+          kill "$(cat /tmp/vinext-promo-routes.pid)" 2>/dev/null || true
+
+      - name: Promo PDF artifact (print handoff)
+        continue-on-error: true
+        run: |
+          set -euo pipefail
+          HIT="${{ steps.pw_quality_cache.outputs.cache-hit }}"
+          if [ "${HIT:-false}" = "true" ] && ls "$HOME/.cache/ms-playwright"/chromium_headless_shell-*/chrome-headless-shell-*/chrome-headless-shell >/dev/null 2>&1; then
+            echo "Reusing cached Chromium for promo PDF"
+          else
+            npx playwright install --with-deps chromium
+          fi
+          npm run export:promo-poster-pdf
+          test -f docs/promo/poster.pdf
+          test -f public/promo/poster.pdf
+
+      - name: Upload promo poster.pdf
+        if: success() || failure()
+        continue-on-error: true
+        uses: actions/upload-artifact@v4
+        with:
+          name: promo-poster-pdf
+          path: |
+            docs/promo/poster.pdf
+            public/promo/poster.pdf
+          if-no-files-found: warn
 
       - name: Lint
         run: npm run lint
@@ -454,6 +507,31 @@ jobs:
             exit 0
           fi
           GRAPHICS_WORDMARK="$FOUND" npm run assert:graphics-wordmark-charcoal
+
+  graphics-charcoal-scheduled:
+    name: graphics wordmark charcoal (scheduled clone)
+    if: github.event_name == 'schedule' || (github.event_name == 'workflow_dispatch' && inputs.run_desktop_check == true)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+      - name: Install
+        run: npm ci || npm install --no-fund --no-audit
+      - name: Clone Graphics Enhancement Tool (required sibling)
+        run: |
+          set -euo pipefail
+          # Public clone of the Graphics line product for charcoal #545454 spot-check.
+          git clone --depth 1 https://github.com/otas0/buusdo-Graphics-Enhancement-Tool.git "$HOME/buusdo"
+          test -f "$HOME/buusdo/docs/promo/logo-wordmark.png"
+      - name: Assert Graphics wordmark charcoal (required)
+        run: |
+          set -euo pipefail
+          export GRAPHICS_WORDMARK="${HOME}/buusdo/docs/promo/logo-wordmark.png"
+          export GRAPHICS_WORDMARK_REQUIRED=1
+          npm run assert:graphics-wordmark-charcoal
 
   check-desktop-optional:
     name: check:desktop (dispatch / nightly)
@@ -788,8 +866,9 @@ jobs:
         env:
           PLAYWRIGHT_SKIP_WEBSERVER: "1"
 
-      # Soft: live Workers privacy (skip inside spec if unreachable). Includes /en/privacy zero /survey/ links.
-      - name: Soft privacy-prod (/en/privacy no /survey/)
+      # Soft: live Workers privacy (skip inside spec if unreachable).
+      # Covers /en|/pt-PT|/zh-Hans/privacy zero /survey/ links (local fixture: tests/privacy-fixture-no-survey.test.ts).
+      - name: Soft privacy-prod (en/pt-PT/zh-Hans no /survey/)
         if: steps.pw_install.outcome == 'success'
         continue-on-error: true
         env:

@@ -4,14 +4,30 @@
  *   npm run export:promo-poster-pdf
  *
  * Output: docs/promo/poster.pdf (+ mirrored to public/promo/poster.pdf)
+ *
+ * Browser path (PLAYWRIGHT_BROWSERS_PATH):
+ *   1. If PLAYWRIGHT_BROWSERS_PATH is already set, use it as-is.
+ *   2. Else on macOS, if ~/Library/Caches/ms-playwright exists, use that
+ *      (avoids empty sandbox/temp caches after a fresh `npx playwright install`).
+ *   3. Else Playwright’s default cache (~/.cache/ms-playwright on Linux).
+ *   4. Launch: bundled Chromium first; if missing, channel=chrome.
+ *
+ *   PLAYWRIGHT_BROWSERS_PATH="$HOME/Library/Caches/ms-playwright" npm run export:promo-poster-pdf
+ *   npx playwright install chromium   # when no cache is present
  */
 import { createServer } from "node:http";
 import fs from "node:fs";
+import os from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { chromium } from "playwright";
 
 const root = path.join(path.dirname(fileURLToPath(import.meta.url)), "..");
+/** Prefer the user’s Playwright cache when the sandbox/temp cache is empty. */
+if (!process.env.PLAYWRIGHT_BROWSERS_PATH) {
+  const homeCache = path.join(os.homedir(), "Library/Caches/ms-playwright");
+  if (fs.existsSync(homeCache)) process.env.PLAYWRIGHT_BROWSERS_PATH = homeCache;
+}
 const promo = path.join(root, "public/promo");
 const outDocs = path.join(root, "docs/promo/poster.pdf");
 const outPublic = path.join(root, "public/promo/poster.pdf");
