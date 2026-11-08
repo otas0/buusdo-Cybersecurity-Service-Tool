@@ -124,24 +124,23 @@ for (const file of chinaPages) {
   }
 }
 
-/** Website + Settings poster control must exist with formal product framing. */
-const messagesTs = readFileSync(join(root, "i18n/messages.ts"), "utf8");
-if (!/downloadA4Poster:\s*"Download A4 poster"/.test(messagesTs)) {
-  console.error("[assert-formal-name] i18n/messages.ts must define downloadA4Poster (EN)");
-  process.exit(1);
-}
-if (!/downloadA4PosterShort:\s*"A4"/.test(messagesTs)) {
-  console.error("[assert-formal-name] i18n/messages.ts must define downloadA4PosterShort");
-  process.exit(1);
-}
+/** Website must not surface an A4 poster download CTA (promo sheet stays at /promo/ for print). */
 const appShell = readFileSync(join(root, "components/AppShell.tsx"), "utf8");
-if (!appShell.includes("downloadA4Poster") || !appShell.includes("/promo/poster.html")) {
-  console.error("[assert-formal-name] AppShell must link /promo/poster.html via downloadA4Poster");
+if (
+  appShell.includes("downloadA4Poster") ||
+  appShell.includes("nav-download-a4-poster") ||
+  appShell.includes("/promo/poster.html")
+) {
+  console.error("[assert-formal-name] AppShell must not link /promo/poster.html or downloadA4Poster");
   process.exit(1);
 }
 const settings = readFileSync(join(root, "components/SettingsPanel.tsx"), "utf8");
-if (!settings.includes("downloadA4Poster") || !settings.includes("/promo/poster.html")) {
-  console.error("[assert-formal-name] SettingsPanel must link /promo/poster.html via downloadA4Poster");
+if (
+  settings.includes("downloadA4Poster") ||
+  settings.includes("settings-download-a4-poster") ||
+  settings.includes("/promo/poster.html")
+) {
+  console.error("[assert-formal-name] SettingsPanel must not link /promo/poster.html or downloadA4Poster");
   process.exit(1);
 }
 
