@@ -17,7 +17,7 @@ test("showsPartialPackBanner is false for complete locale packs", () => {
   assert.equal(showsPartialPackBanner("nr"), false);
   assert.equal(showsPartialPackBanner("fr"), false);
   assert.equal(showsPartialPackBanner("es"), false);
-  assert.equal(showsPartialPackBanner("bg"), true);
+  assert.equal(showsPartialPackBanner("ca"), true);
 });
 
 test("Settings and Privacy panels both render partialPackBanner", () => {

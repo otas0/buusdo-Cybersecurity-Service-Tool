@@ -1,3 +1,4 @@
+import mustStayFull from "./must-stay-full-locales.json";
 import { messages } from "./messages";
 import { LOCALE_PACKS } from "./pack-index";
 import { normalizeLocale } from "./locales";
@@ -31,43 +32,9 @@ export function packCoverageRatio(locale: string): number {
 
 /**
  * Locales that must stay full once shipped — CI hard-fails if any drop below
- * FULL_PACK_MIN_KEYS (regression guard).
+ * FULL_PACK_MIN_KEYS (regression guard). Source: i18n/must-stay-full-locales.json
  */
-export const MUST_STAY_FULL_LOCALES: readonly string[] = [
-  "zh-Hans",
-  "zh-Hant",
-  "ja",
-  "pt-BR",
-  "de",
-  "fr",
-  "es",
-  "it",
-  "nl",
-  "pl",
-  "sv",
-  "da",
-  "fi",
-  "nb",
-  "af",
-  "zu",
-  "xh",
-  "nso",
-  "st",
-  "tn",
-  "ss",
-  "ve",
-  "ts",
-  "nr",
-  "mi",
-  "id",
-  "ms",
-  "th",
-  "vi",
-  "fil",
-  "km",
-  "lo",
-  "my"
-];
+export const MUST_STAY_FULL_LOCALES: readonly string[] = mustStayFull as string[];
 
 export function assertMustStayFullLocales(): string[] {
   return MUST_STAY_FULL_LOCALES.filter((id) => !isFullLocalePack(id));

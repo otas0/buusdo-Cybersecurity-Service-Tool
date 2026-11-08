@@ -45,4 +45,19 @@ test.describe("multi-locale switcher", () => {
     await expect(page.getByTestId("locale-select")).toHaveValue("ja");
     await expect(page.locator("html")).toHaveAttribute("lang", "ja");
   });
+
+  test("locale-toggle search Français switches to /fr", async ({ page }) => {
+    await page.goto(`${base}/en`, { waitUntil: "domcontentloaded" });
+    await waitForReactHydration(page, '[data-testid="locale-toggle"]');
+    await page.getByTestId("locale-toggle").click();
+    await expect(page.getByTestId("locale-panel")).toBeVisible();
+    await page.getByTestId("locale-search").fill("Français");
+    await expect(page.getByTestId("locale-option-fr")).toBeVisible();
+    await Promise.all([
+      page.waitForURL(/\/fr(?:\/|\?|#|$)/),
+      page.getByTestId("locale-option-fr").click()
+    ]);
+    await expect(page.locator("html")).toHaveAttribute("lang", "fr");
+    await expect(page.getByTestId("locale-select")).toHaveValue("fr");
+  });
 });

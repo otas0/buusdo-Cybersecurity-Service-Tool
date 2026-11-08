@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import {
+  LOCALE_CATALOG,
   getLocaleEntry,
   localesInRegion,
   normalizeLocale,
@@ -68,27 +69,42 @@ export function LocaleRecommendModal({
 }) {
   const t = getMessages(locale);
   const [open, setOpen] = useState(false);
+  const [query, setQuery] = useState("");
   const suggested = useMemo(() => suggestLocale(), []);
   const suggestedEntry = getLocaleEntry(suggested);
-  const regionLocales = useMemo(() => {
+
+  /** Short pin list (suggested + majors) — search unlocks the full catalog. */
+  const pinned = useMemo(() => {
     const regions = regionHintsFromBrowser();
     const seen = new Set<string>();
     const list = [];
+    for (const id of [suggested, "zh-Hans", "zh-Hant", "ja", "pt-PT", "en", "de", "fr", "es"]) {
+      if (seen.has(id)) continue;
+      seen.add(id);
+      list.push(getLocaleEntry(id));
+    }
     for (const region of regions) {
       for (const item of localesInRegion(region)) {
         if (seen.has(item.id)) continue;
         seen.add(item.id);
         list.push(item);
+        if (list.length >= 8) break;
       }
+      if (list.length >= 8) break;
     }
-    // Always offer suggested + zh-Hans/ja/pt-PT/en near top
-    for (const id of [suggested, "zh-Hans", "zh-Hant", "ja", "pt-PT", "en"]) {
-      if (seen.has(id)) continue;
-      seen.add(id);
-      list.unshift(getLocaleEntry(id));
-    }
-    return list.slice(0, 12);
+    return list.slice(0, 8);
   }, [suggested]);
+
+  const filtered = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    if (!q) return pinned;
+    return LOCALE_CATALOG.filter(
+      (item) =>
+        item.nativeName.toLowerCase().includes(q) ||
+        item.englishName.toLowerCase().includes(q) ||
+        item.id.toLowerCase().includes(q)
+    ).slice(0, 12);
+  }, [pinned, query]);
 
   useEffect(() => {
     try {
@@ -145,26 +161,67 @@ export function LocaleRecommendModal({
         <p className="kicker">{t.localeRecommendTitle}</p>
         <p className="hint">{body}</p>
         <div className="action-row">
-          <button type="button" className="text-button" data-testid="locale-recommend-accept" onClick={() => accept(suggested)}>
+          <button
+            type="button"
+            className="text-button"
+            data-testid="locale-recommend-accept"
+            onClick={() => accept(suggested)}
+          >
             {acceptLabel}
           </button>
-          <button type="button" className="text-button" data-testid="locale-recommend-dismiss" onClick={dismiss}>
+          <button
+            type="button"
+            className="text-button"
+            data-testid="locale-recommend-dismiss"
+            onClick={dismiss}
+          >
             {t.localeRecommendDismiss}
           </button>
         </div>
-        <label className="hint">
+        <label className="hint locale-recommend-picker">
           <span className="visually-hidden">{t.localeRecommendTitle}</span>
+          <input
+            className="locale-recommend-search"
+            data-testid="locale-recommend-search"
+            type="search"
+            placeholder="Search language…"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            autoComplete="off"
+          />
+          {/* Hidden select kept for existing Playwright selectOption helpers. */}
           <select
+            className="visually-hidden"
             data-testid="locale-recommend-select"
-            defaultValue={suggested}
+            value={suggested}
             onChange={(e) => accept(e.target.value)}
           >
-            {regionLocales.map((item) => (
+            {LOCALE_CATALOG.map((item) => (
               <option key={item.id} value={item.id}>
                 {item.nativeName}
               </option>
             ))}
           </select>
+          <ul className="locale-recommend-list" data-testid="locale-recommend-list">
+            {filtered.map((item) => (
+              <li key={item.id}>
+                <button
+                  type="button"
+                  className={item.id === suggested ? "lang-option is-current" : "lang-option"}
+                  data-testid={`locale-recommend-option-${item.id}`}
+                  onClick={() => accept(item.id)}
+                >
+                  <span className="lang-option-native">{item.nativeName}</span>
+                  <span className="lang-option-en">{item.englishName}</span>
+                </button>
+              </li>
+            ))}
+          </ul>
+          {!filtered.length ? (
+            <p className="lang-panel-empty" data-testid="locale-recommend-empty">
+              No matches
+            </p>
+          ) : null}
         </label>
       </div>
     </div>
@@ -179,7 +236,6 @@ export function maybeAcceptLanguageRedirect(currentLocale: string): void {
     if (currentLocale !== "en") return;
     const suggested = suggestLocale();
     if (suggested === "en") return;
-    // Soft: show modal only (LocaleRecommendModal). Hard redirect optional via ?alang=1
     const params = new URLSearchParams(window.location.search);
     if (params.get("alang") === "1") {
       localStorage.setItem(CHOICE_KEY, suggested);

@@ -16,11 +16,42 @@ test("FULL_PACK_MIN_KEYS is exported and near EN snapshot size", () => {
   console.info(summary);
   assert.match(summary, /minKeys=\d+/);
   assert.match(summary, /xh=\d+%:(full|partial)/);
-  for (const id of ["xh", "af", "zu", "st", "tn", "nso", "ss", "ve", "ts", "nr", "fr", "es", "de", "it", "nl", "pl", "sv", "da", "fi", "nb"]) {
+  for (const id of [
+    "xh",
+    "af",
+    "zu",
+    "st",
+    "tn",
+    "nso",
+    "ss",
+    "ve",
+    "ts",
+    "nr",
+    "fr",
+    "es",
+    "de",
+    "it",
+    "nl",
+    "pl",
+    "sv",
+    "da",
+    "fi",
+    "nb",
+    "cs",
+    "sk",
+    "hu",
+    "ro",
+    "bg",
+    "el",
+    "hr",
+    "lt",
+    "lv",
+    "et"
+  ]) {
     assert.equal(isFullLocalePack(id), true, id);
     assert.equal(showsPartialPackBanner(id), false, id);
   }
-  assert.equal(showsPartialPackBanner("bg"), true);
+  assert.equal(showsPartialPackBanner("ca"), true);
 });
 
 test("MUST_STAY_FULL_LOCALES never regress below FULL_PACK_MIN_KEYS", () => {

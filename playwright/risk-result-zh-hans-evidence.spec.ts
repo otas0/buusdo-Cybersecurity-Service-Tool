@@ -192,4 +192,16 @@ test.describe("live Halt evidence (soft)", () => {
   test("known-threat Halt shows evidence-known-threat on /es", async ({ page }) => {
     await runKnownThreatOnLocale(page, "/es", /amenaza|conocida|Señal/i);
   });
+
+  test("known-threat Halt shows evidence-known-threat on /it", async ({ page }) => {
+    await runKnownThreatOnLocale(page, "/it", /minaccia|nota|Segnale/i);
+  });
+
+  test("known-threat Halt shows evidence-known-threat on /nl", async ({ page }) => {
+    await runKnownThreatOnLocale(page, "/nl", /dreiging|bekende|Signaal/i);
+  });
+
+  test("known-threat Halt shows evidence-known-threat on /lt", async ({ page }) => {
+    await runKnownThreatOnLocale(page, "/lt", /grėsm|žinom|Signal/i);
+  });
 });

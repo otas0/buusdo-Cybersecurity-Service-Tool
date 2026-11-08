@@ -1,6 +1,8 @@
 #!/usr/bin/env node
 /**
  * Print locale pack coverage ratios for CI ::notice (pure Node — no tsx).
+ * MUST_STAY_FULL list: i18n/must-stay-full-locales.json (single source).
+ *
  *   node scripts/print-pack-coverage-summary.mjs
  */
 import fs from "node:fs";
@@ -12,6 +14,9 @@ const packsDir = path.join(root, "i18n/packs");
 const en = JSON.parse(fs.readFileSync(path.join(packsDir, "_en.snapshot.json"), "utf8"));
 const EN_KEYS = Object.keys(en);
 const FULL_PACK_MIN_KEYS = Math.max(400, Math.floor(EN_KEYS.length * 0.9));
+const MUST_STAY_FULL = JSON.parse(
+  fs.readFileSync(path.join(root, "i18n/must-stay-full-locales.json"), "utf8")
+);
 
 const packFiles = fs
   .readdirSync(packsDir)
@@ -43,42 +48,6 @@ const rows = ids.map((id) => {
 });
 console.log(`[pack-coverage] minKeys=${FULL_PACK_MIN_KEYS} ${rows.join(" ")}`);
 
-/** Keep in sync with i18n/pack-coverage.ts MUST_STAY_FULL_LOCALES */
-const MUST_STAY_FULL = [
-  "zh-Hans",
-  "zh-Hant",
-  "ja",
-  "pt-BR",
-  "de",
-  "fr",
-  "es",
-  "it",
-  "nl",
-  "pl",
-  "sv",
-  "da",
-  "fi",
-  "nb",
-  "af",
-  "zu",
-  "xh",
-  "nso",
-  "st",
-  "tn",
-  "ss",
-  "ve",
-  "ts",
-  "nr",
-  "mi",
-  "id",
-  "ms",
-  "th",
-  "vi",
-  "fil",
-  "km",
-  "lo",
-  "my"
-];
 const dropped = MUST_STAY_FULL.filter((id) => !isFull(id));
 if (dropped.length) {
   console.error(`[pack-coverage] FULL regression: ${dropped.join(", ")}`);
