@@ -8,6 +8,7 @@
  *
  * Toast dismiss (optional): SW reads chrome.storage.local.shieldToastDismiss and
  * passes dismiss:true|false on every SHIELD_TOAST. Content trusts that boolean only.
+ * Trust boolean `dismiss` from the service worker only (no storage read — avoids race).
  * Uses appendToastAction so the button stays under data-testid=result-action-row.
  *
  * Halt phishing DOM: shared builder in phishing-toast-mount.js (fixture + content).
@@ -88,6 +89,8 @@
       const text = (count === 1 ? table.tracker : table.trackers).replace("{n}", String(count));
       el = document.createElement("div");
       el.className = "portugal-cp-shield-toast portugal-cp-shield-toast--caution";
+      // Keep dismiss/Leave controls inside this node when added — same testid as RiskResult.
+      // Label span stays first; appendToastAction() adds buttons after it.
       el.setAttribute("data-testid", "result-action-row");
       const label = document.createElement("span");
       label.className = "portugal-cp-shield-toast__label";
