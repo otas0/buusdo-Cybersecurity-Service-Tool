@@ -18,6 +18,32 @@ test("localeFromAcceptLanguage maps aliases", () => {
   assert.equal(localeFromAcceptLanguage("tl;q=0.9"), "fil");
 });
 
+test("localeFromAcceptLanguage SEA region tags and legacy codes", () => {
+  assert.equal(localeFromAcceptLanguage("th-TH,en;q=0.8"), "th");
+  assert.equal(localeFromAcceptLanguage("vi-VN;q=0.9"), "vi");
+  assert.equal(localeFromAcceptLanguage("id-ID,en;q=0.5"), "id");
+  assert.equal(localeFromAcceptLanguage("ind;q=0.9"), "id");
+  assert.equal(localeFromAcceptLanguage("ms-MY;q=0.8"), "ms");
+  assert.equal(localeFromAcceptLanguage("may;q=0.9"), "ms");
+  assert.equal(localeFromAcceptLanguage("km-KH,en;q=0.7"), "km");
+  assert.equal(localeFromAcceptLanguage("kh;q=0.9"), "km");
+  assert.equal(localeFromAcceptLanguage("lo-LA;q=0.9"), "lo");
+  assert.equal(localeFromAcceptLanguage("lao;q=0.8"), "lo");
+  assert.equal(localeFromAcceptLanguage("my-MM;q=0.9"), "my");
+  assert.equal(localeFromAcceptLanguage("bur;q=0.9"), "my");
+  assert.equal(localeFromAcceptLanguage("tl-PH;q=0.9"), "fil");
+});
+
+test("localeFromAcceptLanguage Southern Africa + Māori region tags", () => {
+  assert.equal(localeFromAcceptLanguage("xh-ZA,en;q=0.5"), "xh");
+  assert.equal(localeFromAcceptLanguage("zu-ZA;q=0.9"), "zu");
+  assert.equal(localeFromAcceptLanguage("af-ZA;q=0.8"), "af");
+  assert.equal(localeFromAcceptLanguage("nso-ZA;q=0.9"), "nso");
+  assert.equal(localeFromAcceptLanguage("st-ZA;q=0.9"), "st");
+  assert.equal(localeFromAcceptLanguage("tn-ZA;q=0.9"), "tn");
+  assert.equal(localeFromAcceptLanguage("mi-NZ,en;q=0.6"), "mi");
+});
+
 test("localeFromAcceptLanguage empty / junk → null", () => {
   assert.equal(localeFromAcceptLanguage(""), null);
   assert.equal(localeFromAcceptLanguage(null), null);

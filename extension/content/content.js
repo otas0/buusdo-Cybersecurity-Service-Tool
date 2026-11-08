@@ -50,6 +50,21 @@
       tracker: "トラッカーを {n} 件ブロック",
       trackers: "トラッカーを {n} 件ブロック",
       dismiss: "閉じる"
+    },
+    mi: {
+      tracker: "Kua ārai {n} kaitutei",
+      trackers: "Kua ārai {n} kaitutei",
+      dismiss: "Whakakore"
+    },
+    th: {
+      tracker: "บล็อกตัวติดตาม {n} รายการ",
+      trackers: "บล็อกตัวติดตาม {n} รายการ",
+      dismiss: "ปิด"
+    },
+    vi: {
+      tracker: "Đã chặn {n} trình theo dõi",
+      trackers: "Đã chặn {n} trình theo dõi",
+      dismiss: "Đóng"
     }
   };
 
@@ -64,6 +79,9 @@
     if (id.startsWith("zh") || id === "zh-CN") return "zh-Hans";
     if (id.startsWith("pt")) return "pt-PT";
     if (id === "jp") return "ja";
+    if (id === "th" || id.startsWith("th-")) return TRACKER_COPY.th ? "th" : "en";
+    if (id === "vi" || id.startsWith("vi-")) return TRACKER_COPY.vi ? "vi" : "en";
+    if (id === "mi" || id.startsWith("mi-")) return TRACKER_COPY.mi ? "mi" : "en";
     return "en";
   }
 

@@ -445,6 +445,6 @@
   "detailKindRedirects": "ការបញ្ជូនបន្ត",
   "detailKindTiming": "ពេលវេលា",
   "detailKindLimit": "ដែនកំណត់",
-  "probeBlockedGenericTitle": "Site blocked the automated probe",
-  "probeBlockedGenericDetail": "Received HTTP {status}. The site blocked or throttled this check — that is not proof of phishing. Try the address in a normal browser if needed."
+  "probeBlockedGenericTitle": "គេហទំព័របានរារាំងការស៊ើបអង្កេតស្វ័យប្រវត្តិ",
+  "probeBlockedGenericDetail": "ទទួលបាន HTTP {status}។ គេហទំព័របានរារាំង ឬកំណត់ការត្រួតពិនិត្យនេះ — នោះមិនមែនជាភស្តុតាងនៃការឆបោកទេ។ សាកល្បងអាសយដ្ឋានក្នុងកម្មវិធីរុករកធម្មតាប្រសិនបើចាំបាច់។"
 }

@@ -123,7 +123,7 @@ async function liveReachable(): Promise<boolean> {
   }
 }
 
-test.describe("live zh-Hans Halt evidence (soft)", () => {
+test.describe("live Halt evidence (soft)", () => {
   test.beforeAll(async () => {
     if (!liveBase) {
       test.skip(true, "Set PLAYWRIGHT_LIVE_BASE_URL or PRODUCTION_HEALTH_URL");
@@ -134,7 +134,11 @@ test.describe("live zh-Hans Halt evidence (soft)", () => {
     }
   });
 
-  test("known-threat Halt shows evidence-known-threat on /zh-Hans", async ({ page }) => {
+  async function runKnownThreatOnLocale(
+    page: import("@playwright/test").Page,
+    localePath: string,
+    titleRe: RegExp
+  ) {
     const fixture = JSON.parse(
       readFileSync(path.join(root, "security/data/fixtures/halt-known-threat.json"), "utf8")
     ) as { host: string };
@@ -144,16 +148,28 @@ test.describe("live zh-Hans Halt evidence (soft)", () => {
     const host = (process.env.PLAYWRIGHT_HALT_HOST || fixture.host).trim();
     expect(curated.hosts[host], `fixture host ${host} must remain on curated list`).toBeTruthy();
 
-    await page.goto(`${liveBase}/zh-Hans`, { waitUntil: "domcontentloaded", timeout: 45_000 });
+    await page.goto(`${liveBase}${localePath}`, { waitUntil: "domcontentloaded", timeout: 45_000 });
     const input = page
-      .getByLabel(/地址|Website|address|网址/i)
+      .getByLabel(/地址|Website|address|网址|Adresse|ที่อยู่/i)
       .or(page.locator('input[name="url"], input[type="url"], input[data-testid="check-url"]').first());
     await expect(input.first()).toBeVisible({ timeout: 20_000 });
     await input.first().fill(host);
-    const go = page.getByRole("button", { name: /运行|Go|Run|檢查|检查/i }).first();
+    const go = page.getByRole("button", { name: /运行|Go|Run|檢查|检查|Ausführen|ตรวจ|เริ่ม/i }).first();
     await go.click();
     const evidence = page.getByTestId("evidence-known-threat");
     await expect(evidence).toBeVisible({ timeout: 45_000 });
-    await expect(page.getByTestId("evidence-known-threat-title")).toContainText(/威胁|已知/);
+    await expect(page.getByTestId("evidence-known-threat-title")).toContainText(titleRe);
+  }
+
+  test("known-threat Halt shows evidence-known-threat on /zh-Hans", async ({ page }) => {
+    await runKnownThreatOnLocale(page, "/zh-Hans", /威胁|已知/);
+  });
+
+  test("known-threat Halt shows evidence-known-threat on /de", async ({ page }) => {
+    await runKnownThreatOnLocale(page, "/de", /Bedrohung|bekannt|Liste/i);
+  });
+
+  test("known-threat Halt shows evidence-known-threat on /th", async ({ page }) => {
+    await runKnownThreatOnLocale(page, "/th", /ภัย|คุกคาม|รายการ/);
   });
 });

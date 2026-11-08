@@ -8,7 +8,9 @@ test("showsPartialPackBanner false for full packs, true for thin packs", () => {
   assert.equal(showsPartialPackBanner("en"), false);
   assert.equal(showsPartialPackBanner("pt-PT"), false);
   assert.equal(showsPartialPackBanner("zh-Hans"), false);
-  assert.equal(showsPartialPackBanner("xh"), true);
+  assert.equal(showsPartialPackBanner("xh"), false);
+  assert.equal(showsPartialPackBanner("zu"), true);
+  assert.equal(showsPartialPackBanner("af"), true);
 });
 
 test("Settings and Privacy panels both render partialPackBanner", () => {

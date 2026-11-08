@@ -445,6 +445,6 @@
   "detailKindRedirects": "လမ်းလွှဲများ",
   "detailKindTiming": "အချိန်",
   "detailKindLimit": "ကန့်သတ်ချက်",
-  "probeBlockedGenericTitle": "Site blocked the automated probe",
-  "probeBlockedGenericDetail": "Received HTTP {status}. The site blocked or throttled this check — that is not proof of phishing. Try the address in a normal browser if needed."
+  "probeBlockedGenericTitle": "ဆိုက်က အလိုအလျောက် စစ်ဆေးမှုကို ပိတ်ပင်ထားသည်",
+  "probeBlockedGenericDetail": "HTTP {status} ရရှိသည်။ ဆိုက်က ဤစစ်ဆေးမှုကို ပိတ်ပင် သို့မဟုတ် ကန့်သတ်ထားသည် — ၎င်းသည် phishing သက်သေ မဟုတ်ပါ။ လိုအပ်ပါက ပုံမှန်ဘရောက်ဇာတွင် လိပ်စာကို စမ်းကြည့်ပါ။"
 }

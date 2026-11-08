@@ -105,6 +105,19 @@ test("generic probe-blocked {status} for ja/es/it comes from message bag", () =>
   }
 });
 
+test("probeBlockedGeneric {status} for km/lo/my stays bag-backed", () => {
+  for (const locale of ["km", "lo", "my"] as const) {
+    const bag = getMessages(locale);
+    assert.ok(bag.probeBlockedGenericTitle?.trim());
+    assert.match(bag.probeBlockedGenericDetail, /\{status\}/);
+    const copy = ambiguousProbeBlockedCopy(418, locale);
+    assert.equal(copy.title, bag.probeBlockedGenericTitle);
+    assert.equal(copy.detail, bag.probeBlockedGenericDetail.replaceAll("{status}", "418"));
+    assert.match(copy.detail, /418/);
+    assert.notEqual(copy.title, messages.en.probeBlockedGenericTitle);
+  }
+});
+
 test("probeBlockedPair multi-locale titles/details stay bag-backed", () => {
   for (const locale of ["de", "th", "mi", "ja", "zh-Hans", "pt-PT"] as const) {
     const bag = getMessages(locale);
