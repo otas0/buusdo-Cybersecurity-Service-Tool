@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
  * Compare Round-2 survey CSV clicked_bad=not_sure share to Round-1 baseline (25%).
- * Segments not_sure by age=under18 and role=teacher.
+ * Segments not_sure by age=under18, role=teacher, and locale/language.
  *
  *   node scripts/survey-round2-compare.mjs path/to/round2.csv
  *   node scripts/survey-round2-compare.mjs path/to.csv --write-md=docs/SURVEY_ROUND2.md
@@ -45,6 +45,7 @@ const header = splitCsvLine(lines[0]).map((h) => h.trim().toLowerCase());
 const col = header.indexOf("clicked_bad");
 const ageCol = header.indexOf("age");
 const roleCol = header.indexOf("role");
+const localeCol = Math.max(header.indexOf("locale"), header.indexOf("language"));
 if (col < 0) {
   console.error("CSV missing clicked_bad column");
   process.exit(2);
@@ -58,6 +59,8 @@ const segments = {
   "not-under18": { n: 0, not_sure: 0 },
   "not-teacher": { n: 0, not_sure: 0 }
 };
+/** @type {Record<string, { n: number, not_sure: number }>} */
+const byLocale = {};
 let n = 0;
 const rows = [];
 for (const line of lines.slice(1)) {
@@ -67,6 +70,8 @@ for (const line of lines.slice(1)) {
   const v = (cells[col] || "").trim().toLowerCase();
   const age = ageCol >= 0 ? (cells[ageCol] || "").trim().toLowerCase() : "";
   const role = roleCol >= 0 ? (cells[roleCol] || "").trim().toLowerCase() : "";
+  const localeRaw = localeCol >= 0 ? (cells[localeCol] || "").trim() : "";
+  const locale = localeRaw || "unknown";
   const isNotSure = v === "not_sure" || v === "not sure";
   if (v === "yes") counts.yes += 1;
   else if (v === "no") counts.no += 1;
@@ -87,7 +92,10 @@ for (const line of lines.slice(1)) {
     segments["not-teacher"].n += 1;
     if (isNotSure) segments["not-teacher"].not_sure += 1;
   }
-  rows.push({ clicked_bad: v, age, role });
+  if (!byLocale[locale]) byLocale[locale] = { n: 0, not_sure: 0 };
+  byLocale[locale].n += 1;
+  if (isNotSure) byLocale[locale].not_sure += 1;
+  rows.push({ clicked_bad: v, age, role, locale });
 }
 
 const share = n ? counts.not_sure / n : 0;
@@ -109,6 +117,14 @@ const outLines = [
   segLine("segment role=teacher", segments.teacher),
   segLine("segment role≠teacher", segments["not-teacher"])
 ];
+
+const localeKeys = Object.keys(byLocale).sort((a, b) => byLocale[b].n - byLocale[a].n || a.localeCompare(b));
+if (localeKeys.length) {
+  outLines.push("segment by locale/language:");
+  for (const key of localeKeys) {
+    outLines.push(`  ${segLine(key, byLocale[key])}`);
+  }
+}
 
 const stepCol = header.findIndex((h) => h === "saw_step_by_step" || h === "saw_next_steps");
 if (stepCol >= 0) {

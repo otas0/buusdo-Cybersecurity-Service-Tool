@@ -139,4 +139,14 @@ export async function assertLocaleToggleKeepsSettingsDesktop(page: Page, base: s
     page.getByTestId("locale-select").selectOption("en")
   ]);
   await assertSettingsDesktopInView(page);
+
+  // Cross-locale: zh-Hans and ja must keep #settings-desktop
+  for (const next of ["zh-Hans", "ja"] as const) {
+    await Promise.all([
+      page.waitForURL(new RegExp(`/${next}/settings#settings-desktop`)),
+      page.getByTestId("locale-select").selectOption(next)
+    ]);
+    await expect(page.getByTestId("settings-desktop-downloads")).toBeVisible({ timeout: 15000 });
+    await assertSettingsDesktopInView(page);
+  }
 }

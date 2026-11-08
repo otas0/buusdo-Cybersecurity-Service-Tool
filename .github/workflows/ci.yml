@@ -706,6 +706,17 @@ jobs:
         env:
           PLAYWRIGHT_BASE_URL: ${{ vars.PLAYWRIGHT_BASE_URL || 'http://localhost:3000' }}
 
+      - name: Multi-locale switcher
+        if: steps.pw_install.outcome == 'success'
+        run: |
+          BASE="${PLAYWRIGHT_BASE_URL:-http://localhost:3000}"
+          export PLAYWRIGHT_BASE_URL="$BASE"
+          export PLAYWRIGHT_SKIP_WEBSERVER=1
+          npm run test:playwright:locales
+        env:
+          PLAYWRIGHT_BASE_URL: ${{ vars.PLAYWRIGHT_BASE_URL || 'http://localhost:3000' }}
+          PLAYWRIGHT_SKIP_WEBSERVER: "1"
+
       - name: Extension phishing toast fixture
         if: steps.pw_install.outcome == 'success'
         run: npm run test:playwright:extension-toast-phishing

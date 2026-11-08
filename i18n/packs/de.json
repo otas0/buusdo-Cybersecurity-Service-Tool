@@ -446,5 +446,7 @@
   "detailKindSubdomain": "Subdomain",
   "detailKindRedirects": "Umleitungen",
   "detailKindTiming": "Zeit",
-  "detailKindLimit": "Grenze"
+  "detailKindLimit": "Grenze",
+  "probeBlockedGenericTitle": "Die Seite hat die automatische Sonde blockiert",
+  "probeBlockedGenericDetail": "HTTP {status} erhalten. Die Seite hat diese Prüfung blockiert oder gedrosselt — das ist kein Phishing-Beweis. Öffnen Sie die Adresse bei Bedarf in einem normalen Browser."
 }

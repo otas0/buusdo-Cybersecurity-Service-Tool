@@ -60,3 +60,12 @@ test("probeBlockedPair ignores non-probe-blocked ids", () => {
     undefined
   );
 });
+
+test("ambiguousProbeBlockedCopy uses locale bag for ja/de and generic {status}", () => {
+  const ja = ambiguousProbeBlockedCopy(403, "ja");
+  assert.match(ja.title, /サイト|拒否|自動/);
+  const de = ambiguousProbeBlockedCopy(429, "de");
+  assert.ok(de.title.trim());
+  const other = ambiguousProbeBlockedCopy(418, "zh-Hans");
+  assert.match(other.detail, /418/);
+});

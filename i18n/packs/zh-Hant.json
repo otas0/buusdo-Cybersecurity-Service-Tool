@@ -446,5 +446,7 @@
   "detailKindSubdomain": "子網域",
   "detailKindRedirects": "重新導向",
   "detailKindTiming": "耗時",
-  "detailKindLimit": "限制"
+  "detailKindLimit": "限制",
+  "probeBlockedGenericTitle": "網站阻止了自動探測",
+  "probeBlockedGenericDetail": "收到 HTTP {status}。網站阻止或限制了此次檢查——這不能證明釣魚。如需要，請在一般瀏覽器中開啟該地址。"
 }

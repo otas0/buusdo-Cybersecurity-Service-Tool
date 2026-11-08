@@ -56,7 +56,9 @@ function snapshot() {
 }
 
 function setPrefs(patch) {
-  if (patch.lang === "en" || patch.lang === "pt-PT") state.lang = patch.lang;
+  if (typeof patch.lang === "string" && /^[a-z]{2,3}(-[A-Za-z0-9]+)?$/.test(patch.lang.trim())) {
+    state.lang = patch.lang.trim();
+  }
   if (patch.privacyMode != null) {
     const next = normalizePrivacyMode(patch.privacyMode);
     state.privacyMode = next;

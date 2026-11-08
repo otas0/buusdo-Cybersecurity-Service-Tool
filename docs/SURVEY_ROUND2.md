@@ -52,12 +52,22 @@ Facilitator visual: [store-screenshots/FRAME-hold.png](./store-screenshots/FRAME
 ## Analysis checklist
 
 1. Export / merge CSV rows from the open form.
-2. Compare `not_sure` (overall + under18 + teacher):
+2. Compare `not_sure` (overall + under18 + teacher + **locale/language**):
    ```bash
    npm run survey:round2-compare -- path/to/merged-round2.csv --write-md=docs/SURVEY_ROUND2.md
    ```
+   The script prints `segment by locale/language:` when the CSV has `locale` or `language`.
 3. Re-read free-text `frustration` for leftover themes.
 4. If under-18 `not_sure` stays high, tighten idle + Halt copy for that audience.
+
+## Facilitator notes — `language` / `locale`
+
+| Field | Required | Values |
+|-------|----------|--------|
+| `language` | yes | UI locale used during the Halt session (`en`, `pt-PT`, `zh-Hans`, `ja`, `th`, `mi`, … or `other`) |
+| `locale` | optional | Same BCP-47 id when it differs from `language`, or leave blank (compare treats blank as `language`) |
+
+Ask participants to pick the **same language they used in the product header** while answering. Merge row CSVs without renaming columns.
 
 ## Form (ready to run)
 

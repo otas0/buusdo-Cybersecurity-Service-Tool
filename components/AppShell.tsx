@@ -139,7 +139,7 @@ function Header({
           <span className="visually-hidden">{t.prototype}</span>
         </h1>
       </div>
-      <nav className="top-nav" aria-label="Navigation">
+      <nav className="top-nav" aria-label={t.navAriaLabel || "Navigation"}>
         <button
           type="button"
           className={`nav-link ${view === "check" ? "is-active" : ""}`}

@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import type { Locale } from "../i18n/messages";
 import { getMessages, isPortugueseLocale } from "../i18n/messages";
 import { localeIntl } from "../i18n/locales";
+import { showsPartialPackBanner } from "../i18n/pack-coverage";
 import {
   applyPrivacyModeChange,
   canPersistLists,
@@ -422,6 +423,11 @@ export function SettingsPanel({
   return (
     <main className="stage settings-stage">
       <p className="kicker">{t.navSettings}</p>
+      {showsPartialPackBanner(locale) ? (
+        <p className="scope-note" role="status" data-testid="settings-partial-pack-banner">
+          {t.partialPackBanner}
+        </p>
+      ) : null}
       <p className="light-note">{t.settingsIntro}</p>
 
       <section className="settings-block" id="settings-data">

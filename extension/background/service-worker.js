@@ -454,7 +454,14 @@ api.runtime.onMessage.addListener((message, sender, sendResponse) => {
 
     if (message?.type === "SHIELD_SET_PREFS") {
       const patch = {};
-      if (message.lang === "en" || message.lang === "pt-PT" || message.lang === "zh-Hans") {
+      if (
+        message.lang === "en" ||
+        message.lang === "pt-PT" ||
+        message.lang === "zh-Hans" ||
+        message.lang === "mi" ||
+        message.lang === "th" ||
+        message.lang === "vi"
+      ) {
         patch.lang = message.lang;
       } else if (message.lang === "zh" || message.lang === "zh-CN") {
         patch.lang = "zh-Hans";

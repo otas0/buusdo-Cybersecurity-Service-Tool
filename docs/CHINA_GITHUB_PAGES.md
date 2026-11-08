@@ -50,11 +50,15 @@ Pages **不能**替代 `POST /api/check`。
 
 别名：`/zh`、`/zh-CN`、`/zh-SG` 在 Workers 上 **redirect → `/zh-Hans`**；`/zh-TW`、`/zh-HK` → `/zh-Hant`（避免旧链 404）。简体文案包：`i18n/packs/zh-Hans.json`。摘要对齐清单见 `docs/CHINA_PRIVACY_DIFF.md`。
 
-Pacific / SEA 语言（mi、id、ms、th、vi、fil、km、lo、my）已从 catalog **暂撤**，待真实文案包就绪后再加回。
+Pacific / SEA（`mi`、`id`、`ms`、`th`、`vi`、`fil`、`km`、`lo`、`my`）已恢复真实文案包（无 EN stub）。
+
+### EN entry secondary `/zh-Hans` CTA
+
+`en.html` keeps primary **Open full check (EN)** → `/en`, plus a secondary ghost button `data-testid="china-workers-zh-hans"` → `https://buusdocst.mtsu.workers.dev/zh-Hans`（简体中文 /zh-Hans）so English-landing users can jump to the Simplified UI without leaving Pages.
 
 ### Halt next-steps on Pages
 
-`index.html` / `en.html` include `#halt-next-steps` (`data-testid="china-halt-next-steps"`): the same leave / no-credentials / verify / optional-report summary as the Workers Halt result. Full interactive Halt UI remains on Workers (`/zh-Hans` or `/en`) — open **打开完整检查** / **Open full check** when Cloudflare is reachable.
+`index.html` / `en.html` include `#halt-next-steps` (`data-testid="china-halt-next-steps"`): the same leave / no-credentials / verify / optional-report summary as the Workers Halt result. Full interactive Halt UI remains on Workers (`/zh-Hans` or `/en`) — open **打开完整检查** / **Open full check (EN)** when Cloudflare is reachable.
 
 ## 运维
 

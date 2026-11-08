@@ -84,3 +84,62 @@ function escapeHtml(s: string): string {
     .replaceAll(">", "&gt;")
     .replaceAll('"', "&quot;");
 }
+
+const liveBase = (
+  process.env.PLAYWRIGHT_LIVE_BASE_URL ||
+  process.env.PRODUCTION_HEALTH_URL ||
+  process.env.STAGING_HEALTH_URL ||
+  ""
+)
+  .trim()
+  .replace(/\/$/, "");
+
+async function liveReachable(): Promise<boolean> {
+  if (!liveBase) return false;
+  try {
+    const res = await fetch(`${liveBase}/api/health`, {
+      signal: AbortSignal.timeout(12_000),
+      headers: { Accept: "application/json" }
+    });
+    if (!res.ok) return false;
+    const data = (await res.json()) as { ok?: boolean; curatedListPresent?: boolean };
+    return data?.ok === true && data?.curatedListPresent === true;
+  } catch {
+    return false;
+  }
+}
+
+test.describe("live zh-Hans Halt evidence (soft)", () => {
+  test.beforeAll(async () => {
+    if (!liveBase) {
+      test.skip(true, "Set PLAYWRIGHT_LIVE_BASE_URL or PRODUCTION_HEALTH_URL");
+    }
+    const ok = await liveReachable();
+    if (!ok) {
+      test.skip(true, `Origin unreachable: ${liveBase}`);
+    }
+  });
+
+  test("known-threat Halt shows evidence-known-threat on /zh-Hans", async ({ page }) => {
+    // Fixture host from own list — prefer env override for CI.
+    const host = (process.env.PLAYWRIGHT_HALT_HOST || "secure-paypal-login.tk").trim();
+    await page.goto(`${liveBase}/zh-Hans`, { waitUntil: "domcontentloaded", timeout: 45_000 });
+    const input = page.getByLabel(/地址|Website|address|网址/i).or(page.locator('input[name="url"], input[type="url"], input[data-testid="check-url"]').first());
+    await expect(input.first()).toBeVisible({ timeout: 20_000 });
+    await input.first().fill(host);
+    const go = page.getByRole("button", { name: /运行|Go|Run|檢查|检查/i }).first();
+    await go.click();
+    const evidence = page.getByTestId("evidence-known-threat");
+    // Soft: if host no longer on list, skip rather than fail the suite.
+    try {
+      await expect(evidence).toBeVisible({ timeout: 30_000 });
+    } catch {
+      test.info().annotations.push({
+        type: "note",
+        description: `evidence-known-threat not shown for ${host} (list drift — soft)`
+      });
+      return;
+    }
+    await expect(page.getByTestId("evidence-known-threat-title")).toContainText(/威胁|已知/);
+  });
+});

@@ -3,6 +3,7 @@
  */
 
 import { normalizeUiLang, t } from "./i18n.js";
+import { LOCALE_CATALOG_DATA } from "./locale-catalog.js";
 import { afterRingClear, lifetimeChipTitles } from "./lifetime-chip.mjs";
 import { hashFocusOnlyScrolls, shouldFocusAskDecline } from "./machine-focus.mjs";
 import {
@@ -257,8 +258,30 @@ let websiteHealthPollMs = 15_000;
 /** Hostname (or full base) from WEBSITE_CHECK_URL via /api/state. */
 let websiteCheckHost = "localhost:3000";
 
-/** @type {'en'|'pt-PT'} */
+/** @type {string} */
 let lang = "en";
+
+function fillLangSelect() {
+  const sel = els.langSelect;
+  if (!sel || !LOCALE_CATALOG_DATA?.catalog) return;
+  const { regionOrder, regionLabels, catalog } = LOCALE_CATALOG_DATA;
+  const previous = sel.value || lang;
+  sel.innerHTML = "";
+  for (const region of regionOrder) {
+    const items = catalog.filter((c) => c.region === region);
+    if (!items.length) continue;
+    const group = document.createElement("optgroup");
+    group.label = regionLabels?.[region]?.en || region;
+    for (const item of items) {
+      const opt = document.createElement("option");
+      opt.value = item.id;
+      opt.textContent = item.nativeName;
+      group.appendChild(opt);
+    }
+    sel.appendChild(group);
+  }
+  sel.value = previous;
+}
 /** Desktop package version from /api/state (footer about line). */
 let desktopAppVersion = "";
 /** @type {object|null} */
@@ -409,7 +432,7 @@ function applyI18n() {
     els.listsOperatorHint.textContent = formatOperatorHint(lastOperatorHint);
   }
   document.documentElement.lang =
-    lang === "pt-PT" ? "pt-PT" : lang === "zh-Hans" ? "zh-Hans" : "en";
+    lang || "en";
 }
 
 function refreshFilterChipLabel(btn, countEl, label) {
@@ -1187,8 +1210,11 @@ els.websiteCheckBtn?.addEventListener("click", () => {
   runWebsiteCheck().catch(console.debug);
 });
 
+fillLangSelect();
+
 els.langSelect.addEventListener("change", async () => {
   lang = normalizeUiLang(els.langSelect.value);
+  document.documentElement.lang = lang;
   applyI18n();
   const res = await fetch("/api/prefs", {
     method: "POST",

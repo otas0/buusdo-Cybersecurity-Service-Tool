@@ -88,5 +88,35 @@
     "nextLeave": "Salga ya de esta página — no continúe en la dirección que comprobó.",
     "nextNoCreds": "No introduzca contraseñas, números de tarjeta, códigos de SMS/correo ni otros datos personales en este sitio.",
     "nextVerify": "Verifique de forma independiente: abra el dominio o la app oficial de la organización en la que ya confía (marcador, tarjeta bancaria, tienda de apps conocida). No use teléfonos ni correos mostrados en la página sospechosa."
+  },
+  "mi": {
+    "phishing": "Phishing pattern blocked",
+    "dismiss": "Whakakorea te tohu",
+    "dangerLevel": "Taumata mōrearea: Tū",
+    "ignoreRisk": "Tērā pea ka hoatu e koe ngā kupu huna, ngā taipitopito utu, ētahi raraunga whaiaro rānei ki te hunga e whakahaere ana i tēnei wāhitau. Katia te ripa i mua i te patopato, i te utu rānei.",
+    "nextStepsTitle": "Me aha ināianei — hikoi ā-hikoi",
+    "nextLeave": "Wehe ināianei i tēnei whārangi — kaua e haere tonu i te wāhitau i tirohia e koe.",
+    "nextNoCreds": "Kaua e tāuru kupu huna, nama kāri, waehere nō SMS/īmēra, ētahi raraunga whaiaro rānei ki tēnei pae.",
+    "nextVerify": "Whakamana motuhake: whakatuwheratia te rohe, te taupānga rānei ōkawa o te whakahaere kua whakapono kē koe (tohuwhārangi, kāri pēke, toa taupānga e mōhiotia ana). Kaua e whakamahi waea, īmēra rānei i te whārangi whakapātaritari."
+  },
+  "th": {
+    "phishing": "Phishing pattern blocked",
+    "dismiss": "ปิดคำใบ้",
+    "dangerLevel": "ระดับอันตราย: หยุด",
+    "ignoreRisk": "คุณอาจมอบรหัสผ่าน ข้อมูลชำระเงิน หรือข้อมูลส่วนตัวอื่นให้ผู้ควบคุมที่อยู่นี้ ปิดแท็บก่อนพิมพ์หรือจ่ายอะไร",
+    "nextStepsTitle": "สิ่งที่ควรทำต่อ — ทีละขั้น",
+    "nextLeave": "ออกจากหน้านี้ทันที — อย่าไปต่อที่อยู่ที่คุณเพิ่งตรวจ",
+    "nextNoCreds": "อย่าใส่รหัสผ่าน เลขบัตร รหัสจาก SMS/อีเมล หรือข้อมูลส่วนตัวอื่นบนเว็บนี้",
+    "nextVerify": "ตรวจอิสระ: เปิดโดเมนหรือแอปทางการขององค์กรที่คุณไว้ใจอยู่แล้ว (บุ๊กมาร์ก บัตรธนาคาร ร้านแอปที่รู้จัก) อย่าใช้โทรศัพท์หรืออีเมลบนหน้าต้องสงสัย"
+  },
+  "vi": {
+    "phishing": "Phishing pattern blocked",
+    "dismiss": "Đóng gợi ý",
+    "dangerLevel": "Mức nguy hiểm: Dừng",
+    "ignoreRisk": "Bạn có thể đưa mật khẩu, chi tiết thanh toán hoặc dữ liệu cá nhân khác cho người kiểm soát địa chỉ này. Đóng thẻ trước khi gõ hoặc thanh toán bất kỳ thứ gì.",
+    "nextStepsTitle": "Việc cần làm tiếp — từng bước",
+    "nextLeave": "Rời trang này ngay — đừng tiếp tục trên địa chỉ bạn vừa kiểm tra.",
+    "nextNoCreds": "Đừng nhập mật khẩu, số thẻ, mã từ SMS/email hay dữ liệu cá nhân khác trên trang này.",
+    "nextVerify": "Xác minh độc lập: mở tên miền hoặc ứng dụng chính thức của tổ chức bạn đã tin (dấu trang, thẻ ngân hàng, cửa hàng ứng dụng quen). Đừng dùng số điện thoại hay email hiện trên trang đáng ngờ."
   }
 }

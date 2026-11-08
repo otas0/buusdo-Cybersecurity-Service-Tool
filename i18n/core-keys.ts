@@ -75,6 +75,10 @@ export const CORE_MESSAGE_KEYS = [
   "faqSurveyRound2Link",
   "partialPackBanner",
   "localeRecommendTitle",
+  "localeRecommendBody",
+  "localeRecommendAccept",
+  "localeRecommendStay",
+  "localeRecommendDismiss",
   "whyEmpty"
 ] as const;
 

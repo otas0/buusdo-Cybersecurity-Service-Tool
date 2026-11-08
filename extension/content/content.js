@@ -35,8 +35,37 @@
       tracker: "Bloqueado {n} Rastreador",
       trackers: "Bloqueados {n} Rastreadores",
       dismiss: "Fechar"
+    },
+    "zh-Hans": {
+      tracker: "已拦截 {n} 个跟踪器",
+      trackers: "已拦截 {n} 个跟踪器",
+      dismiss: "关闭"
+    },
+    "zh-Hant": {
+      tracker: "已攔截 {n} 個追蹤器",
+      trackers: "已攔截 {n} 個追蹤器",
+      dismiss: "關閉"
+    },
+    ja: {
+      tracker: "トラッカーを {n} 件ブロック",
+      trackers: "トラッカーを {n} 件ブロック",
+      dismiss: "閉じる"
     }
   };
+
+  /** Prefer mount.resolveToastLang when present (catalog-aware). */
+  function resolveContentLang(raw) {
+    if (mount && typeof mount.resolveToastLang === "function") {
+      return mount.resolveToastLang(raw);
+    }
+    const id = String(raw || "en");
+    if (TRACKER_COPY[id]) return id;
+    if (id.startsWith("zh-Hant") || id === "zh-TW" || id === "zh-HK") return "zh-Hant";
+    if (id.startsWith("zh") || id === "zh-CN") return "zh-Hans";
+    if (id.startsWith("pt")) return "pt-PT";
+    if (id === "jp") return "ja";
+    return "en";
+  }
 
   function ensureHost() {
     let host = document.getElementById(TOAST_HOST_ID);
@@ -73,12 +102,7 @@
    * @param {{ kind: 'tracker'|'phishing', count?: number, lang?: string, dismiss?: boolean }} payload
    */
   async function showToast(payload) {
-    const lang =
-      payload.lang === "pt-PT"
-        ? "pt-PT"
-        : payload.lang === "zh-Hans" || payload.lang === "zh" || payload.lang === "zh-CN"
-          ? "zh-Hans"
-          : "en";
+    const lang = resolveContentLang(payload.lang);
     const count = Math.max(1, Number(payload.count) || 1);
     const host = ensureHost();
 
@@ -90,7 +114,7 @@
       }
       el = mount.buildPhishingToast(document, { lang });
     } else {
-      const table = TRACKER_COPY[lang];
+      const table = TRACKER_COPY[lang] || TRACKER_COPY.en;
       const text = (count === 1 ? table.tracker : table.trackers).replace("{n}", String(count));
       el = document.createElement("div");
       el.className = "portugal-cp-shield-toast portugal-cp-shield-toast--caution";
@@ -117,7 +141,7 @@
       const dismissText =
         payload.kind === "phishing" && mount
           ? mount.dismissLabel(lang)
-          : TRACKER_COPY[lang].dismiss;
+          : (TRACKER_COPY[lang] || TRACKER_COPY.en).dismiss;
       const btn = document.createElement("button");
       btn.type = "button";
       btn.textContent = dismissText;

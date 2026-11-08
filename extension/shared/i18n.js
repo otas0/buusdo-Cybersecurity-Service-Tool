@@ -9,8 +9,12 @@
 /** @param {string|null|undefined} lang */
 export function normalizeUiLang(lang) {
   const raw = String(lang || "").trim();
+  if (!raw) return "en";
   if (raw === "pt-PT" || raw === "pt") return "pt-PT";
   if (raw === "zh-Hans" || raw === "zh" || raw === "zh-CN" || raw === "zh-SG") return "zh-Hans";
+  if (raw === "en") return "en";
+  // mi / th / vi (and other catalog ids): keep for prefs; toast mount resolves pack COPY.
+  if (/^[a-z]{2,3}(-[A-Za-z0-9]+)?$/.test(raw)) return raw;
   return "en";
 }
 

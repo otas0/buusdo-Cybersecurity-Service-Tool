@@ -38,7 +38,20 @@ function toastFromBag(bag, localeId) {
   };
 }
 
-const locales = ["en", "pt-PT", "pt-BR", "zh-Hans", "zh-Hant", "ja", "de", "fr", "es"];
+const locales = [
+  "en",
+  "pt-PT",
+  "pt-BR",
+  "zh-Hans",
+  "zh-Hant",
+  "ja",
+  "de",
+  "fr",
+  "es",
+  "mi",
+  "th",
+  "vi"
+];
 const COPY = {};
 COPY.en = toastFromBag(en, "en");
 COPY["pt-PT"] = toastFromBag(pt, "pt-PT");

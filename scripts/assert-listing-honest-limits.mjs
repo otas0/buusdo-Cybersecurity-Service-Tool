@@ -62,6 +62,15 @@ need("Draft EN detailed: no cloud account", /no cloud account/i.test(draft));
 need("Draft pt-PT detailed stem", /sem desencriptação TLS/i.test(draft));
 need("Draft pt-PT detailed: não assinadas", /não assinadas/i.test(draft));
 
+need(
+  "Draft zh-Hans short description",
+  /## Short description \(zh-Hans\)/i.test(draft) && /自有威胁列表|简体中文/.test(draft)
+);
+need(
+  "Draft ja short description",
+  /## Short description \(ja\)/i.test(draft) && /独自の脅威リスト|日本語/.test(draft)
+);
+
 // Ready for localized CDN copy later — keep the SR describedby hook in Settings.
 need(
   "Settings mac CDN desc testid",

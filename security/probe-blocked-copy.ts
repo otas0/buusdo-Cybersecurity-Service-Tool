@@ -1,14 +1,18 @@
 /**
- * Single source for probe-blocked 403/429/503 copy from i18n/messages (any shipped locale).
+ * Single source for probe-blocked copy from i18n/messages (any shipped locale).
  * Used by site-signals evidence and RiskResult display.
  */
-import { getMessages, isPortugueseLocale } from "../i18n/messages";
+import { getMessages } from "../i18n/messages";
 
 export type ProbeBlockedLocale = string;
 
+function fillStatus(template: string, statusCode: number): string {
+  return template.replaceAll("{status}", String(statusCode));
+}
+
 /**
- * Limitation copy for ambiguous probe HTTP statuses (403 refuse / 429 throttle / 503 overload).
- * Never escalate risk.
+ * Limitation copy for ambiguous probe HTTP statuses (403 refuse / 429 throttle / 503 overload / other).
+ * Never escalate risk. Generic statuses use message-bag probeBlockedGeneric* (no hardcoded EN/pt).
  */
 export function ambiguousProbeBlockedCopy(
   statusCode: number,
@@ -24,15 +28,9 @@ export function ambiguousProbeBlockedCopy(
   if (statusCode === 503) {
     return { title: m.probeBlocked503Title, detail: m.probeBlocked503Detail };
   }
-  if (isPortugueseLocale(locale)) {
-    return {
-      title: "O site bloqueou a sondagem automática",
-      detail: `Recebido HTTP ${statusCode}. O site bloqueou ou limitou esta verificação — isso não prova phishing. Abra o endereço num browser normal se precisar.`
-    };
-  }
   return {
-    title: "Site blocked the automated probe",
-    detail: `Received HTTP ${statusCode}. The site blocked or throttled this check — that is not proof of phishing. Try the address in a normal browser if needed.`
+    title: m.probeBlockedGenericTitle,
+    detail: fillStatus(m.probeBlockedGenericDetail, statusCode)
   };
 }
 
@@ -52,8 +50,8 @@ export function resolveProbeBlockedStatusCode(
 }
 
 /**
- * RiskResult helper: pick 403/429/503 pair from live.statusCode or detail fallback.
- * @returns title/detail tuple, or genericFallback / undefined
+ * RiskResult helper: pick probe-blocked pair from live.statusCode or detail fallback.
+ * Always returns a bag-backed pair when a status code is known.
  */
 export function probeBlockedPair(
   item: { id: string; detail: string },
@@ -65,9 +63,7 @@ export function probeBlockedPair(
 ): [string, string] | undefined {
   if (item.id !== "probe-blocked") return undefined;
   const code = resolveProbeBlockedStatusCode(item.detail, opts.liveStatusCode);
-  if (code === 403 || code === 429 || code === 503) {
-    const copy = ambiguousProbeBlockedCopy(code, opts.locale);
-    return [copy.title, copy.detail];
-  }
-  return opts.genericFallback;
+  if (code == null) return opts.genericFallback;
+  const copy = ambiguousProbeBlockedCopy(code, opts.locale);
+  return [copy.title, copy.detail];
 }

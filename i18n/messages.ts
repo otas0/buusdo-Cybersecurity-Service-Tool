@@ -213,6 +213,9 @@ export const messages = {
     probeBlocked503Title: "Site temporarily unavailable to the probe",
     probeBlocked503Detail:
       "Received HTTP 503 (Service Unavailable). The site or edge may be overloaded — that is not proof of phishing. Try again later in a normal browser if needed.",
+    probeBlockedGenericTitle: "Site blocked the automated probe",
+    probeBlockedGenericDetail:
+      "Received HTTP {status}. The site blocked or throttled this check — that is not proof of phishing. Try the address in a normal browser if needed.",
     personalListLeaveNote:
       "Leave suggested from your personal block list (extension / desktop). This website did not store the list.",
     none: "Nothing is saved here yet.",
@@ -692,6 +695,9 @@ export const messages = {
     probeBlocked503Title: "O site está temporariamente indisponível à sonda",
     probeBlocked503Detail:
       "Recebido HTTP 503 (Service Unavailable). O site ou a edge podem estar sobrecarregados — isso não prova phishing. Tente mais tarde num browser normal se precisar.",
+    probeBlockedGenericTitle: "O site bloqueou a sondagem automática",
+    probeBlockedGenericDetail:
+      "Recebido HTTP {status}. O site bloqueou ou limitou esta verificação — isso não prova phishing. Abra o endereço num browser normal se precisar.",
     personalListLeaveNote:
       "Saída sugerida pela sua lista pessoal (extensão / app). Este site não guardou a lista.",
     none: "Ainda não há nada guardado.",
