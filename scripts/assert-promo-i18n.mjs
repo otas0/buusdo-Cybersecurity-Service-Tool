@@ -74,7 +74,24 @@ if (!poster.includes("/zh-Hans/privacy")) {
   failed = true;
 }
 
+// Catalog Europe packs are full — Halt chrome must not still be EN leftovers.
+for (const locale of ["it", "nl", "pl", "sv", "da", "fi", "nb", "fr", "es", "de"]) {
+  const t = getMessages(locale);
+  const en = getMessages("en");
+  if (!t.lightDanger || t.lightDanger === en.lightDanger) {
+    // fr/de may keep cognate Halt/Stop — only fail when identical to EN "Halt" for non-de.
+    if (locale !== "de" && t.lightDanger === "Halt") {
+      console.error(`[assert-promo-i18n] ${locale}.lightDanger still EN Halt (Europe packs are full)`);
+      failed = true;
+    }
+  }
+  if (!t.go || t.go === en.go) {
+    console.error(`[assert-promo-i18n] ${locale}.go still EN (Europe packs are full)`);
+    failed = true;
+  }
+}
+
 if (failed) process.exit(1);
 console.info(
-  `[assert-promo-i18n] OK body ${bodyKeys.length} keys × 3 locales + bilingual signal + privacy foot in public/promo/poster.html`,
+  `[assert-promo-i18n] OK body ${bodyKeys.length} keys × 3 locales + bilingual signal + privacy foot + Europe Halt chrome`,
 );

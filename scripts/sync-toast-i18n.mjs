@@ -30,6 +30,8 @@ function toastFromBag(bag, localeId) {
   else if (localeId === "de") phishing = "Phishing-Muster blockiert";
   else if (localeId === "fr") phishing = "Modèle de phishing bloqué";
   else if (localeId === "es") phishing = "Patrón de phishing bloqueado";
+  else if (localeId === "it") phishing = "Modello di phishing bloccato";
+  else if (localeId === "nl") phishing = "Phishingpatroon geblokkeerd";
   return {
     phishing,
     dismiss: bag.feedbackDismissAfterReportHint || bag.leave || "Dismiss",
@@ -49,7 +51,8 @@ function localesFromLangSelect() {
   return [...block[0].matchAll(/<option\s+value="([^"]+)"/g)].map((m) => m[1]);
 }
 
-const EXTRA_PACKS = ["pt-BR", "zh-Hant", "ja", "de", "fr", "es"];
+// Overlay Halt chips beyond the popup #langSelect 12-set (it/nl keep toast COPY in JSON for shared i18n sync).
+const EXTRA_PACKS = ["pt-BR", "zh-Hant", "ja", "de", "fr", "es", "it", "nl"];
 const langSelectOrder = localesFromLangSelect();
 const locales = [...new Set([...langSelectOrder, ...EXTRA_PACKS])];
 

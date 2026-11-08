@@ -45,6 +45,8 @@ jobs:
 
       - name: Pack coverage ratios (locale notice + hard-fail regression)
         run: |
+          # Keep must-stay-full list aligned with packs that currently pass the threshold.
+          node scripts/sync-must-stay-full-locales.mjs --check
           summary="$(node scripts/print-pack-coverage-summary.mjs)"
           echo "$summary"
           echo "::notice::$summary"

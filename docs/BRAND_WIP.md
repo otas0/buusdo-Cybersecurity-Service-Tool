@@ -11,8 +11,15 @@ Product chrome i18n PRs must stay locale-clean. Brand / promo / wordmark experim
 ## Policy
 
 1. Do **not** mix brand WIP into locale pack commits on `main`.
-2. Park brand work on `brand/<topic>` (example: `brand/wordmark-paths`).
-3. Before starting an i18n batch:
+2. Park brand work on `brand/<topic>` (examples: `brand/wordmark-paths`, `brand/shield-css`, `brand/popup-chrome`). Create the branch **before** editing those files:
+
+```bash
+git switch -c brand/shield-css
+# …edit app/shield.css / extension/popup/* …
+git push -u origin HEAD
+```
+
+3. Before starting an i18n batch on `main`:
 
 ```bash
 git status -sb

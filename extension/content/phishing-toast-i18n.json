@@ -118,5 +118,25 @@
     "nextLeave": "Salga ya de esta página — no continúe en la dirección que comprobó.",
     "nextNoCreds": "No introduzca contraseñas, números de tarjeta, códigos de SMS/correo ni otros datos personales en este sitio.",
     "nextVerify": "Verifique de forma independiente: abra el dominio o la app oficial de la organización en la que ya confía (marcador, tarjeta bancaria, tienda de apps conocida). No use teléfonos ni correos mostrados en la página sospechosa."
+  },
+  "it": {
+    "phishing": "Modello di phishing bloccato",
+    "dismiss": "Chiudi avviso",
+    "dangerLevel": "Livello di pericolo: Stop",
+    "ignoreRisk": "Potresti consegnare password, dati di pagamento o altri dati personali a chi controlla questo indirizzo. Chiudi la scheda prima di digitare o pagare qualsiasi cosa.",
+    "nextStepsTitle": "Cosa fare dopo — passo dopo passo",
+    "nextLeave": "Lascia subito questa pagina — non continuare sull’indirizzo che hai controllato.",
+    "nextNoCreds": "Non inserire password, numeri di carta, codici da SMS/e-mail o altri dati personali su questo sito.",
+    "nextVerify": "Verifica in modo indipendente: apri il dominio o l’app ufficiale dell’organizzazione di cui ti fidi già (segnalibro, carta bancaria, store di app noto). Non usare telefoni o e-mail mostrati sulla pagina sospetta."
+  },
+  "nl": {
+    "phishing": "Phishingpatroon geblokkeerd",
+    "dismiss": "Hint sluiten",
+    "dangerLevel": "Gevaarsniveau: Stop",
+    "ignoreRisk": "U kunt wachtwoorden, betaalgegevens of andere persoonsgegevens overhandigen aan wie dit adres beheert. Sluit het tabblad voordat u iets typt of betaalt.",
+    "nextStepsTitle": "Wat nu te doen — stap voor stap",
+    "nextLeave": "Verlaat deze pagina nu — ga niet verder op het adres dat u controleerde.",
+    "nextNoCreds": "Voer op deze site geen wachtwoorden, kaartnummers, codes uit sms/e-mail of andere persoonsgegevens in.",
+    "nextVerify": "Verifieer onafhankelijk: open het officiële domein of de app van de organisatie die u al vertrouwt (bladwijzer, bankpas, bekende app store). Gebruik geen telefoonnummers of e-mails op de verdachte pagina."
   }
 }

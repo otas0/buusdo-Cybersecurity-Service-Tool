@@ -19,7 +19,7 @@ const checkOnly = process.argv.includes("--check");
 const i18nPath = path.join(root, "extension/shared/i18n.js");
 const packsDir = path.join(root, "i18n/packs");
 /** Overlay bags (hand bags en / pt-PT / zh-Hans stay above the marker). */
-const LOCALES = ["mi", "th", "vi", "ja", "de", "fr", "es", "zh-Hant", "pt-BR"];
+const LOCALES = ["mi", "th", "vi", "ja", "de", "fr", "es", "it", "nl", "zh-Hant", "pt-BR"];
 
 /** extension key → website pack key */
 const MAP = {

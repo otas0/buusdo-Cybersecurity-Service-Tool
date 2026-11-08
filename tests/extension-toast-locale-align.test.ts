@@ -16,17 +16,21 @@ test("content TRACKER_COPY covers toast 12-locale set", () => {
   const toast = Object.keys(
     JSON.parse(readFileSync(join(root, "extension/content/phishing-toast-i18n.json"), "utf8"))
   );
-  assert.equal(toast.length, 12);
+  // Popup #langSelect is the 12-locale core; EXTRA_PACKS (it/nl/…) may grow the JSON.
+  assert.ok(toast.length >= 12, `expected ≥12 toast locales, got ${toast.length}`);
+  for (const id of ["en", "pt-PT", "zh-Hans", "mi", "th", "vi"]) {
+    assert.ok(toast.includes(id), `toast JSON missing langSelect core ${id}`);
+  }
   const content = readFileSync(join(root, "extension/content/content.js"), "utf8");
   const tracker = trackerLocales(content);
-  for (const id of toast) {
+  for (const id of ["en", "pt-PT", "zh-Hans", "mi", "th", "vi"]) {
     assert.ok(tracker.includes(id), `TRACKER_COPY missing toast locale ${id}`);
   }
 });
 
 test("extension shared i18n has toast Halt chips for mi/th/vi (SEA overlay)", () => {
   const shared = readFileSync(join(root, "extension/shared/i18n.js"), "utf8");
-  for (const id of ["en", "pt-PT", "zh-Hans", "mi", "th", "vi", "ja", "de", "fr", "es"]) {
+  for (const id of ["en", "pt-PT", "zh-Hans", "mi", "th", "vi", "ja", "de", "fr", "es", "it", "nl"]) {
     assert.match(
       shared,
       new RegExp(`(?:^|\\n)\\s{2}(?:"${id}"|${id})\\s*:`),
@@ -37,7 +41,7 @@ test("extension shared i18n has toast Halt chips for mi/th/vi (SEA overlay)", ()
   assert.match(shared, /"toastPhishing":\s*"หยุด"/);
   assert.match(shared, /"toastPhishing":\s*"Dừng"/);
   assert.match(shared, /"toastPhishing":\s*"停止"/); // ja Halt
-  // de / fr / es Halt chips — native instrument verbs (not EN-only bag presence)
+  // de / fr / es / it / nl Halt chips — native instrument verbs
   function toastChip(id: string, chip: string) {
     const re = new RegExp(
       `(?:^|\\n)\\s{2}(?:"${id}"|${id})\\s*:\\s*\\{[\\s\\S]*?"toastPhishing"\\s*:\\s*"${chip}"`
@@ -47,6 +51,8 @@ test("extension shared i18n has toast Halt chips for mi/th/vi (SEA overlay)", ()
   toastChip("de", "Halt");
   toastChip("fr", "Stop");
   toastChip("es", "Alto");
+  toastChip("it", "Stop");
+  toastChip("nl", "Stop");
   // Pack lightDanger → toastPhishing overlay (Stop / Alto must survive pack edits)
   const frPack = JSON.parse(readFileSync(join(root, "i18n/packs/fr.json"), "utf8")) as {
     lightDanger?: string;

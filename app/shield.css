@@ -158,7 +158,8 @@
   right: 0;
   z-index: 90;
   width: min(17.5rem, calc(100vw - 24px));
-  max-height: min(20rem, 65vh);
+  /* Frequent strip + one open region must fit without clipping on mobile. */
+  max-height: min(22rem, 72vh);
   display: flex;
   flex-direction: column;
   background: var(--panel);
@@ -166,6 +167,7 @@
   border: 1px solid color-mix(in srgb, var(--muted) 40%, transparent);
   box-shadow: 0 12px 32px color-mix(in srgb, #000 45%, transparent);
   color-scheme: inherit;
+  overflow: hidden;
 }
 
 .shell .lang-panel-search {
@@ -190,18 +192,30 @@
 }
 
 .shell .lang-panel-frequent {
-  flex: 0 0 auto;
-  max-height: 11rem;
+  flex: 0 1 auto;
+  max-height: min(9.5rem, 38%);
   overflow: auto;
   border-bottom: 1px solid color-mix(in srgb, var(--muted) 28%, transparent);
   padding-bottom: 4px;
+  min-height: 0;
 }
 
 .shell .lang-panel-regions {
   overflow: auto;
   padding: 4px 0 8px;
   flex: 1 1 auto;
-  min-height: 0;
+  min-height: 4.5rem;
+}
+
+@media (max-width: 720px) {
+  .shell .lang-panel {
+    max-height: min(70vh, 24rem);
+    width: min(18rem, calc(100vw - 16px));
+  }
+
+  .shell .lang-panel-frequent {
+    max-height: min(8rem, 34%);
+  }
 }
 
 .shell .lang-region-toggle {

@@ -42,6 +42,21 @@ export const LOCALE_REGION_ORDER: LocaleRegion[] = [
 ];
 
 /**
+ * Short “Frequent” strip shared by LanguageSwitcher + LocaleRecommendModal.
+ * Keep in sync — do not diverge per component.
+ */
+export const FREQUENT_LOCALE_IDS = [
+  "en",
+  "zh-Hans",
+  "zh-Hant",
+  "ja",
+  "pt-PT",
+  "de",
+  "fr",
+  "es"
+] as const;
+
+/**
  * Ship list: EN + 简/繁/日/葡 + Europe + South Africa (11 official) + te reo Māori + ASEAN national languages.
  * SEA/Pacific packs must be real translations (no EN stubs).
  * Aliases: zh → zh-Hans, zh-CN/zh-SG → zh-Hans, zh-TW/zh-HK → zh-Hant, pt → pt-PT, jp → ja, tl → fil, no → nb.
