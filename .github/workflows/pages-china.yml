@@ -59,3 +59,4 @@ jobs:
           for page in "/" "/en.html" "/install.html" "/install-en.html" "/privacy.html" "/privacy-en.html"; do
             assert_url "$page" 'data-china-lang'
           done
+          assert_url "/" 'china-workers-locale-hint'

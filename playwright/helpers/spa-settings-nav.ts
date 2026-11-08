@@ -127,12 +127,16 @@ export async function assertLocaleToggleKeepsSettingsDesktop(page: Page, base: s
   const lang = page.getByTestId("locale-select");
   await expect(lang).toBeVisible();
   await waitForReactHydration(page, '[data-testid="locale-select"]');
-  await lang.selectOption("pt-PT");
-  await expect(page).toHaveURL(/\/pt-PT\/settings#settings-desktop/);
+  await Promise.all([
+    page.waitForURL(/\/pt-PT\/settings#settings-desktop/),
+    lang.selectOption("pt-PT")
+  ]);
   await expect(page.getByTestId("settings-desktop-downloads")).toBeVisible({ timeout: 15000 });
   await assertSettingsDesktopInView(page);
 
-  await page.getByTestId("locale-select").selectOption("en");
-  await expect(page).toHaveURL(/\/en\/settings#settings-desktop/);
+  await Promise.all([
+    page.waitForURL(/\/en\/settings#settings-desktop/),
+    page.getByTestId("locale-select").selectOption("en")
+  ]);
   await assertSettingsDesktopInView(page);
 }

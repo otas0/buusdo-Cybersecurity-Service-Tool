@@ -1,7 +1,16 @@
 /**
- * UI strings — locale packs (en, pt-PT).
+ * UI strings — locale packs (en, pt-PT, zh-Hans).
  * Kept aligned with extension/shared/i18n.js (desktop-specific keys added).
+ * Prefer zh-Hans — never persist bare `zh`.
  */
+
+/** @param {string|null|undefined} lang */
+export function normalizeUiLang(lang) {
+  const raw = String(lang || "").trim();
+  if (raw === "pt-PT" || raw === "pt") return "pt-PT";
+  if (raw === "zh-Hans" || raw === "zh" || raw === "zh-CN" || raw === "zh-SG") return "zh-Hans";
+  return "en";
+}
 
 export const STRINGS = {
   en: {
@@ -505,8 +514,30 @@ export const STRINGS = {
   }
 };
 
+STRINGS["zh-Hans"] = {
+  appTitle: "buusdo Cybersecurity Service Tool",
+  statusKicker: "状态",
+  scan: "运行",
+  scanning: "等待",
+  statusStandby: "就绪",
+  statusSafe: "畅通",
+  statusCaution: "暂缓",
+  statusDanger: "停止",
+  statusIdle: "输入地址。",
+  langLabel: "语言",
+  privacyLabel: "数据",
+  privacyOff: "永不存储",
+  privacyLocal: "仅本设备",
+  privacyShare: "用于支持的诊断",
+  dangerLevelLabel: "危险等级",
+  ignoreRiskTitle: "若忽略此警告",
+  ignoreRiskBody:
+    "您可能把密码、支付信息或其他个人数据交给控制该地址的人。输入或付款前请先关闭。"
+};
+
 export function t(lang, key, vars = {}) {
-  const table = STRINGS[lang] || STRINGS.en;
+  const id = normalizeUiLang(lang);
+  const table = STRINGS[id] || STRINGS.en;
   let out = table[key] ?? STRINGS.en[key] ?? key;
   for (const [k, v] of Object.entries(vars)) {
     out = out.replaceAll(`{${k}}`, String(v));

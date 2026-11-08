@@ -13,8 +13,12 @@ import {
   timingLabels
 } from "./timing-copy";
 import { levelToLight, TrafficLights } from "./TrafficLights";
-import type { Locale } from "../i18n/messages";
-import { isPortugueseLocale } from "../i18n/locales";
+import type { Locale, MessageBag } from "../i18n/messages";
+import {
+  evidencePairFromBag,
+  recommendationCopy,
+  riskLevelCopy
+} from "./risk-evidence-copy";
 import { riskWhyItems, whyEvidenceDisplay } from "./risk-why-items";
 
 export function RiskResult({
@@ -24,17 +28,16 @@ export function RiskResult({
   onReset
 }: {
   analysis: Analysis;
-  t: Record<string, string>;
+  t: MessageBag | Record<string, string>;
   locale?: Locale;
   onReset: () => void;
 }) {
+  const bag = t as MessageBag;
   const { parsed, risk, identity, threat, sensitive, live } = analysis;
   const [feedbackNote, setFeedbackNote] = useState("");
   const [showDetails, setShowDetails] = useState(false);
   const [draftMarks, setDraftMarks] = useState<FeedbackMark[]>([]);
   const [desktopBlockNote, setDesktopBlockNote] = useState("");
-  /** Legacy inline PT copy until those strings move into the message bag. */
-  const pt = isPortugueseLocale(locale);
   const feedbackHost = parsed.hostname.toLowerCase().replace(/\.$/, "");
 
   async function openDesktopBlock() {
@@ -50,20 +53,12 @@ export function RiskResult({
       }).catch(() => null);
       clearTimeout(timer);
       if (!res || !res.ok) {
-        setDesktopBlockNote(
-          pt
-            ? "Abra primeiro o desktop buusdo (localhost:3010), depois tente de novo."
-            : "Open the buusdo desktop app first (localhost:3010), then try again."
-        );
+        setDesktopBlockNote(bag.desktopBlockNeedOpen);
         return;
       }
       window.open(deep, "_blank", "noopener,noreferrer");
     } catch {
-      setDesktopBlockNote(
-        pt
-          ? "Abra primeiro o desktop buusdo (localhost:3010), depois tente de novo."
-          : "Open the buusdo desktop app first (localhost:3010), then try again."
-      );
+      setDesktopBlockNote(bag.desktopBlockNeedOpen);
     }
   }
 
@@ -99,118 +94,99 @@ export function RiskResult({
     }
   }
 
-  const levelCopy: Record<string, { label: string; note: string }> = pt ? {
-    CRITICAL: { label: "Risco crítico", note: "Há provas fortes de que deve sair antes de introduzir informação." },
-    HIGH: { label: "Risco elevado", note: "Vários sinais documentados exigem atenção imediata." },
-    CAUTION: { label: "Cuidado", note: "Foram encontrados sinais de alerta ou incerteza importantes." },
-    LOW_EVIDENCE: { label: "Provas de risco limitadas", note: "Não foi encontrada nenhuma ameaça conhecida nas fontes verificadas." },
-    UNKNOWN: { label: "Desconhecido", note: "Não existem provas suficientes para uma conclusão segura." },
-  } : {
-    CRITICAL: { label: "Critical risk", note: "Strong evidence indicates that you should leave before entering information." },
-    HIGH: { label: "High risk", note: "Multiple documented warning signals need immediate attention." },
-    CAUTION: { label: "Caution", note: "Important uncertainty or warning signals were found." },
-    LOW_EVIDENCE: { label: "Limited risk evidence", note: "No known threat was found in the sources checked." },
-    UNKNOWN: { label: "Unknown", note: "There is not enough evidence to reach a confident conclusion." },
+  const evidenceVars = {
+    org: identity.claimedOrganisation?.name ?? "",
+    domain: parsed.registrableDomain
   };
-
-  const evidencePt: Record<string, [string, string]> = {
-    "known-threat": ["Sinal de ameaça conhecido", "Este endereço correspondeu à lista própria do buusdo."],
-    "no-match": ["Nenhuma ameaça conhecida nas listas", "Não foi encontrada nenhuma ameaça conhecida na lista própria. Isto não prova que o site seja seguro."],
-    "unknown-reputation": ["Reputação desconhecida", "A lista própria não fornece um resultado positivo nem negativo."],
-    "provider-unavailable": ["Lista de ameaças indisponível", "A lista própria não pôde ser lida. As verificações estruturais e em direto continuaram."],
-    "identity-match": ["O domínio corresponde a uma organização conhecida", `O domínio registável corresponde a ${identity.claimedOrganisation?.name}. Isto não significa que o site seja seguro.`],
-    "identity-mismatch": ["Parece uma organização conhecida, mas o domínio não corresponde", `O endereço parece relacionado com ${identity.claimedOrganisation?.name}, mas o domínio de controlo é ${parsed.registrableDomain}.`],
-    "misleading-subdomain": ["Sinal de subdomínio enganador", `Um nome parecido com uma organização aparece antes do domínio de controlo ${parsed.registrableDomain}.`],
-    lookalike: ["Sinal de semelhança do domínio", "Este domínio parece-se com um domínio conhecido. A semelhança é um sinal, não prova de phishing."],
-    punycode: ["Domínio internacionalizado codificado", "O endereço contém punycode. Pode ser legítimo, mas caracteres visualmente confusos exigem cuidado."],
-    http: ["Ligação não encriptada", "A informação enviada por HTTP pode ficar exposta durante a transmissão."],
-    "sensitive-path": ["Caminho de página sensível", "O caminho sugere que a página pode pedir informação sensível. Confirme o domínio de forma independente."],
-    sensitive: ["Caminho de página sensível", "O caminho sugere que a página pode pedir informação sensível. Confirme o domínio de forma independente."],
-    "checked-address": ["Endereço analisado", `Verificado ${parsed.registrableDomain}.`],
-    "dns-ok": ["Anfitrião acessível", "A verificação em direto alcançou o anfitrião."],
-    "dns-fail": ["O anfitrião não foi alcançado", "O anfitrião não respondeu. O site pode estar mal escrito ou inacessível."],
-    "http-status": ["O site respondeu", "Foi recebida uma resposta HTTP."],
-    "redirect-chain": ["Cadeia de redirecionamentos", "O pedido seguiu um ou mais redirecionamentos."],
-    "cross-redirect": ["Redirecionamento para outro domínio", "O endereço redirecionou para outro domínio registável."],
-    redirect: ["O endereço redireciona", "O pedido seguiu um redirecionamento."],
-    unreachable: ["O site não respondeu", "O pedido em direto falhou."],
-    "tls-fail": ["Problema de TLS / certificado", "O HTTPS não pôde ser validado. Não introduza informação sensível."],
-    "ip-host": ["Endereço numérico", "O site é acedido por IP em vez de um nome de domínio normal."],
-    "risky-tld": ["Terminação de domínio pouco comum", "Esta terminação é mais usada em campanhas de phishing. Por si só não prova dano."],
-    "deep-subdomain": ["Cadeia de subdomínios invulgar", "Subdomínios longos às vezes são usados para parecer oficiais."],
-    "secret-query": ["Segredo no link", "O endereço coloca um segredo na query. O valor não foi guardado."],
-    "probe-timeout": ["A verificação em direto expirou", "O site não respondeu a tempo."],
-    "https-limit": ["HTTPS não prova identidade ou confiança", "HTTPS protege a ligação, mas não prova a identidade ou a fiabilidade do site."],
-    "scope-limit": ["Âmbito desta verificação", "Analisamos o endereço com a lista própria, marcas parecidas, DNS, acessibilidade e redirecionamentos. Não enviamos o URL a serviços de terceiros."],
-    "user-block": [
-      "Lista pessoal de bloqueio",
-      "Este anfitrião está na sua lista pessoal (extensão ou app). O site não guardou a lista."
-    ],
-  };
+  function evidenceTranslated(id: string): [string, string] | undefined {
+    return evidencePairFromBag(bag, id, evidenceVars);
+  }
   function probeBlockedTranslated(item: { id: string; detail: string }): [string, string] | undefined {
     return probeBlockedPair(item, {
       liveStatusCode: live?.statusCode,
-      locale: isPortugueseLocale(locale) ? "pt-PT" : "en"
+      locale
     });
   }
-  const limitationsPt = [
-    "Os sinais podem produzir falsos positivos ou falsos negativos.",
-    "Esta verificação não analisa o conteúdo do site nem prova quem controla um domínio.",
-    "Uma correspondência de identidade não garante que todas as ações de um site sejam seguras.",
-    "URLs não são enviados a Google Safe Browsing nem a outros serviços de reputação de terceiros.",
-  ];
-  const copy = levelCopy[risk.level];
+  const copy =
+    riskLevelCopy(bag, risk.level) ??
+    ({ label: risk.level, note: "" } as { label: string; note: string });
   const official = identity.claimedOrganisation?.domains[0];
-  const confidenceLabel = pt ? ({ HIGH: "ALTA", MODERATE: "MODERADA", LIMITED: "LIMITADA" }[risk.confidence]) : risk.confidence;
-  const reputationLabel = pt ? ({
-    KNOWN_MALICIOUS: "MALICIOSO CONHECIDO",
-    KNOWN_PHISHING: "PHISHING CONHECIDO",
-    NO_KNOWN_MATCH: "NENHUMA CORRESPONDÊNCIA CONHECIDA",
-    UNKNOWN: "DESCONHECIDA",
-    PROVIDER_UNAVAILABLE: "LISTA INDISPONÍVEL",
-  }[threat.state] ?? threat.state.replaceAll("_", " ")) : threat.state.replaceAll("_", " ");
-  const sensitiveLabel = pt && sensitive ? ({ password: "palavra-passe", payment: "dados de pagamento", personal: "informação pessoal", permission: "permissão" }[sensitive] ?? sensitive) : sensitive ?? (pt ? "Nenhum" : "None");
-  const recommendation = pt
-    ? risk.recommendation === "LEAVE_AND_BLOCK" ? "Saia e bloqueie este domínio (na extensão ou app)" : risk.recommendation === "LEAVE" ? "Saia deste site" : risk.recommendation === "VERIFY_INDEPENDENTLY" ? "Verifique de forma independente" : "Prossiga com cuidado"
-    : risk.recommendation === "LEAVE_AND_BLOCK" ? "Leave and block this domain (in the extension or desktop app)" : risk.recommendation === "LEAVE" ? "Leave this website" : risk.recommendation === "VERIFY_INDEPENDENTLY" ? "Verify independently" : "Proceed with care";
+  const confidenceLabel =
+    ({ HIGH: bag.confidenceHigh, MODERATE: bag.confidenceModerate, LIMITED: bag.confidenceLimited }[
+      risk.confidence as "HIGH" | "MODERATE" | "LIMITED"
+    ] ?? risk.confidence);
+  const reputationLabel =
+    ({
+      KNOWN_MALICIOUS: bag.reputationKnownMalicious,
+      KNOWN_PHISHING: bag.reputationKnownPhishing,
+      NO_KNOWN_MATCH: bag.reputationNoKnownMatch,
+      UNKNOWN: bag.reputationUnknown,
+      PROVIDER_UNAVAILABLE: bag.reputationProviderUnavailable
+    }[threat.state] ?? threat.state.replaceAll("_", " "));
+  const sensitiveLabel = sensitive
+    ? ({
+        password: bag.sensitivePassword,
+        payment: bag.sensitivePayment,
+        personal: bag.sensitivePersonal,
+        permission: bag.sensitivePermission
+      }[sensitive] ?? sensitive)
+    : bag.detailSensitiveNone || "None";
+  const recommendation = recommendationCopy(bag, risk.recommendation);
 
-  const kindLabel = (kind: string) => pt
-    ? ({ known: "conhecido", likely: "provável", signal: "sinal", unknown: "desconhecido", limitation: "limitação" }[kind] ?? kind)
-    : kind;
+  const kindLabel = (kind: string) => {
+    const map: Record<string, string> = {
+      known: bag.kindKnown,
+      likely: bag.kindLikely,
+      signal: bag.kindSignal,
+      unknown: bag.kindUnknown,
+      limitation: bag.kindLimitation
+    };
+    return map[kind] || kind;
+  };
 
   const userBlockEv = risk.evidence.find((item) => item.id === "user-block");
-  const userBlockTitle = userBlockEv
-    ? pt
-      ? evidencePt["user-block"]?.[0] ?? userBlockEv.title
-      : userBlockEv.title
-    : null;
+  const userBlockPair = userBlockEv ? evidenceTranslated("user-block") : undefined;
+  const userBlockTitle = userBlockEv ? userBlockPair?.[0] ?? userBlockEv.title : null;
   const whyItems = riskWhyItems(risk.evidence, { bannerShowsUserBlock: Boolean(userBlockTitle) });
+  const limitations = [
+    bag.limitationFalsePosNeg,
+    bag.limitationNoContent,
+    bag.limitationIdentityNotSafe,
+    bag.limitationNoThirdParty
+  ].filter((s) => Boolean(s?.trim()));
   const detailRows: Array<{ kind: string; display: string; meta?: string }> = [
-    { kind: pt ? "Domínio" : "Domain", display: parsed.registrableDomain },
-    { kind: pt ? "Reputação (lista própria)" : "Reputation (own list)", display: reputationLabel },
-    { kind: pt ? "Pedido" : "Request", display: sensitiveLabel },
-    { kind: pt ? "Provas" : "Evidence", display: confidenceLabel },
-    { kind: pt ? "Fonte" : "Source", display: threat.providerName },
+    { kind: bag.detailKindDomain, display: parsed.registrableDomain },
+    { kind: bag.detailKindReputation, display: reputationLabel },
+    { kind: bag.detailKindRequest, display: sensitiveLabel },
+    { kind: bag.detailKindEvidence, display: confidenceLabel },
+    { kind: bag.detailKindSource, display: threat.providerName },
     ...risk.evidence.map((item) => {
       const translated =
-        item.id === "probe-blocked" ? probeBlockedTranslated(item) : pt ? evidencePt[item.id] : undefined;
+        item.id === "probe-blocked" ? probeBlockedTranslated(item) : evidenceTranslated(item.id);
       return { kind: kindLabel(item.kind), display: translated?.[0] ?? item.title, meta: translated?.[1] ?? item.detail };
     }),
     { kind: "URL", display: parsed.fullUrl },
-    { kind: pt ? "Protocolo" : "Protocol", display: `${parsed.protocol.toUpperCase()} ${parsed.usesHttps ? (pt ? "· ligação encriptada" : "· encrypted connection") : (pt ? "· não encriptada" : "· not encrypted")}` },
+    {
+      kind: bag.detailKindProtocol,
+      display: `${parsed.protocol.toUpperCase()} ${
+        parsed.usesHttps ? bag.protocolEncrypted : bag.protocolUnencrypted
+      }`
+    },
     { kind: "Hostname", display: parsed.hostname },
-    ...(parsed.subdomain ? [{ kind: pt ? "Subdomínio" : "Subdomain", display: parsed.subdomain }] : []),
+    ...(parsed.subdomain ? [{ kind: bag.detailKindSubdomain, display: parsed.subdomain }] : []),
     ...(parsed.hasPunycode ? [{ kind: "Punycode", display: parsed.hostname }] : []),
-    ...(live?.redirectChain?.length ? [{ kind: pt ? "Redirecionamentos" : "Redirects", display: live.redirectChain.join(" → ") }] : []),
+    ...(live?.redirectChain?.length
+      ? [{ kind: bag.detailKindRedirects, display: live.redirectChain.join(" → ") }]
+      : []),
     ...(analysis.timing
       ? [
           {
-            kind: pt ? "Tempo" : "Timing",
+            kind: bag.detailKindTiming,
             display: formatTimingSummaryLine(analysis.timing, timingLabels(t))
           }
         ]
       : []),
-    ...(pt ? limitationsPt : [...risk.limitations, "URLs are not sent to Google Safe Browsing or other third-party reputation services."]).map((item) => ({ kind: pt ? "Limite" : "Limit", display: item })),
+    ...limitations.map((item) => ({ kind: bag.detailKindLimit, display: item }))
   ];
 
   const showIgnoreRisk = risk.level === "CRITICAL" || risk.level === "HIGH";
@@ -248,14 +224,12 @@ export function RiskResult({
           <p className="scope-note halt-accent" data-testid="user-block-evidence">
             <strong>{userBlockTitle}</strong>
             {" — "}
-            {pt
-              ? evidencePt["user-block"]?.[1] ?? userBlockEv?.detail
-              : userBlockEv?.detail}
+            {userBlockPair?.[1] ?? userBlockEv?.detail}
           </p>
         )}
         <ul className="why-list">
           {whyItems.length === 0 ? (
-            <li>{pt ? "Nenhum sinal forte além das limitações habituais." : "No strong signals beyond the usual limitations."}</li>
+            <li>{bag.whyEmpty}</li>
           ) : (
             whyItems.map((item) => {
               const full = risk.evidence.find((e) => e.id === item.id);
@@ -271,7 +245,7 @@ export function RiskResult({
               if (full.id === "probe-blocked") {
                 const display = whyEvidenceDisplay(full, {
                   liveStatusCode: live?.statusCode,
-                  locale: isPortugueseLocale(locale) ? "pt-PT" : "en"
+                  locale
                 });
                 return (
                   <li key={item.id}>
@@ -280,7 +254,7 @@ export function RiskResult({
                   </li>
                 );
               }
-              const translated = pt ? evidencePt[full.id] : undefined;
+              const translated = evidenceTranslated(full.id);
               return (
                 <li key={item.id}>
                   <strong>{translated?.[0] ?? full.title ?? item.id}</strong>
@@ -376,7 +350,7 @@ export function RiskResult({
                 data-testid="add-desktop-block"
                 onClick={() => void openDesktopBlock()}
               >
-                {pt ? "Bloquear no desktop (buusdo)" : "Block on desktop (buusdo)"}
+                {bag.desktopBlockCta}
               </button>
               {desktopBlockNote ? (
                 <p className="hint" data-testid="desktop-block-need-app" role="status">

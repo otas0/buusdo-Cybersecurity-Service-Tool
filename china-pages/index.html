@@ -64,9 +64,38 @@
           <a class="ghost-button" href="./privacy.html">隐私摘要</a>
           <a class="ghost-button" href="./survey-round2.html" data-testid="china-round2-survey">Round-2 问卷（开放填写）</a>
         </div>
-        <p class="hint" data-testid="china-workers-locale-hint">
-          完整检查打开 Workers <code>/zh-Hans</code>。若界面文案仍为英文，请在 Workers 顶栏语言菜单改选简体中文。
+        <p class="hint" data-testid="china-workers-locale-hint" id="china-workers-locale-hint">
+          完整检查：Workers <code>/zh-Hans</code>（可改语言）。
+          <button
+            type="button"
+            class="hint-dismiss"
+            data-testid="china-workers-locale-hint-dismiss"
+            hidden
+          >
+            关闭
+          </button>
         </p>
+        <script>
+          (function () {
+            var KEY = "buusdocst-china-hint-dismissed";
+            var el = document.getElementById("china-workers-locale-hint");
+            var btn = el && el.querySelector("[data-testid='china-workers-locale-hint-dismiss']");
+            if (!el || !btn) return;
+            try {
+              if (localStorage.getItem(KEY) === "1") {
+                el.hidden = true;
+                return;
+              }
+            } catch (e) {}
+            btn.hidden = false;
+            btn.addEventListener("click", function () {
+              try {
+                localStorage.setItem(KEY, "1");
+              } catch (e) {}
+              el.hidden = true;
+            });
+          })();
+        </script>
         <div
           id="workers-reach"
           class="reach"

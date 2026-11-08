@@ -6,7 +6,7 @@
  * UI strings via shared/i18n.js.
  */
 
-import { t } from "../shared/i18n.js";
+import { normalizeUiLang, t } from "../shared/i18n.js";
 import { api } from "../shared/browser-api.js";
 import { normalizePrivacyMode } from "../shared/log-client.js";
 import { validateCheckTiming } from "../shared/validate-timing.js";
@@ -719,7 +719,7 @@ function renderScan(lastScan, lastScanAt) {
 async function refreshFromBackground() {
   const res = await api.runtime.sendMessage({ type: "SHIELD_GET_STATE" });
   if (!res?.ok) return;
-  lang = res.state.lang === "pt-PT" ? "pt-PT" : "en";
+  lang = normalizeUiLang(res.state.lang);
   els.langSelect.value = lang;
   if (els.privacySelect) {
     els.privacySelect.value = normalizePrivacyMode(res.state.privacyMode);
@@ -824,7 +824,7 @@ els.scanBtn.addEventListener("click", () => {
 });
 
 els.langSelect.addEventListener("change", async () => {
-  lang = els.langSelect.value === "pt-PT" ? "pt-PT" : "en";
+  lang = normalizeUiLang(els.langSelect.value);
   applyI18n();
   // Storage flag may have been set before DOM was ready — restore after i18n.
   await restoreFallbackNoticeFromStorage();

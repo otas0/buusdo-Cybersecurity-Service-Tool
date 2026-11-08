@@ -1,0 +1,374 @@
+{
+  "regionOrder": [
+    "global",
+    "east-asia",
+    "europe",
+    "southern-africa",
+    "pacific",
+    "southeast-asia"
+  ],
+  "regionLabels": {
+    "global": {
+      "en": "Global",
+      "zh": "全球"
+    },
+    "east-asia": {
+      "en": "East Asia",
+      "zh": "东亚"
+    },
+    "europe": {
+      "en": "Europe",
+      "zh": "欧洲"
+    },
+    "southern-africa": {
+      "en": "Southern Africa",
+      "zh": "南部非洲"
+    },
+    "pacific": {
+      "en": "Pacific",
+      "zh": "太平洋"
+    },
+    "southeast-asia": {
+      "en": "Southeast Asia",
+      "zh": "东南亚"
+    }
+  },
+  "catalog": [
+    {
+      "id": "en",
+      "nativeName": "English",
+      "englishName": "English",
+      "region": "global",
+      "htmlLang": "en",
+      "intl": "en-GB"
+    },
+    {
+      "id": "zh-Hans",
+      "nativeName": "简体中文",
+      "englishName": "Chinese (Simplified)",
+      "region": "east-asia",
+      "htmlLang": "zh-Hans",
+      "intl": "zh-CN"
+    },
+    {
+      "id": "zh-Hant",
+      "nativeName": "繁體中文",
+      "englishName": "Chinese (Traditional)",
+      "region": "east-asia",
+      "htmlLang": "zh-Hant",
+      "intl": "zh-TW"
+    },
+    {
+      "id": "ja",
+      "nativeName": "日本語",
+      "englishName": "Japanese",
+      "region": "east-asia",
+      "htmlLang": "ja",
+      "intl": "ja-JP"
+    },
+    {
+      "id": "pt-PT",
+      "nativeName": "Português (Portugal)",
+      "englishName": "Portuguese (Portugal)",
+      "region": "europe",
+      "htmlLang": "pt-PT",
+      "intl": "pt-PT"
+    },
+    {
+      "id": "pt-BR",
+      "nativeName": "Português (Brasil)",
+      "englishName": "Portuguese (Brazil)",
+      "region": "europe",
+      "htmlLang": "pt-BR",
+      "intl": "pt-BR"
+    },
+    {
+      "id": "de",
+      "nativeName": "Deutsch",
+      "englishName": "German",
+      "region": "europe",
+      "htmlLang": "de",
+      "intl": "de-DE"
+    },
+    {
+      "id": "fr",
+      "nativeName": "Français",
+      "englishName": "French",
+      "region": "europe",
+      "htmlLang": "fr",
+      "intl": "fr-FR"
+    },
+    {
+      "id": "es",
+      "nativeName": "Español",
+      "englishName": "Spanish",
+      "region": "europe",
+      "htmlLang": "es",
+      "intl": "es-ES"
+    },
+    {
+      "id": "it",
+      "nativeName": "Italiano",
+      "englishName": "Italian",
+      "region": "europe",
+      "htmlLang": "it",
+      "intl": "it-IT"
+    },
+    {
+      "id": "nl",
+      "nativeName": "Nederlands",
+      "englishName": "Dutch",
+      "region": "europe",
+      "htmlLang": "nl",
+      "intl": "nl-NL"
+    },
+    {
+      "id": "pl",
+      "nativeName": "Polski",
+      "englishName": "Polish",
+      "region": "europe",
+      "htmlLang": "pl",
+      "intl": "pl-PL"
+    },
+    {
+      "id": "sv",
+      "nativeName": "Svenska",
+      "englishName": "Swedish",
+      "region": "europe",
+      "htmlLang": "sv",
+      "intl": "sv-SE"
+    },
+    {
+      "id": "da",
+      "nativeName": "Dansk",
+      "englishName": "Danish",
+      "region": "europe",
+      "htmlLang": "da",
+      "intl": "da-DK"
+    },
+    {
+      "id": "fi",
+      "nativeName": "Suomi",
+      "englishName": "Finnish",
+      "region": "europe",
+      "htmlLang": "fi",
+      "intl": "fi-FI"
+    },
+    {
+      "id": "nb",
+      "nativeName": "Norsk bokmål",
+      "englishName": "Norwegian Bokmål",
+      "region": "europe",
+      "htmlLang": "nb",
+      "intl": "nb-NO"
+    },
+    {
+      "id": "el",
+      "nativeName": "Ελληνικά",
+      "englishName": "Greek",
+      "region": "europe",
+      "htmlLang": "el",
+      "intl": "el-GR"
+    },
+    {
+      "id": "cs",
+      "nativeName": "Čeština",
+      "englishName": "Czech",
+      "region": "europe",
+      "htmlLang": "cs",
+      "intl": "cs-CZ"
+    },
+    {
+      "id": "sk",
+      "nativeName": "Slovenčina",
+      "englishName": "Slovak",
+      "region": "europe",
+      "htmlLang": "sk",
+      "intl": "sk-SK"
+    },
+    {
+      "id": "hu",
+      "nativeName": "Magyar",
+      "englishName": "Hungarian",
+      "region": "europe",
+      "htmlLang": "hu",
+      "intl": "hu-HU"
+    },
+    {
+      "id": "ro",
+      "nativeName": "Română",
+      "englishName": "Romanian",
+      "region": "europe",
+      "htmlLang": "ro",
+      "intl": "ro-RO"
+    },
+    {
+      "id": "bg",
+      "nativeName": "Български",
+      "englishName": "Bulgarian",
+      "region": "europe",
+      "htmlLang": "bg",
+      "intl": "bg-BG"
+    },
+    {
+      "id": "hr",
+      "nativeName": "Hrvatski",
+      "englishName": "Croatian",
+      "region": "europe",
+      "htmlLang": "hr",
+      "intl": "hr-HR"
+    },
+    {
+      "id": "sl",
+      "nativeName": "Slovenščina",
+      "englishName": "Slovenian",
+      "region": "europe",
+      "htmlLang": "sl",
+      "intl": "sl-SI"
+    },
+    {
+      "id": "lt",
+      "nativeName": "Lietuvių",
+      "englishName": "Lithuanian",
+      "region": "europe",
+      "htmlLang": "lt",
+      "intl": "lt-LT"
+    },
+    {
+      "id": "lv",
+      "nativeName": "Latviešu",
+      "englishName": "Latvian",
+      "region": "europe",
+      "htmlLang": "lv",
+      "intl": "lv-LV"
+    },
+    {
+      "id": "et",
+      "nativeName": "Eesti",
+      "englishName": "Estonian",
+      "region": "europe",
+      "htmlLang": "et",
+      "intl": "et-EE"
+    },
+    {
+      "id": "ga",
+      "nativeName": "Gaeilge",
+      "englishName": "Irish",
+      "region": "europe",
+      "htmlLang": "ga",
+      "intl": "ga-IE"
+    },
+    {
+      "id": "mt",
+      "nativeName": "Malti",
+      "englishName": "Maltese",
+      "region": "europe",
+      "htmlLang": "mt",
+      "intl": "mt-MT"
+    },
+    {
+      "id": "uk",
+      "nativeName": "Українська",
+      "englishName": "Ukrainian",
+      "region": "europe",
+      "htmlLang": "uk",
+      "intl": "uk-UA"
+    },
+    {
+      "id": "is",
+      "nativeName": "Íslenska",
+      "englishName": "Icelandic",
+      "region": "europe",
+      "htmlLang": "is",
+      "intl": "is-IS"
+    },
+    {
+      "id": "ca",
+      "nativeName": "Català",
+      "englishName": "Catalan",
+      "region": "europe",
+      "htmlLang": "ca",
+      "intl": "ca-ES"
+    },
+    {
+      "id": "af",
+      "nativeName": "Afrikaans",
+      "englishName": "Afrikaans",
+      "region": "southern-africa",
+      "htmlLang": "af",
+      "intl": "af-ZA"
+    },
+    {
+      "id": "zu",
+      "nativeName": "isiZulu",
+      "englishName": "Zulu",
+      "region": "southern-africa",
+      "htmlLang": "zu",
+      "intl": "zu-ZA"
+    },
+    {
+      "id": "xh",
+      "nativeName": "isiXhosa",
+      "englishName": "Xhosa",
+      "region": "southern-africa",
+      "htmlLang": "xh",
+      "intl": "xh-ZA"
+    },
+    {
+      "id": "nso",
+      "nativeName": "Sesotho sa Leboa",
+      "englishName": "Northern Sotho",
+      "region": "southern-africa",
+      "htmlLang": "nso",
+      "intl": "nso-ZA"
+    },
+    {
+      "id": "st",
+      "nativeName": "Sesotho",
+      "englishName": "Southern Sotho",
+      "region": "southern-africa",
+      "htmlLang": "st",
+      "intl": "st-ZA"
+    },
+    {
+      "id": "tn",
+      "nativeName": "Setswana",
+      "englishName": "Tswana",
+      "region": "southern-africa",
+      "htmlLang": "tn",
+      "intl": "tn-ZA"
+    },
+    {
+      "id": "ss",
+      "nativeName": "siSwati",
+      "englishName": "Swati",
+      "region": "southern-africa",
+      "htmlLang": "ss",
+      "intl": "ss-ZA"
+    },
+    {
+      "id": "ve",
+      "nativeName": "Tshivenḓa",
+      "englishName": "Venda",
+      "region": "southern-africa",
+      "htmlLang": "ve",
+      "intl": "ve-ZA"
+    },
+    {
+      "id": "ts",
+      "nativeName": "Xitsonga",
+      "englishName": "Tsonga",
+      "region": "southern-africa",
+      "htmlLang": "ts",
+      "intl": "ts-ZA"
+    },
+    {
+      "id": "nr",
+      "nativeName": "isiNdebele",
+      "englishName": "Southern Ndebele",
+      "region": "southern-africa",
+      "htmlLang": "nr",
+      "intl": "nr-ZA"
+    }
+  ]
+}

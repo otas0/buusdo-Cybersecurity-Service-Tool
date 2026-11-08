@@ -454,7 +454,11 @@ api.runtime.onMessage.addListener((message, sender, sendResponse) => {
 
     if (message?.type === "SHIELD_SET_PREFS") {
       const patch = {};
-      if (message.lang === "en" || message.lang === "pt-PT") patch.lang = message.lang;
+      if (message.lang === "en" || message.lang === "pt-PT" || message.lang === "zh-Hans") {
+        patch.lang = message.lang;
+      } else if (message.lang === "zh" || message.lang === "zh-CN") {
+        patch.lang = "zh-Hans";
+      }
       if (message.privacyMode != null) patch.privacyMode = normalizePrivacyMode(message.privacyMode);
       const state = await setState(patch);
       if (patch.privacyMode === "off") {

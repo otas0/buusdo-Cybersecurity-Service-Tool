@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { getMessages, type Locale } from "../i18n/messages";
+import { showsPartialPackBanner } from "../i18n/pack-coverage";
 import { macMirrorUrl, resolveDesktopDownloads } from "../shared/desktop-downloads-resolve";
 
 export function PrivacyPanel({
@@ -30,6 +31,11 @@ export function PrivacyPanel({
     <main className="stage settings-stage" data-testid="privacy-policy">
       <p className="kicker">{t.navPrivacy}</p>
       <h2>{t.privacyPolicyTitle}</h2>
+      {showsPartialPackBanner(locale) ? (
+        <p className="scope-note" role="status" data-testid="privacy-partial-pack-banner">
+          {t.partialPackBanner}
+        </p>
+      ) : null}
       <p className="light-note">{t.privacyPolicyIntro}</p>
 
       <section className="settings-block">

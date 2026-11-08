@@ -64,6 +64,8 @@ export const CORE_MESSAGE_KEYS = [
   "desktopHonestLimitsLink",
   "timingTotalChip",
   "timingTitle"
+  // FAQ / locale-recommend / whyEmpty: full packs (zh/ja/de…) may translate;
+  // partial Europe/ZA packs EN-fallback until filled — not mandatory CORE.
 ] as const;
 
 export type CoreMessageKey = (typeof CORE_MESSAGE_KEYS)[number];

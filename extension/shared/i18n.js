@@ -1,9 +1,18 @@
 /**
- * UI strings — locale packs (en, pt-PT).
+ * UI strings — locale packs (en, pt-PT, zh-Hans).
  * Shared by the popup; content-script toasts use a tiny subset via messages.
+ * Never persist bare `zh` — use normalizeUiLang → zh-Hans.
  *
  * Privacy note: these are UI strings only. No browsing history is stored here.
  */
+
+/** @param {string|null|undefined} lang */
+export function normalizeUiLang(lang) {
+  const raw = String(lang || "").trim();
+  if (raw === "pt-PT" || raw === "pt") return "pt-PT";
+  if (raw === "zh-Hans" || raw === "zh" || raw === "zh-CN" || raw === "zh-SG") return "zh-Hans";
+  return "en";
+}
 
 export const STRINGS = {
   en: {
@@ -217,12 +226,34 @@ export const STRINGS = {
     listsDnrTruncated:
       "Regras DNR pessoais limitadas a {limit} (a lista tem {total}). A exportação mantém a lista completa.",
     listsRemove: "Remover"
+  },
+  "zh-Hans": {
+    appTitle: "buusdo Cybersecurity Service Tool",
+    scan: "运行",
+    scanning: "等待",
+    statusStandby: "就绪",
+    statusSafe: "畅通",
+    statusCaution: "暂缓",
+    statusDanger: "停止",
+    statusIdle: "打开页面后运行。",
+    langLabel: "语言",
+    privacyLabel: "数据",
+    privacyOff: "永不存储",
+    privacyLocal: "仅本设备",
+    privacyShare: "用于支持的诊断",
+    toastPhishing: "停止",
+    toastTracker: "暂缓",
+    toastTrackers: "暂缓",
+    toastDismissLabel: "关闭提示",
+    websiteApiCfUnreachable:
+      "本机无法到达 Cloudflare workers.dev API（超时）。Worker 仍可能健康 — 换网络、在浏览器打开 API，或使用中国入口：{chinaEntry}"
   }
 };
 
-/** @param {'en'|'pt-PT'} lang @param {string} key @param {Record<string, string|number>} [vars] */
+/** @param {string} lang @param {string} key @param {Record<string, string|number>} [vars] */
 export function t(lang, key, vars = {}) {
-  const table = STRINGS[lang] || STRINGS.en;
+  const id = normalizeUiLang(lang);
+  const table = STRINGS[id] || STRINGS.en;
   let out = table[key] ?? STRINGS.en[key] ?? key;
   for (const [k, v] of Object.entries(vars)) {
     out = out.replaceAll(`{${k}}`, String(v));

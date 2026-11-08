@@ -1,0 +1,177 @@
+"use client";
+
+import { useEffect, useMemo, useState } from "react";
+import {
+  getLocaleEntry,
+  localesInRegion,
+  normalizeLocale,
+  type LocaleRegion
+} from "../i18n/locales";
+import { getMessages, type Locale } from "../i18n/messages";
+
+const CHOICE_KEY = "buusdocst-locale-choice";
+const DISMISS_KEY = "buusdocst-locale-recommend-dismiss";
+
+function regionHintsFromBrowser(): LocaleRegion[] {
+  const langs = typeof navigator !== "undefined" ? navigator.languages || [navigator.language] : ["en"];
+  const regions = new Set<LocaleRegion>();
+  for (const raw of langs) {
+    const id = normalizeLocale(raw);
+    const entry = getLocaleEntry(id);
+    regions.add(entry.region);
+    const lower = raw.toLowerCase();
+    if (lower.startsWith("zh")) regions.add("east-asia");
+    if (lower.startsWith("ja")) regions.add("east-asia");
+    if (lower.startsWith("th") || lower.startsWith("vi") || lower.startsWith("id") || lower.startsWith("ms")) {
+      regions.add("southeast-asia");
+    }
+    if (lower.startsWith("af") || lower.startsWith("zu") || lower.includes("-za")) {
+      regions.add("southern-africa");
+    }
+    if (lower.startsWith("mi") || lower.includes("-nz")) regions.add("pacific");
+  }
+  return [...regions];
+}
+
+function suggestLocale(): string {
+  if (typeof navigator === "undefined") return "en";
+  const langs = navigator.languages?.length ? navigator.languages : [navigator.language];
+  for (const raw of langs) {
+    const id = normalizeLocale(raw);
+    if (id !== "en") return id;
+  }
+  return normalizeLocale(langs[0] || "en");
+}
+
+export function LocaleRecommendModal({
+  locale,
+  view,
+  hash = ""
+}: {
+  locale: Locale;
+  view: "check" | "settings" | "privacy" | "lists-offline";
+  hash?: string;
+}) {
+  const t = getMessages(locale);
+  const [open, setOpen] = useState(false);
+  const suggested = useMemo(() => suggestLocale(), []);
+  const suggestedEntry = getLocaleEntry(suggested);
+  const regionLocales = useMemo(() => {
+    const regions = regionHintsFromBrowser();
+    const seen = new Set<string>();
+    const list = [];
+    for (const region of regions) {
+      for (const item of localesInRegion(region)) {
+        if (seen.has(item.id)) continue;
+        seen.add(item.id);
+        list.push(item);
+      }
+    }
+    // Always offer suggested + zh-Hans/ja/pt-PT/en near top
+    for (const id of [suggested, "zh-Hans", "zh-Hant", "ja", "pt-PT", "en"]) {
+      if (seen.has(id)) continue;
+      seen.add(id);
+      list.unshift(getLocaleEntry(id));
+    }
+    return list.slice(0, 12);
+  }, [suggested]);
+
+  useEffect(() => {
+    try {
+      if (localStorage.getItem(CHOICE_KEY) || localStorage.getItem(DISMISS_KEY)) return;
+      if (suggested === locale) {
+        localStorage.setItem(CHOICE_KEY, locale);
+        return;
+      }
+      setOpen(true);
+    } catch {
+      /* private mode */
+    }
+  }, [locale, suggested]);
+
+  function pathFor(next: string): string {
+    if (view === "settings") return `/${next}/settings${hash}`;
+    if (view === "privacy") return `/${next}/privacy${hash}`;
+    if (view === "lists-offline") return `/${next}/lists-offline${hash}`;
+    return `/${next}${hash}`;
+  }
+
+  function accept(next: string) {
+    try {
+      localStorage.setItem(CHOICE_KEY, next);
+      localStorage.setItem(DISMISS_KEY, "1");
+    } catch {
+      /* ignore */
+    }
+    window.location.href = pathFor(next);
+  }
+
+  function dismiss() {
+    try {
+      localStorage.setItem(DISMISS_KEY, "1");
+      localStorage.setItem(CHOICE_KEY, locale);
+    } catch {
+      /* ignore */
+    }
+    setOpen(false);
+  }
+
+  if (!open) return null;
+
+  const body = t.localeRecommendBody.replace("{lang}", suggestedEntry.nativeName);
+  const acceptLabel = t.localeRecommendAccept.replace("{lang}", suggestedEntry.nativeName);
+
+  return (
+    <div className="locale-recommend" role="dialog" aria-modal="true" data-testid="locale-recommend">
+      <div className="locale-recommend-card">
+        <p className="kicker">{t.localeRecommendTitle}</p>
+        <p className="hint">{body}</p>
+        <div className="action-row">
+          <button type="button" className="text-button" data-testid="locale-recommend-accept" onClick={() => accept(suggested)}>
+            {acceptLabel}
+          </button>
+          <button type="button" className="text-button" data-testid="locale-recommend-stay" onClick={() => accept("en")}>
+            {t.localeRecommendStay}
+          </button>
+          <button type="button" className="text-button" data-testid="locale-recommend-dismiss" onClick={dismiss}>
+            {t.localeRecommendDismiss}
+          </button>
+        </div>
+        <label className="hint">
+          <span className="visually-hidden">{t.localeRecommendTitle}</span>
+          <select
+            data-testid="locale-recommend-select"
+            defaultValue={suggested}
+            onChange={(e) => accept(e.target.value)}
+          >
+            {regionLocales.map((item) => (
+              <option key={item.id} value={item.id}>
+                {item.nativeName}
+              </option>
+            ))}
+          </select>
+        </label>
+      </div>
+    </div>
+  );
+}
+
+/** First-visit Accept-Language soft redirect when no choice stored and path is /en. */
+export function maybeAcceptLanguageRedirect(currentLocale: string): void {
+  if (typeof window === "undefined") return;
+  try {
+    if (localStorage.getItem(CHOICE_KEY) || localStorage.getItem(DISMISS_KEY)) return;
+    if (currentLocale !== "en") return;
+    const suggested = suggestLocale();
+    if (suggested === "en") return;
+    // Soft: show modal only (LocaleRecommendModal). Hard redirect optional via ?alang=1
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("alang") === "1") {
+      localStorage.setItem(CHOICE_KEY, suggested);
+      const path = window.location.pathname.replace(/^\/[^/]+/, `/${suggested}`);
+      window.location.replace(path + window.location.search + window.location.hash);
+    }
+  } catch {
+    /* ignore */
+  }
+}

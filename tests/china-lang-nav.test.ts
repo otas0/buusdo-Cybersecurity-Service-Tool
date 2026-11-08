@@ -131,7 +131,10 @@ test("zh entry points Workers CTA at zh-Hans and notes possible EN UI", () => {
   const html = readFileSync(path.join(root, "index.html"), "utf8");
   assert.match(html, /workers\.dev\/zh-Hans/);
   assert.match(html, /data-testid="china-workers-locale-hint"/);
-  assert.match(html, /界面文案可能仍为英文|仍为英文/);
+  assert.match(html, /china-workers-locale-hint/);
+  assert.match(html, /data-testid="china-workers-locale-hint-dismiss"/);
+  assert.match(html, /buusdocst-china-hint-dismissed/);
+  assert.match(html, /\/zh-Hans/);
 });
 
 test("china-pages lang switch pairs point at zh/en counterparts", () => {

@@ -87,6 +87,22 @@ test.describe("production privacy pages", () => {
     await expect(page.getByTestId("privacy-faq-parents")).toBeVisible();
   });
 
+  test("/zh-Hans/privacy soft check (policy chrome)", async ({ page }) => {
+    await page.goto(`${base}/zh-Hans/privacy`, { waitUntil: "domcontentloaded", timeout: 45_000 });
+    const policy = page.getByTestId("privacy-policy");
+    if ((await policy.count()) === 0) {
+      console.warn("[playwright] zh-Hans privacy-policy missing (soft)");
+      return;
+    }
+    await expect(policy).toBeVisible();
+    const limits = page.getByTestId("privacy-honest-limits");
+    if ((await limits.count()) === 0) {
+      console.warn("[playwright] zh-Hans privacy-honest-limits missing (soft)");
+    } else {
+      await expect(limits).toBeVisible();
+    }
+  });
+
   test("/en/settings shows desktop download slots", async ({ page }) => {
     await page.goto(`${base}/en/settings#settings-desktop`, { waitUntil: "domcontentloaded" });
     await expect(page.locator("#settings-desktop")).toBeVisible();

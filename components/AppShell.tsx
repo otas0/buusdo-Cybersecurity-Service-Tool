@@ -5,6 +5,7 @@ import type { Analysis, CheckTiming } from "../security/analyse";
 import { getMessages, type Locale } from "../i18n/messages";
 import { localeHtmlLang, localeIntl } from "../i18n/locales";
 import { LanguageSwitcher } from "./LanguageSwitcher";
+import { LocaleRecommendModal, maybeAcceptLanguageRedirect } from "./LocaleRecommendModal";
 import { UrlCheckForm } from "./UrlCheckForm";
 import { RiskResult } from "./RiskResult";
 import { TrafficLights } from "./TrafficLights";
@@ -503,7 +504,7 @@ function Home({ locale }: { locale: Locale }) {
 
   return (
     <main className="stage">
-      <p className="kicker">{locale.startsWith("pt") ? "Estado" : "Status"}</p>
+      <p className="kicker">{getMessages(locale).statusKicker}</p>
       <TrafficLights
         level="idle"
         standby={t.lightStandby}
@@ -569,7 +570,18 @@ export function AppShell({ locale, slug }: { locale: Locale; slug: string[] }) {
 
   useEffect(() => {
     document.documentElement.lang = localeHtmlLang(locale);
+    maybeAcceptLanguageRedirect(locale);
   }, [locale]);
+
+  const [viewHash, setViewHash] = useState("");
+  useEffect(() => {
+    setViewHash(typeof window !== "undefined" ? window.location.hash || "" : "");
+    function onHash() {
+      setViewHash(window.location.hash || "");
+    }
+    window.addEventListener("hashchange", onHash);
+    return () => window.removeEventListener("hashchange", onHash);
+  }, [view]);
 
   useEffect(() => {
     const timer = window.setTimeout(() => {
@@ -667,6 +679,7 @@ export function AppShell({ locale, slug }: { locale: Locale; slug: string[] }) {
 
   return (
     <div className="shell">
+      <LocaleRecommendModal locale={locale} view={view} hash={viewHash} />
       <Header locale={locale} view={view} onNavigate={navigate} />
       {view === "settings" ? (
         <SettingsPanel

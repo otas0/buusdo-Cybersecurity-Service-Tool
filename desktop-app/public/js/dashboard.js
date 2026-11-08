@@ -2,7 +2,7 @@
  * Desktop dashboard controller — Ookla-style Scan UI + live SSE block feed.
  */
 
-import { t } from "./i18n.js";
+import { normalizeUiLang, t } from "./i18n.js";
 import { afterRingClear, lifetimeChipTitles } from "./lifetime-chip.mjs";
 import { hashFocusOnlyScrolls, shouldFocusAskDecline } from "./machine-focus.mjs";
 import {
@@ -408,7 +408,8 @@ function applyI18n() {
   if (els.listsOperatorHint && !els.listsOperatorHint.hidden && lastOperatorHint) {
     els.listsOperatorHint.textContent = formatOperatorHint(lastOperatorHint);
   }
-  document.documentElement.lang = lang === "pt-PT" ? "pt-PT" : "en";
+  document.documentElement.lang =
+    lang === "pt-PT" ? "pt-PT" : lang === "zh-Hans" ? "zh-Hans" : "en";
 }
 
 function refreshFilterChipLabel(btn, countEl, label) {
@@ -706,7 +707,7 @@ async function fetchState() {
   const res = await fetch("/api/state");
   const data = await res.json();
   if (!data.ok) return;
-  lang = data.state.lang === "pt-PT" ? "pt-PT" : "en";
+  lang = normalizeUiLang(data.state.lang);
   els.langSelect.value = lang;
   if (els.privacySelect) {
     els.privacySelect.value = normalizePrivacyMode(data.state.privacyMode);
@@ -1051,7 +1052,7 @@ function connectSSE() {
     try {
       const data = JSON.parse(ev.data);
       if (data.state) {
-        lang = data.state.lang === "pt-PT" ? "pt-PT" : "en";
+        lang = normalizeUiLang(data.state.lang);
         els.langSelect.value = lang;
         if (els.privacySelect) {
           els.privacySelect.value = normalizePrivacyMode(data.state.privacyMode);
@@ -1187,7 +1188,7 @@ els.websiteCheckBtn?.addEventListener("click", () => {
 });
 
 els.langSelect.addEventListener("change", async () => {
-  lang = els.langSelect.value === "pt-PT" ? "pt-PT" : "en";
+  lang = normalizeUiLang(els.langSelect.value);
   applyI18n();
   const res = await fetch("/api/prefs", {
     method: "POST",

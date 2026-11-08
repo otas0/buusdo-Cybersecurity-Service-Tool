@@ -38,3 +38,13 @@ test("china-pages EN entry links to English install/privacy (not zh-only)", () =
   assert.match(en, /href="\.\/privacy-en\.html"/);
   assert.match(en, /What the product does/);
 });
+
+test("CHINA_GITHUB_PAGES locale table matches install Workers settings hrefs", () => {
+  const docs = readFileSync(path.join(repo, "docs/CHINA_GITHUB_PAGES.md"), "utf8");
+  assert.match(docs, /\/zh-Hans\/settings#settings-desktop/);
+  assert.match(docs, /\/en\/settings#settings-desktop/);
+  const zhInstall = readFileSync(path.join(repo, "china-pages/install.html"), "utf8");
+  const enInstall = readFileSync(path.join(repo, "china-pages/install-en.html"), "utf8");
+  assert.match(zhInstall, /buusdocst\.mtsu\.workers\.dev\/zh-Hans\/settings#settings-desktop/);
+  assert.match(enInstall, /buusdocst\.mtsu\.workers\.dev\/en\/settings#settings-desktop/);
+});

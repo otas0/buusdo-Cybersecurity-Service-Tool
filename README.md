@@ -23,10 +23,10 @@ Data storage defaults to off. Users can choose never store, this device only, or
 
 ## Website routes
 
-- `/en` (and `/pt-PT`) — check a website address
-- `/en/settings` — privacy mode, blocked and trusted lists, own-intel note
-- `/en/privacy` — privacy policy (ship before public promotion)
-- `/en/lists-offline` — move lists between devices without a cloud account
+- `/{locale}` — check a website address (EN, pt-PT, zh-Hans/Hant, ja, Europe, Southern Africa, Māori, Southeast Asia — see `docs/I18N.md`)
+- `/{locale}/settings` — privacy mode, blocked and trusted lists, own-intel note
+- `/{locale}/privacy` — privacy policy (ship before public promotion)
+- `/{locale}/lists-offline` — move lists between devices without a cloud account
 - `/api/health` — service status (confirms first-party threat mode, exposes `probeTimeoutMs`, `curatedListPresent`)
 - `POST /api/check` — `{ ok, analysis }` where `analysis.timing` includes `parseMs`, `threatMs`, `probeMs`, `riskMs`, `totalMs`, `probeTimeoutMs`, `probeHeadFailed`, `headSkipped`
 
@@ -167,7 +167,7 @@ Or hand-edit from `security/data/batches/_template.json`.
 - `app/` — App Router, localized routes, product styles
 - `components/` — check form, results, settings, privacy
 - `security/` — parsing, identity, own threat list (`data/curated-threats.json`), live probe, risk, persistence
-- `i18n/` — EN / pt-PT copy
+- `i18n/` — locale catalog + message packs (`docs/I18N.md`)
 - `evaluation/` — scenario runner for regression evidence
 - `tests/` — unit tests (may use `.test` fixtures; not product UI)
 - `extension/`, `desktop-app/`, `shared/` — secondary surfaces

@@ -73,7 +73,12 @@
    * @param {{ kind: 'tracker'|'phishing', count?: number, lang?: string, dismiss?: boolean }} payload
    */
   async function showToast(payload) {
-    const lang = payload.lang === "pt-PT" ? "pt-PT" : "en";
+    const lang =
+      payload.lang === "pt-PT"
+        ? "pt-PT"
+        : payload.lang === "zh-Hans" || payload.lang === "zh" || payload.lang === "zh-CN"
+          ? "zh-Hans"
+          : "en";
     const count = Math.max(1, Number(payload.count) || 1);
     const host = ensureHost();
 

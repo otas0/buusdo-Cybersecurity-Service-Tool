@@ -1,10 +1,10 @@
 /**
- * Single source for probe-blocked 403/429/503 copy — EN (and pt-PT) from i18n/messages.
+ * Single source for probe-blocked 403/429/503 copy from i18n/messages (any shipped locale).
  * Used by site-signals evidence and RiskResult display.
  */
-import { messages } from "../i18n/messages";
+import { getMessages, isPortugueseLocale } from "../i18n/messages";
 
-export type ProbeBlockedLocale = "en" | "pt-PT";
+export type ProbeBlockedLocale = string;
 
 /**
  * Limitation copy for ambiguous probe HTTP statuses (403 refuse / 429 throttle / 503 overload).
@@ -14,7 +14,7 @@ export function ambiguousProbeBlockedCopy(
   statusCode: number,
   locale: ProbeBlockedLocale = "en"
 ): { title: string; detail: string } {
-  const m = messages[locale];
+  const m = getMessages(locale);
   if (statusCode === 403) {
     return { title: m.probeBlocked403Title, detail: m.probeBlocked403Detail };
   }
@@ -24,7 +24,7 @@ export function ambiguousProbeBlockedCopy(
   if (statusCode === 503) {
     return { title: m.probeBlocked503Title, detail: m.probeBlocked503Detail };
   }
-  if (locale === "pt-PT") {
+  if (isPortugueseLocale(locale)) {
     return {
       title: "O site bloqueou a sondagem automática",
       detail: `Recebido HTTP ${statusCode}. O site bloqueou ou limitou esta verificação — isso não prova phishing. Abra o endereço num browser normal se precisar.`

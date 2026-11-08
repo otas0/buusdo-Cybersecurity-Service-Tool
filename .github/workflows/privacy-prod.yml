@@ -42,3 +42,8 @@ jobs:
           PLAYWRIGHT_SKIP_WEBSERVER: "1"
           PLAYWRIGHT_BASE_URL: ${{ steps.origin.outputs.url }}
         run: npm run test:playwright:privacy
+      - name: Playwright /zh → /zh-Hans alias (soft skip if unreachable)
+        env:
+          PLAYWRIGHT_SKIP_WEBSERVER: "1"
+          PLAYWRIGHT_BASE_URL: ${{ steps.origin.outputs.url }}
+        run: npm run test:playwright:zh-alias

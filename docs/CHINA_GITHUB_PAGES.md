@@ -48,7 +48,9 @@ Pages **不能**替代 `POST /api/check`。
 | 中文页（`index` / `install` / `privacy`） | `/zh-Hans`、`/zh-Hans/settings#settings-desktop`、`/zh-Hans/privacy` |
 | 英文页（`en` / `install-en` / `privacy-en`） | `/en`、`/en/settings#settings-desktop`、`/en/privacy` |
 
-别名：`/zh`、`/zh-CN` 在 Workers 上 **redirect → `/zh-Hans`**（避免旧链 404）。简体文案包：`i18n/packs/zh-Hans.json`。
+别名：`/zh`、`/zh-CN`、`/zh-SG` 在 Workers 上 **redirect → `/zh-Hans`**；`/zh-TW`、`/zh-HK` → `/zh-Hant`（避免旧链 404）。简体文案包：`i18n/packs/zh-Hans.json`。摘要对齐清单见 `docs/CHINA_PRIVACY_DIFF.md`。
+
+Pacific / SEA 语言（mi、id、ms、th、vi、fil、km、lo、my）已从 catalog **暂撤**，待真实文案包就绪后再加回。
 
 ### Halt next-steps on Pages
 

@@ -42,8 +42,9 @@ export function LanguageSwitcher({
         value={locale}
         onChange={(e) => {
           const next = e.target.value;
+          if (!next || next === locale) return;
           if (typeof window !== "undefined") {
-            window.location.assign(pathForView(next, view, hash));
+            window.location.href = pathForView(next, view, hash);
           }
         }}
       >
