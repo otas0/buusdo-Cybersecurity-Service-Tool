@@ -155,7 +155,7 @@ export function LanguageSwitcher({
             className="lang-panel-search"
             data-testid="locale-search"
             type="search"
-            placeholder={t.langPanelSearchPlaceholder || t.localeSearchPlaceholder}
+            placeholder={t.langPanelSearchPlaceholder}
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             autoComplete="off"

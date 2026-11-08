@@ -28,4 +28,27 @@ for (const id of ["sv", "da", "fi", "nb"] as const) {
     assert.notEqual(bag!.scan, en.scan);
     assert.ok(bag!.statusDanger?.trim());
   });
+
+  test(`desktop ${id} honestLimits / proxy MAP keys differ from EN when present`, () => {
+    const bag = extractBag(id);
+    assert.ok(bag, `missing STRINGS[${id}]`);
+    assert.ok(src.includes(`"${id}"`), `DESKTOP_BAGS / overlay should surface ${id}`);
+    if (en.honestLimitsTitle) {
+      assert.ok(bag!.honestLimitsTitle?.trim());
+      assert.notEqual(bag!.honestLimitsTitle, en.honestLimitsTitle);
+    }
+    if (en.proxyGuideSummary) {
+      assert.ok(bag!.proxyGuideSummary?.trim());
+      assert.notEqual(bag!.proxyGuideSummary, en.proxyGuideSummary);
+    }
+  });
 }
+
+test("DESKTOP_BAGS includes Nordic sv/da/fi/nb", () => {
+  const m = src.match(/const DESKTOP_BAGS = new Set\(\[([\s\S]*?)\]\)/);
+  assert.ok(m, "DESKTOP_BAGS missing");
+  const block = m![1];
+  for (const id of ["sv", "da", "fi", "nb"]) {
+    assert.match(block, new RegExp(`["']${id}["']`), `DESKTOP_BAGS missing ${id}`);
+  }
+});

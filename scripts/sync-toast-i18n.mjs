@@ -20,18 +20,11 @@ const pt = JSON.parse(fs.readFileSync(path.join(packsDir, "_pt-PT.snapshot.json"
 function toastFromBag(bag, localeId) {
   const danger = bag.lightDanger || en.lightDanger;
   const dangerLabel = bag.dangerLevelLabel || en.dangerLevelLabel;
-  let phishing = "Phishing pattern blocked";
-  if (localeId.startsWith("zh")) phishing = "已拦截钓鱼模式";
-  else if (localeId === "ja") phishing = "フィッシングパターンをブロックしました";
-  else if (localeId.startsWith("pt")) phishing = "Padrão de phishing bloqueado";
-  else if (localeId === "th") phishing = "บล็อกรูปแบบฟิชชิงแล้ว";
-  else if (localeId === "vi") phishing = "Đã chặn mẫu lừa đảo";
-  else if (localeId === "mi") phishing = "Kua ārai te tauira tinihanga";
-  else if (localeId === "de") phishing = "Phishing-Muster blockiert";
-  else if (localeId === "fr") phishing = "Modèle de phishing bloqué";
-  else if (localeId === "es") phishing = "Patrón de phishing bloqueado";
-  else if (localeId === "it") phishing = "Modello di phishing bloccato";
-  else if (localeId === "nl") phishing = "Phishingpatroon geblokkeerd";
+  // Prefer dedicated pack key (extensionToastPhishing); hardcodes remain fallback only.
+  const phishing =
+    bag.extensionToastPhishing ||
+    en.extensionToastPhishing ||
+    "Phishing pattern blocked";
   return {
     phishing,
     dismiss: bag.feedbackDismissAfterReportHint || bag.leave || "Dismiss",

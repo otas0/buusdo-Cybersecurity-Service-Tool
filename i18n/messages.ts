@@ -557,7 +557,6 @@ export const messages = {
     themeHint: "Guardado só neste navegador. O predefinição é o campo escuro do instrumento.",
     themeHeaderHint: "Use o botão Aspeto no cabeçalho (junto ao idioma).",
     navDownloads: "Transferências",
-    localeSearchPlaceholder: "Pesquisar idioma…",
     homeDownloadsCta: "Transferências da app",
     privacyDesktopMirrorNote:
       "Transferência macOS: o espelho CDN está ativo; o GitHub Release continua a ser o fallback documentado.",

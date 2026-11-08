@@ -79,7 +79,7 @@ export const CORE_MESSAGE_KEYS = [
   "localeRecommendBody",
   "localeRecommendAccept",
   "localeRecommendDismiss",
-  "localeSearchPlaceholder",
+  "langPanelSearchPlaceholder",
   "whyEmpty",
   "probeBlockedGenericTitle",
   "probeBlockedGenericDetail"
