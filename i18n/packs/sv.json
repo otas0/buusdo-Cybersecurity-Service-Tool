@@ -455,6 +455,7 @@
   "langPanelFrequent": "Vanliga",
   "langPanelAllRegions": "Alla regioner",
   "langPanelSearchPlaceholder": "Sök språk…",
-  "localeSearchPlaceholder": "Sök språk…",
-  "homeDownloadsCta": "Skrivbordsnedladdningar"
+  "extensionToastPhishing": "Phishing pattern blocked",
+  "homeDownloadsCta": "Skrivbordsnedladdningar",
+  "themeHeaderHint": "Använd Utseende-knappen i sidhuvudet (bredvid språk)."
 }

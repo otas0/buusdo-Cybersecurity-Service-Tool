@@ -452,9 +452,10 @@
   "themeLight": "Terang",
   "themeHint": "Hanya di browser ini.",
   "navDownloads": "Unduhan",
-  "langPanelFrequent": "Frequent",
-  "langPanelAllRegions": "All regions",
+  "langPanelFrequent": "Sering",
+  "langPanelAllRegions": "Semua wilayah",
   "langPanelSearchPlaceholder": "Cari bahasa…",
-  "localeSearchPlaceholder": "Cari bahasa…",
-  "homeDownloadsCta": "Unduhan desktop"
+  "extensionToastPhishing": "Phishing pattern blocked",
+  "homeDownloadsCta": "Unduhan desktop",
+  "themeHeaderHint": "Use the one Appearance button in the header (next to language)."
 }

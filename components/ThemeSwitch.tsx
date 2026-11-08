@@ -49,76 +49,44 @@ function useThemeState() {
     }
   }
 
-  return { theme, onChange };
+  function toggle() {
+    onChange(theme === "dark" ? "light" : "dark");
+  }
+
+  return { theme, onChange, toggle };
 }
 
-/** Compact Dark | Light control for the top nav (next to language). */
+/** One header button — shows the mode you switch into. */
 export function ThemeToggle({ locale }: { locale: Locale }) {
   const t = getMessages(locale);
-  const { theme, onChange } = useThemeState();
+  const { theme, toggle } = useThemeState();
+  const nextLabel = theme === "dark" ? t.themeLight : t.themeDark;
 
   return (
-    <div
-      className="theme-toggle"
+    <button
+      type="button"
+      className="nav-link theme-toggle-btn"
       data-testid="theme-switch"
-      role="group"
-      aria-label={t.themeLabel}
+      aria-label={`${t.themeLabel}: ${nextLabel}`}
+      title={`${t.themeLabel} — ${nextLabel}`}
+      aria-pressed={theme === "light"}
+      onClick={toggle}
     >
-      <button
-        type="button"
-        className={`nav-link theme-opt${theme === "dark" ? " is-active" : ""}`}
-        data-testid="theme-dark"
-        aria-pressed={theme === "dark"}
-        title={t.themeDark}
-        onClick={() => onChange("dark")}
-      >
-        {t.themeDark}
-      </button>
-      <button
-        type="button"
-        className={`nav-link theme-opt${theme === "light" ? " is-active" : ""}`}
-        data-testid="theme-light"
-        aria-pressed={theme === "light"}
-        title={t.themeLight}
-        onClick={() => onChange("light")}
-      >
-        {t.themeLight}
-      </button>
-    </div>
+      {nextLabel}
+    </button>
   );
 }
 
-/** Settings copy of the same control. */
+/** Settings: one-line pointer to the header control (no second dual switch). */
 export function ThemeSwitch({ locale }: { locale: Locale }) {
   const t = getMessages(locale);
-  const { theme, onChange } = useThemeState();
 
   return (
     <div className="theme-switch" data-testid="theme-switch-settings">
-      <p className="kicker" id="theme-switch-label">
-        {t.themeLabel}
+      <p className="kicker">{t.themeLabel}</p>
+      <p className="hint" data-testid="theme-header-hint">
+        {t.themeHeaderHint}
       </p>
-      <div className="theme-switch-row" role="group" aria-labelledby="theme-switch-label">
-        <button
-          type="button"
-          className={`text-button theme-opt${theme === "dark" ? " is-active" : ""}`}
-          data-testid="theme-dark-settings"
-          aria-pressed={theme === "dark"}
-          onClick={() => onChange("dark")}
-        >
-          {t.themeDark}
-        </button>
-        <button
-          type="button"
-          className={`text-button theme-opt${theme === "light" ? " is-active" : ""}`}
-          data-testid="theme-light-settings"
-          aria-pressed={theme === "light"}
-          onClick={() => onChange("light")}
-        >
-          {t.themeLight}
-        </button>
-      </div>
-      <p className="hint">{t.themeHint}</p>
     </div>
   );
 }

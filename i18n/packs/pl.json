@@ -455,6 +455,7 @@
   "langPanelFrequent": "Częste",
   "langPanelAllRegions": "Wszystkie regiony",
   "langPanelSearchPlaceholder": "Szukaj języka…",
-  "localeSearchPlaceholder": "Szukaj języka…",
-  "homeDownloadsCta": "Pobieranie aplikacji"
+  "extensionToastPhishing": "Phishing pattern blocked",
+  "homeDownloadsCta": "Pobieranie aplikacji",
+  "themeHeaderHint": "Użyj jednego przycisku Wygląd w nagłówku (obok języka)."
 }

@@ -455,6 +455,7 @@
   "langPanelFrequent": "Häufig",
   "langPanelAllRegions": "Alle Regionen",
   "langPanelSearchPlaceholder": "Sprache suchen…",
-  "localeSearchPlaceholder": "Sprache suchen…",
-  "homeDownloadsCta": "Desktop-App herunterladen"
+  "extensionToastPhishing": "Phishing-Muster blockiert",
+  "homeDownloadsCta": "Desktop-App herunterladen",
+  "themeHeaderHint": "Nutzen Sie die eine Erscheinungsbild-Schaltfläche in der Kopfzeile (neben der Sprache)."
 }

@@ -455,6 +455,7 @@
   "langPanelFrequent": "Usein",
   "langPanelAllRegions": "Kaikki alueet",
   "langPanelSearchPlaceholder": "Hae kieltä…",
-  "localeSearchPlaceholder": "Hae kieltä…",
-  "homeDownloadsCta": "Työpöytälataukset"
+  "extensionToastPhishing": "Phishing pattern blocked",
+  "homeDownloadsCta": "Työpöytälataukset",
+  "themeHeaderHint": "Käytä Ulkoasu-painiketta yläpalkissa (kielen vieressä)."
 }

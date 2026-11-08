@@ -452,9 +452,10 @@
   "themeLight": "Tshena",
   "themeHint": "Fhedzi kha browser iyi.",
   "navDownloads": "U dzhia",
-  "langPanelFrequent": "Frequent",
-  "langPanelAllRegions": "All regions",
+  "langPanelFrequent": "Zwinzhi",
+  "langPanelAllRegions": "Zwitiriki zwothe",
   "langPanelSearchPlaceholder": "Toda luambo…",
-  "localeSearchPlaceholder": "Toda luambo…",
-  "homeDownloadsCta": "U dzhia desktop"
+  "extensionToastPhishing": "Phishing pattern blocked",
+  "homeDownloadsCta": "U dzhia desktop",
+  "themeHeaderHint": "Use the one Appearance button in the header (next to language)."
 }

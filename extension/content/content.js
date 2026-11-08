@@ -85,6 +85,16 @@
       tracker: "{n} rastreador bloqueado",
       trackers: "{n} rastreadores bloqueados",
       dismiss: "Cerrar"
+    },
+    it: {
+      tracker: "Bloccato {n} tracker",
+      trackers: "Bloccati {n} tracker",
+      dismiss: "Chiudi"
+    },
+    nl: {
+      tracker: "{n} tracker geblokkeerd",
+      trackers: "{n} trackers geblokkeerd",
+      dismiss: "Sluiten"
     }
   };
 

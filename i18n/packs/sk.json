@@ -452,9 +452,10 @@
   "themeLight": "Svetlý",
   "themeHint": "Uložené len v tomto prehliadači.",
   "navDownloads": "Sťahovanie",
-  "langPanelFrequent": "Frequent",
-  "langPanelAllRegions": "All regions",
+  "langPanelFrequent": "Časté",
+  "langPanelAllRegions": "Všetky regióny",
   "langPanelSearchPlaceholder": "Hľadať jazyk…",
-  "localeSearchPlaceholder": "Hľadať jazyk…",
-  "homeDownloadsCta": "Sťahovanie pre počítač"
+  "extensionToastPhishing": "Phishing pattern blocked",
+  "homeDownloadsCta": "Sťahovanie pre počítač",
+  "themeHeaderHint": "Use the one Appearance button in the header (next to language)."
 }

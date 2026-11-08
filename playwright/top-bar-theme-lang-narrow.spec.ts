@@ -48,10 +48,7 @@ const fixtureHtml = `<!doctype html>
           src="data:image/svg+xml,${encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="117" height="32"><rect width="117" height="32" fill="#333"/><text x="6" y="22" fill="#f3f1ea" font-size="12" font-family="sans-serif">buusdo</text></svg>')}" />
       </div>
       <nav class="top-nav" data-testid="top-nav-chrome">
-        <div class="theme-toggle" data-testid="theme-switch">
-          <button type="button" class="nav-link theme-opt is-active" data-testid="theme-dark">Dark</button>
-          <button type="button" class="nav-link theme-opt" data-testid="theme-light">Light</button>
-        </div>
+        <button type="button" class="nav-link theme-toggle-btn" data-testid="theme-switch">Light</button>
         <div class="lang-switch" data-testid="locale-switch">
           <span class="lang-badge" data-testid="locale-toggle">EN</span>
         </div>

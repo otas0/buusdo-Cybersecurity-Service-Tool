@@ -455,6 +455,7 @@
   "langPanelFrequent": "Pogosti",
   "langPanelAllRegions": "Vse regije",
   "langPanelSearchPlaceholder": "Išči jezik…",
-  "localeSearchPlaceholder": "Išči jezik…",
-  "homeDownloadsCta": "Prenosi za namizje"
+  "extensionToastPhishing": "Phishing pattern blocked",
+  "homeDownloadsCta": "Prenosi za namizje",
+  "themeHeaderHint": "Use the one Appearance button in the header (next to language)."
 }

@@ -892,6 +892,14 @@ jobs:
         env:
           PLAYWRIGHT_SKIP_WEBSERVER: "1"
 
+      - name: Theme chrome (locale panel light + FOUC + wordmark + 320 theme/lang)
+        if: steps.pw_install.outcome == 'success'
+        run: |
+          export PLAYWRIGHT_SKIP_WEBSERVER=1
+          npm run test:playwright:theme-chrome
+        env:
+          PLAYWRIGHT_SKIP_WEBSERVER: "1"
+
       # Soft: live Workers privacy (skip inside spec if unreachable).
       # Covers /en|/pt-PT|/zh-Hans/privacy zero /survey/ links (local fixture: tests/privacy-fixture-no-survey.test.ts).
       - name: Soft privacy-prod (Workers + China Pages no /survey/)

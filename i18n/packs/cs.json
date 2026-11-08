@@ -452,9 +452,10 @@
   "themeLight": "Světlý",
   "themeHint": "Uloženo jen v tomto prohlížeči.",
   "navDownloads": "Stahování",
-  "langPanelFrequent": "Frequent",
-  "langPanelAllRegions": "All regions",
+  "langPanelFrequent": "Časté",
+  "langPanelAllRegions": "Všechny regiony",
   "langPanelSearchPlaceholder": "Hledat jazyk…",
-  "localeSearchPlaceholder": "Hledat jazyk…",
-  "homeDownloadsCta": "Stažení pro počítač"
+  "extensionToastPhishing": "Phishing pattern blocked",
+  "homeDownloadsCta": "Stažení pro počítač",
+  "themeHeaderHint": "Use the one Appearance button in the header (next to language)."
 }

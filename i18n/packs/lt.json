@@ -455,6 +455,7 @@
   "langPanelFrequent": "Dažni",
   "langPanelAllRegions": "Visi regionai",
   "langPanelSearchPlaceholder": "Ieškoti kalbos…",
-  "localeSearchPlaceholder": "Ieškoti kalbos…",
-  "homeDownloadsCta": "Darbalaukio atsisiuntimai"
+  "extensionToastPhishing": "Phishing pattern blocked",
+  "homeDownloadsCta": "Darbalaukio atsisiuntimai",
+  "themeHeaderHint": "Use the one Appearance button in the header (next to language)."
 }

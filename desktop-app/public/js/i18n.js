@@ -5,7 +5,17 @@
  */
 
 /** Shipped desktop string bags (others fall back to EN via t()). */
-const DESKTOP_BAGS = new Set(["en", "pt-PT", "zh-Hans", "ja", "zh-Hant"]);
+const DESKTOP_BAGS = new Set([
+  "en",
+  "pt-PT",
+  "zh-Hans",
+  "zh-Hant",
+  "ja",
+  "sv",
+  "da",
+  "fi",
+  "nb"
+]);
 
 /** @param {string|null|undefined} lang */
 export function normalizeUiLang(lang) {

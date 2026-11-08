@@ -452,9 +452,10 @@
   "themeLight": "Khanya",
   "themeHint": "Kule bhrawuza kuphela.",
   "navDownloads": "Ukhuphelo",
-  "langPanelFrequent": "Frequent",
-  "langPanelAllRegions": "All regions",
+  "langPanelFrequent": "Rhoqo",
+  "langPanelAllRegions": "Yonke imimandla",
   "langPanelSearchPlaceholder": "Khangela ulwimi…",
-  "localeSearchPlaceholder": "Khangela ulwimi…",
-  "homeDownloadsCta": "Ukhuphelo lwedeski"
+  "extensionToastPhishing": "Phishing pattern blocked",
+  "homeDownloadsCta": "Ukhuphelo lwedeski",
+  "themeHeaderHint": "Use the one Appearance button in the header (next to language)."
 }

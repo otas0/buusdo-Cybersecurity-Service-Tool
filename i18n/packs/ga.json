@@ -455,6 +455,7 @@
   "langPanelFrequent": "Coitianta",
   "langPanelAllRegions": "Gach réigiún",
   "langPanelSearchPlaceholder": "Cuardaigh teanga…",
-  "localeSearchPlaceholder": "Cuardaigh teanga…",
-  "homeDownloadsCta": "Íoslódálacha deisce"
+  "extensionToastPhishing": "Phishing pattern blocked",
+  "homeDownloadsCta": "Íoslódálacha deisce",
+  "themeHeaderHint": "Use the one Appearance button in the header (next to language)."
 }

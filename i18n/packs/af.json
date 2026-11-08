@@ -452,9 +452,10 @@
   "themeLight": "Lig",
   "themeHint": "Slegs in hierdie blaaier.",
   "navDownloads": "Aflaaie",
-  "langPanelFrequent": "Frequent",
-  "langPanelAllRegions": "All regions",
+  "langPanelFrequent": "Dikwels",
+  "langPanelAllRegions": "Alle streke",
   "langPanelSearchPlaceholder": "Soek taal…",
-  "localeSearchPlaceholder": "Soek taal…",
-  "homeDownloadsCta": "Lessenaar-aflaaie"
+  "extensionToastPhishing": "Phishing pattern blocked",
+  "homeDownloadsCta": "Lessenaar-aflaaie",
+  "themeHeaderHint": "Use the one Appearance button in the header (next to language)."
 }

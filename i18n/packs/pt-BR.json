@@ -455,6 +455,7 @@
   "langPanelFrequent": "Frequentes",
   "langPanelAllRegions": "Todas as regiões",
   "langPanelSearchPlaceholder": "Pesquisar idioma…",
-  "localeSearchPlaceholder": "Pesquisar idioma…",
-  "homeDownloadsCta": "Downloads do app"
+  "extensionToastPhishing": "Padrão de phishing bloqueado",
+  "homeDownloadsCta": "Downloads do app",
+  "themeHeaderHint": "Use o botão Aparência no cabeçalho (ao lado do idioma)."
 }

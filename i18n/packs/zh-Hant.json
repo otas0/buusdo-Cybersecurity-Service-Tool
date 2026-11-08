@@ -455,6 +455,7 @@
   "langPanelFrequent": "常用",
   "langPanelAllRegions": "全部地區",
   "langPanelSearchPlaceholder": "搜尋語言…",
-  "localeSearchPlaceholder": "搜尋語言…",
-  "homeDownloadsCta": "桌面應用下載"
+  "extensionToastPhishing": "已攔截釣魚模式",
+  "homeDownloadsCta": "桌面應用下載",
+  "themeHeaderHint": "請使用頁首中的外觀按鈕（在語言旁邊）。"
 }

@@ -30,8 +30,11 @@ Product instrument language — keep short and consistent across locales.
 | fi | Seis | Pidä | Selvä | Valmis |
 | nb | Stopp | Hold | Rent | Klar |
 | pt-BR | Parar | Pausar | Limpo | Pronto |
-| ca | Atura | Retén | Clar | En espera |
+| ca | Atura | Retén | Nete | Pendent |
 | el | Στάση | Κράτηση | Καθαρό | Αναμονή |
+| uk | Стоп | Тримати | Чисто | Очікування |
+| is | Stöðva | Halda | Hreint | Biðstaða |
+| sl | Stop | Zadrži | Čisto | Pripravljenost |
 | th | หยุด | ชะลอ | ผ่าน | พร้อม |
 | mi | Tū | Tatari | Mahea | Tūrei |
 | af | Stop | Wag | Skoon | Gereed |

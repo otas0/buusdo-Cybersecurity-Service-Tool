@@ -452,9 +452,10 @@
   "themeLight": "Cerah",
   "themeHint": "Hanya dalam pelayar ini.",
   "navDownloads": "Muat turun",
-  "langPanelFrequent": "Frequent",
-  "langPanelAllRegions": "All regions",
+  "langPanelFrequent": "Kerap",
+  "langPanelAllRegions": "Semua wilayah",
   "langPanelSearchPlaceholder": "Cari bahasa…",
-  "localeSearchPlaceholder": "Cari bahasa…",
-  "homeDownloadsCta": "Muat turun desktop"
+  "extensionToastPhishing": "Phishing pattern blocked",
+  "homeDownloadsCta": "Muat turun desktop",
+  "themeHeaderHint": "Use the one Appearance button in the header (next to language)."
 }

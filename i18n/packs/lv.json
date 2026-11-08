@@ -455,6 +455,7 @@
   "langPanelFrequent": "Biežākie",
   "langPanelAllRegions": "Visi reģioni",
   "langPanelSearchPlaceholder": "Meklēt valodu…",
-  "localeSearchPlaceholder": "Meklēt valodu…",
-  "homeDownloadsCta": "Darbvirsmas lejupielādes"
+  "extensionToastPhishing": "Phishing pattern blocked",
+  "homeDownloadsCta": "Darbvirsmas lejupielādes",
+  "themeHeaderHint": "Use the one Appearance button in the header (next to language)."
 }

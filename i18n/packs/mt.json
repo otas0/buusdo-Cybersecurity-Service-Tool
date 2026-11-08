@@ -455,6 +455,7 @@
   "langPanelFrequent": "Frekwenti",
   "langPanelAllRegions": "Ir-reġjuni kollha",
   "langPanelSearchPlaceholder": "Fittex lingwa…",
-  "localeSearchPlaceholder": "Fittex lingwa…",
-  "homeDownloadsCta": "Downloads tad-desktop"
+  "extensionToastPhishing": "Phishing pattern blocked",
+  "homeDownloadsCta": "Downloads tad-desktop",
+  "themeHeaderHint": "Use the one Appearance button in the header (next to language)."
 }

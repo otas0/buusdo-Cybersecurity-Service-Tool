@@ -455,6 +455,7 @@
   "langPanelFrequent": "Часті",
   "langPanelAllRegions": "Усі регіони",
   "langPanelSearchPlaceholder": "Пошук мови…",
-  "localeSearchPlaceholder": "Шукати мову…",
-  "homeDownloadsCta": "Завантаження для ПК"
+  "extensionToastPhishing": "Phishing pattern blocked",
+  "homeDownloadsCta": "Завантаження для ПК",
+  "themeHeaderHint": "Use the one Appearance button in the header (next to language)."
 }

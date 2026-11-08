@@ -452,9 +452,10 @@
   "themeLight": "Licht",
   "themeHint": "Alleen in deze browser. Standaard: donker instrumentveld.",
   "navDownloads": "Downloads",
-  "langPanelFrequent": "Frequent",
+  "langPanelFrequent": "Veelgebruikt",
   "langPanelAllRegions": "Alle regio’s",
   "langPanelSearchPlaceholder": "Taal zoeken…",
-  "localeSearchPlaceholder": "Taal zoeken…",
-  "homeDownloadsCta": "Desktop-downloads"
+  "extensionToastPhishing": "Phishingpatroon geblokkeerd",
+  "homeDownloadsCta": "Desktop-downloads",
+  "themeHeaderHint": "Gebruik de knop Weergave in de kop (naast taal)."
 }

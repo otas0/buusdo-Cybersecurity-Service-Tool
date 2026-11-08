@@ -452,9 +452,10 @@
   "themeLight": "Māama",
   "themeHint": "I tēnei pūtirotiro anake.",
   "navDownloads": "Tikiake",
-  "langPanelFrequent": "Frequent",
-  "langPanelAllRegions": "All regions",
+  "langPanelFrequent": "Auau",
+  "langPanelAllRegions": "Ngā rohe katoa",
   "langPanelSearchPlaceholder": "Rapu reo…",
-  "localeSearchPlaceholder": "Rapu reo…",
-  "homeDownloadsCta": "Tikiake rorohiko"
+  "extensionToastPhishing": "Kua ārai te tauira tinihanga",
+  "homeDownloadsCta": "Tikiake rorohiko",
+  "themeHeaderHint": "Use the one Appearance button in the header (next to language)."
 }

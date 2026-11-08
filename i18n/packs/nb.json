@@ -455,6 +455,7 @@
   "langPanelFrequent": "Hyppige",
   "langPanelAllRegions": "Alle regioner",
   "langPanelSearchPlaceholder": "Søk språk…",
-  "localeSearchPlaceholder": "Søk språk…",
-  "homeDownloadsCta": "Skrivebordsnedlastinger"
+  "extensionToastPhishing": "Phishing pattern blocked",
+  "homeDownloadsCta": "Skrivebordsnedlastinger",
+  "themeHeaderHint": "Bruk Utseende-knappen i toppteksten (ved siden av språk)."
 }

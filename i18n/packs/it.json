@@ -455,6 +455,7 @@
   "langPanelFrequent": "Frequenti",
   "langPanelAllRegions": "Tutte le regioni",
   "langPanelSearchPlaceholder": "Cerca lingua…",
-  "localeSearchPlaceholder": "Cerca lingua…",
-  "homeDownloadsCta": "Download desktop"
+  "extensionToastPhishing": "Modello di phishing bloccato",
+  "homeDownloadsCta": "Download desktop",
+  "themeHeaderHint": "Usa il pulsante Aspetto nell’intestazione (accanto alla lingua)."
 }

@@ -452,9 +452,10 @@
   "themeLight": "အလင်း",
   "themeHint": "ဤဘရောက်ဇာတွင်သာ သိမ်းသည်။",
   "navDownloads": "ဒေါင်းလုဒ်",
-  "langPanelFrequent": "Frequent",
-  "langPanelAllRegions": "All regions",
+  "langPanelFrequent": "မကြာခဏ",
+  "langPanelAllRegions": "ဒေသအားလုံး",
   "langPanelSearchPlaceholder": "ဘာသာစကား ရှာရန်…",
-  "localeSearchPlaceholder": "ဘာသာစကား ရှာရန်…",
-  "homeDownloadsCta": "ဒက်စတော့ ဒေါင်းလုဒ်"
+  "extensionToastPhishing": "Phishing pattern blocked",
+  "homeDownloadsCta": "ဒက်စတော့ ဒေါင်းလုဒ်",
+  "themeHeaderHint": "Use the one Appearance button in the header (next to language)."
 }

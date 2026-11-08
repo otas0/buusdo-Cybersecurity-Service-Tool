@@ -452,9 +452,10 @@
   "themeLight": "Kukhanya",
   "themeHint": "Ku-browser le kuphela.",
   "navDownloads": "Kulayisha",
-  "langPanelFrequent": "Frequent",
-  "langPanelAllRegions": "All regions",
+  "langPanelFrequent": "Lokunyenti",
+  "langPanelAllRegions": "Tonke tifundza",
   "langPanelSearchPlaceholder": "Sesha lulwimi…",
-  "localeSearchPlaceholder": "Sesha lulwimi…",
-  "homeDownloadsCta": "Kulayisha ideskithophu"
+  "extensionToastPhishing": "Phishing pattern blocked",
+  "homeDownloadsCta": "Kulayisha ideskithophu",
+  "themeHeaderHint": "Use the one Appearance button in the header (next to language)."
 }

@@ -455,6 +455,7 @@
   "langPanelFrequent": "Sagedased",
   "langPanelAllRegions": "Kõik piirkonnad",
   "langPanelSearchPlaceholder": "Otsi keelt…",
-  "localeSearchPlaceholder": "Otsi keelt…",
-  "homeDownloadsCta": "Töölaua allalaadimised"
+  "extensionToastPhishing": "Phishing pattern blocked",
+  "homeDownloadsCta": "Töölaua allalaadimised",
+  "themeHeaderHint": "Use the one Appearance button in the header (next to language)."
 }

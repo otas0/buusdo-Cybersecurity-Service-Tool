@@ -56,7 +56,17 @@ const MAP = {
   accountSyncFail: "accountError",
   listsTitle: "listsOfflineKicker",
   listsHint: "listsOfflineIntro",
-  pathSyncAccount: "accountSyncToggle"
+  pathSyncAccount: "accountSyncToggle",
+  // Honest limits + Halt toast chips (Nordic / CJK overlays)
+  honestLimitsTitle: "honestLimitsTitle",
+  honestLimitsItemAv: "honestLimitNoAv",
+  honestLimitsBody: "honestLimitNoWipe",
+  toastPhishing: "lightDanger",
+  toastTracker: "lightCaution",
+  toastTrackers: "lightCaution",
+  // Closest pack twins for proxy chrome
+  proxyGuideSummary: "desktopHonestLimitsLink",
+  proxyBody: "honestLimitsTitle"
 };
 
 // Desktop-only ja strings (website / lists UI without pack twins). Applied after MAP.

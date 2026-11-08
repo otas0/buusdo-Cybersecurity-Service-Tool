@@ -452,9 +452,10 @@
   "themeLight": "Svijetlo",
   "themeHint": "Samo u ovom pregledniku.",
   "navDownloads": "Preuzimanja",
-  "langPanelFrequent": "Frequent",
-  "langPanelAllRegions": "All regions",
+  "langPanelFrequent": "Česti",
+  "langPanelAllRegions": "Sve regije",
   "langPanelSearchPlaceholder": "Traži jezik…",
-  "localeSearchPlaceholder": "Traži jezik…",
-  "homeDownloadsCta": "Preuzimanja za radnu površinu"
+  "extensionToastPhishing": "Phishing pattern blocked",
+  "homeDownloadsCta": "Preuzimanja za radnu površinu",
+  "themeHeaderHint": "Use the one Appearance button in the header (next to language)."
 }

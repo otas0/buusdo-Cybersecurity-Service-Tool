@@ -455,6 +455,7 @@
   "langPanelFrequent": "Hyppige",
   "langPanelAllRegions": "Alle regioner",
   "langPanelSearchPlaceholder": "Søg sprog…",
-  "localeSearchPlaceholder": "Søg sprog…",
-  "homeDownloadsCta": "Skrivebordsdownloads"
+  "extensionToastPhishing": "Phishing pattern blocked",
+  "homeDownloadsCta": "Skrivebordsdownloads",
+  "themeHeaderHint": "Brug Udseende-knappen i sidehovedet (ved siden af sprog)."
 }

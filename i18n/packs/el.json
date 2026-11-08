@@ -455,6 +455,7 @@
   "langPanelFrequent": "Συχνά",
   "langPanelAllRegions": "Όλες οι περιοχές",
   "langPanelSearchPlaceholder": "Αναζήτηση γλώσσας…",
-  "localeSearchPlaceholder": "Αναζήτηση γλώσσας…",
-  "homeDownloadsCta": "Λήψεις επιφάνειας εργασίας"
+  "extensionToastPhishing": "Phishing pattern blocked",
+  "homeDownloadsCta": "Λήψεις επιφάνειας εργασίας",
+  "themeHeaderHint": "Use the one Appearance button in the header (next to language)."
 }

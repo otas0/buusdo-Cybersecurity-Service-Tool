@@ -452,9 +452,10 @@
   "themeLight": "ភ្លឺ",
   "themeHint": "រក្សាទុកតែក្នុងកម្មវិធីរុករកនេះ។",
   "navDownloads": "ទាញយក",
-  "langPanelFrequent": "Frequent",
-  "langPanelAllRegions": "All regions",
+  "langPanelFrequent": "ញឹកញាប់",
+  "langPanelAllRegions": "គ្រប់តំបន់",
   "langPanelSearchPlaceholder": "ស្វែងរកភាសា…",
-  "localeSearchPlaceholder": "ស្វែងរកភាសា…",
-  "homeDownloadsCta": "ទាញយកលើផ្ទៃតុ"
+  "extensionToastPhishing": "Phishing pattern blocked",
+  "homeDownloadsCta": "ទាញយកលើផ្ទៃតុ",
+  "themeHeaderHint": "Use the one Appearance button in the header (next to language)."
 }

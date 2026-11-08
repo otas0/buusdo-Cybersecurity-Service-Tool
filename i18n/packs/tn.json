@@ -452,9 +452,10 @@
   "themeLight": "Lesedi",
   "themeHint": "Fela mo sebišing se.",
   "navDownloads": "Dikgopolo",
-  "langPanelFrequent": "Frequent",
-  "langPanelAllRegions": "All regions",
+  "langPanelFrequent": "Gantsi",
+  "langPanelAllRegions": "Dikgaolo tsotlhe",
   "langPanelSearchPlaceholder": "Batla puo…",
-  "localeSearchPlaceholder": "Batla puo…",
-  "homeDownloadsCta": "Dikgopolo tsa desktop"
+  "extensionToastPhishing": "Phishing pattern blocked",
+  "homeDownloadsCta": "Dikgopolo tsa desktop",
+  "themeHeaderHint": "Use the one Appearance button in the header (next to language)."
 }

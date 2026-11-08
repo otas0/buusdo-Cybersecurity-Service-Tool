@@ -455,6 +455,6 @@
   "langPanelFrequent": "Frequent",
   "langPanelAllRegions": "All regions",
   "langPanelSearchPlaceholder": "Search language…",
-  "localeSearchPlaceholder": "Search language…",
+  "extensionToastPhishing": "Phishing pattern blocked",
   "homeDownloadsCta": "Desktop app downloads"
 }

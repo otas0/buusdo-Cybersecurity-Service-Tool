@@ -452,9 +452,10 @@
   "themeLight": "สว่าง",
   "themeHint": "เก็บเฉพาะในเบราว์เซอร์นี้",
   "navDownloads": "ดาวน์โหลด",
-  "langPanelFrequent": "Frequent",
-  "langPanelAllRegions": "All regions",
+  "langPanelFrequent": "ใช้บ่อย",
+  "langPanelAllRegions": "ทุกภูมิภาค",
   "langPanelSearchPlaceholder": "ค้นหาภาษา…",
-  "localeSearchPlaceholder": "ค้นหาภาษา…",
-  "homeDownloadsCta": "ดาวน์โหลดเดสก์ท็อป"
+  "extensionToastPhishing": "บล็อกรูปแบบฟิชชิงแล้ว",
+  "homeDownloadsCta": "ดาวน์โหลดเดสก์ท็อป",
+  "themeHeaderHint": "Use the one Appearance button in the header (next to language)."
 }

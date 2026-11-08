@@ -455,6 +455,7 @@
   "langPanelFrequent": "Frecuentes",
   "langPanelAllRegions": "Todas las regiones",
   "langPanelSearchPlaceholder": "Buscar idioma…",
-  "localeSearchPlaceholder": "Buscar idioma…",
-  "homeDownloadsCta": "Descargas de escritorio"
+  "extensionToastPhishing": "Patrón de phishing bloqueado",
+  "homeDownloadsCta": "Descargas de escritorio",
+  "themeHeaderHint": "Use el botón Apariencia del encabezado (junto al idioma)."
 }

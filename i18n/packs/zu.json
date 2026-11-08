@@ -452,9 +452,10 @@
   "themeLight": "Okukhanyayo",
   "themeHint": "Kule bhrawuza kuphela.",
   "navDownloads": "Ukulanda",
-  "langPanelFrequent": "Frequent",
-  "langPanelAllRegions": "All regions",
+  "langPanelFrequent": "Njalo",
+  "langPanelAllRegions": "Zonke izifunda",
   "langPanelSearchPlaceholder": "Sesha ulimi…",
-  "localeSearchPlaceholder": "Sesha ulimi…",
-  "homeDownloadsCta": "Ukulanda kwekhompyutha"
+  "extensionToastPhishing": "Phishing pattern blocked",
+  "homeDownloadsCta": "Ukulanda kwekhompyutha",
+  "themeHeaderHint": "Use the one Appearance button in the header (next to language)."
 }

@@ -452,9 +452,10 @@
   "themeLight": "Luminos",
   "themeHint": "Doar în acest browser.",
   "navDownloads": "Descărcări",
-  "langPanelFrequent": "Frequent",
-  "langPanelAllRegions": "All regions",
+  "langPanelFrequent": "Frecvente",
+  "langPanelAllRegions": "Toate regiunile",
   "langPanelSearchPlaceholder": "Caută limba…",
-  "localeSearchPlaceholder": "Caută limba…",
-  "homeDownloadsCta": "Descărcări desktop"
+  "extensionToastPhishing": "Phishing pattern blocked",
+  "homeDownloadsCta": "Descărcări desktop",
+  "themeHeaderHint": "Use the one Appearance button in the header (next to language)."
 }

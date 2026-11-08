@@ -40,10 +40,7 @@ const fixtureHtml = `<!doctype html>
 <body>
   <main class="shell">
     <header class="top">
-      <div class="theme-toggle" data-testid="theme-switch" role="group">
-        <button type="button" class="nav-link theme-opt is-active" data-testid="theme-dark">Dark</button>
-        <button type="button" class="nav-link theme-opt" data-testid="theme-light">Light</button>
-      </div>
+      <button type="button" class="nav-link" data-testid="theme-switch">Light</button>
       <div class="lang-switch" data-testid="locale-switch">
         <button type="button" class="lang-badge" data-testid="locale-toggle">EN</button>
         <div class="lang-panel" data-testid="locale-panel" hidden>Languages</div>
@@ -52,17 +49,14 @@ const fixtureHtml = `<!doctype html>
   </main>
   <script>
     const root = document.documentElement;
-    const darkBtn = document.querySelector('[data-testid="theme-dark"]');
-    const lightBtn = document.querySelector('[data-testid="theme-light"]');
+    const themeBtn = document.querySelector('[data-testid="theme-switch"]');
     const panel = document.querySelector('[data-testid="locale-panel"]');
     const toggle = document.querySelector('[data-testid="locale-toggle"]');
-    function setTheme(t) {
-      root.dataset.theme = t;
-      darkBtn.classList.toggle('is-active', t === 'dark');
-      lightBtn.classList.toggle('is-active', t === 'light');
-    }
-    darkBtn.addEventListener('click', () => setTheme('dark'));
-    lightBtn.addEventListener('click', () => setTheme('light'));
+    themeBtn.addEventListener('click', () => {
+      const next = root.dataset.theme === 'light' ? 'dark' : 'light';
+      root.dataset.theme = next;
+      themeBtn.textContent = next === 'dark' ? 'Light' : 'Dark';
+    });
     toggle.addEventListener('click', () => { panel.hidden = !panel.hidden; });
   </script>
 </body>
@@ -87,7 +81,7 @@ test("light theme locale-panel background ≈ #ebe8df", async ({ page }) => {
   const { port } = server.address() as { port: number };
   try {
     await page.goto(`http://127.0.0.1:${port}/`);
-    await page.getByTestId("theme-light").click();
+    await page.getByTestId("theme-switch").click();
     await page.getByTestId("locale-toggle").click();
     const panel = page.getByTestId("locale-panel");
     await expect(panel).toBeVisible();

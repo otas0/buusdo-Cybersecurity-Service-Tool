@@ -455,6 +455,7 @@
   "langPanelFrequent": "よく使う",
   "langPanelAllRegions": "すべての地域",
   "langPanelSearchPlaceholder": "言語を検索…",
-  "localeSearchPlaceholder": "言語を検索…",
-  "homeDownloadsCta": "デスクトップ版のダウンロード"
+  "extensionToastPhishing": "フィッシングパターンをブロックしました",
+  "homeDownloadsCta": "デスクトップ版のダウンロード",
+  "themeHeaderHint": "ヘッダーの外観ボタン（言語の横）を使ってください。"
 }

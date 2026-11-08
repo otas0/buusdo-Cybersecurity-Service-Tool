@@ -452,9 +452,10 @@
   "themeLight": "ສະຫວ່າງ",
   "themeHint": "ເກັບໄວ້ໃນໂປຣແກຣມທ່ອງເວັບນີ້ເທົ່ານັ້ນ.",
   "navDownloads": "ດາວໂຫຼດ",
-  "langPanelFrequent": "Frequent",
-  "langPanelAllRegions": "All regions",
+  "langPanelFrequent": "ໃຊ້ບ່ອຍ",
+  "langPanelAllRegions": "ທຸກພາກພື້ນ",
   "langPanelSearchPlaceholder": "ຄົ້ນຫາພາສາ…",
-  "localeSearchPlaceholder": "ຄົ້ນຫາພາສາ…",
-  "homeDownloadsCta": "ດາວໂຫຼດເດັສກທັອບ"
+  "extensionToastPhishing": "Phishing pattern blocked",
+  "homeDownloadsCta": "ດາວໂຫຼດເດັສກທັອບ",
+  "themeHeaderHint": "Use the one Appearance button in the header (next to language)."
 }

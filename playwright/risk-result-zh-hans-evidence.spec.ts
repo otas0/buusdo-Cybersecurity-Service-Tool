@@ -220,4 +220,8 @@ test.describe("live Halt evidence (soft)", () => {
   test("known-threat Halt shows evidence-known-threat on /el", async ({ page }) => {
     await runKnownThreatOnLocale(page, "/el", /απειλ|γνωστ|Σήμα/i);
   });
+
+  test("known-threat Halt shows evidence-known-threat on /ca", async ({ page }) => {
+    await runKnownThreatOnLocale(page, "/ca", /amenaça|conegud|Senyal/i);
+  });
 });

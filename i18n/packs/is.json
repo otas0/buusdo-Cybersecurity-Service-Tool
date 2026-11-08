@@ -455,6 +455,7 @@
   "langPanelFrequent": "Algeng",
   "langPanelAllRegions": "Öll svæði",
   "langPanelSearchPlaceholder": "Leita að tungumáli…",
-  "localeSearchPlaceholder": "Leita að tungumáli…",
-  "homeDownloadsCta": "Skjáborðsniðurhal"
+  "extensionToastPhishing": "Phishing pattern blocked",
+  "homeDownloadsCta": "Skjáborðsniðurhal",
+  "themeHeaderHint": "Use the one Appearance button in the header (next to language)."
 }

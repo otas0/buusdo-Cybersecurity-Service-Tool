@@ -452,9 +452,10 @@
   "themeLight": "Világos",
   "themeHint": "Csak ebben a böngészőben tárolva.",
   "navDownloads": "Letöltések",
-  "langPanelFrequent": "Frequent",
-  "langPanelAllRegions": "All regions",
+  "langPanelFrequent": "Gyakori",
+  "langPanelAllRegions": "Minden régió",
   "langPanelSearchPlaceholder": "Nyelv keresése…",
-  "localeSearchPlaceholder": "Nyelv keresése…",
-  "homeDownloadsCta": "Asztali letöltések"
+  "extensionToastPhishing": "Phishing pattern blocked",
+  "homeDownloadsCta": "Asztali letöltések",
+  "themeHeaderHint": "Use the one Appearance button in the header (next to language)."
 }

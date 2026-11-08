@@ -452,9 +452,10 @@
   "themeLight": "Sáng",
   "themeHint": "Chỉ lưu trên trình duyệt này.",
   "navDownloads": "Tải xuống",
-  "langPanelFrequent": "Frequent",
-  "langPanelAllRegions": "All regions",
+  "langPanelFrequent": "Thường dùng",
+  "langPanelAllRegions": "Tất cả khu vực",
   "langPanelSearchPlaceholder": "Tìm ngôn ngữ…",
-  "localeSearchPlaceholder": "Tìm ngôn ngữ…",
-  "homeDownloadsCta": "Tải ứng dụng máy tính"
+  "extensionToastPhishing": "Đã chặn mẫu lừa đảo",
+  "homeDownloadsCta": "Tải ứng dụng máy tính",
+  "themeHeaderHint": "Use the one Appearance button in the header (next to language)."
 }

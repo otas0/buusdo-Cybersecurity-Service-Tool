@@ -452,9 +452,10 @@
   "themeLight": "Светла",
   "themeHint": "Само в този браузър.",
   "navDownloads": "Изтегляния",
-  "langPanelFrequent": "Frequent",
-  "langPanelAllRegions": "All regions",
+  "langPanelFrequent": "Чести",
+  "langPanelAllRegions": "Всички региони",
   "langPanelSearchPlaceholder": "Търсене на език…",
-  "localeSearchPlaceholder": "Търсене на език…",
-  "homeDownloadsCta": "Изтегляния за компютър"
+  "extensionToastPhishing": "Phishing pattern blocked",
+  "homeDownloadsCta": "Изтегляния за компютър",
+  "themeHeaderHint": "Use the one Appearance button in the header (next to language)."
 }

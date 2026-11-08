@@ -455,6 +455,7 @@
   "langPanelFrequent": "Freqüents",
   "langPanelAllRegions": "Totes les regions",
   "langPanelSearchPlaceholder": "Cerca idioma…",
-  "localeSearchPlaceholder": "Cerca idioma…",
-  "homeDownloadsCta": "Baixades d’escriptori"
+  "extensionToastPhishing": "Phishing pattern blocked",
+  "homeDownloadsCta": "Baixades d’escriptori",
+  "themeHeaderHint": "Use the one Appearance button in the header (next to language)."
 }

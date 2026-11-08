@@ -452,9 +452,10 @@
   "themeLight": "Basilisa",
   "themeHint": "Eka browser leyi ntsena.",
   "navDownloads": "Ku koka",
-  "langPanelFrequent": "Frequent",
-  "langPanelAllRegions": "All regions",
+  "langPanelFrequent": "Kan’we",
+  "langPanelAllRegions": "Tiko hinkwaro",
   "langPanelSearchPlaceholder": "Lavisisa ririmi…",
-  "localeSearchPlaceholder": "Lavisisa ririmi…",
-  "homeDownloadsCta": "Ku koka desktop"
+  "extensionToastPhishing": "Phishing pattern blocked",
+  "homeDownloadsCta": "Ku koka desktop",
+  "themeHeaderHint": "Use the one Appearance button in the header (next to language)."
 }

@@ -452,9 +452,10 @@
   "themeLight": "Maliwanag",
   "themeHint": "Sa browser na ito lang.",
   "navDownloads": "Mga download",
-  "langPanelFrequent": "Frequent",
-  "langPanelAllRegions": "All regions",
+  "langPanelFrequent": "Madalas",
+  "langPanelAllRegions": "Lahat ng rehiyon",
   "langPanelSearchPlaceholder": "Maghanap ng wika…",
-  "localeSearchPlaceholder": "Maghanap ng wika…",
-  "homeDownloadsCta": "Mga download sa desktop"
+  "extensionToastPhishing": "Phishing pattern blocked",
+  "homeDownloadsCta": "Mga download sa desktop",
+  "themeHeaderHint": "Use the one Appearance button in the header (next to language)."
 }

@@ -452,9 +452,10 @@
   "themeLight": "Lesedi",
   "themeHint": "Fela go sebiši se.",
   "navDownloads": "Ditaelo",
-  "langPanelFrequent": "Frequent",
-  "langPanelAllRegions": "All regions",
+  "langPanelFrequent": "Kgafetša",
+  "langPanelAllRegions": "Dikgaolo ka moka",
   "langPanelSearchPlaceholder": "Nyaka polelo…",
-  "localeSearchPlaceholder": "Nyaka polelo…",
-  "homeDownloadsCta": "Ditaelo tša desktop"
+  "extensionToastPhishing": "Phishing pattern blocked",
+  "homeDownloadsCta": "Ditaelo tša desktop",
+  "themeHeaderHint": "Use the one Appearance button in the header (next to language)."
 }

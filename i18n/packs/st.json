@@ -452,9 +452,10 @@
   "themeLight": "Leseli",
   "themeHint": "Feela sebakeng sena.",
   "navDownloads": "Ho qolla",
-  "langPanelFrequent": "Frequent",
-  "langPanelAllRegions": "All regions",
+  "langPanelFrequent": "Hangata",
+  "langPanelAllRegions": "Libaka tsohle",
   "langPanelSearchPlaceholder": "Batla puo…",
-  "localeSearchPlaceholder": "Batla puo…",
-  "homeDownloadsCta": "Ho qolla desktop"
+  "extensionToastPhishing": "Phishing pattern blocked",
+  "homeDownloadsCta": "Ho qolla desktop",
+  "themeHeaderHint": "Use the one Appearance button in the header (next to language)."
 }
