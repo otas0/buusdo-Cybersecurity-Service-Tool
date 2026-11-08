@@ -70,6 +70,23 @@ test("ambiguousProbeBlockedCopy uses locale bag for ja/de and generic {status}",
   assert.match(other.detail, /418/);
 });
 
+test("generic probe-blocked {status} for fr and de comes from message bag", () => {
+  const fr = ambiguousProbeBlockedCopy(418, "fr");
+  const de = ambiguousProbeBlockedCopy(418, "de");
+  assert.match(fr.detail, /418/);
+  assert.match(de.detail, /418/);
+  assert.match(fr.title, /site|sonde|bloqu/i);
+  assert.match(de.title, /Seite|Sonde|block/i);
+  assert.notEqual(fr.title, messages.en.probeBlockedGenericTitle);
+  assert.notEqual(de.title, messages.en.probeBlockedGenericTitle);
+  const frPair = probeBlockedPair(
+    { id: "probe-blocked", detail: "HTTP 418" },
+    { locale: "fr" }
+  );
+  assert.ok(frPair);
+  assert.match(frPair![1], /418/);
+});
+
 test("probeBlockedPair multi-locale titles/details stay bag-backed", () => {
   for (const locale of ["de", "th", "mi", "ja", "zh-Hans", "pt-PT"] as const) {
     const bag = getMessages(locale);

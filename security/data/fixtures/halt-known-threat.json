@@ -1,0 +1,7 @@
+{
+  "description": "Stable Halt host for CI Playwright — must stay on the curated own-threat list (.example TLD).",
+  "host": "paypal.secure-login.example",
+  "threatState": "KNOWN_PHISHING",
+  "listFile": "security/data/curated-threats.json",
+  "notes": "Prefer this over live phishing TLDs. Workers check uses the same curated list in evaluation/CI."
+}

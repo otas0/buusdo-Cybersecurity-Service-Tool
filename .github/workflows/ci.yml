@@ -717,6 +717,25 @@ jobs:
           PLAYWRIGHT_BASE_URL: ${{ vars.PLAYWRIGHT_BASE_URL || 'http://localhost:3000' }}
           PLAYWRIGHT_SKIP_WEBSERVER: "1"
 
+      - name: Locale recommend soft prompt
+        if: steps.pw_install.outcome == 'success'
+        run: |
+          BASE="${PLAYWRIGHT_BASE_URL:-http://localhost:3000}"
+          export PLAYWRIGHT_BASE_URL="$BASE"
+          export PLAYWRIGHT_SKIP_WEBSERVER=1
+          npm run test:playwright:locale-recommend
+        env:
+          PLAYWRIGHT_BASE_URL: ${{ vars.PLAYWRIGHT_BASE_URL || 'http://localhost:3000' }}
+          PLAYWRIGHT_SKIP_WEBSERVER: "1"
+
+      - name: Top bar narrow (320/375 screenshots)
+        if: steps.pw_install.outcome == 'success'
+        run: |
+          export PLAYWRIGHT_SKIP_WEBSERVER=1
+          npm run test:playwright:top-bar-narrow
+        env:
+          PLAYWRIGHT_SKIP_WEBSERVER: "1"
+
       - name: Extension phishing toast fixture
         if: steps.pw_install.outcome == 'success'
         run: npm run test:playwright:extension-toast-phishing

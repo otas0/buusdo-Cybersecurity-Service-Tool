@@ -1,7 +1,7 @@
 {
   "schemaVersion": "1.0",
   "evaluation": "Controlled Technical Evaluation V0.1",
-  "executedAt": "2026-10-25T13:36:45.071Z",
+  "executedAt": "2026-11-08T08:20:59.689Z",
   "scope": "Fictional .test domains and local deterministic inputs only",
   "summary": {
     "totalScenarios": 64,
@@ -126,7 +126,7 @@
             "id": "scope-limit",
             "kind": "limitation",
             "title": "What this check covers",
-            "detail": "This product checks the address against Preventive Shield’s own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
+            "detail": "This product checks the address against buusdo's own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
           }
         ],
         "decision": "LOW_EVIDENCE",
@@ -134,7 +134,7 @@
           "No known threat was found in the sources checked. This is not proof that the website is safe.",
           "Checked ordinary-garden.test (HTTPS).",
           "HTTPS protects the connection but does not prove the identity or trustworthiness of the website.",
-          "This product checks the address against Preventive Shield’s own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
+          "This product checks the address against buusdo's own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
         ],
         "recommendation": "PROCEED_WITH_CARE"
       },
@@ -247,7 +247,7 @@
             "id": "scope-limit",
             "kind": "limitation",
             "title": "What this check covers",
-            "detail": "This product checks the address against Preventive Shield’s own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
+            "detail": "This product checks the address against buusdo's own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
           }
         ],
         "decision": "CAUTION",
@@ -256,7 +256,7 @@
           "Checked ordinary-garden.test (HTTP).",
           "Information sent over HTTP may be exposed in transit.",
           "HTTPS protects the connection but does not prove the identity or trustworthiness of the website.",
-          "This product checks the address against Preventive Shield’s own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
+          "This product checks the address against buusdo's own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
         ],
         "recommendation": "VERIFY_INDEPENDENTLY"
       },
@@ -369,7 +369,7 @@
             "id": "scope-limit",
             "kind": "limitation",
             "title": "What this check covers",
-            "detail": "This product checks the address against Preventive Shield’s own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
+            "detail": "This product checks the address against buusdo's own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
           }
         ],
         "decision": "LOW_EVIDENCE",
@@ -378,7 +378,7 @@
           "The registrable domain matches Lusitania Bank’s listed domain. This does not mean the website is safe.",
           "Checked lusitaniabank.test (HTTPS).",
           "HTTPS protects the connection but does not prove the identity or trustworthiness of the website.",
-          "This product checks the address against Preventive Shield’s own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
+          "This product checks the address against buusdo's own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
         ],
         "recommendation": "PROCEED_WITH_CARE"
       },
@@ -499,7 +499,7 @@
             "id": "scope-limit",
             "kind": "limitation",
             "title": "What this check covers",
-            "detail": "This product checks the address against Preventive Shield’s own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
+            "detail": "This product checks the address against buusdo's own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
           }
         ],
         "decision": "CAUTION",
@@ -509,7 +509,7 @@
           "Checked lusitaniabank.test (HTTPS).",
           "The path suggests the page may ask for sensitive information. Confirm the domain independently before entering anything.",
           "HTTPS protects the connection but does not prove the identity or trustworthiness of the website.",
-          "This product checks the address against Preventive Shield’s own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
+          "This product checks the address against buusdo's own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
         ],
         "recommendation": "VERIFY_INDEPENDENTLY"
       },
@@ -612,7 +612,7 @@
             "id": "scope-limit",
             "kind": "limitation",
             "title": "What this check covers",
-            "detail": "This product checks the address against Preventive Shield’s own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
+            "detail": "This product checks the address against buusdo's own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
           }
         ],
         "decision": "LOW_EVIDENCE",
@@ -620,7 +620,7 @@
           "No known threat was found in the sources checked. This is not proof that the website is safe.",
           "Checked lusitania-library.test (HTTPS).",
           "HTTPS protects the connection but does not prove the identity or trustworthiness of the website.",
-          "This product checks the address against Preventive Shield’s own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
+          "This product checks the address against buusdo's own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
         ],
         "recommendation": "PROCEED_WITH_CARE"
       },
@@ -711,7 +711,7 @@
             "id": "known-threat",
             "kind": "known",
             "title": "Known phishing signal detected",
-            "detail": "lusitania-bank-login.test is listed in the Preventive Shield curated threat list."
+            "detail": "lusitania-bank-login.test is listed in the buusdo curated threat list."
           },
           {
             "id": "identity-mismatch",
@@ -741,17 +741,17 @@
             "id": "scope-limit",
             "kind": "limitation",
             "title": "What this check covers",
-            "detail": "This product checks the address against Preventive Shield’s own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
+            "detail": "This product checks the address against buusdo's own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
           }
         ],
         "decision": "CRITICAL",
         "rationale": [
-          "lusitania-bank-login.test is listed in the Preventive Shield curated threat list.",
+          "lusitania-bank-login.test is listed in the buusdo curated threat list.",
           "The address appears related to Lusitania Bank, yet the controlling domain is lusitania-bank-login.test.",
           "This domain closely resembles lusitaniabank.test (Lusitania Bank). Similarity is a warning signal, not proof of phishing.",
           "Checked lusitania-bank-login.test (HTTPS).",
           "HTTPS protects the connection but does not prove the identity or trustworthiness of the website.",
-          "This product checks the address against Preventive Shield’s own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
+          "This product checks the address against buusdo's own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
         ],
         "recommendation": "LEAVE_AND_BLOCK"
       },
@@ -836,7 +836,7 @@
             "id": "known-threat",
             "kind": "known",
             "title": "Known malicious signal detected",
-            "detail": "malicious-demo.test is listed in the Preventive Shield curated threat list."
+            "detail": "malicious-demo.test is listed in the buusdo curated threat list."
           },
           {
             "id": "checked-address",
@@ -854,15 +854,15 @@
             "id": "scope-limit",
             "kind": "limitation",
             "title": "What this check covers",
-            "detail": "This product checks the address against Preventive Shield’s own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
+            "detail": "This product checks the address against buusdo's own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
           }
         ],
         "decision": "HIGH",
         "rationale": [
-          "malicious-demo.test is listed in the Preventive Shield curated threat list.",
+          "malicious-demo.test is listed in the buusdo curated threat list.",
           "Checked malicious-demo.test (HTTPS).",
           "HTTPS protects the connection but does not prove the identity or trustworthiness of the website.",
-          "This product checks the address against Preventive Shield’s own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
+          "This product checks the address against buusdo's own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
         ],
         "recommendation": "LEAVE"
       },
@@ -965,7 +965,7 @@
             "id": "scope-limit",
             "kind": "limitation",
             "title": "What this check covers",
-            "detail": "This product checks the address against Preventive Shield’s own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
+            "detail": "This product checks the address against buusdo's own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
           }
         ],
         "decision": "LOW_EVIDENCE",
@@ -973,7 +973,7 @@
           "No known threat was found in the sources checked. This is not proof that the website is safe.",
           "Checked no-record.test (HTTPS).",
           "HTTPS protects the connection but does not prove the identity or trustworthiness of the website.",
-          "This product checks the address against Preventive Shield’s own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
+          "This product checks the address against buusdo's own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
         ],
         "recommendation": "PROCEED_WITH_CARE"
       },
@@ -1074,7 +1074,7 @@
             "id": "scope-limit",
             "kind": "limitation",
             "title": "What this check covers",
-            "detail": "This product checks the address against Preventive Shield’s own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
+            "detail": "This product checks the address against buusdo's own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
           }
         ],
         "decision": "UNKNOWN",
@@ -1082,7 +1082,7 @@
           "The first-party threat list could not be read. Structural and live address checks still ran.",
           "Checked provider-check.test (HTTPS).",
           "HTTPS protects the connection but does not prove the identity or trustworthiness of the website.",
-          "This product checks the address against Preventive Shield’s own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
+          "This product checks the address against buusdo's own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
         ],
         "recommendation": "VERIFY_INDEPENDENTLY"
       },
@@ -1185,7 +1185,7 @@
             "id": "scope-limit",
             "kind": "limitation",
             "title": "What this check covers",
-            "detail": "This product checks the address against Preventive Shield’s own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
+            "detail": "This product checks the address against buusdo's own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
           }
         ],
         "decision": "UNKNOWN",
@@ -1193,7 +1193,7 @@
           "The source checked cannot provide a positive or negative reputation result.",
           "Checked unknown-new-domain.test (HTTPS).",
           "HTTPS protects the connection but does not prove the identity or trustworthiness of the website.",
-          "This product checks the address against Preventive Shield’s own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
+          "This product checks the address against buusdo's own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
         ],
         "recommendation": "VERIFY_INDEPENDENTLY"
       },
@@ -1306,7 +1306,7 @@
             "id": "scope-limit",
             "kind": "limitation",
             "title": "What this check covers",
-            "detail": "This product checks the address against Preventive Shield’s own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
+            "detail": "This product checks the address against buusdo's own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
           }
         ],
         "decision": "LOW_EVIDENCE",
@@ -1315,7 +1315,7 @@
           "The registrable domain matches Atlantic Parcel’s listed domain. This does not mean the website is safe.",
           "Checked atlanticparcel.test (HTTPS).",
           "HTTPS protects the connection but does not prove the identity or trustworthiness of the website.",
-          "This product checks the address against Preventive Shield’s own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
+          "This product checks the address against buusdo's own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
         ],
         "recommendation": "PROCEED_WITH_CARE"
       },
@@ -1428,7 +1428,7 @@
             "id": "scope-limit",
             "kind": "limitation",
             "title": "What this check covers",
-            "detail": "This product checks the address against Preventive Shield’s own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
+            "detail": "This product checks the address against buusdo's own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
           }
         ],
         "decision": "CAUTION",
@@ -1437,7 +1437,7 @@
           "The address appears related to Atlantic Parcel, yet the controlling domain is parcel-status.test.",
           "Checked parcel-status.test (HTTPS).",
           "HTTPS protects the connection but does not prove the identity or trustworthiness of the website.",
-          "This product checks the address against Preventive Shield’s own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
+          "This product checks the address against buusdo's own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
         ],
         "recommendation": "VERIFY_INDEPENDENTLY"
       },
@@ -1558,7 +1558,7 @@
             "id": "scope-limit",
             "kind": "limitation",
             "title": "What this check covers",
-            "detail": "This product checks the address against Preventive Shield’s own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
+            "detail": "This product checks the address against buusdo's own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
           }
         ],
         "decision": "CAUTION",
@@ -1568,7 +1568,7 @@
           "This domain closely resembles atlanticparcel.test (Atlantic Parcel). Similarity is a warning signal, not proof of phishing.",
           "Checked atlanticparcel-login.test (HTTPS).",
           "HTTPS protects the connection but does not prove the identity or trustworthiness of the website.",
-          "This product checks the address against Preventive Shield’s own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
+          "This product checks the address against buusdo's own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
         ],
         "recommendation": "VERIFY_INDEPENDENTLY"
       },
@@ -1671,7 +1671,7 @@
             "id": "scope-limit",
             "kind": "limitation",
             "title": "What this check covers",
-            "detail": "This product checks the address against Preventive Shield’s own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
+            "detail": "This product checks the address against buusdo's own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
           }
         ],
         "decision": "LOW_EVIDENCE",
@@ -1679,7 +1679,7 @@
           "No known threat was found in the sources checked. This is not proof that the website is safe.",
           "Checked independent-workshop.test (HTTPS).",
           "HTTPS protects the connection but does not prove the identity or trustworthiness of the website.",
-          "This product checks the address against Preventive Shield’s own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
+          "This product checks the address against buusdo's own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
         ],
         "recommendation": "PROCEED_WITH_CARE"
       },
@@ -1770,7 +1770,7 @@
             "id": "known-threat",
             "kind": "known",
             "title": "Known malicious signal detected",
-            "detail": "lusitaniabarnk.test is listed in the Preventive Shield curated threat list."
+            "detail": "lusitaniabarnk.test is listed in the buusdo curated threat list."
           },
           {
             "id": "identity-mismatch",
@@ -1800,17 +1800,17 @@
             "id": "scope-limit",
             "kind": "limitation",
             "title": "What this check covers",
-            "detail": "This product checks the address against Preventive Shield’s own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
+            "detail": "This product checks the address against buusdo's own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
           }
         ],
         "decision": "CRITICAL",
         "rationale": [
-          "lusitaniabarnk.test is listed in the Preventive Shield curated threat list.",
+          "lusitaniabarnk.test is listed in the buusdo curated threat list.",
           "The address appears related to Lusitania Bank, yet the controlling domain is lusitaniabarnk.test.",
           "This domain closely resembles lusitaniabank.test (Lusitania Bank). Similarity is a warning signal, not proof of phishing.",
           "Checked lusitaniabarnk.test (HTTPS).",
           "HTTPS protects the connection but does not prove the identity or trustworthiness of the website.",
-          "This product checks the address against Preventive Shield’s own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
+          "This product checks the address against buusdo's own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
         ],
         "recommendation": "LEAVE_AND_BLOCK"
       },
@@ -1931,7 +1931,7 @@
             "id": "scope-limit",
             "kind": "limitation",
             "title": "What this check covers",
-            "detail": "This product checks the address against Preventive Shield’s own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
+            "detail": "This product checks the address against buusdo's own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
           }
         ],
         "decision": "CAUTION",
@@ -1941,7 +1941,7 @@
           "This domain closely resembles lusitaniabank.test (Lusitania Bank). Similarity is a warning signal, not proof of phishing.",
           "Checked lusitaniabank-login.test (HTTPS).",
           "HTTPS protects the connection but does not prove the identity or trustworthiness of the website.",
-          "This product checks the address against Preventive Shield’s own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
+          "This product checks the address against buusdo's own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
         ],
         "recommendation": "VERIFY_INDEPENDENTLY"
       },
@@ -2070,7 +2070,7 @@
             "id": "scope-limit",
             "kind": "limitation",
             "title": "What this check covers",
-            "detail": "This product checks the address against Preventive Shield’s own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
+            "detail": "This product checks the address against buusdo's own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
           }
         ],
         "decision": "CAUTION",
@@ -2081,7 +2081,7 @@
           "Checked xn--80ak6aa92e.test (HTTPS).",
           "The hostname contains punycode. It may be legitimate, but visually confusing characters deserve extra care.",
           "HTTPS protects the connection but does not prove the identity or trustworthiness of the website.",
-          "This product checks the address against Preventive Shield’s own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
+          "This product checks the address against buusdo's own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
         ],
         "recommendation": "VERIFY_INDEPENDENTLY"
       },
@@ -2184,7 +2184,7 @@
             "id": "scope-limit",
             "kind": "limitation",
             "title": "What this check covers",
-            "detail": "This product checks the address against Preventive Shield’s own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
+            "detail": "This product checks the address against buusdo's own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
           }
         ],
         "decision": "LOW_EVIDENCE",
@@ -2192,7 +2192,7 @@
           "No known threat was found in the sources checked. This is not proof that the website is safe.",
           "Checked atlantic-community.test (HTTPS).",
           "HTTPS protects the connection but does not prove the identity or trustworthiness of the website.",
-          "This product checks the address against Preventive Shield’s own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
+          "This product checks the address against buusdo's own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
         ],
         "recommendation": "PROCEED_WITH_CARE"
       },
@@ -2322,7 +2322,7 @@
             "id": "scope-limit",
             "kind": "limitation",
             "title": "What this check covers",
-            "detail": "This product checks the address against Preventive Shield’s own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
+            "detail": "This product checks the address against buusdo's own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
           }
         ],
         "decision": "HIGH",
@@ -2333,7 +2333,7 @@
           "Checked attacker-demo.test (HTTPS).",
           "The path suggests the page may ask for sensitive information. Confirm the domain independently before entering anything.",
           "HTTPS protects the connection but does not prove the identity or trustworthiness of the website.",
-          "This product checks the address against Preventive Shield’s own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
+          "This product checks the address against buusdo's own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
         ],
         "recommendation": "LEAVE"
       },
@@ -2436,7 +2436,7 @@
             "id": "scope-limit",
             "kind": "limitation",
             "title": "What this check covers",
-            "detail": "This product checks the address against Preventive Shield’s own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
+            "detail": "This product checks the address against buusdo's own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
           }
         ],
         "decision": "LOW_EVIDENCE",
@@ -2444,7 +2444,7 @@
           "No known threat was found in the sources checked. This is not proof that the website is safe.",
           "Checked community-library.test (HTTPS).",
           "HTTPS protects the connection but does not prove the identity or trustworthiness of the website.",
-          "This product checks the address against Preventive Shield’s own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
+          "This product checks the address against buusdo's own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
         ],
         "recommendation": "PROCEED_WITH_CARE"
       },
@@ -2555,7 +2555,7 @@
             "id": "scope-limit",
             "kind": "limitation",
             "title": "What this check covers",
-            "detail": "This product checks the address against Preventive Shield’s own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
+            "detail": "This product checks the address against buusdo's own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
           }
         ],
         "decision": "CAUTION",
@@ -2564,7 +2564,7 @@
           "Checked unknown-new-domain.test (HTTPS).",
           "The path suggests the page may ask for sensitive information. Confirm the domain independently before entering anything.",
           "HTTPS protects the connection but does not prove the identity or trustworthiness of the website.",
-          "This product checks the address against Preventive Shield’s own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
+          "This product checks the address against buusdo's own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
         ],
         "recommendation": "VERIFY_INDEPENDENTLY"
       },
@@ -2685,7 +2685,7 @@
             "id": "scope-limit",
             "kind": "limitation",
             "title": "What this check covers",
-            "detail": "This product checks the address against Preventive Shield’s own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
+            "detail": "This product checks the address against buusdo's own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
           }
         ],
         "decision": "CAUTION",
@@ -2695,7 +2695,7 @@
           "Checked lusitaniabank.test (HTTPS).",
           "The path suggests the page may ask for sensitive information. Confirm the domain independently before entering anything.",
           "HTTPS protects the connection but does not prove the identity or trustworthiness of the website.",
-          "This product checks the address against Preventive Shield’s own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
+          "This product checks the address against buusdo's own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
         ],
         "recommendation": "VERIFY_INDEPENDENTLY"
       },
@@ -2816,7 +2816,7 @@
             "id": "scope-limit",
             "kind": "limitation",
             "title": "What this check covers",
-            "detail": "This product checks the address against Preventive Shield’s own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
+            "detail": "This product checks the address against buusdo's own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
           }
         ],
         "decision": "HIGH",
@@ -2826,7 +2826,7 @@
           "Checked account-assistance.test (HTTPS).",
           "The path suggests the page may ask for sensitive information. Confirm the domain independently before entering anything.",
           "HTTPS protects the connection but does not prove the identity or trustworthiness of the website.",
-          "This product checks the address against Preventive Shield’s own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
+          "This product checks the address against buusdo's own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
         ],
         "recommendation": "LEAVE"
       },
@@ -2919,7 +2919,7 @@
             "id": "known-threat",
             "kind": "known",
             "title": "Known phishing signal detected",
-            "detail": "lusitania-bank-login.test is listed in the Preventive Shield curated threat list."
+            "detail": "lusitania-bank-login.test is listed in the buusdo curated threat list."
           },
           {
             "id": "identity-mismatch",
@@ -2949,7 +2949,7 @@
             "id": "scope-limit",
             "kind": "limitation",
             "title": "What this check covers",
-            "detail": "This product checks the address against Preventive Shield’s own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
+            "detail": "This product checks the address against buusdo's own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
           },
           {
             "id": "sensitive-path",
@@ -2960,12 +2960,12 @@
         ],
         "decision": "CRITICAL",
         "rationale": [
-          "lusitania-bank-login.test is listed in the Preventive Shield curated threat list.",
+          "lusitania-bank-login.test is listed in the buusdo curated threat list.",
           "The address appears related to Lusitania Bank, yet the controlling domain is lusitania-bank-login.test.",
           "This domain closely resembles lusitaniabank.test (Lusitania Bank). Similarity is a warning signal, not proof of phishing.",
           "Checked lusitania-bank-login.test (HTTPS).",
           "HTTPS protects the connection but does not prove the identity or trustworthiness of the website.",
-          "This product checks the address against Preventive Shield’s own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled.",
+          "This product checks the address against buusdo's own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled.",
           "The path or check context suggests the page may ask for sensitive information. Confirm the domain independently before entering anything."
         ],
         "recommendation": "LEAVE_AND_BLOCK"
@@ -3069,7 +3069,7 @@
             "id": "scope-limit",
             "kind": "limitation",
             "title": "What this check covers",
-            "detail": "This product checks the address against Preventive Shield’s own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
+            "detail": "This product checks the address against buusdo's own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
           }
         ],
         "decision": "UNKNOWN",
@@ -3077,7 +3077,7 @@
           "The source checked cannot provide a positive or negative reputation result.",
           "Checked unknown-new-domain.test (HTTPS).",
           "HTTPS protects the connection but does not prove the identity or trustworthiness of the website.",
-          "This product checks the address against Preventive Shield’s own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
+          "This product checks the address against buusdo's own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
         ],
         "recommendation": "VERIFY_INDEPENDENTLY"
       },
@@ -3191,7 +3191,7 @@
             "id": "scope-limit",
             "kind": "limitation",
             "title": "What this check covers",
-            "detail": "This product checks the address against Preventive Shield’s own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
+            "detail": "This product checks the address against buusdo's own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
           }
         ],
         "decision": "LOW_EVIDENCE",
@@ -3200,7 +3200,7 @@
           "Checked slow-probe.test (HTTPS).",
           "The site did not respond in time. Structural signals still apply; try again if the site is usually slow or blocks automated checks.",
           "HTTPS protects the connection but does not prove the identity or trustworthiness of the website.",
-          "This product checks the address against Preventive Shield’s own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
+          "This product checks the address against buusdo's own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
         ],
         "recommendation": "PROCEED_WITH_CARE"
       },
@@ -3306,7 +3306,7 @@
             "id": "scope-limit",
             "kind": "limitation",
             "title": "What this check covers",
-            "detail": "This product checks the address against Preventive Shield’s own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
+            "detail": "This product checks the address against buusdo's own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
           },
           {
             "id": "sensitive-path",
@@ -3320,7 +3320,7 @@
           "No known threat was found in the sources checked. This is not proof that the website is safe.",
           "Checked ordinary-garden.test (HTTPS).",
           "HTTPS protects the connection but does not prove the identity or trustworthiness of the website.",
-          "This product checks the address against Preventive Shield’s own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled.",
+          "This product checks the address against buusdo's own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled.",
           "The path or check context suggests the page may ask for sensitive information. Confirm the domain independently before entering anything."
         ],
         "recommendation": "VERIFY_INDEPENDENTLY"
@@ -3426,7 +3426,7 @@
             "id": "scope-limit",
             "kind": "limitation",
             "title": "What this check covers",
-            "detail": "This product checks the address against Preventive Shield’s own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
+            "detail": "This product checks the address against buusdo's own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
           }
         ],
         "decision": "LOW_EVIDENCE",
@@ -3434,7 +3434,7 @@
           "No known threat was found in the sources checked. This is not proof that the website is safe.",
           "Checked caixa-secure-login.example (HTTPS).",
           "HTTPS protects the connection but does not prove the identity or trustworthiness of the website.",
-          "This product checks the address against Preventive Shield’s own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
+          "This product checks the address against buusdo's own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
         ],
         "recommendation": "PROCEED_WITH_CARE"
       },
@@ -3522,7 +3522,7 @@
             "id": "known-threat",
             "kind": "known",
             "title": "Known phishing signal detected",
-            "detail": "autenticacao-gov.example is listed in the Preventive Shield curated threat list."
+            "detail": "autenticacao-gov.example is listed in the buusdo curated threat list."
           },
           {
             "id": "checked-address",
@@ -3546,16 +3546,16 @@
             "id": "scope-limit",
             "kind": "limitation",
             "title": "What this check covers",
-            "detail": "This product checks the address against Preventive Shield’s own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
+            "detail": "This product checks the address against buusdo's own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
           }
         ],
         "decision": "CRITICAL",
         "rationale": [
-          "autenticacao-gov.example is listed in the Preventive Shield curated threat list.",
+          "autenticacao-gov.example is listed in the buusdo curated threat list.",
           "Checked autenticacao-gov.example (HTTPS).",
           "The path suggests the page may ask for sensitive information. Confirm the domain independently before entering anything.",
           "HTTPS protects the connection but does not prove the identity or trustworthiness of the website.",
-          "This product checks the address against Preventive Shield’s own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
+          "This product checks the address against buusdo's own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
         ],
         "recommendation": "LEAVE_AND_BLOCK"
       },
@@ -3667,7 +3667,7 @@
             "id": "scope-limit",
             "kind": "limitation",
             "title": "What this check covers",
-            "detail": "This product checks the address against Preventive Shield’s own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
+            "detail": "This product checks the address against buusdo's own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
           }
         ],
         "decision": "CAUTION",
@@ -3676,7 +3676,7 @@
           "Checked autenticacao-gov.example (HTTPS).",
           "The path suggests the page may ask for sensitive information. Confirm the domain independently before entering anything.",
           "HTTPS protects the connection but does not prove the identity or trustworthiness of the website.",
-          "This product checks the address against Preventive Shield’s own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
+          "This product checks the address against buusdo's own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
         ],
         "recommendation": "VERIFY_INDEPENDENTLY"
       },
@@ -3781,7 +3781,7 @@
             "id": "scope-limit",
             "kind": "limitation",
             "title": "What this check covers",
-            "detail": "This product checks the address against Preventive Shield’s own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
+            "detail": "This product checks the address against buusdo's own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
           }
         ],
         "decision": "LOW_EVIDENCE",
@@ -3789,7 +3789,7 @@
           "No known threat was found in the sources checked. This is not proof that the website is safe.",
           "Checked autenticacao-ajuda.example (HTTPS).",
           "HTTPS protects the connection but does not prove the identity or trustworthiness of the website.",
-          "This product checks the address against Preventive Shield’s own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
+          "This product checks the address against buusdo's own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
         ],
         "recommendation": "PROCEED_WITH_CARE"
       },
@@ -3894,7 +3894,7 @@
             "id": "scope-limit",
             "kind": "limitation",
             "title": "What this check covers",
-            "detail": "This product checks the address against Preventive Shield’s own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
+            "detail": "This product checks the address against buusdo's own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
           }
         ],
         "decision": "LOW_EVIDENCE",
@@ -3902,7 +3902,7 @@
           "No known threat was found in the sources checked. This is not proof that the website is safe.",
           "Checked autenticacao-ajuda.example (HTTPS).",
           "HTTPS protects the connection but does not prove the identity or trustworthiness of the website.",
-          "This product checks the address against Preventive Shield’s own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
+          "This product checks the address against buusdo's own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
         ],
         "recommendation": "PROCEED_WITH_CARE"
       },
@@ -4020,7 +4020,7 @@
             "id": "scope-limit",
             "kind": "limitation",
             "title": "What this check covers",
-            "detail": "This product checks the address against Preventive Shield’s own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
+            "detail": "This product checks the address against buusdo's own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
           }
         ],
         "decision": "CAUTION",
@@ -4030,7 +4030,7 @@
           "Live check reached the host (DNS: 127.0.0.1).",
           "Received HTTP 404 at https://missing-page.test/gone.",
           "HTTPS protects the connection but does not prove the identity or trustworthiness of the website.",
-          "This product checks the address against Preventive Shield’s own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
+          "This product checks the address against buusdo's own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
         ],
         "recommendation": "VERIFY_INDEPENDENTLY"
       },
@@ -4148,7 +4148,7 @@
             "id": "scope-limit",
             "kind": "limitation",
             "title": "What this check covers",
-            "detail": "This product checks the address against Preventive Shield’s own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
+            "detail": "This product checks the address against buusdo's own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
           }
         ],
         "decision": "LOW_EVIDENCE",
@@ -4158,7 +4158,7 @@
           "Live check reached the host (DNS: 127.0.0.1).",
           "Received HTTP 403 (Forbidden). The site refused this automated check — that is not proof of phishing. Try the address in a normal browser if needed.",
           "HTTPS protects the connection but does not prove the identity or trustworthiness of the website.",
-          "This product checks the address against Preventive Shield’s own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
+          "This product checks the address against buusdo's own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
         ],
         "recommendation": "PROCEED_WITH_CARE"
       },
@@ -4276,7 +4276,7 @@
             "id": "scope-limit",
             "kind": "limitation",
             "title": "What this check covers",
-            "detail": "This product checks the address against Preventive Shield’s own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
+            "detail": "This product checks the address against buusdo's own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
           }
         ],
         "decision": "LOW_EVIDENCE",
@@ -4286,7 +4286,7 @@
           "Live check reached the host (DNS: 127.0.0.1).",
           "Received HTTP 429 (Too Many Requests). The site throttled this check — that is not proof of phishing. Wait and try again, or open the address in a normal browser.",
           "HTTPS protects the connection but does not prove the identity or trustworthiness of the website.",
-          "This product checks the address against Preventive Shield’s own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
+          "This product checks the address against buusdo's own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
         ],
         "recommendation": "PROCEED_WITH_CARE"
       },
@@ -4404,7 +4404,7 @@
             "id": "scope-limit",
             "kind": "limitation",
             "title": "What this check covers",
-            "detail": "This product checks the address against Preventive Shield’s own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
+            "detail": "This product checks the address against buusdo's own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
           }
         ],
         "decision": "LOW_EVIDENCE",
@@ -4414,7 +4414,7 @@
           "Live check reached the host (DNS: 127.0.0.1).",
           "Received HTTP 503 (Service Unavailable). The site or edge may be overloaded — that is not proof of phishing. Try again later in a normal browser if needed.",
           "HTTPS protects the connection but does not prove the identity or trustworthiness of the website.",
-          "This product checks the address against Preventive Shield’s own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
+          "This product checks the address against buusdo's own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
         ],
         "recommendation": "PROCEED_WITH_CARE"
       },
@@ -4501,7 +4501,7 @@
             "id": "known-threat",
             "kind": "known",
             "title": "Known phishing signal detected",
-            "detail": "mbway-login.example is listed in the Preventive Shield curated threat list."
+            "detail": "mbway-login.example is listed in the buusdo curated threat list."
           },
           {
             "id": "checked-address",
@@ -4519,15 +4519,15 @@
             "id": "scope-limit",
             "kind": "limitation",
             "title": "What this check covers",
-            "detail": "This product checks the address against Preventive Shield’s own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
+            "detail": "This product checks the address against buusdo's own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
           }
         ],
         "decision": "HIGH",
         "rationale": [
-          "mbway-login.example is listed in the Preventive Shield curated threat list.",
+          "mbway-login.example is listed in the buusdo curated threat list.",
           "Checked mbway-login.example (HTTPS).",
           "HTTPS protects the connection but does not prove the identity or trustworthiness of the website.",
-          "This product checks the address against Preventive Shield’s own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
+          "This product checks the address against buusdo's own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
         ],
         "recommendation": "LEAVE"
       },
@@ -4632,7 +4632,7 @@
             "id": "scope-limit",
             "kind": "limitation",
             "title": "What this check covers",
-            "detail": "This product checks the address against Preventive Shield’s own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
+            "detail": "This product checks the address against buusdo's own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
           }
         ],
         "decision": "LOW_EVIDENCE",
@@ -4640,7 +4640,7 @@
           "No known threat was found in the sources checked. This is not proof that the website is safe.",
           "Checked mbway-login.example (HTTPS).",
           "HTTPS protects the connection but does not prove the identity or trustworthiness of the website.",
-          "This product checks the address against Preventive Shield’s own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
+          "This product checks the address against buusdo's own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
         ],
         "recommendation": "PROCEED_WITH_CARE"
       },
@@ -4728,7 +4728,7 @@
             "id": "known-threat",
             "kind": "known",
             "title": "Known phishing signal detected",
-            "detail": "millenniumbcp-secure.example is listed in the Preventive Shield curated threat list."
+            "detail": "millenniumbcp-secure.example is listed in the buusdo curated threat list."
           },
           {
             "id": "checked-address",
@@ -4752,16 +4752,16 @@
             "id": "scope-limit",
             "kind": "limitation",
             "title": "What this check covers",
-            "detail": "This product checks the address against Preventive Shield’s own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
+            "detail": "This product checks the address against buusdo's own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
           }
         ],
         "decision": "CRITICAL",
         "rationale": [
-          "millenniumbcp-secure.example is listed in the Preventive Shield curated threat list.",
+          "millenniumbcp-secure.example is listed in the buusdo curated threat list.",
           "Checked millenniumbcp-secure.example (HTTPS).",
           "The path suggests the page may ask for sensitive information. Confirm the domain independently before entering anything.",
           "HTTPS protects the connection but does not prove the identity or trustworthiness of the website.",
-          "This product checks the address against Preventive Shield’s own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
+          "This product checks the address against buusdo's own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
         ],
         "recommendation": "LEAVE_AND_BLOCK"
       },
@@ -4873,7 +4873,7 @@
             "id": "scope-limit",
             "kind": "limitation",
             "title": "What this check covers",
-            "detail": "This product checks the address against Preventive Shield’s own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
+            "detail": "This product checks the address against buusdo's own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
           }
         ],
         "decision": "CAUTION",
@@ -4882,7 +4882,7 @@
           "Checked millenniumbcp-secure.example (HTTPS).",
           "The path suggests the page may ask for sensitive information. Confirm the domain independently before entering anything.",
           "HTTPS protects the connection but does not prove the identity or trustworthiness of the website.",
-          "This product checks the address against Preventive Shield’s own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
+          "This product checks the address against buusdo's own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
         ],
         "recommendation": "VERIFY_INDEPENDENTLY"
       },
@@ -4970,7 +4970,7 @@
             "id": "known-threat",
             "kind": "known",
             "title": "Known phishing signal detected",
-            "detail": "novobanco-acesso.example is listed in the Preventive Shield curated threat list."
+            "detail": "novobanco-acesso.example is listed in the buusdo curated threat list."
           },
           {
             "id": "checked-address",
@@ -4994,16 +4994,16 @@
             "id": "scope-limit",
             "kind": "limitation",
             "title": "What this check covers",
-            "detail": "This product checks the address against Preventive Shield’s own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
+            "detail": "This product checks the address against buusdo's own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
           }
         ],
         "decision": "CRITICAL",
         "rationale": [
-          "novobanco-acesso.example is listed in the Preventive Shield curated threat list.",
+          "novobanco-acesso.example is listed in the buusdo curated threat list.",
           "Checked novobanco-acesso.example (HTTPS).",
           "The path suggests the page may ask for sensitive information. Confirm the domain independently before entering anything.",
           "HTTPS protects the connection but does not prove the identity or trustworthiness of the website.",
-          "This product checks the address against Preventive Shield’s own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
+          "This product checks the address against buusdo's own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
         ],
         "recommendation": "LEAVE_AND_BLOCK"
       },
@@ -5115,7 +5115,7 @@
             "id": "scope-limit",
             "kind": "limitation",
             "title": "What this check covers",
-            "detail": "This product checks the address against Preventive Shield’s own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
+            "detail": "This product checks the address against buusdo's own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
           }
         ],
         "decision": "CAUTION",
@@ -5124,7 +5124,7 @@
           "Checked novobanco-acesso.example (HTTPS).",
           "The path suggests the page may ask for sensitive information. Confirm the domain independently before entering anything.",
           "HTTPS protects the connection but does not prove the identity or trustworthiness of the website.",
-          "This product checks the address against Preventive Shield’s own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
+          "This product checks the address against buusdo's own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
         ],
         "recommendation": "VERIFY_INDEPENDENTLY"
       },
@@ -5212,7 +5212,7 @@
             "id": "known-threat",
             "kind": "known",
             "title": "Known phishing signal detected",
-            "detail": "santander-pt-login.example is listed in the Preventive Shield curated threat list."
+            "detail": "santander-pt-login.example is listed in the buusdo curated threat list."
           },
           {
             "id": "checked-address",
@@ -5236,16 +5236,16 @@
             "id": "scope-limit",
             "kind": "limitation",
             "title": "What this check covers",
-            "detail": "This product checks the address against Preventive Shield’s own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
+            "detail": "This product checks the address against buusdo's own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
           }
         ],
         "decision": "CRITICAL",
         "rationale": [
-          "santander-pt-login.example is listed in the Preventive Shield curated threat list.",
+          "santander-pt-login.example is listed in the buusdo curated threat list.",
           "Checked santander-pt-login.example (HTTPS).",
           "The path suggests the page may ask for sensitive information. Confirm the domain independently before entering anything.",
           "HTTPS protects the connection but does not prove the identity or trustworthiness of the website.",
-          "This product checks the address against Preventive Shield’s own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
+          "This product checks the address against buusdo's own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
         ],
         "recommendation": "LEAVE_AND_BLOCK"
       },
@@ -5357,7 +5357,7 @@
             "id": "scope-limit",
             "kind": "limitation",
             "title": "What this check covers",
-            "detail": "This product checks the address against Preventive Shield’s own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
+            "detail": "This product checks the address against buusdo's own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
           }
         ],
         "decision": "CAUTION",
@@ -5366,7 +5366,7 @@
           "Checked santander-pt-login.example (HTTPS).",
           "The path suggests the page may ask for sensitive information. Confirm the domain independently before entering anything.",
           "HTTPS protects the connection but does not prove the identity or trustworthiness of the website.",
-          "This product checks the address against Preventive Shield’s own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
+          "This product checks the address against buusdo's own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
         ],
         "recommendation": "VERIFY_INDEPENDENTLY"
       },
@@ -5454,7 +5454,7 @@
             "id": "known-threat",
             "kind": "known",
             "title": "Known phishing signal detected",
-            "detail": "cgd-caixadirecta.example is listed in the Preventive Shield curated threat list."
+            "detail": "cgd-caixadirecta.example is listed in the buusdo curated threat list."
           },
           {
             "id": "checked-address",
@@ -5478,16 +5478,16 @@
             "id": "scope-limit",
             "kind": "limitation",
             "title": "What this check covers",
-            "detail": "This product checks the address against Preventive Shield’s own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
+            "detail": "This product checks the address against buusdo's own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
           }
         ],
         "decision": "CRITICAL",
         "rationale": [
-          "cgd-caixadirecta.example is listed in the Preventive Shield curated threat list.",
+          "cgd-caixadirecta.example is listed in the buusdo curated threat list.",
           "Checked cgd-caixadirecta.example (HTTPS).",
           "The path suggests the page may ask for sensitive information. Confirm the domain independently before entering anything.",
           "HTTPS protects the connection but does not prove the identity or trustworthiness of the website.",
-          "This product checks the address against Preventive Shield’s own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
+          "This product checks the address against buusdo's own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
         ],
         "recommendation": "LEAVE_AND_BLOCK"
       },
@@ -5599,7 +5599,7 @@
             "id": "scope-limit",
             "kind": "limitation",
             "title": "What this check covers",
-            "detail": "This product checks the address against Preventive Shield’s own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
+            "detail": "This product checks the address against buusdo's own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
           }
         ],
         "decision": "CAUTION",
@@ -5608,7 +5608,7 @@
           "Checked cgd-caixadirecta.example (HTTPS).",
           "The path suggests the page may ask for sensitive information. Confirm the domain independently before entering anything.",
           "HTTPS protects the connection but does not prove the identity or trustworthiness of the website.",
-          "This product checks the address against Preventive Shield’s own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
+          "This product checks the address against buusdo's own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
         ],
         "recommendation": "VERIFY_INDEPENDENTLY"
       },
@@ -5695,7 +5695,7 @@
             "id": "known-threat",
             "kind": "known",
             "title": "Known phishing signal detected",
-            "detail": "ctt-tracking-pt.example is listed in the Preventive Shield curated threat list."
+            "detail": "ctt-tracking-pt.example is listed in the buusdo curated threat list."
           },
           {
             "id": "checked-address",
@@ -5713,15 +5713,15 @@
             "id": "scope-limit",
             "kind": "limitation",
             "title": "What this check covers",
-            "detail": "This product checks the address against Preventive Shield’s own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
+            "detail": "This product checks the address against buusdo's own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
           }
         ],
         "decision": "HIGH",
         "rationale": [
-          "ctt-tracking-pt.example is listed in the Preventive Shield curated threat list.",
+          "ctt-tracking-pt.example is listed in the buusdo curated threat list.",
           "Checked ctt-tracking-pt.example (HTTPS).",
           "HTTPS protects the connection but does not prove the identity or trustworthiness of the website.",
-          "This product checks the address against Preventive Shield’s own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
+          "This product checks the address against buusdo's own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
         ],
         "recommendation": "LEAVE"
       },
@@ -5826,7 +5826,7 @@
             "id": "scope-limit",
             "kind": "limitation",
             "title": "What this check covers",
-            "detail": "This product checks the address against Preventive Shield’s own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
+            "detail": "This product checks the address against buusdo's own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
           }
         ],
         "decision": "LOW_EVIDENCE",
@@ -5834,7 +5834,7 @@
           "No known threat was found in the sources checked. This is not proof that the website is safe.",
           "Checked ctt-tracking-pt.example (HTTPS).",
           "HTTPS protects the connection but does not prove the identity or trustworthiness of the website.",
-          "This product checks the address against Preventive Shield’s own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
+          "This product checks the address against buusdo's own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
         ],
         "recommendation": "PROCEED_WITH_CARE"
       },
@@ -5922,7 +5922,7 @@
             "id": "known-threat",
             "kind": "known",
             "title": "Known phishing signal detected",
-            "detail": "activobank-secure.example is listed in the Preventive Shield curated threat list."
+            "detail": "activobank-secure.example is listed in the buusdo curated threat list."
           },
           {
             "id": "checked-address",
@@ -5946,16 +5946,16 @@
             "id": "scope-limit",
             "kind": "limitation",
             "title": "What this check covers",
-            "detail": "This product checks the address against Preventive Shield’s own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
+            "detail": "This product checks the address against buusdo's own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
           }
         ],
         "decision": "CRITICAL",
         "rationale": [
-          "activobank-secure.example is listed in the Preventive Shield curated threat list.",
+          "activobank-secure.example is listed in the buusdo curated threat list.",
           "Checked activobank-secure.example (HTTPS).",
           "The path suggests the page may ask for sensitive information. Confirm the domain independently before entering anything.",
           "HTTPS protects the connection but does not prove the identity or trustworthiness of the website.",
-          "This product checks the address against Preventive Shield’s own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
+          "This product checks the address against buusdo's own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
         ],
         "recommendation": "LEAVE_AND_BLOCK"
       },
@@ -6067,7 +6067,7 @@
             "id": "scope-limit",
             "kind": "limitation",
             "title": "What this check covers",
-            "detail": "This product checks the address against Preventive Shield’s own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
+            "detail": "This product checks the address against buusdo's own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
           }
         ],
         "decision": "CAUTION",
@@ -6076,7 +6076,7 @@
           "Checked activobank-secure.example (HTTPS).",
           "The path suggests the page may ask for sensitive information. Confirm the domain independently before entering anything.",
           "HTTPS protects the connection but does not prove the identity or trustworthiness of the website.",
-          "This product checks the address against Preventive Shield’s own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
+          "This product checks the address against buusdo's own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
         ],
         "recommendation": "VERIFY_INDEPENDENTLY"
       },
@@ -6164,7 +6164,7 @@
             "id": "known-threat",
             "kind": "known",
             "title": "Known phishing signal detected",
-            "detail": "bancobpi-login.example is listed in the Preventive Shield curated threat list."
+            "detail": "bancobpi-login.example is listed in the buusdo curated threat list."
           },
           {
             "id": "checked-address",
@@ -6188,16 +6188,16 @@
             "id": "scope-limit",
             "kind": "limitation",
             "title": "What this check covers",
-            "detail": "This product checks the address against Preventive Shield’s own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
+            "detail": "This product checks the address against buusdo's own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
           }
         ],
         "decision": "CRITICAL",
         "rationale": [
-          "bancobpi-login.example is listed in the Preventive Shield curated threat list.",
+          "bancobpi-login.example is listed in the buusdo curated threat list.",
           "Checked bancobpi-login.example (HTTPS).",
           "The path suggests the page may ask for sensitive information. Confirm the domain independently before entering anything.",
           "HTTPS protects the connection but does not prove the identity or trustworthiness of the website.",
-          "This product checks the address against Preventive Shield’s own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
+          "This product checks the address against buusdo's own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
         ],
         "recommendation": "LEAVE_AND_BLOCK"
       },
@@ -6309,7 +6309,7 @@
             "id": "scope-limit",
             "kind": "limitation",
             "title": "What this check covers",
-            "detail": "This product checks the address against Preventive Shield’s own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
+            "detail": "This product checks the address against buusdo's own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
           }
         ],
         "decision": "CAUTION",
@@ -6318,7 +6318,7 @@
           "Checked bancobpi-login.example (HTTPS).",
           "The path suggests the page may ask for sensitive information. Confirm the domain independently before entering anything.",
           "HTTPS protects the connection but does not prove the identity or trustworthiness of the website.",
-          "This product checks the address against Preventive Shield’s own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
+          "This product checks the address against buusdo's own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
         ],
         "recommendation": "VERIFY_INDEPENDENTLY"
       },
@@ -6406,7 +6406,7 @@
             "id": "known-threat",
             "kind": "known",
             "title": "Known phishing signal detected",
-            "detail": "montepio-acesso.example is listed in the Preventive Shield curated threat list."
+            "detail": "montepio-acesso.example is listed in the buusdo curated threat list."
           },
           {
             "id": "checked-address",
@@ -6430,16 +6430,16 @@
             "id": "scope-limit",
             "kind": "limitation",
             "title": "What this check covers",
-            "detail": "This product checks the address against Preventive Shield’s own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
+            "detail": "This product checks the address against buusdo's own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
           }
         ],
         "decision": "CRITICAL",
         "rationale": [
-          "montepio-acesso.example is listed in the Preventive Shield curated threat list.",
+          "montepio-acesso.example is listed in the buusdo curated threat list.",
           "Checked montepio-acesso.example (HTTPS).",
           "The path suggests the page may ask for sensitive information. Confirm the domain independently before entering anything.",
           "HTTPS protects the connection but does not prove the identity or trustworthiness of the website.",
-          "This product checks the address against Preventive Shield’s own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
+          "This product checks the address against buusdo's own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
         ],
         "recommendation": "LEAVE_AND_BLOCK"
       },
@@ -6551,7 +6551,7 @@
             "id": "scope-limit",
             "kind": "limitation",
             "title": "What this check covers",
-            "detail": "This product checks the address against Preventive Shield’s own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
+            "detail": "This product checks the address against buusdo's own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
           }
         ],
         "decision": "CAUTION",
@@ -6560,7 +6560,7 @@
           "Checked montepio-acesso.example (HTTPS).",
           "The path suggests the page may ask for sensitive information. Confirm the domain independently before entering anything.",
           "HTTPS protects the connection but does not prove the identity or trustworthiness of the website.",
-          "This product checks the address against Preventive Shield’s own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
+          "This product checks the address against buusdo's own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
         ],
         "recommendation": "VERIFY_INDEPENDENTLY"
       },
@@ -6648,7 +6648,7 @@
             "id": "known-threat",
             "kind": "known",
             "title": "Known phishing signal detected",
-            "detail": "bancoctt-login.example is listed in the Preventive Shield curated threat list."
+            "detail": "bancoctt-login.example is listed in the buusdo curated threat list."
           },
           {
             "id": "checked-address",
@@ -6672,16 +6672,16 @@
             "id": "scope-limit",
             "kind": "limitation",
             "title": "What this check covers",
-            "detail": "This product checks the address against Preventive Shield’s own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
+            "detail": "This product checks the address against buusdo's own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
           }
         ],
         "decision": "CRITICAL",
         "rationale": [
-          "bancoctt-login.example is listed in the Preventive Shield curated threat list.",
+          "bancoctt-login.example is listed in the buusdo curated threat list.",
           "Checked bancoctt-login.example (HTTPS).",
           "The path suggests the page may ask for sensitive information. Confirm the domain independently before entering anything.",
           "HTTPS protects the connection but does not prove the identity or trustworthiness of the website.",
-          "This product checks the address against Preventive Shield’s own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
+          "This product checks the address against buusdo's own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
         ],
         "recommendation": "LEAVE_AND_BLOCK"
       },
@@ -6793,7 +6793,7 @@
             "id": "scope-limit",
             "kind": "limitation",
             "title": "What this check covers",
-            "detail": "This product checks the address against Preventive Shield’s own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
+            "detail": "This product checks the address against buusdo's own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
           }
         ],
         "decision": "CAUTION",
@@ -6802,7 +6802,7 @@
           "Checked bancoctt-login.example (HTTPS).",
           "The path suggests the page may ask for sensitive information. Confirm the domain independently before entering anything.",
           "HTTPS protects the connection but does not prove the identity or trustworthiness of the website.",
-          "This product checks the address against Preventive Shield’s own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
+          "This product checks the address against buusdo's own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
         ],
         "recommendation": "VERIFY_INDEPENDENTLY"
       },
@@ -6890,7 +6890,7 @@
             "id": "known-threat",
             "kind": "known",
             "title": "Known phishing signal detected",
-            "detail": "fidelidade-apolice.example is listed in the Preventive Shield curated threat list."
+            "detail": "fidelidade-apolice.example is listed in the buusdo curated threat list."
           },
           {
             "id": "checked-address",
@@ -6914,16 +6914,16 @@
             "id": "scope-limit",
             "kind": "limitation",
             "title": "What this check covers",
-            "detail": "This product checks the address against Preventive Shield’s own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
+            "detail": "This product checks the address against buusdo's own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
           }
         ],
         "decision": "CRITICAL",
         "rationale": [
-          "fidelidade-apolice.example is listed in the Preventive Shield curated threat list.",
+          "fidelidade-apolice.example is listed in the buusdo curated threat list.",
           "Checked fidelidade-apolice.example (HTTPS).",
           "The path suggests the page may ask for sensitive information. Confirm the domain independently before entering anything.",
           "HTTPS protects the connection but does not prove the identity or trustworthiness of the website.",
-          "This product checks the address against Preventive Shield’s own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
+          "This product checks the address against buusdo's own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
         ],
         "recommendation": "LEAVE_AND_BLOCK"
       },
@@ -7035,7 +7035,7 @@
             "id": "scope-limit",
             "kind": "limitation",
             "title": "What this check covers",
-            "detail": "This product checks the address against Preventive Shield’s own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
+            "detail": "This product checks the address against buusdo's own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
           }
         ],
         "decision": "CAUTION",
@@ -7044,7 +7044,7 @@
           "Checked fidelidade-apolice.example (HTTPS).",
           "The path suggests the page may ask for sensitive information. Confirm the domain independently before entering anything.",
           "HTTPS protects the connection but does not prove the identity or trustworthiness of the website.",
-          "This product checks the address against Preventive Shield’s own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
+          "This product checks the address against buusdo's own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
         ],
         "recommendation": "VERIFY_INDEPENDENTLY"
       },
@@ -7131,7 +7131,7 @@
             "id": "known-threat",
             "kind": "known",
             "title": "Known phishing signal detected",
-            "detail": "ageas-sinistro.example is listed in the Preventive Shield curated threat list."
+            "detail": "ageas-sinistro.example is listed in the buusdo curated threat list."
           },
           {
             "id": "checked-address",
@@ -7149,15 +7149,15 @@
             "id": "scope-limit",
             "kind": "limitation",
             "title": "What this check covers",
-            "detail": "This product checks the address against Preventive Shield’s own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
+            "detail": "This product checks the address against buusdo's own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
           }
         ],
         "decision": "HIGH",
         "rationale": [
-          "ageas-sinistro.example is listed in the Preventive Shield curated threat list.",
+          "ageas-sinistro.example is listed in the buusdo curated threat list.",
           "Checked ageas-sinistro.example (HTTPS).",
           "HTTPS protects the connection but does not prove the identity or trustworthiness of the website.",
-          "This product checks the address against Preventive Shield’s own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
+          "This product checks the address against buusdo's own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
         ],
         "recommendation": "LEAVE"
       },
@@ -7262,7 +7262,7 @@
             "id": "scope-limit",
             "kind": "limitation",
             "title": "What this check covers",
-            "detail": "This product checks the address against Preventive Shield’s own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
+            "detail": "This product checks the address against buusdo's own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
           }
         ],
         "decision": "LOW_EVIDENCE",
@@ -7270,7 +7270,7 @@
           "No known threat was found in the sources checked. This is not proof that the website is safe.",
           "Checked ageas-sinistro.example (HTTPS).",
           "HTTPS protects the connection but does not prove the identity or trustworthiness of the website.",
-          "This product checks the address against Preventive Shield’s own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
+          "This product checks the address against buusdo's own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
         ],
         "recommendation": "PROCEED_WITH_CARE"
       },
@@ -7358,7 +7358,7 @@
             "id": "known-threat",
             "kind": "known",
             "title": "Known phishing signal detected",
-            "detail": "impostos-irs-login.example is listed in the Preventive Shield curated threat list."
+            "detail": "impostos-irs-login.example is listed in the buusdo curated threat list."
           },
           {
             "id": "checked-address",
@@ -7382,16 +7382,16 @@
             "id": "scope-limit",
             "kind": "limitation",
             "title": "What this check covers",
-            "detail": "This product checks the address against Preventive Shield’s own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
+            "detail": "This product checks the address against buusdo's own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
           }
         ],
         "decision": "CRITICAL",
         "rationale": [
-          "impostos-irs-login.example is listed in the Preventive Shield curated threat list.",
+          "impostos-irs-login.example is listed in the buusdo curated threat list.",
           "Checked impostos-irs-login.example (HTTPS).",
           "The path suggests the page may ask for sensitive information. Confirm the domain independently before entering anything.",
           "HTTPS protects the connection but does not prove the identity or trustworthiness of the website.",
-          "This product checks the address against Preventive Shield’s own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
+          "This product checks the address against buusdo's own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
         ],
         "recommendation": "LEAVE_AND_BLOCK"
       },
@@ -7503,7 +7503,7 @@
             "id": "scope-limit",
             "kind": "limitation",
             "title": "What this check covers",
-            "detail": "This product checks the address against Preventive Shield’s own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
+            "detail": "This product checks the address against buusdo's own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
           }
         ],
         "decision": "CAUTION",
@@ -7512,7 +7512,7 @@
           "Checked impostos-irs-login.example (HTTPS).",
           "The path suggests the page may ask for sensitive information. Confirm the domain independently before entering anything.",
           "HTTPS protects the connection but does not prove the identity or trustworthiness of the website.",
-          "This product checks the address against Preventive Shield’s own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
+          "This product checks the address against buusdo's own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
         ],
         "recommendation": "VERIFY_INDEPENDENTLY"
       },
@@ -7600,7 +7600,7 @@
             "id": "known-threat",
             "kind": "known",
             "title": "Known phishing signal detected",
-            "detail": "seguro-directo-acesso.example is listed in the Preventive Shield curated threat list."
+            "detail": "seguro-directo-acesso.example is listed in the buusdo curated threat list."
           },
           {
             "id": "checked-address",
@@ -7624,16 +7624,16 @@
             "id": "scope-limit",
             "kind": "limitation",
             "title": "What this check covers",
-            "detail": "This product checks the address against Preventive Shield’s own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
+            "detail": "This product checks the address against buusdo's own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
           }
         ],
         "decision": "CRITICAL",
         "rationale": [
-          "seguro-directo-acesso.example is listed in the Preventive Shield curated threat list.",
+          "seguro-directo-acesso.example is listed in the buusdo curated threat list.",
           "Checked seguro-directo-acesso.example (HTTPS).",
           "The path suggests the page may ask for sensitive information. Confirm the domain independently before entering anything.",
           "HTTPS protects the connection but does not prove the identity or trustworthiness of the website.",
-          "This product checks the address against Preventive Shield’s own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
+          "This product checks the address against buusdo's own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
         ],
         "recommendation": "LEAVE_AND_BLOCK"
       },
@@ -7745,7 +7745,7 @@
             "id": "scope-limit",
             "kind": "limitation",
             "title": "What this check covers",
-            "detail": "This product checks the address against Preventive Shield’s own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
+            "detail": "This product checks the address against buusdo's own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
           }
         ],
         "decision": "CAUTION",
@@ -7754,7 +7754,7 @@
           "Checked seguro-directo-acesso.example (HTTPS).",
           "The path suggests the page may ask for sensitive information. Confirm the domain independently before entering anything.",
           "HTTPS protects the connection but does not prove the identity or trustworthiness of the website.",
-          "This product checks the address against Preventive Shield’s own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
+          "This product checks the address against buusdo's own curated threat list and address signals, brand lookalikes, DNS, reachability and redirects. URLs are not sent to third-party reputation services. Page content is not fully crawled."
         ],
         "recommendation": "VERIFY_INDEPENDENTLY"
       },

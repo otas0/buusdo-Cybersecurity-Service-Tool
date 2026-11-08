@@ -12,7 +12,8 @@ Checklist to keep Pages `china-pages/privacy.html` aligned with the live Workers
 | Full policy CTA | self | link → `https://buusdocst.mtsu.workers.dev/zh-Hans/privacy` | ✓ linked |
 | Language pref note | n/a (Workers locale select) | `#china-lang-pref` foot-note | ✓ Pages-only |
 | Live soft check | `privacy-prod` `/zh-Hans/privacy` soft | — | ✓ CI after Deploy |
-| Locale recommend / FAQ chrome | Workers packs zh-Hans | Pages Halt FAQ short form | ✓ re-ticked 2026-11-08 (fr Privacy bodies grown; zh-Hans pack stable) |
+| Locale recommend / FAQ chrome | Workers packs zh-Hans | Pages Halt FAQ short form | ✓ re-ticked 2026-11-08 (fr/es/it Privacy bodies; zh-Hans pack stable) |
+| EN entry secondary `/zh-Hans` | Workers `/zh-Hans` | `en.html` CTA + foot-note | ✓ documented + linked |
 
 **When editing either surface:** update this table’s Status column and re-check zh / EN pair (`privacy-en.html` ↔ `/en/privacy`).
 

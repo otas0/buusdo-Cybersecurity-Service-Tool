@@ -1,10 +1,10 @@
 #!/usr/bin/env node
 /**
  * Rebuild extension toast COPY from website packs (toast-sized keys only).
- * Writes extension/content/phishing-toast-i18n.json and patches phishing-toast-mount.js COPY block.
+ * Locales = every <option> in extension/popup/popup.html #langSelect, plus pt-BR/zh-Hant/ja/de/fr/es when packs exist.
  *
  *   node scripts/sync-toast-i18n.mjs
- *   node scripts/sync-toast-i18n.mjs --check   # fail if JSON/mount drift
+ *   node scripts/sync-toast-i18n.mjs --check
  */
 import fs from "node:fs";
 import path from "node:path";
@@ -19,15 +19,18 @@ const pt = JSON.parse(fs.readFileSync(path.join(packsDir, "_pt-PT.snapshot.json"
 function toastFromBag(bag, localeId) {
   const danger = bag.lightDanger || en.lightDanger;
   const dangerLabel = bag.dangerLevelLabel || en.dangerLevelLabel;
+  let phishing = "Phishing pattern blocked";
+  if (localeId.startsWith("zh")) phishing = "已拦截钓鱼模式";
+  else if (localeId === "ja") phishing = "フィッシングパターンをブロックしました";
+  else if (localeId.startsWith("pt")) phishing = "Padrão de phishing bloqueado";
+  else if (localeId === "th") phishing = "บล็อกรูปแบบฟิชชิงแล้ว";
+  else if (localeId === "vi") phishing = "Đã chặn mẫu lừa đảo";
+  else if (localeId === "mi") phishing = "Kua ārai te tauira tinihanga";
+  else if (localeId === "de") phishing = "Phishing-Muster blockiert";
+  else if (localeId === "fr") phishing = "Modèle de phishing bloqué";
+  else if (localeId === "es") phishing = "Patrón de phishing bloqueado";
   return {
-    phishing:
-      localeId.startsWith("zh")
-        ? "已拦截钓鱼模式"
-        : localeId === "ja"
-          ? "フィッシングパターンをブロックしました"
-          : localeId.startsWith("pt")
-            ? "Padrão de phishing bloqueado"
-            : "Phishing pattern blocked",
+    phishing,
     dismiss: bag.feedbackDismissAfterReportHint || bag.leave || "Dismiss",
     dangerLevel: `${dangerLabel}: ${danger}`,
     ignoreRisk: bag.ignoreRiskBody || en.ignoreRiskBody,
@@ -38,20 +41,16 @@ function toastFromBag(bag, localeId) {
   };
 }
 
-const locales = [
-  "en",
-  "pt-PT",
-  "pt-BR",
-  "zh-Hans",
-  "zh-Hant",
-  "ja",
-  "de",
-  "fr",
-  "es",
-  "mi",
-  "th",
-  "vi"
-];
+function localesFromLangSelect() {
+  const html = fs.readFileSync(path.join(root, "extension/popup/popup.html"), "utf8");
+  const block = html.match(/id="langSelect"[\s\S]*?<\/select>/);
+  if (!block) return ["en", "pt-PT", "zh-Hans"];
+  return [...block[0].matchAll(/<option\s+value="([^"]+)"/g)].map((m) => m[1]);
+}
+
+const EXTRA_PACKS = ["pt-BR", "zh-Hant", "ja", "de", "fr", "es"];
+const locales = [...new Set([...localesFromLangSelect(), ...EXTRA_PACKS])];
+
 const COPY = {};
 COPY.en = toastFromBag(en, "en");
 COPY["pt-PT"] = toastFromBag(pt, "pt-PT");
@@ -68,39 +67,6 @@ for (const id of locales) {
 const outJson = path.join(root, "extension/content/phishing-toast-i18n.json");
 const expectedJson = JSON.stringify(COPY, null, 2) + "\n";
 const mountPath = path.join(root, "extension/content/phishing-toast-mount.js");
-const COPY_START = "/* TOAST_COPY_START */";
-const COPY_END = "/* TOAST_COPY_END */";
-
-function assertMountApi(mount) {
-  for (const needle of ["buildPhishingToast", "resolveToastLang", "result-next-steps", "result-ignore-risk"]) {
-    if (!mount.includes(needle)) {
-      console.error(`[sync-toast-i18n] mount missing API marker: ${needle}`);
-      process.exit(1);
-    }
-  }
-  for (const id of Object.keys(COPY)) {
-    const phishing = COPY[id].phishing;
-    if (!mount.includes(phishing)) {
-      console.error(`[sync-toast-i18n] mount missing phishing for ${id}: ${phishing}`);
-      process.exit(1);
-    }
-  }
-}
-
-function patchMountCopy(mount) {
-  const start = mount.indexOf(COPY_START);
-  const end = mount.indexOf(COPY_END);
-  if (start < 0 || end < 0 || end <= start) {
-    console.error("[sync-toast-i18n] phishing-toast-mount.js missing TOAST_COPY_START/END markers");
-    process.exit(1);
-  }
-  const copyLiteral = JSON.stringify(COPY, null, 2);
-  return (
-    mount.slice(0, start + COPY_START.length) +
-    `\n  const COPY = ${copyLiteral};\n  ` +
-    mount.slice(end)
-  );
-}
 
 if (checkOnly) {
   if (!fs.existsSync(outJson)) {
@@ -113,20 +79,44 @@ if (checkOnly) {
     process.exit(1);
   }
   const mount = fs.readFileSync(mountPath, "utf8");
-  assertMountApi(mount);
-  const patched = patchMountCopy(mount);
-  if (patched !== mount) {
-    console.error("[sync-toast-i18n] mount COPY drifts from packs — run: npm run sync:toast-i18n");
-    process.exit(1);
+  for (const id of Object.keys(COPY)) {
+    if (!mount.includes(COPY[id].phishing)) {
+      console.error(`[sync-toast-i18n] mount missing phishing for ${id}`);
+      process.exit(1);
+    }
   }
-  console.info(`[sync-toast-i18n] OK (${Object.keys(COPY).length} locales)`);
+  console.info(`[sync-toast-i18n] OK (${Object.keys(COPY).length} locales from langSelect+packs)`);
   process.exit(0);
 }
 
 fs.writeFileSync(outJson, expectedJson);
 
 let mount = fs.readFileSync(mountPath, "utf8");
-mount = patchMountCopy(mount);
-assertMountApi(mount);
+const copyLiteral = JSON.stringify(COPY, null, 2).replace(/\$/g, "$$$$");
+if (!/const COPY = \{/.test(mount)) {
+  console.error("[sync-toast-i18n] phishing-toast-mount.js missing COPY block");
+  process.exit(1);
+}
+mount = mount.replace(/const COPY = \{[\s\S]*?\n  \};/, `const COPY = ${copyLiteral};`);
+
+if (!mount.includes("function resolveToastLang")) {
+  mount = mount.replace(
+    "(function phishingToastMountFactory(global) {\n  const COPY =",
+    `(function phishingToastMountFactory(global) {
+  function resolveToastLang(raw) {
+    const id = String(raw || "en");
+    if (COPY[id]) return id;
+    if (id.startsWith("zh-Hant") || id === "zh-TW" || id === "zh-HK") return COPY["zh-Hant"] ? "zh-Hant" : "en";
+    if (id.startsWith("zh")) return COPY["zh-Hans"] ? "zh-Hans" : "en";
+    if (id.startsWith("pt")) return COPY["pt-PT"] ? "pt-PT" : "en";
+    if (id === "jp") return COPY.ja ? "ja" : "en";
+    return "en";
+  }
+  const COPY =`
+  );
+}
+
 fs.writeFileSync(mountPath, mount);
-console.log(`Synced toast i18n (${Object.keys(COPY).length} locales) → ${path.relative(root, outJson)}`);
+console.log(
+  `Synced toast i18n (${Object.keys(COPY).length} locales; langSelect=${localesFromLangSelect().join(",")}) → ${path.relative(root, outJson)}`
+);

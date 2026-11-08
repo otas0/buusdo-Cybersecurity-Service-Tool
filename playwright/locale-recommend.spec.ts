@@ -1,5 +1,5 @@
 /**
- * LocaleRecommendModal soft prompt on first /en visit.
+ * LocaleRecommendModal — hard-fail when navigator.languages forces zh and dialog never opens.
  *
  *   PLAYWRIGHT_SKIP_WEBSERVER=1 PLAYWRIGHT_BASE_URL=http://localhost:3000 \
  *     npx playwright test playwright/locale-recommend.spec.ts
@@ -10,7 +10,7 @@ import { waitForReactHydration } from "./helpers/spa-settings-nav";
 const base = (process.env.PLAYWRIGHT_BASE_URL || "http://localhost:3000").replace(/\/$/, "");
 
 test.describe("locale recommend soft prompt", () => {
-  test("first /en visit can open and dismiss recommend dialog", async ({ page, context }) => {
+  test("first /en visit opens recommend when Accept-Language prefers zh", async ({ page, context }) => {
     await context.addInitScript(() => {
       try {
         localStorage.removeItem("buusdocst-locale-choice");
@@ -32,17 +32,10 @@ test.describe("locale recommend soft prompt", () => {
     await waitForReactHydration(page, '[data-testid="locale-select"]').catch(() => undefined);
 
     const dialog = page.getByTestId("locale-recommend");
-    // Soft: if Accept-Language suggestion equals en or storage blocked, dialog may stay closed.
-    const visible = await dialog.isVisible().catch(() => false);
-    if (!visible) {
-      test.info().annotations.push({
-        type: "note",
-        description: "locale-recommend not shown (suggestion matched or storage blocked)"
-      });
-      return;
-    }
+    await expect(dialog, "locale-recommend must open when navigator.languages prefers zh on /en").toBeVisible({
+      timeout: 15_000
+    });
 
-    await expect(dialog).toBeVisible();
     await page.getByTestId("locale-recommend-dismiss").click();
     await expect(dialog).toBeHidden({ timeout: 10_000 });
 

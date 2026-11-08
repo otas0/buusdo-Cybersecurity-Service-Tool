@@ -121,25 +121,25 @@ test.describe("live zh-Hans Halt evidence (soft)", () => {
   });
 
   test("known-threat Halt shows evidence-known-threat on /zh-Hans", async ({ page }) => {
-    // Fixture host from own list — prefer env override for CI.
-    const host = (process.env.PLAYWRIGHT_HALT_HOST || "secure-paypal-login.tk").trim();
+    const fixture = JSON.parse(
+      readFileSync(path.join(root, "security/data/fixtures/halt-known-threat.json"), "utf8")
+    ) as { host: string };
+    const curated = JSON.parse(
+      readFileSync(path.join(root, "security/data/curated-threats.json"), "utf8")
+    ) as { hosts: Record<string, string> };
+    const host = (process.env.PLAYWRIGHT_HALT_HOST || fixture.host).trim();
+    expect(curated.hosts[host], `fixture host ${host} must remain on curated list`).toBeTruthy();
+
     await page.goto(`${liveBase}/zh-Hans`, { waitUntil: "domcontentloaded", timeout: 45_000 });
-    const input = page.getByLabel(/地址|Website|address|网址/i).or(page.locator('input[name="url"], input[type="url"], input[data-testid="check-url"]').first());
+    const input = page
+      .getByLabel(/地址|Website|address|网址/i)
+      .or(page.locator('input[name="url"], input[type="url"], input[data-testid="check-url"]').first());
     await expect(input.first()).toBeVisible({ timeout: 20_000 });
     await input.first().fill(host);
     const go = page.getByRole("button", { name: /运行|Go|Run|檢查|检查/i }).first();
     await go.click();
     const evidence = page.getByTestId("evidence-known-threat");
-    // Soft: if host no longer on list, skip rather than fail the suite.
-    try {
-      await expect(evidence).toBeVisible({ timeout: 30_000 });
-    } catch {
-      test.info().annotations.push({
-        type: "note",
-        description: `evidence-known-threat not shown for ${host} (list drift — soft)`
-      });
-      return;
-    }
+    await expect(evidence).toBeVisible({ timeout: 45_000 });
     await expect(page.getByTestId("evidence-known-threat-title")).toContainText(/威胁|已知/);
   });
 });
