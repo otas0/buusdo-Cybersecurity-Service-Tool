@@ -1582,6 +1582,42 @@ function hideOptionalUpdateBanner() {
 /** Track force-gate open so we can restore focus when it closes. */
 let forceGateWasUp = false;
 
+function isFocusTarget(el) {
+  if (!el || el.hidden) return false;
+  if (el.getAttribute("aria-hidden") === "true") return false;
+  if (el.hasAttribute("disabled") && el.disabled) return false;
+  return true;
+}
+
+/**
+ * After force-gate close or optional-banner dismiss: never leave AT on a hidden control.
+ * Prefer update-check → show-hint → scan; else honest-limits ack or document start.
+ */
+function focusAfterUpdateChromeHide() {
+  let docStart = document.querySelector("main.board") || document.getElementById("appTitle");
+  if (docStart && !docStart.hasAttribute("tabindex")) {
+    docStart.setAttribute("tabindex", "-1");
+  }
+  const target =
+    (isFocusTarget(els.updateCheckBtn) && els.updateCheckBtn) ||
+    (isFocusTarget(els.optionalUpdateShowHint) && els.optionalUpdateShowHint) ||
+    (isFocusTarget(els.scanBtn) && els.scanBtn) ||
+    (isFocusTarget(els.pathScanMachine) && els.pathScanMachine) ||
+    (isFocusTarget(els.honestLimitsAck) && els.honestLimitsAck) ||
+    (docStart && isFocusTarget(docStart) && docStart);
+  if (!target) return;
+  try {
+    target.focus({ preventScroll: true });
+  } catch {
+    /* ignore */
+  }
+}
+
+/** @deprecated name kept for tests — prefer focusAfterUpdateChromeHide */
+function focusAfterForceGateClose() {
+  focusAfterUpdateChromeHide();
+}
+
 /** When force gate is up, keep show-hint + update-check out of the tab order. */
 function syncForceGateChromeAria() {
   const forceUp = Boolean(els.forceUpdateGate && !els.forceUpdateGate.hidden);
@@ -1595,13 +1631,9 @@ function syncForceGateChromeAria() {
       el.removeAttribute("tabindex");
     }
   }
-  // Closing the force gate: move focus back to update-check (not a leftover hidden control).
-  if (forceGateWasUp && !forceUp && els.updateCheckBtn) {
-    try {
-      els.updateCheckBtn.focus({ preventScroll: true });
-    } catch {
-      /* ignore */
-    }
+  // Closing the force gate: restore focus (never leave it on a hidden control).
+  if (forceGateWasUp && !forceUp) {
+    focusAfterUpdateChromeHide();
   }
   forceGateWasUp = forceUp;
 }
@@ -1619,11 +1651,10 @@ function syncOptionalUpdateShowHint() {
   syncForceGateChromeAria();
 }
 
-/** offline / fail use distinct data-testid so E2E does not confuse them with status. */
+/** offline / fail use distinct data-testid + data-status so E2E / logs stay exclusive. */
 function setUpdateCheckStatus(kind, text) {
   if (!els.updateCheckStatus) return;
   els.updateCheckStatus.hidden = false;
-  els.updateCheckStatus.textContent = text;
   const testId =
     kind === "offline"
       ? "update-check-offline"
@@ -1631,11 +1662,20 @@ function setUpdateCheckStatus(kind, text) {
         ? "update-check-fail"
         : "update-check-status";
   els.updateCheckStatus.setAttribute("data-testid", testId);
-  // Offline / status: polite; fail: assertive (AT should announce urgently).
-  els.updateCheckStatus.setAttribute(
-    "aria-live",
-    kind === "fail" ? "assertive" : "polite"
-  );
+  els.updateCheckStatus.setAttribute("data-status", kind);
+  // Pair role + aria-live (fail → alert/assertive; else status/polite) — one live region only.
+  if (kind === "fail") {
+    els.updateCheckStatus.setAttribute("role", "alert");
+    els.updateCheckStatus.setAttribute("aria-live", "assertive");
+  } else {
+    els.updateCheckStatus.setAttribute("role", "status");
+    els.updateCheckStatus.setAttribute("aria-live", "polite");
+  }
+  // Clear then restore text so AT re-announces after role change.
+  els.updateCheckStatus.textContent = "";
+  requestAnimationFrame(() => {
+    if (els.updateCheckStatus) els.updateCheckStatus.textContent = text;
+  });
 }
 
 /** `download` attribute only for same-origin package URLs (cross-origin ignores it). */
@@ -1837,18 +1877,23 @@ async function applyUpdateCheckResult(res, { fromBoot = false } = {}) {
 els.optionalUpdateDismiss?.addEventListener("click", async () => {
   hideOptionalUpdateBanner();
   const tag = lastOptionalUpdateTag;
-  if (!tag) return;
-  optionalUpdateDismissedTag = tag;
-  syncOptionalUpdateShowHint();
-  try {
-    await fetch("/api/settings", {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ optionalUpdateDismissedTag: tag })
-    });
-  } catch {
-    /* keep in-memory dismiss for this session */
+  if (tag) {
+    optionalUpdateDismissedTag = tag;
+    syncOptionalUpdateShowHint();
+    try {
+      await fetch("/api/settings", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ optionalUpdateDismissedTag: tag })
+      });
+    } catch {
+      /* keep in-memory dismiss for this session */
+    }
+  } else {
+    syncOptionalUpdateShowHint();
   }
+  // Mirror force-close focus: banner is hidden — land on show-hint / update-check / doc start.
+  focusAfterUpdateChromeHide();
 });
 
 els.optionalUpdateShowHint?.addEventListener("click", async () => {
@@ -1914,12 +1959,27 @@ void (async () => {
   }
 })();
 
-/** Optional: one-line MIN_SUPPORTED.txt (or json floor) beside honest-limits gate. */
+/** Optional: bilingual floor line beside honest-limits when API returns source. */
 void (async () => {
   if (!els.honestLimitsMinSupported) return;
   try {
     const res = await fetch("/api/min-supported").then((r) => r.json());
-    if (res?.ok && res.line) {
+    if (!res?.ok) return;
+    const min = String(res.minSupportedVersion || "").trim();
+    const sourceRaw = String(res.source || "").trim();
+    if (sourceRaw && min) {
+      const source =
+        sourceRaw === "desktop-downloads.json"
+          ? sourceRaw
+          : sourceRaw.split(/[/\\]/).filter(Boolean).pop() || sourceRaw;
+      els.honestLimitsMinSupported.hidden = false;
+      els.honestLimitsMinSupported.textContent = t(lang, "honestLimitsMinSupportedNote", {
+        min,
+        source
+      });
+      return;
+    }
+    if (res.line) {
       els.honestLimitsMinSupported.hidden = false;
       els.honestLimitsMinSupported.textContent = res.line;
     }

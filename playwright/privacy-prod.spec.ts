@@ -7,7 +7,7 @@
  * without workers.dev access do not fail the suite falsely.
  */
 import { expect, test } from "@playwright/test";
-import { waitForReactHydration } from "./helpers/spa-settings-nav";
+import { assertHashSectionInView, waitForReactHydration } from "./helpers/spa-settings-nav";
 
 const base = (
   process.env.PLAYWRIGHT_BASE_URL ||
@@ -94,6 +94,20 @@ test.describe("production privacy pages", () => {
     await expect(page.getByTestId("privacy-china-notice")).toContainText(/otas0\.github\.io\/buusdocst/);
   });
 
+  test("/pt-PT/privacy China mainland entry section", async ({ page }) => {
+    await page.goto(`${base}/pt-PT/privacy#privacy-china-notice`, {
+      waitUntil: "domcontentloaded"
+    });
+    await expect(page.getByTestId("privacy-china-notice")).toBeVisible();
+    await expect(page.getByTestId("privacy-china-notice")).toContainText(
+      /Entrada da China continental/i
+    );
+    await expect(page.getByTestId("privacy-china-notice")).toContainText(/otas0\.github\.io\/buusdocst/);
+    await expect(page.getByTestId("privacy-china-notice")).toContainText(
+      /aviso bilingue|encaminha automaticamente/i
+    );
+  });
+
   test("/en/privacy#privacy-faq-common deep-link", async ({ page }) => {
     await page.goto(`${base}/en/privacy#privacy-faq-common`, { waitUntil: "domcontentloaded" });
     await expect(page.locator("#privacy-faq-common")).toBeVisible();
@@ -168,7 +182,44 @@ test.describe("production privacy pages", () => {
           console.warn(`[soft-live] ${locale} FAQ href soft mismatch: ${href}`);
         } else {
           console.info(`[soft-live] ${locale} FAQ → #downloads-extension ok`);
+          try {
+            await Promise.all([
+              page.waitForURL(/#downloads-extension/, { timeout: 12_000 }),
+              deeplink.first().click()
+            ]);
+            if (!page.url().includes("#downloads-extension")) {
+              console.warn(`[soft-live] ${locale} after click URL missing hash: ${page.url()}`);
+            } else {
+              console.info(`[soft-live] ${locale} click → #downloads-extension landed`);
+              try {
+                await assertHashSectionInView(page, "#downloads-extension", 12_000);
+                console.info(`[soft-live] ${locale} #downloads-extension in view`);
+              } catch (viewErr) {
+                const msg = viewErr instanceof Error ? viewErr.message : String(viewErr);
+                console.warn(`[soft-live] ${locale} #downloads-extension in-view soft fail: ${msg}`);
+              }
+            }
+          } catch (err) {
+            const msg = err instanceof Error ? err.message : String(err);
+            console.warn(`[soft-live] ${locale} FAQ Downloads click soft fail: ${msg}`);
+          }
         }
+      }
+      // Soft-live: FAQ / intro → #privacy-honest-limits stays in view under sticky shell.
+      try {
+        await page.goto(`${base}/${locale}/privacy#privacy-honest-limits`, {
+          waitUntil: "domcontentloaded",
+          timeout: 45_000
+        });
+        if ((await page.locator("#privacy-honest-limits").count()) === 0) {
+          console.warn(`[soft-live] ${locale} #privacy-honest-limits missing after FAQ intro`);
+        } else {
+          await assertHashSectionInView(page, "#privacy-honest-limits", 12_000);
+          console.info(`[soft-live] ${locale} #privacy-honest-limits in view`);
+        }
+      } catch (limitsErr) {
+        const msg = limitsErr instanceof Error ? limitsErr.message : String(limitsErr);
+        console.warn(`[soft-live] ${locale} #privacy-honest-limits in-view soft fail: ${msg}`);
       }
     });
   }

@@ -95,7 +95,10 @@ jobs:
           assert_url "/lang-persist.js" "buusdocst-china-lang"
           assert_url "/region-redirect.js" "buusdocst-china-stay"
           assert_url "/region-redirect.js" "OPTIONS/CORS"
-          assert_url "/region-redirect.js" 'dataset.state = "stay"'
+          assert_url "/region-redirect.js" 'setReach'
+          assert_url "/region-redirect.js" '"stay"'
+          assert_url "/region-redirect.js" "soft-fail"
+          assert_url "/region-redirect.js" "aria-busy"
           for page in "/" "/en.html"; do
             assert_url "$page" 'data-china-lang'
           done

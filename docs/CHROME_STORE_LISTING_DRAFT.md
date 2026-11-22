@@ -55,6 +55,7 @@ Instrument FRAMEs from `npm run capture:store-halt-frame` (also copied next to t
 | 1 | [`docs/store-screenshots/FRAME-formal-name.png`](store-screenshots/FRAME-formal-name.png) | Halt readout (primary) |
 | 2 | [`docs/store-screenshots/FRAME-clear.png`](store-screenshots/FRAME-clear.png) **and** [`FRAME-hold.png`](store-screenshots/FRAME-hold.png) | Shot 2 pair — Clear + Hold |
 | 3 | [`docs/store-screenshots/FRAME-desktop-about.png`](store-screenshots/FRAME-desktop-about.png) | Desktop About footer (live HTML; packed into listing-frames.zip) |
+| optional | [`FRAME-privacy-china-notice.png`](store-screenshots/FRAME-privacy-china-notice.png) · EN twin [`FRAME-privacy-china-notice-en.png`](store-screenshots/FRAME-privacy-china-notice-en.png) | Workers privacy China entry (instrument; only if listing mentions China Pages / 告知书) |
 | 4+ | Live popup / Settings / privacy captures | Prefer product UI for final submit |
 
 Rebuild FRAMEs after brand sync: `npm run sync:brand-web && npm run capture:store-halt-frame && npm run capture:desktop-about-frame && npm run assert:store-halt-frame-floors`.

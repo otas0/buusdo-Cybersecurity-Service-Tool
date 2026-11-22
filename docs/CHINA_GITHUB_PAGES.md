@@ -49,6 +49,11 @@ UI：`data-testid="china-notice"` / `china-notice-title` / `china-workers-entry`
 
 **When Logpush exists:** export 30 days of path counts for `/install.html`, `/install-en.html`, `/privacy.html`, `/privacy-en.html` on the China entry host; if each is near zero, delete the thin stubs in a dedicated PR and keep only `index.html` / `en.html` notice routes.
 
+```bash
+# Scaffold — feed a JSONL / CSV / plain dump; prints GATE=keep|review
+node scripts/parse-china-stub-path-counts.mjs --dump /path/to/logpush.jsonl --days 30
+```
+
 ### Probe fail copy
 
 - Network timeout / unreachable → `#workers-reach` fail (short).

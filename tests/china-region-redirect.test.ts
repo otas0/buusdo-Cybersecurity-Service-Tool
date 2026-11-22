@@ -24,6 +24,8 @@ test("region-redirect.js ships opt-out, health probe, and Workers locale paths",
   assert.match(src, /preflight|OPTIONS\/CORS/);
   assert.match(src, /timeout|AbortError/);
   assert.match(src, /Health request timed out|健康探测超时/);
+  assert.match(src, /soft-fail|markSoftFail/);
+  assert.match(src, /aria-busy/);
   assert.doesNotMatch(src, /Only entry pages/);
   assert.doesNotMatch(src, /ENTRY\s*=/);
 });
@@ -58,12 +60,19 @@ test("legacy stubs redirect to notice without region-redirect", () => {
 function makeReachEl() {
   const status = { textContent: "Checking…" };
   const detail = { textContent: "" };
+  const attrs: Record<string, string> = { "aria-busy": "true" };
   return {
     dataset: { state: "checking" } as { state: string },
     querySelector(sel: string) {
       if (sel === "[data-reach-status]") return status;
       if (sel === "[data-reach-detail]") return detail;
       return null;
+    },
+    setAttribute(name: string, value: string) {
+      attrs[name] = value;
+    },
+    getAttribute(name: string) {
+      return attrs[name] ?? null;
     },
     _status: status,
     _detail: detail
@@ -247,8 +256,23 @@ test("vm: legacy localStorage stay is cleared and force-redirects", async () => 
 test("vm: health fail leaves notice in place", async () => {
   const run = runRedirect({
     pathname: "/buusdocst/index.html",
-    health: null
+    health: null,
+    withReach: true
   });
   await run.flush();
   assert.equal(run.replaced, "");
+  assert.equal(run.reach?.dataset.state, "fail");
+  assert.notEqual(run.reach?.dataset.state, "checking");
+});
+
+test("vm: wrong health.service soft-fails (never stuck checking)", async () => {
+  const run = runRedirect({
+    pathname: "/buusdocst/index.html",
+    health: { ok: true, service: "pcpd" },
+    withReach: true
+  });
+  await run.flush();
+  assert.equal(run.replaced, "");
+  assert.equal(run.reach?.dataset.state, "soft-fail");
+  assert.notEqual(run.reach?.dataset.state, "checking");
 });

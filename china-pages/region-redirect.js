@@ -54,32 +54,44 @@
     return false;
   }
 
-  function markStay() {
+  /** #workers-reach is below this head script — wait for DOMContentLoaded when needed. */
+  function whenReachReady(fn) {
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", function once() {
+        document.removeEventListener("DOMContentLoaded", once);
+        fn();
+      });
+    } else {
+      fn();
+    }
+  }
+
+  function setReach(state, statusText, detailText) {
     var el = document.getElementById("workers-reach");
     if (!el) return;
     var status = el.querySelector("[data-reach-status]");
     var detail = el.querySelector("[data-reach-detail]");
+    if (status) status.textContent = statusText;
+    if (detail) detail.textContent = detailText;
+    el.dataset.state = state;
+    try {
+      el.setAttribute("aria-busy", state === "checking" ? "true" : "false");
+    } catch (_) {}
+  }
+
+  function markStay() {
     var isEn = document.documentElement.lang === "en";
-    if (status) {
-      status.textContent = isEn ? "Staying on notice" : "留在本告知书";
-    }
-    if (detail) {
-      detail.textContent = isEn
+    setReach(
+      "stay",
+      isEn ? "Staying on notice" : "留在本告知书",
+      isEn
         ? "Auto-guide paused for this tab (?china_stay=1)."
-        : "本标签已暂停自动引导（?china_stay=1）。";
-    }
-    el.dataset.state = "stay";
+        : "本标签已暂停自动引导（?china_stay=1）。"
+    );
   }
 
   if (wantsStay()) {
-    function applyStayUi() {
-      markStay();
-    }
-    if (document.readyState === "loading") {
-      document.addEventListener("DOMContentLoaded", applyStayUi);
-    } else {
-      applyStayUi();
-    }
+    whenReachReady(markStay);
     return;
   }
 
@@ -133,55 +145,52 @@
   }
 
   function announce(msg) {
-    var el = document.getElementById("workers-reach");
-    if (!el) return;
-    var status = el.querySelector("[data-reach-status]");
-    var detail = el.querySelector("[data-reach-detail]");
-    if (status) status.textContent = msg;
-    if (detail) {
-      detail.textContent =
-        document.documentElement.lang === "en"
-          ? "Redirecting to the full product site…"
-          : "正在切换到完整检查站…";
-    }
-    el.dataset.state = "ok";
+    var isEn = document.documentElement.lang === "en";
+    setReach(
+      "ok",
+      msg,
+      isEn ? "Redirecting to the full product site…" : "正在切换到完整检查站…"
+    );
+  }
+
+  function markSoftFail() {
+    var isEn = document.documentElement.lang === "en";
+    setReach(
+      "soft-fail",
+      isEn ? "Workers health unexpected" : "Workers 健康响应异常",
+      isEn
+        ? "Health ok but service ≠ buusdocst. Staying on this notice — no auto-guide."
+        : "健康探测成功但 service ≠ buusdocst。留在本告知书 — 不自动引导。"
+    );
   }
 
   function markFail(kind) {
-    var el = document.getElementById("workers-reach");
-    if (!el) return;
-    var status = el.querySelector("[data-reach-status]");
-    var detail = el.querySelector("[data-reach-detail]");
     var isEn = document.documentElement.lang === "en";
     var preflight = kind === "preflight";
     var timedOut = kind === "timeout";
-    if (status) {
-      status.textContent = timedOut
+    var statusText = timedOut
+      ? isEn
+        ? "Workers probe timed out"
+        : "Workers 探测超时"
+      : preflight
         ? isEn
-          ? "Workers probe timed out"
-          : "Workers 探测超时"
-        : preflight
-          ? isEn
-            ? "Workers probe blocked"
-            : "Workers 探测被拦截"
-          : isEn
-            ? "Workers unreachable"
-            : "Workers 不可达";
-    }
-    if (detail) {
-      detail.textContent = timedOut
+          ? "Workers probe blocked"
+          : "Workers 探测被拦截"
+        : isEn
+          ? "Workers unreachable"
+          : "Workers 不可达";
+    var detailText = timedOut
+      ? isEn
+        ? "Health request timed out. Showing this notice — retry on another network, or open Workers directly."
+        : "健康探测超时。显示本告知书 — 请换网络重试，或直接打开 Workers。"
+      : preflight
         ? isEn
-          ? "Health request timed out. Showing this notice — retry on another network, or open Workers directly."
-          : "健康探测超时。显示本告知书 — 请换网络重试，或直接打开 Workers。"
-        : preflight
-          ? isEn
-            ? "Health OPTIONS/CORS failed. Showing this notice — retry on another network, or open Workers directly."
-            : "健康探测 OPTIONS/CORS 失败。显示本告知书 — 请换网络重试，或直接打开 Workers。"
-          : isEn
-            ? "Showing this notice. Retry when Cloudflare is reachable."
-            : "显示本告知书。待可达 Cloudflare 后再试。";
-    }
-    el.dataset.state = "fail";
+          ? "Health OPTIONS/CORS failed. Showing this notice — retry on another network, or open Workers directly."
+          : "健康探测 OPTIONS/CORS 失败。显示本告知书 — 请换网络重试，或直接打开 Workers。"
+        : isEn
+          ? "Showing this notice. Retry when Cloudflare is reachable."
+          : "显示本告知书。待可达 Cloudflare 后再试。";
+    setReach("fail", statusText, detailText);
   }
 
   var ctrl = typeof AbortController !== "undefined" ? new AbortController() : null;
@@ -205,15 +214,18 @@
     })
     .then(function (data) {
       if (!(data && data.ok === true && data.service === EXPECTED_SERVICE)) {
-        throw new Error("health not ok");
+        whenReachReady(markSoftFail);
+        return;
       }
       var dest = WORKERS_ORIGIN + workersPath();
-      announce(
-        document.documentElement.lang === "en"
-          ? "Workers reachable — opening full site"
-          : "Workers 可达 — 正在打开完整站点"
-      );
-      bounce(dest);
+      whenReachReady(function () {
+        announce(
+          document.documentElement.lang === "en"
+            ? "Workers reachable — opening full site"
+            : "Workers 可达 — 正在打开完整站点"
+        );
+        bounce(dest);
+      });
     })
     .catch(function (err) {
       clearTimeout(timer);
@@ -225,6 +237,9 @@
         !timedOut &&
         (name === "TypeError" ||
           /Failed to fetch|NetworkError|Load failed|CORS|cross-origin/i.test(msg));
-      markFail(timedOut ? "timeout" : preflight ? "preflight" : "unreachable");
+      var kind = timedOut ? "timeout" : preflight ? "preflight" : "unreachable";
+      whenReachReady(function () {
+        markFail(kind);
+      });
     });
 })();

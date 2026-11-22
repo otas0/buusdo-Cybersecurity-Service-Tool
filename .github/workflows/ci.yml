@@ -878,14 +878,14 @@ jobs:
           {
             echo "## China soft-fail"
             echo ""
-            echo "- \`npm run test:playwright:china-soft-fail\` — wrong \`health.service\` stays on notice (no Workers bounce)"
+            echo "- \`npm run test:playwright:china-soft-fail\` — wrong \`health.service\` / timeout / CORS stay on notice"
             echo "- outcome: **passed**"
             echo "- Artifact name: \`china-soft-fail-playwright\` (see [docs/CI.md](https://github.com/${{ github.repository }}/blob/${{ github.sha }}/docs/CI.md))"
-            echo "- Playwright report / traces (if uploaded): [run artifacts](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})"
             echo "- Spec: \`playwright/china-soft-fail.spec.ts\`"
           } >> "$GITHUB_STEP_SUMMARY"
 
       - name: Upload China soft-fail Playwright output
+        id: soft_fail_art
         if: always() && steps.pw_china_soft_fail.outcome != 'skipped'
         uses: actions/upload-artifact@v4
         with:
@@ -895,6 +895,14 @@ jobs:
             playwright/output/**
             test-results/**
           if-no-files-found: ignore
+
+      - name: Soft-fail artifact URL in Job Summary
+        if: always() && steps.soft_fail_art.outcome == 'success'
+        run: |
+          {
+            echo "- Artifact download: ${{ steps.soft_fail_art.outputs.artifact-url }}"
+            echo "- Run artifacts: [run #${{ github.run_id }}](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})"
+          } >> "$GITHUB_STEP_SUMMARY"
 
       - name: Halt survey blocks (RiskResult Round-1 UX)
         id: pw_halt_survey

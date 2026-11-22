@@ -37,14 +37,18 @@ jobs:
         with:
           node-version: "22"
       - name: Smoke privacy China section (zh-Hans + EN)
+        id: privacy_china
         run: |
           set -euo pipefail
           node scripts/smoke-privacy-china.mjs
+          PASSED_AT=$(date -u +%Y-%m-%dT%H:%MZ)
+          echo "passed_at=$PASSED_AT" >> "$GITHUB_OUTPUT"
           {
             echo "## Privacy China smoke"
             echo ""
             echo "- base: \`$HEALTH_BASE_URL\`"
             echo "- paths: \`/zh-Hans/privacy\` · \`/en/privacy\` (\`privacy-china-notice\`)"
+            echo "- smoke:privacy-china: \`$PASSED_AT\`"
             echo "- outcome: **passed**"
           } >> "$GITHUB_STEP_SUMMARY"
 

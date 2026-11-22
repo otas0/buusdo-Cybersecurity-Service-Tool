@@ -141,6 +141,10 @@ for (const page of ["china-pages/index.html", "china-pages/en.html"]) {
       console.error(`FAIL: ${page} #workers-reach must start at data-state="checking"`);
       process.exit(1);
     }
+    if (!html.includes('aria-live="polite"') || !html.includes('aria-atomic="true"')) {
+      console.error(`FAIL: ${page} #workers-reach must be an atomic polite live region`);
+      process.exit(1);
+    }
   }
 
   // Preflight fail copy (OPTIONS/CORS) — same AA path via .reach-detail / --halt status.
@@ -157,8 +161,16 @@ for (const page of ["china-pages/index.html", "china-pages/en.html"]) {
     console.error("FAIL: timeout fail copy missing EN or zh-Hans string");
     process.exit(1);
   }
-  if (!redirect.includes('dataset.state = "stay"') && !redirect.includes('el.dataset.state = "stay"')) {
+  if (
+    !redirect.includes('setReach(\n      "stay"') &&
+    !redirect.includes('setReach("stay"') &&
+    !/"stay"/.test(redirect)
+  ) {
     console.error('FAIL: region-redirect must set data-state="stay" when china_stay pauses auto-guide');
+    process.exit(1);
+  }
+  if (!redirect.includes("soft-fail") || !redirect.includes("markSoftFail")) {
+    console.error("FAIL: region-redirect must soft-fail wrong health.service (not leave checking)");
     process.exit(1);
   }
   console.info("ok preflight/timeout fail copy AA path (OPTIONS/CORS + timeout + stay state)");

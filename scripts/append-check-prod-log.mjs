@@ -61,5 +61,36 @@ if (
   process.exit(0);
 }
 md = `${md.slice(0, insertAt)}${row}\n${md.slice(insertAt)}`;
+
+// Cap table body so privacy-china notes stay readable (default 40 data rows).
+const maxRows = Math.max(
+  5,
+  Number.parseInt(process.env.CHECKLIST_LOG_MAX_ROWS || flag("max-rows") || "40", 10) || 40
+);
+const tableStart = insertAt;
+const afterTable = md.slice(tableStart);
+const lines = afterTable.split("\n");
+const dataRows = [];
+let restIdx = 0;
+for (; restIdx < lines.length; restIdx += 1) {
+  const line = lines[restIdx];
+  if (/^\| /.test(line) && !/^\|[-| ]+\|$/.test(line) && !/When \(UTC\)/.test(line)) {
+    dataRows.push(line);
+    continue;
+  }
+  break;
+}
+if (dataRows.length > maxRows) {
+  const kept = dataRows.slice(0, maxRows);
+  const trimmed = dataRows.length - maxRows;
+  const remainder = lines.slice(restIdx).join("\n");
+  md =
+    md.slice(0, tableStart) +
+    kept.join("\n") +
+    "\n" +
+    remainder;
+  console.info(`[append-check-prod-log] capped table to ${maxRows} rows (dropped ${trimmed})`);
+}
+
 writeFileSync(checklistPath, md, "utf8");
 console.info(`[append-check-prod-log] ${row}`);
