@@ -6,23 +6,16 @@
 # Optional variable:
 #   NEXT_PUBLIC_SITE_URL   — https://YOUR_DOMAIN or https://….workers.dev (no trailing slash)
 #   STAGING_HEALTH_URL     — after first staging deploy; must ≠ PRODUCTION_HEALTH_URL
-#   PLAYWRIGHT_PREVIEW_BASE_URL — optional preview fallback (prefer dedicated buusdocst-preview Worker)
+#   PLAYWRIGHT_PREVIEW_BASE_URL — prefer buusdocst-preview Worker; may reuse staging until then
 #
-# After first success: locally run
-#   npm run production:origin -- https://…
-# then commit the updated origin files / README.
-# Custom domain second deploy: docs/CUSTOM_DOMAIN_REDEPLOY.md (hold until Account gate + POST_LAUNCH_48H).
-# Local laptop timeouts ≠ outage: docs/LOCAL_CF_CONNECTIVITY.md — trust Actions only.
-#
-# Soft EU locale 200: always soft (continue-on-error) for production + staging — locale-pack
-# push deploys must not hard-fail the workflow on a single locale blip. Soft-live Halt Playwright
-# is opt-in via workflow_dispatch `run_soft_live_halt` (not on CI unit matrix). See docs/I18N.md.
+# Soft EU: continue-on-error by default. Optional workflow_dispatch `eu_locale_strict=true`
+# hard-fails the EU job only (does not change push/locale-pack default soft behavior).
+# Soft-live Halt: workflow_dispatch `run_soft_live_halt` (Playwright cache + -g "live Halt evidence").
 
 
 name: Deploy Cloudflare
 
 on:
-  # Locale / i18n bag changes must ship to Workers without a manual dispatch.
   push:
     branches: [main, master]
     paths:
@@ -60,6 +53,11 @@ on:
         required: false
         type: boolean
         default: false
+      eu_locale_strict:
+        description: "Hard-fail EU locale soft job (workflow_dispatch only; default soft)"
+        required: false
+        type: boolean
+        default: false
 
 jobs:
   deploy:
@@ -84,7 +82,6 @@ jobs:
           OVERRIDE="${{ github.event.inputs.site_url }}"
           VAR="${{ vars.NEXT_PUBLIC_SITE_URL }}"
           STAGING_VAR="${{ vars.STAGING_HEALTH_URL }}"
-          # Default public origin until custom domain replaces it (docs/CUSTOM_DOMAIN_REDEPLOY.md).
           DEFAULT="https://buusdocst.mtsu.workers.dev"
           if [ "$TARGET" = "staging" ]; then
             if [ -n "$OVERRIDE" ]; then
@@ -92,9 +89,8 @@ jobs:
             elif [ -n "$STAGING_VAR" ]; then
               URL="$STAGING_VAR"
             else
-              # First staging deploy: health step skipped until STAGING_HEALTH_URL is set.
               URL=""
-              echo "::notice::STAGING_HEALTH_URL unset — deploy will run; set the var to the printed workers.dev URL after first success (soft EU job will skip until then)"
+              echo "::notice::STAGING_HEALTH_URL unset — deploy will run; after wrangler prints the workers.dev host, set the repo var (bot tip step follows)"
             fi
           else
             if [ -n "$OVERRIDE" ]; then
@@ -103,7 +99,7 @@ jobs:
               URL="$VAR"
             else
               URL="$DEFAULT"
-              echo "::notice::NEXT_PUBLIC_SITE_URL unset — defaulting to $DEFAULT (set repo variable to override)"
+              echo "::notice::NEXT_PUBLIC_SITE_URL unset — defaulting to $DEFAULT"
             fi
           fi
           URL=$(echo "$URL" | tr -d '[:space:]' | sed 's:/*$::')
@@ -113,13 +109,14 @@ jobs:
             echo "NEXT_PUBLIC_SITE_URL=$URL" >> "$GITHUB_ENV"
             echo "::notice::target=$TARGET NEXT_PUBLIC_SITE_URL=$URL"
           else
-            echo "::notice::target=$TARGET (no smoke URL yet — first staging? set STAGING_HEALTH_URL after wrangler prints the workers.dev host)"
+            echo "::notice::target=$TARGET (no smoke URL yet)"
           fi
 
       - name: Install
         run: npm ci
 
       - name: Deploy
+        id: wrangler_deploy
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
@@ -135,6 +132,27 @@ jobs:
             npm run deploy:cloudflare
           fi
 
+      - name: Bot tip — set STAGING_HEALTH_URL (first staging)
+        if: steps.site.outputs.target == 'staging' && steps.site.outputs.url == ''
+        run: |
+          {
+            echo "## Staging health URL required"
+            echo ""
+            echo "First staging deploy succeeded but \`STAGING_HEALTH_URL\` is unset — soft EU / soft-live will skip."
+            echo ""
+            echo "1. Copy the \`*.workers.dev\` host from the Deploy step log (Worker \`buusdocst-staging\`)."
+            echo "2. Set the repo variable:"
+            echo ""
+            echo '```bash'
+            echo "gh variable set STAGING_HEALTH_URL --body 'https://buusdocst-staging.mtsu.workers.dev'"
+            echo '```'
+            echo ""
+            echo "3. Re-run **Deploy Cloudflare** (target=staging) so health + soft EU can probe."
+            echo ""
+          } >> "$GITHUB_STEP_SUMMARY"
+          echo "::notice::bot tip: set STAGING_HEALTH_URL after first staging deploy — see job summary"
+          echo "::warning::STAGING_HEALTH_URL unset after staging deploy — soft probes skipped until the var is set"
+
       - name: Health smoke
         if: steps.site.outputs.url != ''
         env:
@@ -143,7 +161,6 @@ jobs:
         run: |
           set -euo pipefail
           if [ "$TARGET" = "staging" ]; then
-            # Account sync cancelled — require accountSyncEnabled false on staging.
             STAGING_HEALTH_URL="$HEALTH_BASE_URL" \
               PRODUCTION_HEALTH_URL="${{ vars.PRODUCTION_HEALTH_URL }}" \
               GITHUB_RUN_URL="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}" \
@@ -153,7 +170,6 @@ jobs:
           fi
 
       - name: Check smoke
-        # Push (locale packs) defaults on; workflow_dispatch respects the input.
         if: >
           steps.site.outputs.url != '' && steps.site.outputs.target == 'production' &&
           (github.event_name == 'push' || github.event.inputs.run_check_smoke == 'true')
@@ -164,14 +180,12 @@ jobs:
   eu-locale-routes:
     name: eu-locale-routes-200 (soft)
     needs: deploy
-    # Keep soft for production + staging (continue-on-error). Eval 2026-11-08: do not hard-fail
-    # production on a single locale blip — locale-pack push deploys would otherwise flake.
     if: needs.deploy.result == 'success'
     runs-on: ubuntu-latest
-    continue-on-error: true
+    # Default soft. Optional hard-fail only when workflow_dispatch + eu_locale_strict=true.
+    continue-on-error: ${{ !(github.event_name == 'workflow_dispatch' && inputs.eu_locale_strict == true) }}
     steps:
       - uses: actions/checkout@v4
-      # Pure Node script — no npm install.
       - name: Europe locale routes 200
         id: eu
         env:
@@ -195,15 +209,18 @@ jobs:
             fi
           fi
           if [ -z "${PLAYWRIGHT_LIVE_BASE_URL:-}" ] && [ "${DEPLOY_TARGET}" = "staging" ]; then
-            echo "::notice::skipped-live [eu-routes-200] staging first deploy has no smoke URL yet — set STAGING_HEALTH_URL to the wrangler workers.dev host, then re-run Deploy or this soft job"
+            echo "::notice::skipped-live [eu-routes-200] staging first deploy has no smoke URL yet — set STAGING_HEALTH_URL to the wrangler workers.dev host, then re-run Deploy"
+          fi
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ] && [ "${{ inputs.eu_locale_strict }}" = "true" ]; then
+            echo "::notice::EU_LOCALE_STRICT — this job will hard-fail the workflow on locale failures"
           fi
           node scripts/assert-eu-locale-routes-200.mjs
-          echo "::notice::eu-locale-routes-200 finished (soft job; continue-on-error for production+staging)"
+          echo "::notice::eu-locale-routes-200 finished"
       - name: Upload EU failure table
         if: failure()
         uses: actions/upload-artifact@v4
         with:
-          name: eu-locale-failures
+          name: eu-locale-failures-${{ github.run_id }}
           path: ${{ runner.temp }}/eu-locale-failures.md
           if-no-files-found: ignore
           retention-days: 7
@@ -214,9 +231,12 @@ jobs:
     if: >
       needs.deploy.result == 'success' &&
       github.event_name == 'workflow_dispatch' &&
-      github.event.inputs.run_soft_live_halt == 'true'
+      inputs.run_soft_live_halt == true
     runs-on: ubuntu-latest
     continue-on-error: true
+    outputs:
+      duration_sec: ${{ steps.soft.outputs.duration_sec }}
+      skipped: ${{ steps.soft.outputs.skipped }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -225,9 +245,27 @@ jobs:
           cache: npm
       - name: Install
         run: npm ci
+      - name: Cache Playwright browsers
+        id: pw_cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
+          restore-keys: |
+            playwright-${{ runner.os }}-
       - name: Install Playwright Chromium
-        run: npx playwright install --with-deps chromium
+        run: |
+          HIT="${{ steps.pw_cache.outputs.cache-hit }}"
+          echo "Playwright browser cache-hit=${HIT:-false}"
+          if [ "${HIT:-false}" = "true" ] && \
+             ls "$HOME/.cache/ms-playwright"/chromium_headless_shell-*/chrome-headless-shell-*/chrome-headless-shell >/dev/null 2>&1 && \
+             ls "$HOME/.cache/ms-playwright"/chromium-*/chrome-*/chrome >/dev/null 2>&1; then
+            echo "::notice::Skipping playwright install — chromium + headless-shell warm cache"
+            exit 0
+          fi
+          npx playwright install --with-deps chromium
       - name: Soft-live Halt evidence
+        id: soft
         env:
           PLAYWRIGHT_SKIP_WEBSERVER: "1"
           PLAYWRIGHT_LIVE_BASE_URL: ${{ needs.deploy.outputs.site_url }}
@@ -246,11 +284,28 @@ jobs:
             fi
           fi
           if [ -z "${PLAYWRIGHT_LIVE_BASE_URL:-}" ]; then
-            echo "::notice::skipped-live soft-live Halt — no origin URL (set site_url / STAGING_HEALTH_URL / PRODUCTION_HEALTH_URL)"
+            echo "::notice::skipped-live soft-live Halt — no origin URL"
+            echo "skipped=true" >> "$GITHUB_OUTPUT"
+            echo "duration_sec=0" >> "$GITHUB_OUTPUT"
             exit 0
           fi
+          echo "skipped=false" >> "$GITHUB_OUTPUT"
+          START=$(date +%s)
           npx playwright test playwright/risk-result-zh-hans-evidence.spec.ts -g "live Halt evidence"
-          echo "::notice::soft-live Halt finished (continue-on-error)"
+          END=$(date +%s)
+          DUR=$((END - START))
+          echo "duration_sec=$DUR" >> "$GITHUB_OUTPUT"
+          echo "::notice::soft-live Halt finished in ${DUR}s (-g \"live Halt evidence\")"
+          {
+            echo "## Soft-live Halt duration"
+            echo ""
+            echo "| Field | Value |"
+            echo "| --- | --- |"
+            echo "| filter | \`-g \"live Halt evidence\"\` |"
+            echo "| duration_sec | \`${DUR}\` |"
+            echo "| origin | \`${PLAYWRIGHT_LIVE_BASE_URL}\` |"
+            echo ""
+          } >> "$GITHUB_STEP_SUMMARY"
 
   deploy-summary:
     name: Deploy Summary
@@ -262,19 +317,37 @@ jobs:
         continue-on-error: true
         uses: actions/download-artifact@v4
         with:
-          name: eu-locale-failures
+          name: eu-locale-failures-${{ github.run_id }}
           path: ${{ runner.temp }}/eu-fail
-      - name: Write summary (failures pinned first)
+      - name: Write summary (failures pinned first + job HTML URLs)
         env:
           TARGET: ${{ needs.deploy.outputs.target }}
           SMOKE_URL: ${{ needs.deploy.outputs.site_url }}
           EU_RESULT: ${{ needs.eu-locale-routes.result }}
           SOFT_LIVE_RESULT: ${{ needs.soft-live-halt.result }}
+          SOFT_LIVE_DUR: ${{ needs.soft-live-halt.outputs.duration_sec }}
           DEPLOY_RESULT: ${{ needs.deploy.result }}
           RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          GH_TOKEN: ${{ github.token }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          RUN_ID: ${{ github.run_id }}
         run: |
           set -euo pipefail
           FAIL_MD="${{ runner.temp }}/eu-fail/eu-locale-failures.md"
+          EU_JOB_URL="$RUN_URL"
+          SOFT_JOB_URL="$RUN_URL"
+          DEPLOY_JOB_URL="$RUN_URL"
+          if command -v gh >/dev/null 2>&1; then
+            JOBS_JSON=$(gh api "repos/${GITHUB_REPOSITORY}/actions/runs/${RUN_ID}/jobs" --paginate 2>/dev/null || true)
+            if [ -n "$JOBS_JSON" ]; then
+              EU_JOB_URL=$(printf '%s' "$JOBS_JSON" | jq -r '[.jobs[]? | select(.name=="eu-locale-routes-200 (soft)")] | first | .html_url // empty' 2>/dev/null || true)
+              SOFT_JOB_URL=$(printf '%s' "$JOBS_JSON" | jq -r '[.jobs[]? | select(.name=="soft-live Halt (Playwright)")] | first | .html_url // empty' 2>/dev/null || true)
+              DEPLOY_JOB_URL=$(printf '%s' "$JOBS_JSON" | jq -r '[.jobs[]? | select(.name=="deploy:cloudflare")] | first | .html_url // empty' 2>/dev/null || true)
+              [ -n "$EU_JOB_URL" ] || EU_JOB_URL="$RUN_URL"
+              [ -n "$SOFT_JOB_URL" ] || SOFT_JOB_URL="$RUN_URL"
+              [ -n "$DEPLOY_JOB_URL" ] || DEPLOY_JOB_URL="$RUN_URL"
+            fi
+          fi
           {
             if [ -f "$FAIL_MD" ]; then
               cat "$FAIL_MD"
@@ -282,32 +355,33 @@ jobs:
             elif [ "$EU_RESULT" = "failure" ]; then
               echo "## EU locale route failures"
               echo ""
-              echo "_Soft job failed but no artifact was uploaded — open soft job logs below._"
+              echo "_Soft job failed but no artifact was uploaded — open [eu-locale soft job]($EU_JOB_URL)._"
               echo ""
             fi
             echo "## Deploy Cloudflare"
             echo ""
             echo "| Field | Value |"
             echo "| --- | --- |"
-            echo "| deploy | \`$DEPLOY_RESULT\` |"
-            echo "| eu-locale soft | \`$EU_RESULT\` — [run logs]($RUN_URL) (job \`eu-locale-routes-200 (soft)\`) |"
-            echo "| soft-live Halt | \`$SOFT_LIVE_RESULT\` — [run logs]($RUN_URL) (job \`soft-live Halt (Playwright)\`; skipped unless workflow_dispatch + run_soft_live_halt) |"
+            echo "| deploy | \`$DEPLOY_RESULT\` — [job]($DEPLOY_JOB_URL) |"
+            echo "| eu-locale soft | \`$EU_RESULT\` — [job]($EU_JOB_URL) |"
+            echo "| soft-live Halt | \`$SOFT_LIVE_RESULT\` — [job]($SOFT_JOB_URL) · duration_sec=\`${SOFT_LIVE_DUR:-n/a}\` |"
             echo "| target | \`$TARGET\` |"
             echo "| smoke URL | \`$SMOKE_URL\` |"
+            echo "| run | [$RUN_ID]($RUN_URL) |"
             CMD="npm run deploy:cloudflare"
             if [ "$TARGET" = "staging" ]; then CMD="npm run deploy:cloudflare:staging"; fi
             echo "| command | \`$CMD\` |"
             echo ""
             if [ "$TARGET" = "staging" ]; then
-              echo "Staging: Account sync is **cancelled** (\`accountSyncEnabled\` must stay false). Soft EU stays \`continue-on-error\` (same as production)."
+              echo "Staging: Account sync cancelled. Soft EU default soft; optional \`eu_locale_strict\` on workflow_dispatch."
               if [ -z "$SMOKE_URL" ]; then
                 echo ""
-                echo "> **First staging deploy:** smoke URL empty — set \`STAGING_HEALTH_URL\` to the wrangler \`*.workers.dev\` host, then re-run Deploy so soft EU / soft-live can probe."
+                echo "> **First staging deploy:** set \`STAGING_HEALTH_URL\` then re-run Deploy."
+                echo '>'
+                echo '> `gh variable set STAGING_HEALTH_URL --body '\''https://buusdocst-staging.mtsu.workers.dev'\''`'
               fi
             else
-              echo "Custom domain: **hold** until docs/POST_LAUNCH_48H.md (docs/CUSTOM_DOMAIN_REDEPLOY.md)."
-              echo ""
-              echo "EU soft job stays soft on production (eval 2026-11-08): hard-fail would flake locale-pack push deploys."
+              echo "EU soft stays soft on push; \`eu_locale_strict\` hard-fail is workflow_dispatch-only."
             fi
           } >> "$GITHUB_STEP_SUMMARY"
 

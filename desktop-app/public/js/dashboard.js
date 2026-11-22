@@ -273,17 +273,22 @@ function fillLangSelect() {
     if (!items.length) continue;
     const group = document.createElement("optgroup");
     group.label = regionLabels?.[region]?.en || region;
-    for (const item of items) {
+    // First-class bags first within each region (badge in label); EN-fallback after.
+    const ranked = [
+      ...items.filter((c) => firstClass.has(c.id)),
+      ...items.filter((c) => !firstClass.has(c.id))
+    ];
+    for (const item of ranked) {
       const opt = document.createElement("option");
       opt.value = item.id;
-      opt.textContent = item.nativeName;
-      // First-class bags (de/fr/es/it/nl + Nordic/CJK…) get a native-UI hint; others EN chrome.
       if (firstClass.has(item.id)) {
         opt.dataset.desktopBag = "first-class";
         opt.title = "Native desktop UI";
+        opt.textContent = `● ${item.nativeName}`;
       } else {
         opt.dataset.desktopBag = "en-fallback";
         opt.title = "English UI fallback";
+        opt.textContent = item.nativeName;
       }
       group.appendChild(opt);
     }

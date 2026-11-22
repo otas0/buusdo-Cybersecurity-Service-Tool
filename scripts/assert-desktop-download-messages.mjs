@@ -84,13 +84,17 @@ for (const key of REQUIRED) {
   }
 }
 
-const settingsPanel = readFileSync(path.join(root, "components/SettingsPanel.tsx"), "utf8");
-if (!settingsPanel.includes('data-testid="settings-desktop-mac-cdn-desc"')) {
-  console.error("SettingsPanel missing settings-desktop-mac-cdn-desc (CDN SR hook)");
+const downloadsPanel = readFileSync(path.join(root, "components/DownloadsPanel.tsx"), "utf8");
+if (!downloadsPanel.includes('data-testid="settings-desktop-mac-cdn-desc"')) {
+  console.error("DownloadsPanel missing settings-desktop-mac-cdn-desc (CDN SR hook)");
   failed += 1;
 }
-if (!settingsPanel.includes('data-testid="settings-desktop-setup-guide"')) {
-  console.error("SettingsPanel missing settings-desktop-setup-guide (unsigned setup guide)");
+if (!downloadsPanel.includes('data-testid="settings-desktop-setup-guide"')) {
+  console.error("DownloadsPanel missing settings-desktop-setup-guide (unsigned setup guide)");
+  failed += 1;
+}
+if (!downloadsPanel.includes('data-testid="downloads-extension"')) {
+  console.error("DownloadsPanel missing downloads-extension section");
   failed += 1;
 }
 if (!String(downloads.setupGuideUrl || "").includes("DESKTOP_SETUP_GUIDE")) {
@@ -99,11 +103,11 @@ if (!String(downloads.setupGuideUrl || "").includes("DESKTOP_SETUP_GUIDE")) {
 }
 
 // Download row must not carry aria-labelledby (section owns labelledby → heading).
-const rowBlock = settingsPanel.match(
+const rowBlock = downloadsPanel.match(
   /data-testid="settings-desktop-download-row"[\s\S]{0,400}?>/
 );
 if (!rowBlock) {
-  console.error("SettingsPanel missing settings-desktop-download-row open tag");
+  console.error("DownloadsPanel missing settings-desktop-download-row open tag");
   failed += 1;
 } else if (/aria-labelledby=/.test(rowBlock[0])) {
   console.error(
@@ -113,11 +117,11 @@ if (!rowBlock) {
 }
 
 // Mac download link: describedby only — never aria-description (pairs with row labelledby gate).
-const macBlock = settingsPanel.match(
+const macBlock = downloadsPanel.match(
   /data-testid="settings-desktop-download-mac"[\s\S]{0,500}?>/
 );
 if (!macBlock) {
-  console.error("SettingsPanel missing settings-desktop-download-mac open tag");
+  console.error("DownloadsPanel missing settings-desktop-download-mac open tag");
   failed += 1;
 } else if (/aria-description=/.test(macBlock[0])) {
   console.error(
@@ -127,11 +131,11 @@ if (!macBlock) {
 }
 
 // Win / Mac / Linux anchors in the download row — no aria-description anywhere in the <p>.
-const rowParagraph = settingsPanel.match(
+const rowParagraph = downloadsPanel.match(
   /data-testid="settings-desktop-download-row"[\s\S]*?<\/p>/
 );
 if (!rowParagraph) {
-  console.error("SettingsPanel missing settings-desktop-download-row paragraph");
+  console.error("DownloadsPanel missing settings-desktop-download-row paragraph");
   failed += 1;
 } else if (/<a\b[^>]*\baria-description=/.test(rowParagraph[0])) {
   console.error(
@@ -140,18 +144,28 @@ if (!rowParagraph) {
   failed += 1;
 }
 
-// settings-desktop-heading must stay unique page-wide.
-const headingHits = [...settingsPanel.matchAll(/id="settings-desktop-heading"/g)];
+// settings-desktop-heading must stay unique page-wide on Downloads.
+const headingHits = [...downloadsPanel.matchAll(/id="settings-desktop-heading"/g)];
 if (headingHits.length !== 1) {
   console.error(
-    `SettingsPanel must declare id="settings-desktop-heading" exactly once (found ${headingHits.length})`
+    `DownloadsPanel must declare id="settings-desktop-heading" exactly once (found ${headingHits.length})`
   );
   failed += 1;
 }
+
+const settingsPanel = readFileSync(path.join(root, "components/SettingsPanel.tsx"), "utf8");
 if (settingsPanel.includes("AccountSettings") || settingsPanel.includes("settings-account")) {
   console.error(
     "SettingsPanel must not import AccountSettings / settings-account (Account sync cancelled)"
   );
+  failed += 1;
+}
+if (!settingsPanel.includes('data-testid="settings-open-downloads"')) {
+  console.error("SettingsPanel must link to /downloads via settings-open-downloads");
+  failed += 1;
+}
+if (settingsPanel.includes('id="settings-desktop"')) {
+  console.error("SettingsPanel must not keep settings-desktop section (moved to DownloadsPanel)");
   failed += 1;
 }
 

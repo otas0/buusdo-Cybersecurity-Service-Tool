@@ -117,7 +117,7 @@ test.describe("Settings → honest limits (SPA)", () => {
     // Count document loads (not framenavigated — vinext soft nav can still emit those).
     const loads = trackDocumentLoads(page);
 
-    await page.goto(`${base}/en/settings#settings-desktop`, { waitUntil: "domcontentloaded" });
+    await page.goto(`${base}/en/downloads`, { waitUntil: "domcontentloaded" });
     await expect(page.getByTestId("settings-desktop-downloads")).toBeVisible({ timeout: 15000 });
     await waitForReactHydration(page, '[data-testid="settings-desktop-honest-limits"]');
     await assertDownloadsRowLabelledByHeading(page);
@@ -151,7 +151,7 @@ test.describe("Settings → honest limits (SPA)", () => {
     }
 
     await page.addInitScript(clearTestDownloadsInit);
-    await page.goto(`${base}/en/settings#settings-desktop`, { waitUntil: "domcontentloaded" });
+    await page.goto(`${base}/en/downloads`, { waitUntil: "domcontentloaded" });
     await expect(page.getByTestId("settings-desktop-downloads")).toBeVisible({ timeout: 15000 });
     await expect(page.getByTestId("settings-desktop-mac-source")).toHaveCount(0);
   });
@@ -171,7 +171,7 @@ test.describe("Settings → honest limits (SPA)", () => {
 
     const loads = trackDocumentLoads(page);
 
-    await page.goto(`${base}/en/settings#settings-desktop`, { waitUntil: "domcontentloaded" });
+    await page.goto(`${base}/en/downloads`, { waitUntil: "domcontentloaded" });
     await expect(page.getByTestId("settings-desktop-downloads")).toBeVisible({ timeout: 15000 });
     await assertDownloadsRowLabelledByHeading(page);
     await expect(page.getByTestId("settings-desktop-mac-source")).toBeVisible({ timeout: 15000 });
@@ -185,13 +185,13 @@ test.describe("Settings → honest limits (SPA)", () => {
     await expect(page.locator("#settings-desktop-mac-cdn-desc")).toHaveText(MAC_CDN_DESC_EN);
 
     // pt-PT: localized mac-cdn-desc + mac-source title via same helper.
-    await page.goto(`${base}/pt-PT/settings#settings-desktop`, { waitUntil: "domcontentloaded" });
+    await page.goto(`${base}/pt-PT/downloads`, { waitUntil: "domcontentloaded" });
     await expect(page.getByTestId("settings-desktop-downloads")).toBeVisible({ timeout: 15000 });
     await assertDownloadsRowLabelledByHeading(page);
     await assertMacSourceTitleEqualsCdnDesc(page, MAC_CDN_DESC_PT);
 
     // Back to EN for Privacy SPA path below.
-    await page.goto(`${base}/en/settings#settings-desktop`, { waitUntil: "domcontentloaded" });
+    await page.goto(`${base}/en/downloads`, { waitUntil: "domcontentloaded" });
     await assertMacSourceTitleEqualsCdnDesc(page, MAC_CDN_DESC_EN);
 
     await page.goto(`${base}/en/privacy#privacy-honest-limits`, { waitUntil: "domcontentloaded" });
@@ -204,7 +204,7 @@ test.describe("Settings → honest limits (SPA)", () => {
     const noteEn = page.getByTestId("privacy-desktop-mirror-note");
     await expect(noteEn).toBeVisible({ timeout: 15000 });
     await waitForReactHydration(page, '[data-testid="privacy-desktop-mirror-note"]');
-    await expect(noteEn).toHaveAttribute("href", /\/en\/settings#settings-desktop/);
+    await expect(noteEn).toHaveAttribute("href", /\/en\/downloads/);
 
     const beforeNoteClick = loads.count;
     await noteEn.click();
@@ -212,12 +212,12 @@ test.describe("Settings → honest limits (SPA)", () => {
     // Stub must survive Privacy → Settings navigation (initScript / SPA).
     await expect(page.getByTestId("settings-desktop-download-mac")).toHaveAttribute("href", CDN_FIXTURE);
 
-    // Active locale: pt-PT Privacy mirror note → SPA stays under /pt-PT/settings#settings-desktop.
+    // Active locale: pt-PT Privacy mirror note → SPA stays under /pt-PT/downloads.
     await page.goto(`${base}/pt-PT/privacy#privacy-honest-limits`, { waitUntil: "domcontentloaded" });
     await expect(page.getByTestId("privacy-honest-limits")).toBeVisible({ timeout: 15000 });
     const notePt = page.getByTestId("privacy-desktop-mirror-note");
     await expect(notePt).toBeVisible({ timeout: 15000 });
-    await expect(notePt).toHaveAttribute("href", /\/pt-PT\/settings#settings-desktop/);
+    await expect(notePt).toHaveAttribute("href", /\/pt-PT\/downloads/);
 
     // Keyboard Enter must take the same SPA path as click.
     const beforePtEnter = loads.count;

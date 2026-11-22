@@ -263,4 +263,16 @@ test.describe("live Halt evidence (soft)", () => {
   test("known-threat Halt shows evidence-known-threat on /bg", async ({ page }) => {
     await runKnownThreatOnLocale(page, "/bg", /заплах|извест|Сигнал/i);
   });
+
+  test("known-threat Halt shows evidence-known-threat on /hr", async ({ page }) => {
+    await runKnownThreatOnLocale(page, "/hr", /prijetnj|poznat|Signal/i);
+  });
+
+  test("known-threat Halt shows evidence-known-threat on /sk", async ({ page }) => {
+    await runKnownThreatOnLocale(page, "/sk", /hrozb|znám|Signál/i);
+  });
+
+  test("known-threat Halt shows evidence-known-threat on /hu", async ({ page }) => {
+    await runKnownThreatOnLocale(page, "/hu", /fenyeget|Ismert|jelzés/i);
+  });
 });

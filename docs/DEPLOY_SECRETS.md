@@ -43,7 +43,7 @@ Wrangler OAuth / `wrangler login` cannot be copied into GH secrets — use an AP
 | `CHECKLIST_CI_WRITE` | Set to `0` to disable bot commits that append check:prod rows to LAUNCH_CHECKLIST |
 | `RUN_PLAYWRIGHT_SETTINGS` | Optional CI job `playwright-settings`. Keep **`false`** until offline Settings narrow (`npm run test:playwright:settings`) is green; only then `gh variable set RUN_PLAYWRIGHT_SETTINGS --body true`. |
 
-**Deploy soft jobs:** `eu-locale-routes-200` always runs after a successful deploy (production + staging) with **`continue-on-error: true`** — eval 2026-11-08: do **not** hard-fail production on a single locale blip (would flake locale-pack push deploys). Opt-in soft-live Halt: workflow_dispatch **`run_soft_live_halt`** installs Playwright and runs `live Halt evidence` against the smoke URL.
+**Deploy soft jobs:** `eu-locale-routes-200` always runs after a successful deploy (production + staging). Default **`continue-on-error: true`** — eval 2026-11-08: do **not** hard-fail production on a single locale blip (would flake locale-pack push deploys). Optional workflow_dispatch **`eu_locale_strict=true`** hard-fails that soft job only (push/locale-pack path stays soft). Opt-in soft-live Halt: **`run_soft_live_halt`** (Playwright Chromium cache + `-g "live Halt evidence"`). Preview Worker scaffold: `wrangler.jsonc` env **`preview`** → name `buusdocst-preview`; deploy with `CLOUDFLARE_ENV=preview vinext build && npm run assert:preview-wrangler-name && wrangler deploy`.
 
 ## Account sync — cancelled
 

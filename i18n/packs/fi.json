@@ -460,7 +460,7 @@
   "proxyGuideWin": "Windows: Asetukset → Verkko ja Internet → Välityspalvelin → Manuaalinen määritys → Käytä välityspalvelinta → Osoite 127.0.0.1 Portti 8080.",
   "proxyGuideLinux": "Linux: aseta http_proxy=http://127.0.0.1:8080 sovellukselle, tai työpöydän verkkovälitys → HTTP 127.0.0.1:8080.",
   "proxyGuideBrowser": "Selain: suosi käyttöjärjestelmän välitystä tai laajennusta, joka lähettää HTTP:n 127.0.0.1:8080 kautta. Älä asenna MITM-varmennetta — tämä tuote ei koskaan pura TLS:ää.",
-  "proxyGuideCurl": "Quick test: curl -x http://127.0.0.1:8080 http://www.google-analytics.com/collect -i",
+  "proxyGuideCurl": "Pikatesti: curl -x http://127.0.0.1:8080 http://www.google-analytics.com/collect -i",
   "proxyGuideAfterBlock": "Isäntiä estetty. Aseta HTTP-välitykseksi 127.0.0.1:8080 tai loki jää tyhjäksi.",
   "extensionToastPhishing": "Tietojenkalastelumalli estetty",
   "homeDownloadsCta": "Työpöytälataukset",

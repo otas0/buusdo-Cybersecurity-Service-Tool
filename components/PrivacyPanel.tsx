@@ -12,7 +12,7 @@ export function PrivacyPanel({
 }: {
   locale: Locale;
   onBack: () => void;
-  /** SPA: Settings → #settings-desktop (scroll after client navigate). */
+  /** SPA: open dedicated /downloads page. */
   onOpenDesktopDownloads?: () => void;
 }) {
   const t = getMessages(locale);
@@ -57,7 +57,7 @@ export function PrivacyPanel({
           <p className="scope-note">
             <a
               className="text-button"
-              href={`/${locale}/settings#settings-desktop`}
+              href={`/${locale}/downloads`}
               data-testid="privacy-desktop-mirror-note"
               onClick={(e) => {
                 if (!onOpenDesktopDownloads) return;
@@ -111,7 +111,7 @@ export function PrivacyPanel({
       </p>
 
       <p className="hint">
-        <a className="text-button" href={`/${locale}/settings#settings-desktop`}>
+        <a className="text-button" href={`/${locale}/downloads`}>
           {t.desktopDownloadsTitle}
         </a>
         {" · "}

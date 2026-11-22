@@ -1343,7 +1343,7 @@ export const STRINGS = {
     "detailDanger": "仿冒網域或登入套路。",
     "trackersBlocked": "追蹤器",
     "phishingHits": "訊號",
-    "langLabel": "語言",
+    "langLabel": "檢查",
     "privacyLabel": "資料",
     "privacyOff": "永不儲存",
     "privacyLocal": "僅本裝置",

@@ -46,6 +46,16 @@
     "nextNoCreds": "不要在此網站輸入密碼、卡號、簡訊/電子郵件驗證碼或其他個人資料。",
     "nextVerify": "獨立核實：開啟您已信任的該組織官方網域或應用程式（書籤、金融卡、已知應用程式商店）。不要使用可疑頁面上顯示的電話或電子郵件。"
   },
+  "ja": {
+    "phishing": "フィッシングパターンをブロックしました",
+    "dismiss": "ヒントを閉じる",
+    "dangerLevel": "危険度: 停止",
+    "ignoreRisk": "パスワード、支払い情報、その他の個人データを、このアドレスを支配する相手に渡すおそれがあります。入力や支払いの前にタブを閉じてください。",
+    "nextStepsTitle": "次にすること — 手順どおり",
+    "nextLeave": "今すぐこのページを離れてください — 確認したアドレスで続けないでください。",
+    "nextNoCreds": "このサイトにパスワード、カード番号、SMS/メールのコード、その他の個人データを入力しないでください。",
+    "nextVerify": "独立して確認してください：すでに信頼している公式ドメインやアプリを開く（ブックマーク、キャッシュカード、既知のアプリストア）。不審なページに表示された電話番号やメールは使わないでください。"
+  },
   "pt-PT": {
     "phishing": "Padrão de phishing bloqueado",
     "dismiss": "Dispensar aviso",
@@ -165,16 +175,6 @@
     "nextLeave": "Saia já desta página — não continue no endereço que você verificou.",
     "nextNoCreds": "Não digite senhas, números de cartão, códigos de SMS/e-mail ou outros dados pessoais neste site.",
     "nextVerify": "Verifique de forma independente: abra o domínio ou o app oficial da organização em que você já confia (favorito, cartão do banco, loja de apps conhecida). Não use telefones nem e-mails mostrados na página suspeita."
-  },
-  "ja": {
-    "phishing": "フィッシングパターンをブロックしました",
-    "dismiss": "ヒントを閉じる",
-    "dangerLevel": "危険度: 停止",
-    "ignoreRisk": "パスワード、支払い情報、その他の個人データを、このアドレスを支配する相手に渡すおそれがあります。入力や支払いの前にタブを閉じてください。",
-    "nextStepsTitle": "次にすること — 手順どおり",
-    "nextLeave": "今すぐこのページを離れてください — 確認したアドレスで続けないでください。",
-    "nextNoCreds": "このサイトにパスワード、カード番号、SMS/メールのコード、その他の個人データを入力しないでください。",
-    "nextVerify": "独立して確認してください：すでに信頼している公式ドメインやアプリを開く（ブックマーク、キャッシュカード、既知のアプリストア）。不審なページに表示された電話番号やメールは使わないでください。"
   }
 };
   /* TOAST_COPY_END */

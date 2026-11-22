@@ -13,6 +13,7 @@ import { TrafficLights } from "./TrafficLights";
 import { SettingsPanel } from "./SettingsPanel";
 import { PrivacyPanel } from "./PrivacyPanel";
 import { ListsOfflinePanel } from "./ListsOfflinePanel";
+import { DownloadsPanel } from "./DownloadsPanel";
 import { reportAnalysis } from "./report-analysis";
 import {
   listCheckHistory,
@@ -41,12 +42,13 @@ import {
 import { PROBE_TIMEOUT_ENV_KEY } from "../shared/probe-budget-copy.mjs";
 import { replaceStateMaybeHashchange } from "../shared/spa-replace-state";
 
-type ShellView = "check" | "settings" | "privacy" | "lists-offline";
+type ShellView = "check" | "settings" | "privacy" | "lists-offline" | "downloads";
 
 function viewFromSlug(slug: string[]): ShellView {
   if (slug[0] === "settings") return "settings";
   if (slug[0] === "privacy") return "privacy";
   if (slug[0] === "lists-offline") return "lists-offline";
+  if (slug[0] === "downloads") return "downloads";
   return "check";
 }
 
@@ -54,6 +56,7 @@ function pathForView(locale: Locale, next: ShellView, hash = ""): string {
   if (next === "settings") return `/${locale}/settings${hash}`;
   if (next === "privacy") return `/${locale}/privacy${hash}`;
   if (next === "lists-offline") return `/${locale}/lists-offline${hash}`;
+  if (next === "downloads") return `/${locale}/downloads${hash}`;
   return `/${locale}${hash}`;
 }
 
@@ -509,11 +512,13 @@ function Home({ locale }: { locale: Locale }) {
           locale={locale}
           onReset={() => setAnalysis(null)}
         />
-        <p className="hint home-downloads-cta" data-testid="home-downloads-cta">
-          <a className="text-button" href={`/${locale}/settings#settings-desktop`}>
-            {t.homeDownloadsCta}
-          </a>
-        </p>
+        <div className="stage-secondary">
+          <p className="hint home-downloads-cta" data-testid="home-downloads-cta">
+            <a className="text-button" href={`/${locale}/downloads`}>
+              {t.homeDownloadsCta}
+            </a>
+          </p>
+        </div>
       </main>
     );
   }
@@ -538,7 +543,7 @@ function Home({ locale }: { locale: Locale }) {
           </p>
         )}
         <p className="hint home-downloads-cta" data-testid="home-downloads-cta">
-          <a className="text-button" href={`/${locale}/settings#settings-desktop`}>
+          <a className="text-button" href={`/${locale}/downloads`}>
             {t.homeDownloadsCta}
           </a>
         </p>
@@ -643,26 +648,22 @@ export function AppShell({ locale, slug }: { locale: Locale; slug: string[] }) {
     };
   }, [view, slug]);
 
-  // Settings hash-only updates while already on Settings (SPA) — scroll #settings-desktop.
+  // Legacy Settings #settings-desktop → dedicated /downloads page.
   useEffect(() => {
     if (view !== "settings") return;
-    function scrollSettingsDesktopHash() {
-      const hash = typeof window !== "undefined" ? window.location.hash : "";
-      if (hash !== "#settings-desktop") return;
-      document.getElementById("settings-desktop")?.scrollIntoView({ block: "start" });
-    }
-    const raf = window.requestAnimationFrame(() => {
-      window.requestAnimationFrame(scrollSettingsDesktopHash);
-    });
-    window.addEventListener("hashchange", scrollSettingsDesktopHash);
-    return () => {
-      window.cancelAnimationFrame(raf);
-      window.removeEventListener("hashchange", scrollSettingsDesktopHash);
-    };
-  }, [view, slug]);
+    if (typeof window === "undefined") return;
+    if (window.location.hash !== "#settings-desktop") return;
+    setView("downloads");
+    replaceStateMaybeHashchange(pathForView(locale, "downloads"));
+  }, [view, slug, locale]);
 
   function navigate(next: ShellView, hashOverride?: string) {
     const alreadySettings = view === "settings";
+    // Legacy deep-link / privacy CTA → downloads page.
+    if (next === "settings" && hashOverride === "#settings-desktop") {
+      next = "downloads";
+      hashOverride = "";
+    }
     setView(next);
     // Already on Settings → block-lists; first open → data section.
     let hash = hashOverride ?? "";
@@ -676,11 +677,6 @@ export function AppShell({ locale, slug }: { locale: Locale; slug: string[] }) {
       replaceStateMaybeHashchange(path);
       if (next === "settings") {
         window.setTimeout(() => {
-          if (hash === "#settings-desktop") {
-            // Privacy mirror note (SPA) or deep-link — scroll downloads into view.
-            document.getElementById("settings-desktop")?.scrollIntoView({ block: "start" });
-            return;
-          }
           if (alreadySettings || hash === "#settings-block-lists") {
             window.dispatchEvent(new Event("shield:settings-block-lists"));
             const live = document.querySelector<HTMLElement>('[data-testid="settings-block-lists-live"]');
@@ -718,13 +714,19 @@ export function AppShell({ locale, slug }: { locale: Locale; slug: string[] }) {
         <PrivacyPanel
           locale={locale}
           onBack={() => navigate("check")}
-          onOpenDesktopDownloads={() => navigate("settings", "#settings-desktop")}
+          onOpenDesktopDownloads={() => navigate("downloads")}
         />
       ) : view === "lists-offline" ? (
         <ListsOfflinePanel
           locale={locale}
           onBack={() => navigate("check")}
           onOpenSettingsLists={() => navigate("settings", "#settings-block-lists")}
+        />
+      ) : view === "downloads" ? (
+        <DownloadsPanel
+          locale={locale}
+          onBack={() => navigate("check")}
+          onOpenHonestLimits={() => navigate("privacy", "#privacy-honest-limits")}
         />
       ) : (
         <Home locale={locale} />

@@ -21,12 +21,13 @@ const REGION_MESSAGE_KEY: Record<LocaleRegion, keyof MessageBag> = {
   "southeast-asia": "langRegionSoutheastAsia"
 };
 
-type ShellView = "check" | "settings" | "privacy" | "lists-offline";
+type ShellView = "check" | "settings" | "privacy" | "lists-offline" | "downloads";
 
 function pathForView(locale: string, view: ShellView, hash = ""): string {
   if (view === "settings") return `/${locale}/settings${hash}`;
   if (view === "privacy") return `/${locale}/privacy${hash}`;
   if (view === "lists-offline") return `/${locale}/lists-offline${hash}`;
+  if (view === "downloads") return `/${locale}/downloads${hash}`;
   return `/${locale}${hash}`;
 }
 

@@ -35,6 +35,9 @@ Product instrument language — keep short and consistent across locales.
 | uk | Стоп | Тримати | Чисто | Очікування |
 | is | Stöðva | Halda | Hreint | Biðstaða |
 | sl | Stop | Zadrži | Čisto | Pripravljenost |
+| hr | Stani | Zadrži | Čisto | Pripravnost |
+| sk | Stoj | Pozdržať | Čisto | Pohotovosť |
+| hu | Állj | Várakozás | Tiszta | Készenlét |
 | th | หยุด | ชะลอ | ผ่าน | พร้อม |
 | vi | Dừng | Giữ | Thông | Chờ |
 | mi | Tū | Tatari | Mahea | Tūrei |

@@ -69,6 +69,22 @@ test("mapPool preserves input order under concurrency", async () => {
   assert.equal(started.length, items.length);
 });
 
+test("mapPool never runs more than limit workers at once", async () => {
+  const limit = 3;
+  let inFlight = 0;
+  let maxInFlight = 0;
+  const items = Array.from({ length: 12 }, (_, i) => i);
+  await mapPool(items, limit, async (n) => {
+    inFlight += 1;
+    maxInFlight = Math.max(maxInFlight, inFlight);
+    await new Promise((r) => setTimeout(r, 8));
+    inFlight -= 1;
+    return n;
+  });
+  assert.ok(maxInFlight <= limit, `maxInFlight=${maxInFlight} exceeded limit=${limit}`);
+  assert.ok(maxInFlight >= 2, "expected some parallelism");
+});
+
 test("soft-live Go button helper covers ga/mt pack labels", () => {
   const src = readFileSync("playwright/helpers/soft-live-go-button.ts", "utf8");
   assert.match(src, /SOFT_LIVE_GO_BUTTON_NAME/);

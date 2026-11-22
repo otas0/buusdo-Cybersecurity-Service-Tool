@@ -111,13 +111,31 @@ h1 {
   border: 0;
 }
 
+.lang {
+  max-width: min(11.5rem, 48vw);
+  min-width: 0;
+  flex-shrink: 1;
+}
+
 .lang select {
+  display: block;
+  max-width: 100%;
+  width: 100%;
   background: transparent;
   border: 0;
   font-family: var(--mono);
   font-size: 11px;
   letter-spacing: 0.14em;
   cursor: pointer;
+  /* Keep Southern Africa + long native names from blowing the 320px popup. */
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.lang select optgroup {
+  font-style: normal;
+  letter-spacing: 0.06em;
 }
 
 .api-base {

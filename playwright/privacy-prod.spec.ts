@@ -115,7 +115,7 @@ test.describe("production privacy pages", () => {
   });
 
   test("/en/settings shows desktop download slots", async ({ page }) => {
-    await page.goto(`${base}/en/settings#settings-desktop`, { waitUntil: "domcontentloaded" });
+    await page.goto(`${base}/en/downloads`, { waitUntil: "domcontentloaded" });
     await expect(page.locator("#settings-desktop")).toBeVisible();
     await expect(page.getByTestId("settings-desktop-downloads")).toBeVisible();
     await waitForReactHydration(page, '[data-testid="settings-desktop-downloads"]');
@@ -143,7 +143,7 @@ test.describe("production privacy pages", () => {
   });
 
   test("/pt-PT/settings shows desktop download slots", async ({ page }) => {
-    await page.goto(`${base}/pt-PT/settings#settings-desktop`, { waitUntil: "domcontentloaded" });
+    await page.goto(`${base}/pt-PT/downloads`, { waitUntil: "domcontentloaded" });
     await expect(page.locator("#settings-desktop")).toBeVisible();
     await expect(page.getByTestId("settings-desktop-downloads")).toBeVisible();
     await waitForReactHydration(page, '[data-testid="settings-desktop-downloads"]');

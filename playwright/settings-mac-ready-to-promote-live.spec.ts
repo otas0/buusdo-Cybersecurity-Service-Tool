@@ -56,7 +56,7 @@ test("live SettingsPanel: ready-to-promote note from status API", async ({ page 
     });
   });
 
-  await page.goto(`${base}/en/settings#settings-desktop`, { waitUntil: "domcontentloaded" });
+  await page.goto(`${base}/en/downloads`, { waitUntil: "domcontentloaded" });
   await expect(page.getByTestId("settings-desktop-downloads")).toBeVisible({ timeout: 20000 });
   await expect(page.getByTestId("settings-desktop-mac-ready-to-promote")).toBeVisible({
     timeout: 15000

@@ -43,6 +43,22 @@ jobs:
           npm run test
           echo "::notice::shield-lists classic fixture covered in tests/shield-lists.test.ts (mjs + shield-lists.classic.js parity)"
 
+      - name: Sync latest Deploy run URL (soft)
+        continue-on-error: true
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+        run: |
+          # Soft: gh failure → ::warning:: exit 0 (does not block CI). Strict only with SYNC_DEPLOY_RUN_URL_STRICT=1.
+          npm run sync:latest-deploy-run-url
+          if git diff --quiet -- docs/LOCAL_CF_CONNECTIVITY.md; then
+            echo "::notice::LOCAL_CF_CONNECTIVITY.md already current"
+          else
+            echo "::notice::LOCAL_CF_CONNECTIVITY.md would update — review locally with npm run sync:latest-deploy-run-url (CI soft step does not commit)"
+            git diff --stat -- docs/LOCAL_CF_CONNECTIVITY.md || true
+            git checkout -- docs/LOCAL_CF_CONNECTIVITY.md
+          fi
+
       - name: Pack coverage ratios (locale notice + hard-fail regression)
         run: |
           # Keep must-stay-full list aligned with packs that currently pass the threshold.

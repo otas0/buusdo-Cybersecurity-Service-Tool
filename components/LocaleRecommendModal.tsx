@@ -64,7 +64,7 @@ export function LocaleRecommendModal({
   hash = ""
 }: {
   locale: Locale;
-  view: "check" | "settings" | "privacy" | "lists-offline";
+  view: "check" | "settings" | "privacy" | "lists-offline" | "downloads";
   hash?: string;
 }) {
   const t = getMessages(locale);
@@ -112,6 +112,7 @@ export function LocaleRecommendModal({
     if (view === "settings") return `/${next}/settings${hash}`;
     if (view === "privacy") return `/${next}/privacy${hash}`;
     if (view === "lists-offline") return `/${next}/lists-offline${hash}`;
+    if (view === "downloads") return `/${next}/downloads${hash}`;
     return `/${next}${hash}`;
   }
 

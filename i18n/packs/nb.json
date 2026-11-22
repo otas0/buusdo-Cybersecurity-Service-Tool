@@ -460,7 +460,7 @@
   "proxyGuideWin": "Windows: Innstillinger → Nettverk og Internett → Proxy → Manuell oppsett → Bruk en proxyserver → Adresse 127.0.0.1 Port 8080.",
   "proxyGuideLinux": "Linux: sett http_proxy=http://127.0.0.1:8080 for appen, eller skrivebordets nettverksproxy → HTTP 127.0.0.1:8080.",
   "proxyGuideBrowser": "Nettleser: foretrekk OS-proxy, eller et tillegg som sender HTTP via 127.0.0.1:8080. Ikke installer noe MITM-sertifikat — dette produktet dekrypterer aldri TLS.",
-  "proxyGuideCurl": "Quick test: curl -x http://127.0.0.1:8080 http://www.google-analytics.com/collect -i",
+  "proxyGuideCurl": "Hurtigtest: curl -x http://127.0.0.1:8080 http://www.google-analytics.com/collect -i",
   "proxyGuideAfterBlock": "Verter ble blokkert. Sett HTTP-proxyen til 127.0.0.1:8080, ellers forblir loggen tom.",
   "extensionToastPhishing": "Phishingmønster blokkert",
   "homeDownloadsCta": "Skrivebordsnedlastinger",

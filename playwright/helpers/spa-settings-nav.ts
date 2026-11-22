@@ -100,50 +100,50 @@ export function assertSpaNavNoReload(documentLoads: number, before: number) {
   expect(documentLoads).toBe(before);
 }
 
-/** Shared tail after Privacy→Settings SPA nav (click / Enter / Space). */
+/** Shared tail after Privacy→Downloads SPA nav (click / Enter / Space). */
 export async function assertSettingsDesktopAfterSpaNav(
   page: Page,
   documentLoads: number,
   before: number,
   urlTimeoutMs = 10000
 ) {
-  await page.waitForURL(/\/(?:en|pt-PT|zh-Hans|ja)\/settings#settings-desktop/, { timeout: urlTimeoutMs });
+  await page.waitForURL(/\/(?:en|pt-PT|zh-Hans|ja)\/downloads/, { timeout: urlTimeoutMs });
   assertSpaNavNoReload(documentLoads, before);
   await expect(page.getByTestId("settings-desktop-downloads")).toBeVisible({ timeout: 15000 });
   await assertSettingsDesktopInView(page);
 }
 
 /**
- * Locale select from Settings#settings-desktop must keep hash + scroll target in view
+ * Locale select from /downloads must keep the desktop section in view
  * (EN → pt-PT → en). Used by honest-limits + narrow — no local in-view copies.
  */
 export async function assertLocaleToggleKeepsSettingsDesktop(page: Page, base: string) {
   const root = base.replace(/\/$/, "");
-  await page.goto(`${root}/en/settings#settings-desktop`, { waitUntil: "domcontentloaded" });
+  await page.goto(`${root}/en/downloads`, { waitUntil: "domcontentloaded" });
   await expect(page.getByTestId("settings-desktop-downloads")).toBeVisible({ timeout: 15000 });
   await waitForReactHydration(page, '[data-testid="settings-desktop-downloads"]');
-  await expect(page).toHaveURL(/\/en\/settings#settings-desktop/);
+  await expect(page).toHaveURL(/\/en\/downloads/);
 
   const lang = page.getByTestId("locale-select");
   await expect(lang).toBeVisible();
   await waitForReactHydration(page, '[data-testid="locale-select"]');
   await Promise.all([
-    page.waitForURL(/\/pt-PT\/settings#settings-desktop/),
+    page.waitForURL(/\/pt-PT\/downloads/),
     lang.selectOption("pt-PT")
   ]);
   await expect(page.getByTestId("settings-desktop-downloads")).toBeVisible({ timeout: 15000 });
   await assertSettingsDesktopInView(page);
 
   await Promise.all([
-    page.waitForURL(/\/en\/settings#settings-desktop/),
+    page.waitForURL(/\/en\/downloads/),
     page.getByTestId("locale-select").selectOption("en")
   ]);
   await assertSettingsDesktopInView(page);
 
-  // Cross-locale: zh-Hans and ja must keep #settings-desktop
+  // Cross-locale: zh-Hans and ja must keep /downloads
   for (const next of ["zh-Hans", "ja"] as const) {
     await Promise.all([
-      page.waitForURL(new RegExp(`/${next}/settings#settings-desktop`)),
+      page.waitForURL(new RegExp(`/${next}/downloads`)),
       page.getByTestId("locale-select").selectOption(next)
     ]);
     await expect(page.getByTestId("settings-desktop-downloads")).toBeVisible({ timeout: 15000 });
