@@ -621,9 +621,46 @@ async function runWebsiteApiCheck() {
       /failed to fetch|networkerror|load failed|aborted|timeout|timed out|unreachable/i.test(
         message
       );
-    els.websiteApiStatus.textContent = looksCfTimeout
-      ? t(lang, "websiteApiCfUnreachable", { chinaEntry: CHINA_PAGES_URL })
-      : t(lang, "websiteApiFail", { error: message });
+    if (looksCfTimeout) {
+      const noticeUrl = (() => {
+        try {
+          const u = new URL(CHINA_PAGES_URL);
+          u.searchParams.set("china_stay", "1");
+          return u.toString();
+        } catch {
+          return `${CHINA_PAGES_URL.replace(/\?.*$/, "")}?china_stay=1`;
+        }
+      })();
+      const line = t(lang, "websiteApiCfUnreachable", { chinaEntry: noticeUrl });
+      els.websiteApiStatus.replaceChildren();
+      const parts = String(line).split(noticeUrl);
+      if (parts.length === 1) {
+        els.websiteApiStatus.append(document.createTextNode(line));
+        const a = document.createElement("a");
+        a.href = noticeUrl;
+        a.target = "_blank";
+        a.rel = "noreferrer noopener";
+        a.textContent = noticeUrl;
+        a.dataset.testid = "china-notice-link";
+        els.websiteApiStatus.append(document.createTextNode(" "));
+        els.websiteApiStatus.append(a);
+      } else {
+        parts.forEach((chunk, i) => {
+          if (chunk) els.websiteApiStatus.append(document.createTextNode(chunk));
+          if (i < parts.length - 1) {
+            const a = document.createElement("a");
+            a.href = noticeUrl;
+            a.target = "_blank";
+            a.rel = "noreferrer noopener";
+            a.textContent = noticeUrl;
+            a.dataset.testid = "china-notice-link";
+            els.websiteApiStatus.append(a);
+          }
+        });
+      }
+    } else {
+      els.websiteApiStatus.textContent = t(lang, "websiteApiFail", { error: message });
+    }
   }
 }
 

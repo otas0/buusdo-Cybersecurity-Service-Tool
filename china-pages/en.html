@@ -11,6 +11,7 @@
     <link rel="icon" href="./assets/favicon.svg" type="image/svg+xml" />
     <link rel="stylesheet" href="./styles.css" />
     <script src="./lang-persist.js"></script>
+    <script src="./region-redirect.js"></script>
   </head>
   <body>
     <main class="shell" data-testid="china-notice">
@@ -198,7 +199,7 @@
           >
         </div>
         <p class="hint" data-testid="china-region-redirect-hint">
-          If this network can reach the full checker, this page auto-switches.
+          Reachable networks are force-redirected to the full checker (use Stay for this tab only).
           <a href="./en.html?china_stay=1" data-testid="china-stay-link">Stay on this page</a>
           ·
           <a href="./en.html?china_stay=0" data-testid="china-stay-clear">Clear stay</a>.
@@ -222,6 +223,5 @@
         </p>
       </footer>
     </main>
-    <script src="./region-redirect.js" defer></script>
   </body>
 </html>

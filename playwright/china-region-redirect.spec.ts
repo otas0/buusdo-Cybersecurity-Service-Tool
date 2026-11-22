@@ -57,6 +57,10 @@ test("notice redirects to Workers when health ok", async ({ page }) => {
     await route.fulfill({
       status: 200,
       contentType: "application/json",
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "GET, OPTIONS",
+      },
       body: JSON.stringify({
         ok: true,
         service: "buusdocst",
@@ -65,12 +69,26 @@ test("notice redirects to Workers when health ok", async ({ page }) => {
       }),
     });
   });
+  // Stub Workers HTML so force-redirect completes when CF is unreachable from the runner.
+  await page.route("https://buusdocst.mtsu.workers.dev/**", async (route) => {
+    if (route.request().url().includes("/api/health")) {
+      await route.fallback();
+      return;
+    }
+    await route.fulfill({
+      status: 200,
+      contentType: "text/html; charset=utf-8",
+      body: "<!doctype html><title>workers</title><body>ok</body>",
+    });
+  });
 
   try {
-    await page.goto(`http://127.0.0.1:${port}/`, { waitUntil: "domcontentloaded" });
-    await page.waitForURL(/buusdocst\.mtsu\.workers\.dev\/(zh-Hans|zh-Hant|en)/, {
+    const redirected = page.waitForURL(/buusdocst\.mtsu\.workers\.dev\/(zh-Hans|zh-Hant|en)/, {
       timeout: 10_000,
+      waitUntil: "commit",
     });
+    await page.goto(`http://127.0.0.1:${port}/`, { waitUntil: "commit" });
+    await redirected;
     expect(page.url()).toMatch(/buusdocst\.mtsu\.workers\.dev\/(zh-Hans|zh-Hant|en)/);
   } finally {
     try {
@@ -109,8 +127,12 @@ test("china_stay=1 keeps notice on China Pages", async ({ page }) => {
     await expect(page.getByTestId("china-stay-link")).toBeVisible();
     expect(page.url()).toContain(`127.0.0.1:${port}`);
     expect(page.url()).not.toMatch(/workers\.dev/);
-    const stay = await page.evaluate(() => localStorage.getItem("buusdocst-china-stay"));
-    expect(stay).toBe("1");
+    const sticky = await page.evaluate(() => localStorage.getItem("buusdocst-china-stay"));
+    expect(sticky).toBeNull();
+    const sessionStay = await page.evaluate(() =>
+      sessionStorage.getItem("buusdocst-china-stay-session"),
+    );
+    expect(sessionStay).toBe("1");
   } finally {
     try {
       const anyServer = server as typeof server & { closeAllConnections?: () => void };

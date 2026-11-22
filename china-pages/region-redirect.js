@@ -1,14 +1,16 @@
 /**
- * Region / network auto-guide: any China Pages HTML → Workers when reachable.
+ * Force auto-guide: China Pages → Workers when /api/health is reachable.
  *
- * GET /api/health succeeds → location.replace matching Workers locale path.
- * Opt out: ?china_stay=1 or localStorage buusdocst-china-stay=1 (read the notice).
- * Legacy install/privacy stubs bounce to index/en first; those stubs also load this script.
+ * Default: always location.replace matching Workers locale (no sticky localStorage stay).
+ * Opt out for this tab only: ?china_stay=1 → sessionStorage (read the notice).
+ * Clear: ?china_stay=0. Legacy buusdocst-china-stay in localStorage is ignored and cleared.
+ *
+ * Load sync in <head> (no defer) so reachable networks bounce before paint.
  */
 (function () {
   var WORKERS_ORIGIN = "https://buusdocst.mtsu.workers.dev";
   var HEALTH = WORKERS_ORIGIN + "/api/health";
-  var TIMEOUT_MS = 5000;
+  var TIMEOUT_MS = 8000;
   var EXPECTED_SERVICE = "buusdocst";
   var STAY_KEY = "buusdocst-china-stay";
   var STAY_SESSION = "buusdocst-china-stay-session";
@@ -21,14 +23,16 @@
   }
 
   var file = pageFile();
-  /* All China site HTML pages auto-guide when reachable (no entry-only gate). */
 
   function wantsStay() {
     try {
       var params = new URLSearchParams(location.search || "");
       if (params.get("china_stay") === "1") {
         try {
-          localStorage.setItem(STAY_KEY, "1");
+          sessionStorage.setItem(STAY_SESSION, "1");
+        } catch (_) {}
+        try {
+          localStorage.removeItem(STAY_KEY);
         } catch (_) {}
         return true;
       }
@@ -40,9 +44,12 @@
         return false;
       }
     } catch (_) {}
+    /* Drop legacy sticky stay so reachable networks always force-bounce. */
+    try {
+      localStorage.removeItem(STAY_KEY);
+    } catch (_) {}
     try {
       if (sessionStorage.getItem(STAY_SESSION) === "1") return true;
-      if (localStorage.getItem(STAY_KEY) === "1") return true;
     } catch (_) {}
     return false;
   }
@@ -87,6 +94,17 @@
     return pageIsEn ? "/en" : "/zh-Hans";
   }
 
+  function bounce(dest) {
+    try {
+      sessionStorage.setItem(STAY_SESSION, "0");
+    } catch (_) {}
+    try {
+      location.replace(dest);
+    } catch (_) {
+      location.href = dest;
+    }
+  }
+
   function announce(msg) {
     var el = document.getElementById("workers-reach");
     if (!el) return;
@@ -119,18 +137,20 @@
     el.dataset.state = "fail";
   }
 
-  var ctrl = new AbortController();
+  var ctrl = typeof AbortController !== "undefined" ? new AbortController() : null;
   var timer = setTimeout(function () {
-    ctrl.abort();
+    if (ctrl) ctrl.abort();
   }, TIMEOUT_MS);
 
-  fetch(HEALTH, {
+  var opts = {
     method: "GET",
     mode: "cors",
     credentials: "omit",
-    signal: ctrl.signal,
-    headers: { Accept: "application/json" }
-  })
+    cache: "no-store"
+  };
+  if (ctrl) opts.signal = ctrl.signal;
+
+  fetch(HEALTH, opts)
     .then(function (res) {
       clearTimeout(timer);
       if (!res.ok) throw new Error("HTTP " + res.status);
@@ -146,10 +166,7 @@
           ? "Workers reachable — opening full site"
           : "Workers 可达 — 正在打开完整站点"
       );
-      try {
-        sessionStorage.setItem(STAY_SESSION, "0");
-      } catch (_) {}
-      location.replace(dest);
+      bounce(dest);
     })
     .catch(function () {
       clearTimeout(timer);

@@ -100,6 +100,7 @@ jobs:
           assert_url "/" 'china-notice'
           assert_url "/" 'china-region-redirect-hint'
           assert_url "/en.html" 'china-stay-link'
+          assert_url "/" 'china-stay-clear'
           assert_url "/install.html" 'index.html'
           assert_url "/privacy-en.html" 'en.html'
 

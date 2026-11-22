@@ -53,6 +53,10 @@ test("China health soft-fail when service ≠ buusdocst stays on notice", async 
     await route.fulfill({
       status: 200,
       contentType: "application/json",
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "GET, OPTIONS",
+      },
       body: JSON.stringify({
         ok: true,
         service: "pcpd",

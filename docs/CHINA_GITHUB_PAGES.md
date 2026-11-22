@@ -34,16 +34,16 @@ Actions **Pages China** 将 `china-pages/` 发布到 `otas0/buusdocst`（secret 
 
 `china-pages/region-redirect.js`（defer on **every** notice HTML; stubs jump to notice first）：
 
-1. Opt-out: `?china_stay=1` → `localStorage buusdocst-china-stay=1`（便于阅读告知书）。清除：`?china_stay=0`（`data-testid="china-stay-clear"`）。
-2. Else `GET https://buusdocst.mtsu.workers.dev/api/health`（CORS、omit credentials、~5s）。
-3. If `ok && service === buusdocst` → `location.replace` Workers locale：
-   - `zh-TW` / `zh-HK` / `zh-Hant` → `/zh-Hant`
-   - `zh` / `zh-CN` / `zh-Hans` → `/zh-Hans`
-   - `en*` → `/en`
-   - else page default（中文页 `/zh-Hans`，英文页 `/en`）
-4. If health fails → stay on notice；`#workers-reach` 显示不可达。
+1. **强制跳转（默认）**：`GET /api/health` 成功且 `service === buusdocst` → 立即 `location.replace` Workers 语言路径。脚本在 `<head>` 同步加载；旧 `localStorage buusdocst-china-stay` 会被清除，不再长期拦截。
+2. 本标签临时阅读：`?china_stay=1` → 仅 `sessionStorage`（`data-testid="china-stay-link"`）。清除：`?china_stay=0`（`china-stay-clear`）。
+3. Locale：`zh-TW`/`zh-HK` → `/zh-Hant`；`zh`/`zh-CN` → `/zh-Hans`；`en*` → `/en`；否则按页面默认。
+4. Health 失败 → 留在告知书；`#workers-reach` 显示不可达。
 
-UI：`data-testid="china-notice"` / `china-notice-title` / `china-workers-entry` / `china-region-redirect-hint` / `china-stay-link`。
+UI：`data-testid="china-notice"` / `china-notice-title` / `china-workers-entry` / `china-region-redirect-hint` / `china-stay-link` / `china-stay-clear`。
+
+### Legacy install / privacy paths — keep thin redirects
+
+**Decision (2026-11-22):** keep `/install.html` · `/privacy.html` · EN twins as **thin redirects** to the notice. Old bookmarks and store listing drafts still point there; deleting them would 404 without gain. Revisit only after traffic/logs show zero hits.
 
 ## 与 Workers 的关系
 

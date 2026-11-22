@@ -89,4 +89,39 @@ for (const page of ["china-pages/index.html", "china-pages/en.html"]) {
   }
   console.info(`ok ${page} china-region-redirect-hint present`);
 }
+
+// Weak-network reach copy (#workers-reach): fail status uses --halt; detail uses --muted.
+{
+  const haltMatch = tokens.match(/--halt:\s*(#[0-9a-fA-F]{3,8})/);
+  if (!haltMatch) {
+    console.error("FAIL: --halt missing for reach fail AA");
+    process.exit(1);
+  }
+  if (!css.includes('.reach[data-state="fail"] .reach-status') || !css.includes("var(--halt)")) {
+    console.error("FAIL: .reach fail state must use --halt");
+    process.exit(1);
+  }
+  if (!css.includes(".reach-detail") || !/reach-detail[\s\S]*?color:\s*var\(--muted\)/.test(css)) {
+    console.error("FAIL: .reach-detail must use --muted");
+    process.exit(1);
+  }
+  const haltRatio = contrast(hexToRgb(haltMatch[1]), bg);
+  const mutedRatio = contrast(hexToRgb(hintHex), bg);
+  if (haltRatio < 4.5) {
+    console.error(`FAIL: reach fail --halt contrast ${haltRatio.toFixed(2)} < 4.5`);
+    process.exit(1);
+  }
+  if (mutedRatio < 4.5) {
+    console.error(`FAIL: reach detail --muted contrast ${mutedRatio.toFixed(2)} < 4.5`);
+    process.exit(1);
+  }
+  console.info(`ok weak-network reach AA halt ${haltRatio.toFixed(2)} muted ${mutedRatio.toFixed(2)}`);
+  for (const page of ["china-pages/index.html", "china-pages/en.html"]) {
+    const html = readFileSync(path.join(root, page), "utf8");
+    if (!html.includes('id="workers-reach"') || !html.includes("data-reach-detail")) {
+      console.error(`FAIL: ${page} missing workers-reach fail copy hooks`);
+      process.exit(1);
+    }
+  }
+}
 console.info("assert-china-hint-contrast-aa ok");

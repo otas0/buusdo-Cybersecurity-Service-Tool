@@ -28,7 +28,8 @@ test("region-redirect.js ships opt-out, health probe, and Workers locale paths",
 test("index.html and en.html load region-redirect and expose stay link", () => {
   for (const file of ["china-pages/index.html", "china-pages/en.html"]) {
     const html = readFileSync(file, "utf8");
-    assert.match(html, /src="\.\/region-redirect\.js"/, file);
+    assert.match(html, /<script src="\.\/region-redirect\.js"><\/script>/, file);
+    assert.doesNotMatch(html, /region-redirect\.js" defer/, file);
     assert.match(html, /data-testid="china-region-redirect-hint"/, file);
     assert.match(html, /data-testid="china-stay-link"/, file);
     assert.match(html, /data-testid="china-stay-clear"/, file);
@@ -148,7 +149,7 @@ test("vm: zh-TW browser language opens /zh-Hant", async () => {
   assert.match(run.replaced, /\/zh-Hant$/);
 });
 
-test("vm: china_stay=1 skips redirect and persists stay key", async () => {
+test("vm: china_stay=1 skips redirect (session only; clears sticky localStorage)", async () => {
   const run = runRedirect({
     pathname: "/buusdocst/index.html",
     search: "?china_stay=1",
@@ -156,7 +157,62 @@ test("vm: china_stay=1 skips redirect and persists stay key", async () => {
   });
   await run.flush();
   assert.equal(run.replaced, "");
-  assert.equal(run.storage["buusdocst-china-stay"], "1");
+  assert.equal(run.storage["buusdocst-china-stay"], undefined);
+});
+
+test("vm: legacy localStorage stay is cleared and force-redirects", async () => {
+  const js = readFileSync(scriptPath, "utf8");
+  const storage: Record<string, string> = { "buusdocst-china-stay": "1" };
+  const session: Record<string, string> = {};
+  const state = { replaced: "" };
+  const context: Record<string, unknown> = {
+    location: {
+      pathname: "/buusdocst/index.html",
+      search: "",
+      replace(url: string) {
+        state.replaced = url;
+      }
+    },
+    localStorage: {
+      getItem: (k: string) => storage[k] ?? null,
+      setItem: (k: string, v: string) => {
+        storage[k] = v;
+      },
+      removeItem: (k: string) => {
+        delete storage[k];
+      }
+    },
+    sessionStorage: {
+      getItem: (k: string) => session[k] ?? null,
+      setItem: (k: string, v: string) => {
+        session[k] = v;
+      },
+      removeItem: (k: string) => {
+        delete session[k];
+      }
+    },
+    navigator: { languages: ["zh-CN"], language: "zh-CN" },
+    document: {
+      documentElement: { lang: "zh-CN" },
+      getElementById: () => null
+    },
+    AbortController,
+    Promise,
+    setTimeout,
+    clearTimeout,
+    URLSearchParams,
+    fetch() {
+      return Promise.resolve({
+        ok: true,
+        json: () => Promise.resolve({ ok: true, service: "buusdocst" })
+      });
+    }
+  };
+  vm.createContext(context);
+  vm.runInContext(js, context);
+  await new Promise<void>((r) => setImmediate(() => setImmediate(() => r())));
+  assert.equal(storage["buusdocst-china-stay"], undefined);
+  assert.match(state.replaced, /\/zh-Hans$/);
 });
 
 test("vm: health fail leaves notice in place", async () => {

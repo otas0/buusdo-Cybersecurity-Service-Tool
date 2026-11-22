@@ -870,8 +870,17 @@ jobs:
         run: npm run capture:store-halt-frame:playwright
 
       - name: China soft-fail (wrong health.service)
+        id: pw_china_soft_fail
         if: steps.pw_install.outcome == 'success'
-        run: PLAYWRIGHT_SKIP_WEBSERVER=1 npx playwright test playwright/china-soft-fail.spec.ts
+        run: |
+          set -euo pipefail
+          npm run test:playwright:china-soft-fail
+          {
+            echo "## China soft-fail"
+            echo ""
+            echo "- \`npm run test:playwright:china-soft-fail\` — wrong \`health.service\` stays on notice (no Workers bounce)"
+            echo "- outcome: **passed**"
+          } >> "$GITHUB_STEP_SUMMARY"
 
       - name: Halt survey blocks (RiskResult Round-1 UX)
         id: pw_halt_survey
@@ -937,6 +946,15 @@ jobs:
         run: |
           export PLAYWRIGHT_SKIP_WEBSERVER=1
           npm run test:playwright:locale-chrome-a11y
+        env:
+          PLAYWRIGHT_SKIP_WEBSERVER: "1"
+          PLAYWRIGHT_BASE_URL: ${{ vars.PLAYWRIGHT_BASE_URL || 'http://localhost:3000' }}
+
+      - name: Downloads three-step install list (static + live smoke)
+        if: steps.pw_install.outcome == 'success'
+        run: |
+          export PLAYWRIGHT_SKIP_WEBSERVER=1
+          npm run test:playwright:downloads-install
         env:
           PLAYWRIGHT_SKIP_WEBSERVER: "1"
           PLAYWRIGHT_BASE_URL: ${{ vars.PLAYWRIGHT_BASE_URL || 'http://localhost:3000' }}

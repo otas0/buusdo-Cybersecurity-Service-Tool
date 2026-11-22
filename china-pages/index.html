@@ -11,6 +11,7 @@
     <link rel="icon" href="./assets/favicon.svg" type="image/svg+xml" />
     <link rel="stylesheet" href="./styles.css" />
     <script src="./lang-persist.js"></script>
+    <script src="./region-redirect.js"></script>
   </head>
   <body>
     <main class="shell" data-testid="china-notice">
@@ -195,7 +196,7 @@
           >
         </div>
         <p class="hint" data-testid="china-region-redirect-hint">
-          若当前网络可达完整检查站，本页会自动跳转。
+          网络可达时会强制跳转到完整检查站（本标签页内可用「留在本页」临时阅读）。
           <a href="./index.html?china_stay=1" data-testid="china-stay-link">留在本页</a>
           ·
           <a href="./index.html?china_stay=0" data-testid="china-stay-clear">清除留在本页</a>。
@@ -212,6 +213,5 @@
         </p>
       </footer>
     </main>
-    <script src="./region-redirect.js" defer></script>
   </body>
 </html>
