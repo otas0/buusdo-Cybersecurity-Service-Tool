@@ -761,7 +761,8 @@ jobs:
 
   playwright-settings-optional:
     name: playwright-settings (optional)
-    if: ${{ vars.RUN_PLAYWRIGHT_SETTINGS == 'true' }}
+    # Var on, or nightly schedule (clear-stay harness + soft-fail coverage).
+    if: ${{ vars.RUN_PLAYWRIGHT_SETTINGS == 'true' || github.event_name == 'schedule' }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -903,6 +904,39 @@ jobs:
             echo "- Artifact download: ${{ steps.soft_fail_art.outputs.artifact-url }}"
             echo "- Run artifacts: [run #${{ github.run_id }}](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})"
           } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Soft-fail artifact-url self-check
+        if: always() && steps.soft_fail_art.outcome == 'success'
+        env:
+          ARTIFACT_URL: ${{ steps.soft_fail_art.outputs.artifact-url }}
+          ARTIFACT_ID: ${{ steps.soft_fail_art.outputs.artifact-id }}
+        run: |
+          set -euo pipefail
+          if [ -n "${ARTIFACT_URL:-}" ]; then
+            echo "::notice::china-soft-fail artifact-url ok (${ARTIFACT_URL})"
+            echo "- artifact-url self-check: **ok**" >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+          if [ -n "${ARTIFACT_ID:-}" ]; then
+            # upload-artifact@v4 always sets artifact-id when files uploaded; URL may be absent on older action minors.
+            FALLBACK="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}/artifacts/${ARTIFACT_ID}"
+            echo "::notice::artifact-url empty — using artifact-id fallback ${FALLBACK}"
+            echo "- artifact-url self-check: **ok** (via artifact-id \`${ARTIFACT_ID}\`)" >> "$GITHUB_STEP_SUMMARY"
+            echo "- Artifact download (id fallback): ${FALLBACK}" >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+          echo "::error::china-soft-fail upload succeeded but artifact-url and artifact-id are both empty"
+          echo "- artifact-url self-check: **FAIL** (empty)" >> "$GITHUB_STEP_SUMMARY"
+          exit 1
+
+      - name: Extension clear-stay same-origin harness
+        id: pw_china_stay_clear
+        if: steps.pw_install.outcome == 'success'
+        run: |
+          set -euo pipefail
+          npm run test:playwright:extension-china-stay-clear
+          echo "::notice::extension-china-stay-clear passed"
+          echo "- \`npm run test:playwright:extension-china-stay-clear\` — **passed**" >> "$GITHUB_STEP_SUMMARY"
 
       - name: Halt survey blocks (RiskResult Round-1 UX)
         id: pw_halt_survey

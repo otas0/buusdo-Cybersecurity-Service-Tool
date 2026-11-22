@@ -36,7 +36,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: "22"
-      - name: Smoke privacy China section (zh-Hans + EN)
+      - name: Smoke privacy China section (zh-Hans + EN + pt-PT)
         id: privacy_china
         run: |
           set -euo pipefail
@@ -47,7 +47,7 @@ jobs:
             echo "## Privacy China smoke"
             echo ""
             echo "- base: \`$HEALTH_BASE_URL\`"
-            echo "- paths: \`/zh-Hans/privacy\` · \`/en/privacy\` (\`privacy-china-notice\`)"
+            echo "- paths: \`/zh-Hans/privacy\` · \`/en/privacy\` · \`/pt-PT/privacy\` (\`privacy-china-notice\`)"
             echo "- smoke:privacy-china: \`$PASSED_AT\`"
             echo "- outcome: **passed**"
           } >> "$GITHUB_STEP_SUMMARY"

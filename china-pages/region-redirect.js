@@ -76,7 +76,32 @@
     el.dataset.state = state;
     try {
       el.setAttribute("aria-busy", state === "checking" ? "true" : "false");
+      // Assertive only for hard fail; stay/ok/soft-fail stay polite.
+      el.setAttribute("aria-live", state === "fail" ? "assertive" : "polite");
+      if (state === "fail") {
+        el.setAttribute("role", "alert");
+      } else {
+        el.setAttribute("role", "status");
+      }
     } catch (_) {}
+    if (state !== "soft-fail") {
+      var stale = el.querySelector('[data-testid="china-workers-anyway"]');
+      if (stale && stale.parentNode) stale.parentNode.removeChild(stale);
+    }
+  }
+
+  function ensureWorkersAnywayLink() {
+    var el = document.getElementById("workers-reach");
+    if (!el) return;
+    if (el.querySelector('[data-testid="china-workers-anyway"]')) return;
+    var isEn = document.documentElement.lang === "en";
+    var a = document.createElement("a");
+    a.href = WORKERS_ORIGIN + workersPath();
+    a.rel = "noopener noreferrer";
+    a.dataset.testid = "china-workers-anyway";
+    a.className = "reach-anyway";
+    a.textContent = isEn ? "Open Workers anyway" : "仍打开 Workers";
+    el.appendChild(a);
   }
 
   function markStay() {
@@ -162,6 +187,7 @@
         ? "Health ok but service ≠ buusdocst. Staying on this notice — no auto-guide."
         : "健康探测成功但 service ≠ buusdocst。留在本告知书 — 不自动引导。"
     );
+    ensureWorkersAnywayLink();
   }
 
   function markFail(kind) {

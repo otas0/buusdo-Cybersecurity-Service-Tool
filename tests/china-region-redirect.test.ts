@@ -26,6 +26,8 @@ test("region-redirect.js ships opt-out, health probe, and Workers locale paths",
   assert.match(src, /Health request timed out|健康探测超时/);
   assert.match(src, /soft-fail|markSoftFail/);
   assert.match(src, /aria-busy/);
+  assert.match(src, /aria-live.*assertive|assertive.*aria-live|\"assertive\"/);
+  assert.match(src, /china-workers-anyway|Open Workers anyway/);
   assert.doesNotMatch(src, /Only entry pages/);
   assert.doesNotMatch(src, /ENTRY\s*=/);
 });
@@ -60,12 +62,22 @@ test("legacy stubs redirect to notice without region-redirect", () => {
 function makeReachEl() {
   const status = { textContent: "Checking…" };
   const detail = { textContent: "" };
-  const attrs: Record<string, string> = { "aria-busy": "true" };
-  return {
+  const attrs: Record<string, string> = { "aria-busy": "true", "aria-live": "polite" };
+  const children: unknown[] = [];
+  const el = {
     dataset: { state: "checking" } as { state: string },
     querySelector(sel: string) {
       if (sel === "[data-reach-status]") return status;
       if (sel === "[data-reach-detail]") return detail;
+      if (sel === '[data-testid="china-workers-anyway"]') {
+        return children.find(
+          (c) =>
+            c &&
+            typeof c === "object" &&
+            "dataset" in c &&
+            (c as { dataset: { testid?: string } }).dataset.testid === "china-workers-anyway"
+        );
+      }
       return null;
     },
     setAttribute(name: string, value: string) {
@@ -74,9 +86,15 @@ function makeReachEl() {
     getAttribute(name: string) {
       return attrs[name] ?? null;
     },
+    appendChild(node: unknown) {
+      children.push(node);
+      return node;
+    },
     _status: status,
-    _detail: detail
+    _detail: detail,
+    _children: children
   };
+  return el;
 }
 
 function runRedirect(opts: {
@@ -126,6 +144,16 @@ function runRedirect(opts: {
       readyState: "complete",
       documentElement: { lang: opts.lang ?? "zh-CN" },
       getElementById: (id: string) => (id === "workers-reach" ? reach : null),
+      createElement(tag: string) {
+        return {
+          tagName: tag.toUpperCase(),
+          href: "",
+          rel: "",
+          className: "",
+          textContent: "",
+          dataset: {} as Record<string, string>
+        };
+      },
       addEventListener() {
         /* no-op when readyState is complete */
       }
@@ -275,4 +303,16 @@ test("vm: wrong health.service soft-fails (never stuck checking)", async () => {
   assert.equal(run.replaced, "");
   assert.equal(run.reach?.dataset.state, "soft-fail");
   assert.notEqual(run.reach?.dataset.state, "checking");
+  assert.equal(run.reach?.getAttribute("aria-live"), "polite");
+});
+
+test("vm: hard fail uses assertive aria-live", async () => {
+  const run = runRedirect({
+    pathname: "/buusdocst/index.html",
+    health: null,
+    withReach: true
+  });
+  await run.flush();
+  assert.equal(run.reach?.dataset.state, "fail");
+  assert.equal(run.reach?.getAttribute("aria-live"), "assertive");
 });

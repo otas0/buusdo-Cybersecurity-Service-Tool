@@ -52,6 +52,7 @@ UI：`data-testid="china-notice"` / `china-notice-title` / `china-workers-entry`
 ```bash
 # Scaffold — feed a JSONL / CSV / plain dump; prints GATE=keep|review
 node scripts/parse-china-stub-path-counts.mjs --dump /path/to/logpush.jsonl --days 30
+# Sample fixtures: tests/fixtures/china-stub-path-counts/
 ```
 
 ### Probe fail copy

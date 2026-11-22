@@ -22,6 +22,14 @@ const pages = [
   {
     path: "/en/privacy",
     needles: ["privacy-china-notice", "China mainland entry", "otas0.github.io/buusdocst"]
+  },
+  {
+    path: "/pt-PT/privacy",
+    needles: [
+      "privacy-china-notice",
+      "Entrada da China continental",
+      "otas0.github.io/buusdocst"
+    ]
   }
 ];
 

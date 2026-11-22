@@ -59,6 +59,11 @@ test.describe("production privacy pages", () => {
     await expect(page.getByTestId("privacy-policy-updated")).toContainText(/2026/);
     await expect(page.getByTestId("privacy-honest-limits")).toBeVisible();
     await expect(page.getByTestId("privacy-honest-limits")).toContainText(/No TLS decryption/i);
+    const { minSupportedVersion } = await import("../shared/desktop-downloads.json");
+    await expect(page.getByTestId("privacy-honest-limits-min-supported")).toBeVisible();
+    await expect(page.getByTestId("privacy-honest-limits-min-supported")).toContainText(
+      String(minSupportedVersion)
+    );
     await expect(page.getByTestId("privacy-desktop-offline")).toBeVisible();
     await expect(page.getByTestId("privacy-desktop-offline")).toContainText(/offline/i);
     await expect(page.getByRole("heading", { name: /No cloud account sync/i })).toBeVisible();
@@ -106,6 +111,25 @@ test.describe("production privacy pages", () => {
     await expect(page.getByTestId("privacy-china-notice")).toContainText(
       /aviso bilingue|encaminha automaticamente/i
     );
+  });
+
+  test("/pt-PT/privacy soft-live China section when Workers reachable", async ({ page }) => {
+    await page.goto(`${base}/pt-PT/privacy#privacy-china-notice`, {
+      waitUntil: "domcontentloaded",
+      timeout: 45_000
+    });
+    const section = page.getByTestId("privacy-china-notice");
+    if ((await section.count()) === 0) {
+      console.warn("[soft-live] pt-PT privacy-china-notice missing");
+      return;
+    }
+    await expect(section).toBeVisible();
+    const text = ((await section.textContent()) || "").replace(/\s+/g, " ").trim();
+    if (!/Entrada da China continental/i.test(text)) {
+      console.warn(`[soft-live] pt-PT China title soft mismatch: ${text.slice(0, 80)}`);
+    } else {
+      console.info(`[soft-live] pt-PT China section ok (${text.slice(0, 72)}…)`);
+    }
   });
 
   test("/en/privacy#privacy-faq-common deep-link", async ({ page }) => {

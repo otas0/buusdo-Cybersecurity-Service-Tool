@@ -362,6 +362,22 @@ a {
   max-width: 42rem;
 }
 
+.shell .reach-anyway {
+  display: inline-block;
+  margin-top: 10px;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.shell .reach-anyway:hover {
+  color: var(--halt);
+}
+
 .shell .foot {
   margin-top: 48px;
   padding-top: 16px;

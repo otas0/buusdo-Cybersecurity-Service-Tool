@@ -26,3 +26,14 @@ Repository variable: CHECKLIST_CI_WRITE = 0
 ```
 
 Documented in [OPS_RUNBOOK.md](OPS_RUNBOOK.md). Re-enable by deleting the variable or setting it to `1`.
+
+## Log table size (`CHECKLIST_LOG_MAX_ROWS`)
+
+`scripts/append-check-prod-log.mjs` caps the **check:prod log** table so privacy-china notes stay readable.
+
+| Knob | Default | Meaning |
+|------|---------|---------|
+| Env `CHECKLIST_LOG_MAX_ROWS` | `40` | Max data rows kept after each append (oldest beyond the cap are dropped) |
+| CLI `--max-rows N` | same | Overrides env for a one-off local append |
+
+Health monitor does not need to set the env unless you want a tighter cap (e.g. `20`) on the bot push.

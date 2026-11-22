@@ -1,5 +1,6 @@
 /**
  * China notice: soft-fail (wrong service), timeout (AbortError), CORS/preflight.
+ * EN twin (`en.html`) covers timeout/CORS English copy.
  *
  *   PLAYWRIGHT_SKIP_WEBSERVER=1 npx playwright test playwright/china-soft-fail.spec.ts
  */
@@ -9,17 +10,31 @@ import { join } from "node:path";
 import { expect, test } from "@playwright/test";
 
 const root = process.cwd();
-const html = readFileSync(join(root, "china-pages/index.html"), "utf8");
+const htmlZh = readFileSync(join(root, "china-pages/index.html"), "utf8");
+const htmlEn = readFileSync(join(root, "china-pages/en.html"), "utf8");
 const persist = readFileSync(join(root, "china-pages/lang-persist.js"), "utf8");
 const regionRedirect = readFileSync(join(root, "china-pages/region-redirect.js"), "utf8");
 const css = readFileSync(join(root, "china-pages/styles.css"), "utf8");
 
-async function serveNotice(): Promise<{ server: Server; port: number }> {
+function rewriteHtml(html: string) {
+  return html
+    .replace(/src="\.?\/?lang-persist\.js"/, 'src="/lang-persist.js"')
+    .replace(/src="\.?\/?region-redirect\.js"/, 'src="/region-redirect.js"')
+    .replace(/href="\.?\/?styles\.css"/, 'href="/styles.css"')
+    .replace(/href="\.?\/?assets\/tokens\.css"/, 'href="/styles.css"');
+}
+
+async function serveNotice(opts?: {
+  html?: string;
+  redirectJs?: string;
+}): Promise<{ server: Server; port: number }> {
+  const pageHtml = opts?.html ?? htmlZh;
+  const redirectJs = opts?.redirectJs ?? regionRedirect;
   const server = createServer((req, res) => {
     const url = req.url || "/";
     if (url.startsWith("/region-redirect.js")) {
       res.writeHead(200, { "Content-Type": "application/javascript; charset=utf-8" });
-      res.end(regionRedirect);
+      res.end(redirectJs);
       return;
     }
     if (url.startsWith("/lang-persist.js")) {
@@ -38,13 +53,7 @@ async function serveNotice(): Promise<{ server: Server; port: number }> {
       return;
     }
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8" });
-    res.end(
-      html
-        .replace(/src="\.?\/?lang-persist\.js"/, 'src="/lang-persist.js"')
-        .replace(/src="\.?\/?region-redirect\.js"/, 'src="/region-redirect.js"')
-        .replace(/href="\.?\/?styles\.css"/, 'href="/styles.css"')
-        .replace(/href="\.?\/?assets\/tokens\.css"/, 'href="/styles.css"'),
-    );
+    res.end(rewriteHtml(pageHtml));
   });
   await new Promise<void>((resolve) => server.listen(0, "127.0.0.1", resolve));
   const { port } = server.address() as { port: number };
@@ -88,77 +97,63 @@ test("China health soft-fail when service ≠ buusdocst stays on notice", async 
     await expect(reachEl).toHaveAttribute("data-state", "soft-fail", { timeout: 10_000 });
     await expect(reachEl).not.toHaveAttribute("data-state", "checking");
     await expect(reachEl).toHaveAttribute("aria-busy", "false");
+    await expect(reachEl).toHaveAttribute("aria-live", "polite");
+    await expect(page.getByTestId("china-workers-anyway")).toBeVisible();
+    await expect(page.getByTestId("china-workers-anyway")).toHaveAttribute(
+      "href",
+      /buusdocst\.mtsu\.workers\.dev/,
+    );
     expect(page.url()).not.toMatch(/workers\.dev/);
   } finally {
     await closeServer(server);
   }
 });
 
-test("China health AbortError / timeout uses timeout fail copy", async ({ page }) => {
-  // Fast AbortController timeout (patched script) + hung health → AbortError path.
-  const fastRedirect = regionRedirect.replace("TIMEOUT_MS = 8000", "TIMEOUT_MS = 250");
-  const server = createServer((req, res) => {
-    const url = req.url || "/";
-    if (url.startsWith("/region-redirect.js")) {
-      res.writeHead(200, { "Content-Type": "application/javascript; charset=utf-8" });
-      res.end(fastRedirect);
-      return;
-    }
-    if (url.startsWith("/lang-persist.js")) {
-      res.writeHead(200, { "Content-Type": "application/javascript; charset=utf-8" });
-      res.end(persist);
-      return;
-    }
-    if (url.startsWith("/styles.css") || url.startsWith("/assets/tokens.css")) {
-      res.writeHead(200, { "Content-Type": "text/css; charset=utf-8" });
-      res.end(css);
-      return;
-    }
-    res.writeHead(200, { "Content-Type": "text/html; charset=utf-8" });
-    res.end(
-      html
-        .replace(/src="\.?\/?lang-persist\.js"/, 'src="/lang-persist.js"')
-        .replace(/src="\.?\/?region-redirect\.js"/, 'src="/region-redirect.js"')
-        .replace(/href="\.?\/?styles\.css"/, 'href="/styles.css"')
-        .replace(/href="\.?\/?assets\/tokens\.css"/, 'href="/styles.css"'),
-    );
-  });
-  await new Promise<void>((resolve) => server.listen(0, "127.0.0.1", resolve));
-  const { port } = server.address() as { port: number };
+for (const locale of [
+  { id: "zh", html: htmlZh, timeoutStatus: /超时|timed out/i, timeoutDetail: /超时|timed out/i },
+  { id: "en", html: htmlEn, timeoutStatus: /timed out/i, timeoutDetail: /timed out/i },
+] as const) {
+  test(`China health AbortError / timeout (${locale.id})`, async ({ page }) => {
+    const fastRedirect = regionRedirect.replace("TIMEOUT_MS = 8000", "TIMEOUT_MS = 250");
+    const { server, port } = await serveNotice({ html: locale.html, redirectJs: fastRedirect });
 
-  await page.route("**/api/health", async () => {
-    await new Promise(() => {
-      /* never settle — AbortController fires */
+    await page.route("**/api/health", async () => {
+      await new Promise(() => {
+        /* hung — AbortController fires */
+      });
     });
+
+    try {
+      await page.goto(`http://127.0.0.1:${port}/?china_stay=0`, { waitUntil: "domcontentloaded" });
+      const reachEl = page.locator("#workers-reach");
+      await expect(reachEl).toHaveAttribute("data-state", "fail", { timeout: 5_000 });
+      await expect(reachEl).toHaveAttribute("aria-live", "assertive");
+      await expect(reachEl.locator("[data-reach-status]")).toContainText(locale.timeoutStatus);
+      await expect(reachEl.locator("[data-reach-detail]")).toContainText(locale.timeoutDetail);
+      await expect(reachEl).not.toHaveAttribute("data-state", "checking");
+    } finally {
+      await closeServer(server);
+    }
   });
 
-  try {
-    await page.goto(`http://127.0.0.1:${port}/?china_stay=0`, { waitUntil: "domcontentloaded" });
-    const reachEl = page.locator("#workers-reach");
-    await expect(reachEl).toHaveAttribute("data-state", "fail", { timeout: 5_000 });
-    await expect(reachEl.locator("[data-reach-status]")).toContainText(/超时|timed out/i);
-    await expect(reachEl.locator("[data-reach-detail]")).toContainText(/超时|timed out/i);
-    await expect(reachEl).not.toHaveAttribute("data-state", "checking");
-  } finally {
-    await closeServer(server);
-  }
-});
+  test(`China health CORS / Failed to fetch (${locale.id})`, async ({ page }) => {
+    const { server, port } = await serveNotice({ html: locale.html });
 
-test("China health CORS / Failed to fetch uses preflight fail copy", async ({ page }) => {
-  const { server, port } = await serveNotice();
+    await page.route("**/api/health", async (route) => {
+      await route.abort("failed");
+    });
 
-  await page.route("**/api/health", async (route) => {
-    await route.abort("failed");
+    try {
+      await page.goto(`http://127.0.0.1:${port}/?china_stay=0`, { waitUntil: "domcontentloaded" });
+      const reachEl = page.locator("#workers-reach");
+      await expect(reachEl).toHaveAttribute("data-state", "fail", { timeout: 10_000 });
+      await expect(reachEl).toHaveAttribute("aria-live", "assertive");
+      await expect(reachEl.locator("[data-reach-detail]")).toContainText(
+        /OPTIONS\/CORS|Failed to fetch|拦截|blocked/i,
+      );
+      await expect(reachEl).not.toHaveAttribute("data-state", "checking");
+    } finally {
+      await closeServer(server);
+    }
   });
-
-  try {
-    await page.goto(`http://127.0.0.1:${port}/?china_stay=0`, { waitUntil: "domcontentloaded" });
-    const reachEl = page.locator("#workers-reach");
-    await expect(reachEl).toHaveAttribute("data-state", "fail", { timeout: 10_000 });
-    // Playwright abort("failed") → Failed to fetch → preflight path (not AbortError timeout).
-    await expect(reachEl.locator("[data-reach-detail]")).toContainText(/OPTIONS\/CORS|Failed to fetch|拦截|blocked/i);
-    await expect(reachEl).not.toHaveAttribute("data-state", "checking");
-  } finally {
-    await closeServer(server);
-  }
-});
+}

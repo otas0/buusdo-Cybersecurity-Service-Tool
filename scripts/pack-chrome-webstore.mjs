@@ -118,6 +118,27 @@ for (const name of frames) {
     draft.split("## Screenshot captions")[1]?.split("## Privacy policy URL")[0]?.trim() ||
     "See docs/CHROME_STORE_LISTING_DRAFT.md";
   writeFileSync(join(shotDir, "CAPTIONS.txt"), `${chunk}\n`, "utf8");
+  // Optional China privacy FRAME — only when listing draft mentions 告知书 / China notice.
+  const chinaFrames = [];
+  if (/告知书|China notice/i.test(draft)) {
+    for (const name of [
+      "FRAME-privacy-china-notice.png",
+      "FRAME-privacy-china-notice-en.png",
+    ]) {
+      const from = join(root, "docs", "store-screenshots", name);
+      if (!existsSync(from)) {
+        console.info(`[pack:chrome-store] listing mentions 告知书 but ${name} absent — skip`);
+        continue;
+      }
+      cpSync(from, join(shotDir, name));
+      chinaFrames.push(name);
+      console.info(`[pack:chrome-store] packed China privacy FRAME ${name} (listing mentions 告知书)`);
+    }
+  } else {
+    console.info(
+      "[pack:chrome-store] listing draft has no 告知书 / China notice — skip China privacy FRAMEs",
+    );
+  }
   writeFileSync(
     join(shotDir, "README.txt"),
     [
@@ -126,6 +147,11 @@ for (const name of frames) {
       "2. FRAME-clear.png + FRAME-hold.png — Clear / Hold pair",
       "3. FRAME-desktop-about.png — Desktop About footer (live HTML capture)",
       "   FRAME-desktop-about-tray.png — About + tray composite (optional)",
+      ...(chinaFrames.length
+        ? [
+            `optional. ${chinaFrames.join(" + ")} — Workers privacy China entry (listing mentions 告知书)`,
+          ]
+        : []),
       "Captions: CAPTIONS.txt (from docs/CHROME_STORE_LISTING_DRAFT.md)",
       "Rebuild: npm run capture:store-halt-frame && npm run capture:desktop-about-frame && npm run pack:chrome-store",
       "",
