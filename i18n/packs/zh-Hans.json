@@ -29,7 +29,9 @@
   "privacyPolicyContactBody": "隐私或产品问题，请通过官方邮箱或支持渠道联系您的 buusdo 部署运营方（运行 Cloudflare Worker 的个人或组织）。请使用该已知官方地址——不要使用您正在检查的网站上印出的电话或邮箱。不要把敏感检查结果粘贴到公开渠道。",
   "privacyPolicyLimitsTitle": "诚实限度（桌面端 + 代理）",
   "privacyPolicyLimitsBody": "无 TLS 解密——HTTPS CONNECT 仅使用主机名；没有 MITM 证书。不会结束进程——正在运行的程序继续运行。系统目录仅报告——/usr、/etc、Windows 系统路径和 Program Files 从不会被移动或编辑。没有杀毒/特征引擎，也不捕获凭据或浏览历史。",
-  "privacyPolicyUpdated": "最近审阅：2026-11-07 · 网站上线",
+  "privacyPolicyChinaTitle": "中国大陆入口（GitHub Pages）",
+  "privacyPolicyChinaBody": "自 2026 年 11 月 22 日起，中国大陆 GitHub Pages 站点（https://otas0.github.io/buusdocst/）暂停常规产品说明/安装/隐私摘要页，仅保留中英告知书。当网络可达本 Workers 产品站时，该告知书会自动引导至此；不可达时仍可打开告知书。正式隐私以本页为准——不再另设中国站隐私摘要。",
+  "privacyPolicyUpdated": "最近审阅：2026-11-22 · 中国入口告知书",
   "desktopDownloadsTitle": "桌面应用下载",
   "desktopDownloadsIntro": "从 GitHub Release 在本机安装 buusdo Cybersecurity Service Tool（浏览器外壳 + 托盘）。构建未签名——请参阅安装指南。登录时打开默认关闭，直至您启用。",
   "desktopDownloadWindows": "Windows 安装包（NSIS）",
@@ -473,5 +475,11 @@
   "langRegionSoutheastAsia": "东南亚",
   "langRegionSouthernAfrica": "南部非洲",
   "themeHeaderHint": "请使用页眉中的外观按钮（在语言旁边）。",
-  "localeRecommendSearchHint": "下方为推荐。搜索可浏览全部语言。"
+  "localeRecommendSearchHint": "下方为推荐。搜索可浏览全部语言。",
+  "desktopInstallStepsTitle": "三步安装",
+  "desktopInstallStep1": "下载适用于您系统的安装包（Windows、macOS 或 Linux）。",
+  "desktopInstallStep2": "打开或安装。若系统提示未知发布者，请按安装指南操作一次。",
+  "desktopInstallStep3": "启动应用 — 仪表板在本机打开。需要更新时按同样方式安装。",
+  "privacyDesktopOfflineNote": "桌面应用：本机扫描与个人拦截列表可离线使用。网站地址检查在走该路径时需要联网。",
+  "extensionStoreOnlyNote": "浏览器扩展仅通过 Chrome 网上应用店或 Mac App Store 安装。不提供整库下载，也没有离线自包含扩展包。"
 }

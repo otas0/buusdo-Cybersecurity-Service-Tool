@@ -2,9 +2,19 @@
 
 **buusdo Cybersecurity Service Tool** ships the desktop app from [GitHub Releases](https://github.com/otas0/buusdo-Cybersecurity-Service-Tool/releases) (tag in [`shared/desktop-downloads.json`](../shared/desktop-downloads.json) → `releaseTag`).
 
-**Notarization / Developer ID / Authenticode are not part of this ship path.** Builds are **unsigned**. That is intentional for the current public channel — not a temporary “until promote” step. Settings on the website says the same.
+## Three steps (everyone)
 
-Website downloads: Settings → **Desktop app downloads** → platform link.  
+1. **Download** the package for your system from the website **Downloads** page (or the Release tag above).
+2. **Open / install** it. Unsigned builds may show Gatekeeper (macOS) or SmartScreen (Windows) once — that is expected; use the platform section below if blocked.
+3. **Launch** the app. The dashboard opens on this computer (`http://localhost:3010`). When a required update appears, download the new package the same way and replace the old install.
+
+Website / extension stay online install paths — only the **desktop** app is this self-contained package + update flow.
+
+China mainland GitHub Pages is **notice-only** (告知书 + auto-guide to Workers when reachable): https://otas0.github.io/buusdocst/ — not a separate install/privacy site.
+
+**Notarization / Developer ID / Authenticode are not part of this ship path.** Builds are **unsigned**. That is intentional for the current public channel — not a temporary “until promote” step. Downloads on the website says the same.
+
+Website downloads: **Downloads** → platform link.  
 Operator packaging notes: [`desktop-app/PACKAGING.md`](../desktop-app/PACKAGING.md).
 
 ## macOS (`.app` zip)
@@ -47,7 +57,9 @@ Or: **System Settings → Privacy & Security** → scroll to the blocked-app mes
 
 ## Português (Portugal) — resumo
 
-Builds **não assinadas** (sem notarização Apple / sem Authenticode). Descarregue só a partir deste Release / Definições do site.
+**Três passos:** 1) descarregar o pacote do seu sistema na página Transferências; 2) abrir/instalar (Gatekeeper / SmartScreen uma vez se pedir); 3) abrir a app — atualizações obrigatórias usam o mesmo fluxo.
+
+Builds **não assinadas** (sem notarização Apple / sem Authenticode). Descarregue só a partir deste Release / Transferências do site.
 
 - **macOS:** o zip bom tem ~58 MB. Descompacte → na primeira abertura use botão direito → **Abrir**, ou `xattr -dr com.apple.quarantine` no `.app`, ou autorize em Privacidade e segurança → Abrir mesmo assim.
 - **Windows:** SmartScreen → **Mais informações** → **Executar mesmo assim** (só se confiar neste Release).
@@ -59,7 +71,9 @@ Abrir ao iniciar sessão fica desligado até o ativar. Limites honestos: Privacy
 
 ## 简体中文 — 完整步骤
 
-**buusdo Cybersecurity Service Tool** 桌面版来自 [GitHub Releases](https://github.com/otas0/buusdo-Cybersecurity-Service-Tool/releases)（见网站设置 → 桌面应用下载）。构建**未签名**（无 Apple 公证 / 无 Authenticode）。
+**三步（与网站 Downloads 一致）：** 1）下载对应系统的安装包；2）打开/安装（首次可能需 Gatekeeper / SmartScreen）；3）启动应用 — 强制更新时用同一流程替换安装。
+
+**buusdo Cybersecurity Service Tool** 桌面版来自 [GitHub Releases](https://github.com/otas0/buusdo-Cybersecurity-Service-Tool/releases)（见网站 Downloads）。构建**未签名**（无 Apple 公证 / 无 Authenticode）。
 
 ### macOS（`.app` zip）
 
@@ -90,7 +104,9 @@ open "/path/to/Preventive Shield.app"
 
 ## 日本語 — 手順
 
-**buusdo Cybersecurity Service Tool** のデスクトップ版は [GitHub Releases](https://github.com/otas0/buusdo-Cybersecurity-Service-Tool/releases) から（サイトの設定 → デスクトップ版のダウンロード）。ビルドは**未署名**です。
+**3 ステップ（サイト Downloads と同じ）：** 1）OS 用パッケージをダウンロード；2）開く／インストール（初回は Gatekeeper / SmartScreen の可能性）；3）起動 — 必須アップデートも同じ流れで入れ替え。
+
+**buusdo Cybersecurity Service Tool** のデスクトップ版は [GitHub Releases](https://github.com/otas0/buusdo-Cybersecurity-Service-Tool/releases) から（サイトの Downloads）。ビルドは**未署名**です。
 
 ### macOS
 
@@ -112,7 +128,9 @@ open "/path/to/Preventive Shield.app"
 
 ## Deutsch — Schritte
 
-**buusdo Cybersecurity Service Tool** Desktop kommt von [GitHub Releases](https://github.com/otas0/buusdo-Cybersecurity-Service-Tool/releases) (Website → Einstellungen → Desktop-Downloads). Builds sind **unsigniert**.
+**Drei Schritte (wie Website Downloads):** 1) Paket für Ihr System laden; 2) öffnen/installieren (Gatekeeper / SmartScreen einmal möglich); 3) App starten — Pflicht-Updates denselben Weg.
+
+**buusdo Cybersecurity Service Tool** Desktop kommt von [GitHub Releases](https://github.com/otas0/buusdo-Cybersecurity-Service-Tool/releases) (Website → Downloads). Builds sind **unsigniert**.
 
 ### macOS
 
@@ -134,7 +152,9 @@ open "/path/to/Preventive Shield.app"
 
 ## Français — étapes
 
-**buusdo Cybersecurity Service Tool** bureau vient des [GitHub Releases](https://github.com/otas0/buusdo-Cybersecurity-Service-Tool/releases) (site → Paramètres → Téléchargements bureau). Builds **non signées**.
+**Trois étapes (comme Downloads sur le site) :** 1) télécharger le paquet de votre système ; 2) ouvrir/installer (Gatekeeper / SmartScreen une fois possible) ; 3) lancer l’app — les mises à jour obligatoires suivent le même flux.
+
+**buusdo Cybersecurity Service Tool** bureau vient des [GitHub Releases](https://github.com/otas0/buusdo-Cybersecurity-Service-Tool/releases) (site → Downloads). Builds **non signées**.
 
 ### macOS
 
@@ -154,6 +174,13 @@ open "/path/to/Preventive Shield.app"
 - Windows : NSIS ; SmartScreen → Informations → Exécuter quand même.
 - Linux : `.deb` via `dpkg -i`. Non signé = normal pour ce canal.
 
+## Español / Italiano / Nederlands — tres pasos / tre passi / drie stappen
+
+Misma lógica que Downloads en el sitio / stessa logica del sito / zelfde als website Downloads:
+
+1. Descargar / Scarica / Download el paquete de su sistema.
+2. Abrir o instalar (Gatekeeper / SmartScreen una vez si avisa).
+3. Abrir la app — actualizaciones obligatorias usan el mismo flujo.
 
 ## Supported languages (website + in-app setup path)
 
@@ -217,7 +244,7 @@ Setup and desktop download copy ship in **every** UI locale below. Open **Downlo
 | `lo` | ລາວ | Lao | southeast-asia | [/lo/downloads](https://buusdocst.mtsu.workers.dev/lo/downloads) |
 | `my` | မြန်မာ | Burmese | southeast-asia | [/my/downloads](https://buusdocst.mtsu.workers.dev/my/downloads) |
 
-Canonical English steps stay in this file. Locale packs carry `desktopDownloads*` + setup-guide link labels for the same Release URLs.
+Canonical English steps stay in this file. Locale packs carry `desktopDownloads*` + `desktopInstallStep*` + setup-guide link labels for the same Release URLs. Spot-check: each language section above should match the website Downloads three-step copy for that locale.
 ## Slack / ops
 
 Slack webhook is **not** configured for this product ops path (skipped). Health failures still go through GitHub Actions email / watch notifications — see [`HEALTH_ALERTS.md`](HEALTH_ALERTS.md).

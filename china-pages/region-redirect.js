@@ -109,14 +109,12 @@
     var detail = el.querySelector("[data-reach-detail]");
     var isEn = document.documentElement.lang === "en";
     if (status) {
-      status.textContent = isEn
-        ? "Workers unreachable — showing notice"
-        : "Workers 不可达 — 显示本告知书";
+      status.textContent = isEn ? "Workers unreachable" : "Workers 不可达";
     }
     if (detail) {
       detail.textContent = isEn
-        ? "Stay on this page, or retry when your network can reach Cloudflare."
-        : "请停留在本页；待网络可到达 Cloudflare 后再试。";
+        ? "Showing this notice. Retry when Cloudflare is reachable."
+        : "显示本告知书。待可达 Cloudflare 后再试。";
     }
     el.dataset.state = "fail";
   }

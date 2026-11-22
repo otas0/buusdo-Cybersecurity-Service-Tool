@@ -9,7 +9,7 @@ Until a custom domain replaces workers.dev, the **only** public links are:
 | Canonical product | `https://buusdocst.mtsu.workers.dev` |
 | Privacy (EN) | `https://buusdocst.mtsu.workers.dev/en/privacy` |
 | Privacy (optional locale) | `https://buusdocst.mtsu.workers.dev/pt-PT/privacy` |
-| China entry (GitHub Pages) | `https://otas0.github.io/buusdocst/` — suspension notice; auto-guides to Workers when reachable ([CHINA_GITHUB_PAGES.md](CHINA_GITHUB_PAGES.md)) |
+| China notice (GitHub Pages) | `https://otas0.github.io/buusdocst/` — 告知书 + auto-guide only ([CHINA_GITHUB_PAGES.md](CHINA_GITHUB_PAGES.md)) |
 | A4 poster (print handoff only) | `https://buusdocst.mtsu.workers.dev/promo/poster.html` — EN / pt-PT / 中文. **Not** product chrome (nav / Settings / extension / desktop footer must not link this). |
 | A4 poster (legacy pt URL) | `…/promo/poster-pt.html` → meta-refresh redirect to `poster.html` (keep for old links; see [promo/README.md](promo/README.md)) |
 
@@ -23,7 +23,7 @@ After a custom domain, `npm run production:origin -- https://YOUR_CANONICAL` rew
 buusdo Cybersecurity Service Tool (Buusdo product line).
 Check a website before you trust it.
 Product (Workers): https://buusdocst.mtsu.workers.dev
-China entry (GitHub Pages): https://otas0.github.io/buusdocst/
+China notice (告知书 + auto-guide): https://otas0.github.io/buusdocst/
 A4 poster: https://buusdocst.mtsu.workers.dev/promo/poster.html
 Privacy: https://buusdocst.mtsu.workers.dev/en/privacy
 ```
@@ -34,7 +34,7 @@ Privacy: https://buusdocst.mtsu.workers.dev/en/privacy
 buusdo Cybersecurity Service Tool (linha Buusdo).
 Verifique um site antes de confiar.
 Produto (Workers): https://buusdocst.mtsu.workers.dev
-Entrada China (GitHub Pages): https://otas0.github.io/buusdocst/
+Aviso China (aviso + auto-guia): https://otas0.github.io/buusdocst/
 Cartaz A4: https://buusdocst.mtsu.workers.dev/promo/poster.html
 Privacidade: https://buusdocst.mtsu.workers.dev/en/privacy
 ```
@@ -45,7 +45,7 @@ Privacidade: https://buusdocst.mtsu.workers.dev/en/privacy
 buusdo Cybersecurity Service Tool（Buusdo 产品线）。
 访问网站前先核查地址。
 产品（Workers）：https://buusdocst.mtsu.workers.dev
-中国入口（GitHub Pages）：https://otas0.github.io/buusdocst/
+中国告知书（告知书 + 自动引导）：https://otas0.github.io/buusdocst/
 A4 海报：https://buusdocst.mtsu.workers.dev/promo/poster.html
 隐私：https://buusdocst.mtsu.workers.dev/en/privacy
 ```
@@ -53,8 +53,8 @@ A4 海报：https://buusdocst.mtsu.workers.dev/promo/poster.html
 ## Do
 
 - Name the **product** (`buusdo Cybersecurity Service Tool`) and, when useful, the **line** (`Buusdo`) — never imply they are the same product.
-- Always show **Workers product** and **China Pages entry** as two distinct surfaces (API vs static suspension notice / auto-guide).
-- Link **only** the canonical origin + privacy page(s) + China entry above.
+- Always show **Workers product** and **China Pages notice** as two distinct surfaces (API vs 告知书 + auto-guide).
+- Link **only** the canonical origin + privacy page(s) + the single China notice URL above (no install/privacy subpaths).
 - Always include privacy before asking people to use the product.
 - Desktop downloads are **unsigned** GitHub Release builds — say Gatekeeper / SmartScreen warnings are expected; point to [DESKTOP_SETUP_GUIDE.md](DESKTOP_SETUP_GUIDE.md) (never imply Apple notarization or Authenticode).
 

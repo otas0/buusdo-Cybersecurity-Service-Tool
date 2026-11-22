@@ -78,6 +78,6 @@ Rebuild FRAMEs after brand sync: `npm run sync:brand-web && npm run capture:stor
 
 `https://buusdocst.mtsu.workers.dev`
 
-## China entry (when Workers is hard to reach)
+## China notice (告知书 + auto-guide)
 
 `https://otas0.github.io/buusdocst/`

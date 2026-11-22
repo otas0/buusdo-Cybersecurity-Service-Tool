@@ -53,6 +53,9 @@ export function PrivacyPanel({
         <p className="hint" data-testid="privacy-honest-limits">
           {t.privacyPolicyLimitsBody}
         </p>
+        <p className="hint" data-testid="privacy-desktop-offline">
+          {t.privacyDesktopOfflineNote}
+        </p>
         {mirrorLive ? (
           <p className="scope-note">
             <a
@@ -80,6 +83,11 @@ export function PrivacyPanel({
       <section className="settings-block">
         <h3 className="settings-subhead">{t.privacyPolicyAccountTitle}</h3>
         <p className="hint">{t.privacyPolicyAccountBody}</p>
+      </section>
+
+      <section className="settings-block" data-testid="privacy-china-notice" id="privacy-china-notice">
+        <h3 className="settings-subhead">{t.privacyPolicyChinaTitle}</h3>
+        <p className="hint">{t.privacyPolicyChinaBody}</p>
       </section>
 
       <section className="settings-block" data-testid="privacy-contact" id="privacy-contact">

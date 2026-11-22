@@ -31,7 +31,9 @@ test("index.html and en.html load region-redirect and expose stay link", () => {
     assert.match(html, /src="\.\/region-redirect\.js"/, file);
     assert.match(html, /data-testid="china-region-redirect-hint"/, file);
     assert.match(html, /data-testid="china-stay-link"/, file);
+    assert.match(html, /data-testid="china-stay-clear"/, file);
     assert.match(html, /china_stay=1/, file);
+    assert.match(html, /china_stay=0/, file);
     assert.match(html, /data-testid="china-notice-title"/, file);
   }
 });

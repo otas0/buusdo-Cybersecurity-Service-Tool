@@ -29,7 +29,7 @@
   "privacyPolicyContactBody": "Para questões de privacidade ou do produto, contacte o operador da sua instalação do buusdo pelo email ou canal de suporte oficial (quem gere o Worker na Cloudflare). Prefira esse endereço oficial conhecido — não um telefone ou email impresso no site que está a verificar. Não cole resultados sensíveis de verificações em canais públicos.",
   "privacyPolicyLimitsTitle": "Limites honestos (app + proxy)",
   "privacyPolicyLimitsBody": "Sem desencriptação TLS — o HTTPS CONNECT usa só o nome do anfitrião; não há certificado MITM. Sem terminar processos — os programas em execução continuam. Pastas de sistema só são reportadas — /usr, /etc, caminhos de sistema Windows e Program Files nunca são movidos nem editados. Não há motor AV / de assinaturas nem captura de credenciais ou histórico de navegação.",
-  "privacyPolicyUpdated": "Última revisão: 2026-11-07 · lançamento do site",
+  "privacyPolicyUpdated": "Última revisão: 2026-11-22 · aviso da entrada China",
   "desktopDownloadsTitle": "Transferências da app de ambiente de trabalho",
   "desktopDownloadsIntro": "Instale o buusdo Cybersecurity Service Tool neste computador a partir do GitHub Release (browser + tabuleiro). As builds não estão assinadas — veja o guia de instalação. Abrir ao iniciar sessão fica desligado até o ativar.",
   "desktopDownloadWindows": "Instalador Windows (NSIS)",
@@ -472,5 +472,13 @@
   "langRegionPacific": "Pacífico",
   "langRegionSoutheastAsia": "Sudeste Asiático",
   "langRegionSouthernAfrica": "África Austral",
-  "localeRecommendSearchHint": "Sugestões abaixo. Pesquise para ver a lista completa de idiomas."
+  "localeRecommendSearchHint": "Sugestões abaixo. Pesquise para ver a lista completa de idiomas.",
+  "desktopInstallStepsTitle": "Install in three steps",
+  "desktopInstallStep1": "Download the package for your system (Windows, macOS, or Linux).",
+  "desktopInstallStep2": "Open or install it. If the OS warns that the publisher is unknown, follow the setup guide once.",
+  "desktopInstallStep3": "Launch the app — the dashboard opens on this computer. Updates install the same way when the app asks.",
+  "privacyDesktopOfflineNote": "Desktop app: computer scan and personal block lists work offline. Live website address checks need the internet when you use that path.",
+  "extensionStoreOnlyNote": "The browser extension installs from the Chrome Web Store or Mac App Store only. There is no whole-repo download and no offline self-contained extension package.",
+  "privacyPolicyChinaTitle": "Entrada da China continental (GitHub Pages)",
+  "privacyPolicyChinaBody": "Desde 22 de novembro de 2026 o site GitHub Pages da China continental (https://otas0.github.io/buusdocst/) suspende as páginas habituais de explicação/instalação/privacidade e mantém só um aviso bilingue. Quando a rede alcança este site Workers, esse aviso encaminha automaticamente para aqui; quando não alcança, o aviso pode ainda abrir. A privacidade formal é esta página — não um resumo separado na China."
 }

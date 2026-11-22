@@ -41,10 +41,19 @@ export const messages = {
     privacyPolicyLimitsTitle: "Honest limits (desktop + proxy)",
     privacyPolicyLimitsBody:
       "No TLS decryption — HTTPS CONNECT is hostname-only; there is no MITM certificate. No process kill — running programs keep running. System directories are report-only — /usr, /etc, Windows system paths, and Program Files are never moved or edited. There is no AV / signature engine and no credential or browsing-history capture.",
-    privacyPolicyUpdated: "Last reviewed: 2026-11-07 · website launch",
+    privacyDesktopOfflineNote:
+      "Desktop app: computer scan and personal block lists work offline. Live website address checks need the internet when you use that path.",
+    privacyPolicyChinaTitle: "China mainland entry (GitHub Pages)",
+    privacyPolicyChinaBody:
+      "From 22 November 2026 the China mainland GitHub Pages site (https://otas0.github.io/buusdocst/) suspends regular product explain/install/privacy pages and keeps only a bilingual notice. When your network can reach this Workers product site, that Pages notice auto-guides here; when it cannot, you may still open the notice. Formal privacy is this page — not a separate China privacy summary.",
+    privacyPolicyUpdated: "Last reviewed: 2026-11-22 · China entry notice",
     desktopDownloadsTitle: "Desktop app downloads",
     desktopDownloadsIntro:
-      "Install buusdo Cybersecurity Service Tool on this computer from the GitHub Release (browser shell + tray). Builds are unsigned — see the setup guide. Open-at-login stays off until you enable it.",
+      "Get the desktop app for this computer in three steps. Builds are unsigned — the first open may need Gatekeeper / SmartScreen approval. Open-at-login stays off until you enable it.",
+    desktopInstallStepsTitle: "Install in three steps",
+    desktopInstallStep1: "Download the package for your system (Windows, macOS, or Linux).",
+    desktopInstallStep2: "Open or install it. If the OS warns that the publisher is unknown, follow the setup guide once.",
+    desktopInstallStep3: "Launch the app — the dashboard opens on this computer. Updates install the same way when the app asks.",
     desktopDownloadWindows: "Windows installer (NSIS)",
     desktopDownloadMac: "macOS app (zip)",
     desktopDownloadLinux: "Linux amd64 (.deb)",
@@ -271,7 +280,9 @@ export const messages = {
     intelMergePtWriteFallbackPath:
       "Merge state hot-applied. .env.local denied — persisted to {path}.",
     blockOnSurfaces:
-      "Blocking runs in the browser extension and desktop app — not on this website. The site only checks addresses. See Settings for install docs.",
+      "Blocking runs in the browser extension and desktop app — not on this website. The site only checks addresses. See Downloads for install docs.",
+    extensionStoreOnlyNote:
+      "The browser extension installs from the Chrome Web Store or Mac App Store only. There is no whole-repo download and no offline self-contained extension package.",
     timingCopyEnv: "Copy CHECK_PROBE_TIMEOUT_MS=…",
     timingCopied: "Copied",
     timingCopyFailed: "Could not copy — select the line manually.",
@@ -541,16 +552,25 @@ export const messages = {
     privacyPolicyLimitsTitle: "Limites honestos (app + proxy)",
     privacyPolicyLimitsBody:
       "Sem desencriptação TLS — o HTTPS CONNECT usa só o nome do anfitrião; não há certificado MITM. Sem terminar processos — os programas em execução continuam. Pastas de sistema só são reportadas — /usr, /etc, caminhos de sistema Windows e Program Files nunca são movidos nem editados. Não há motor AV / de assinaturas nem captura de credenciais ou histórico de navegação.",
-    privacyPolicyUpdated: "Última revisão: 2026-11-07 · lançamento do site",
+    privacyDesktopOfflineNote:
+      "App desktop: a análise deste computador e as listas pessoais de bloqueio funcionam offline. As verificações de endereço no site precisam de internet quando usar esse caminho.",
+    privacyPolicyChinaTitle: "Entrada da China continental (GitHub Pages)",
+    privacyPolicyChinaBody:
+      "Desde 22 de novembro de 2026 o site GitHub Pages da China continental (https://otas0.github.io/buusdocst/) suspende as páginas habituais de explicação/instalação/privacidade e mantém só um aviso bilingue. Quando a rede alcança este site Workers, esse aviso encaminha automaticamente para aqui; quando não alcança, o aviso pode ainda abrir. A privacidade formal é esta página — não um resumo separado na China.",
+    privacyPolicyUpdated: "Última revisão: 2026-11-22 · aviso da entrada China",
     desktopDownloadsTitle: "Transferências da app de ambiente de trabalho",
     desktopDownloadsIntro:
-      "Instale o buusdo Cybersecurity Service Tool neste computador a partir do GitHub Release (browser + tabuleiro). As builds não estão assinadas — veja o guia de instalação. Abrir ao iniciar sessão fica desligado até o ativar.",
+      "Obtenha a app neste computador em três passos. As builds não estão assinadas — a primeira abertura pode pedir aprovação do Gatekeeper / SmartScreen. Abrir ao iniciar sessão fica desligado até o ativar.",
+    desktopInstallStepsTitle: "Instalar em três passos",
+    desktopInstallStep1: "Descarregue o pacote do seu sistema (Windows, macOS ou Linux).",
+    desktopInstallStep2: "Abra ou instale. Se o sistema avisar de editor desconhecido, siga o guia de instalação uma vez.",
+    desktopInstallStep3: "Abra a app — o painel abre neste computador. As atualizações instalam-se da mesma forma quando a app pedir.",
     desktopDownloadWindows: "Instalador Windows (NSIS)",
     desktopDownloadMac: "App macOS (zip)",
     desktopDownloadLinux: "Linux amd64 (.deb)",
     desktopDownloadSoon: "Compilar a partir do Actions (artefacto em breve)",
-    desktopDownloadPackaging: "Documentação de empacotamento",
     desktopDownloadSetupGuide: "Guia de instalação (não assinado)",
+    desktopDownloadPackaging: "Documentação de empacotamento",
     desktopDownloadRelease: "Notas de lançamento da app",
     desktopDownloadReleaseTag: "Lançamento {tag}",
     desktopDownloadSourceCdn: "Espelho CDN",
@@ -770,7 +790,9 @@ export const messages = {
     intelMergePtWriteFallbackPath:
       "Estado de fusão aplicado a quente. .env.local negado — persistido em {path}.",
     blockOnSurfaces:
-      "O bloqueio corre na extensão do browser e na aplicação de ambiente de trabalho — não neste site. O site apenas verifica endereços. Veja Definições para a instalação.",
+      "O bloqueio corre na extensão do browser e na aplicação de ambiente de trabalho — não neste site. O site apenas verifica endereços. Veja Transferências para a instalação.",
+    extensionStoreOnlyNote:
+      "A extensão do browser instala-se apenas na Chrome Web Store ou na Mac App Store. Não há descarga do repositório completo nem pacote offline autónomo da extensão.",
     timingCopyEnv: "Copiar CHECK_PROBE_TIMEOUT_MS=…",
     timingCopied: "Copiado",
     timingCopyFailed: "Não foi possível copiar — selecione a linha manualmente.",

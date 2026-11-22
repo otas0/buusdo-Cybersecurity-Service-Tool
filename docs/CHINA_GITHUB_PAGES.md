@@ -34,7 +34,7 @@ Actions **Pages China** 将 `china-pages/` 发布到 `otas0/buusdocst`（secret 
 
 `china-pages/region-redirect.js`（defer on **every** notice HTML; stubs jump to notice first）：
 
-1. Opt-out: `?china_stay=1` → `localStorage buusdocst-china-stay=1`（便于阅读告知书）。
+1. Opt-out: `?china_stay=1` → `localStorage buusdocst-china-stay=1`（便于阅读告知书）。清除：`?china_stay=0`（`data-testid="china-stay-clear"`）。
 2. Else `GET https://buusdocst.mtsu.workers.dev/api/health`（CORS、omit credentials、~5s）。
 3. If `ok && service === buusdocst` → `location.replace` Workers locale：
    - `zh-TW` / `zh-HK` / `zh-Hant` → `/zh-Hant`

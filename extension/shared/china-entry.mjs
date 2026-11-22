@@ -1,5 +1,5 @@
 /**
- * China-facing GitHub Pages entry.
+ * China-facing GitHub Pages notice (告知书 + auto-guide).
  * URL host: otas0/buusdocst → https://otas0.github.io/buusdocst/
  * Source of truth: otas0/buusdo-Cybersecurity-Service-Tool/china-pages/
  */

@@ -1,6 +1,6 @@
 {
   "url": "https://otas0.github.io/buusdocst/",
   "repo": "otas0/buusdo-Cybersecurity-Service-Tool",
-  "notes": "China entry URL is otas0.github.io/buusdocst (host repo otas0/buusdocst). Source of truth: product repo china-pages/.",
+  "notes": "Notice-only China Pages (host repo otas0/buusdocst). Bilingual suspension notice + Workers auto-guide when /api/health is reachable. Source of truth: product repo china-pages/.",
   "pagesHostRepo": "otas0/buusdocst"
 }
