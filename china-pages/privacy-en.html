@@ -118,8 +118,11 @@
       <footer class="foot">
         <p>buusdo Cybersecurity Service Tool · GitHub Pages</p>
         <p class="foot-note" id="china-lang-pref">
-          Language preference is stored on this device only (this site’s <code>localStorage</code>, not uploaded).
-          Prefer Simplified Chinese on Workers?
+          Language preference is stored on this device only
+          (<code>localStorage</code> key <code>buusdocst-china-lang</code>, not uploaded).
+          Entry pages may auto-switch to the Workers product site when
+          <code>/api/health</code> succeeds; choosing “Stay on China entry” sets
+          <code>buusdocst-china-stay</code> (also local only). Prefer Simplified Chinese on Workers?
           <a
             data-testid="china-workers-zh-hans-footnote"
             href="https://buusdocst.mtsu.workers.dev/zh-Hans"

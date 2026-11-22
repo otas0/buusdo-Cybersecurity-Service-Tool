@@ -105,8 +105,10 @@
       <footer class="foot">
         <p>buusdo Cybersecurity Service Tool · GitHub Pages</p>
         <p class="foot-note" id="china-lang-pref">
-          语言偏好仅保存在本机（本站 <code>localStorage</code>，不上传）。
-          英文摘要页同样提供 Workers 简体入口：
+          语言偏好仅保存在本机（本站 <code>localStorage</code> 键
+          <code>buusdocst-china-lang</code>，不上传）。入口页在 Workers
+          <code>/api/health</code> 可达时可能自动切到产品站；若选择「留在中国入口」，会写入
+          <code>buusdocst-china-stay</code>（亦不上传）。英文摘要页同样提供 Workers 简体入口：
           <a
             data-testid="china-workers-zh-hans-footnote"
             href="https://buusdocst.mtsu.workers.dev/zh-Hans"

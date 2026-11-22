@@ -12,6 +12,7 @@ const root = process.cwd();
 const html = readFileSync(join(root, "china-pages/index.html"), "utf8");
 const reach = readFileSync(join(root, "china-pages/reachability.js"), "utf8");
 const persist = readFileSync(join(root, "china-pages/lang-persist.js"), "utf8");
+const regionRedirect = readFileSync(join(root, "china-pages/region-redirect.js"), "utf8");
 const css = readFileSync(join(root, "china-pages/styles.css"), "utf8");
 
 test("China health soft-fail when service ≠ buusdocst", async ({ page }) => {
@@ -20,6 +21,11 @@ test("China health soft-fail when service ≠ buusdocst", async ({ page }) => {
     if (url.startsWith("/reachability.js")) {
       res.writeHead(200, { "Content-Type": "application/javascript; charset=utf-8" });
       res.end(reach);
+      return;
+    }
+    if (url.startsWith("/region-redirect.js")) {
+      res.writeHead(200, { "Content-Type": "application/javascript; charset=utf-8" });
+      res.end(regionRedirect);
       return;
     }
     if (url.startsWith("/lang-persist.js")) {
@@ -43,6 +49,7 @@ test("China health soft-fail when service ≠ buusdocst", async ({ page }) => {
       html
         .replace(/src="\.?\/?lang-persist\.js"/, 'src="/lang-persist.js"')
         .replace(/src="\.?\/?reachability\.js"/, 'src="/reachability.js"')
+        .replace(/src="\.?\/?region-redirect\.js"/, 'src="/region-redirect.js"')
         .replace(/href="\.?\/?styles\.css"/, 'href="/styles.css"')
         .replace(/href="\.?\/?assets\/tokens\.css"/, 'href="/styles.css"'),
     );

@@ -93,10 +93,13 @@ jobs:
             return 1
           }
           assert_url "/lang-persist.js" "buusdocst-china-lang"
+          assert_url "/region-redirect.js" "buusdocst-china-stay"
           for page in "/" "/en.html" "/install.html" "/install-en.html" "/privacy.html" "/privacy-en.html"; do
             assert_url "$page" 'data-china-lang'
           done
           assert_url "/" 'china-workers-locale-hint'
+          assert_url "/" 'china-region-redirect-hint'
+          assert_url "/en.html" 'china-stay-link'
 
       - name: Soft-check live wordmark Halt-orange / charcoal (needs sharp)
         continue-on-error: true

@@ -30,7 +30,7 @@ Actions **Pages China** 将 `china-pages/` 发布到 `otas0/buusdocst`（secret 
 
 **Locale packs:** 欧洲目录语言包均为完整包（含中欧 / 南欧 / 波罗的海 / `ca` / `ga` / `mt` / `uk` / `is` / `sl`）— 无「精简欧洲」或部分包暗示。English: all Europe catalog packs are full — no thin-Europe implication. See entry pages `data-testid="china-europe-packs-full"`.
 
-语言偏好：`lang-persist.js`（`<head>` 同步加载，先于 `reachability.js` defer）把选择写入 `localStorage`（`buusdocst-china-lang`）。顶栏 `中文` / `EN` 带 `data-china-lang`；显式切换用 session 标记，避免「点了 EN 再点中文又跳回 EN」。选 EN 后打开中文 URL（如 `/` 或 `install.html`）会落到对应英文页。
+语言偏好：`lang-persist.js`（`<head>` 同步加载，先于 `reachability.js` / `region-redirect.js` defer）把选择写入 `localStorage`（`buusdocst-china-lang`）。顶栏 `中文` / `EN` 带 `data-china-lang`；显式切换用 session 标记，避免「点了 EN 再点中文又跳回 EN」。选 EN 后打开中文 URL（如 `/` 或 `install.html`）会落到对应英文页。入口自动切站见下文 **Region auto-guide**。
 
 **本地验证默认中文：** 打开 Pages 任意页 → DevTools → Application → Local Storage → 删除 `buusdocst-china-lang`（并清 `sessionStorage` 的 `buusdocst-china-lang-nav`）→ 再打开 `/` 或 `install.html`，应停在中文页。
 
@@ -43,6 +43,23 @@ China Pages is a **static explain / privacy / install** entry — not a second p
 - **Do not** revive `china-pages/site-config.js` (dropped; `tests/china-no-a4-poster.test.ts` keeps it absent).
 - **Do not** link `/promo/poster.html` or show an A4 海报 CTA on any `china-pages/**/*.html` page (Pages China workflow greps for this).
 - Poster print handoff stays on Workers `/promo/` only — never from China nav.
+
+## Region auto-guide (entry → Workers)
+
+`china-pages/region-redirect.js` (defer on **entry** pages only: `index.html` / `en.html`):
+
+1. Opt-out: `?china_stay=1` (also sets `localStorage buusdocst-china-stay=1`) or existing stay flag — no bounce.
+2. Else `GET https://buusdocst.mtsu.workers.dev/api/health` (CORS, credentials omit, ~5s).
+3. If `ok && service === buusdocst` → `location.replace` to Workers locale path:
+   - browser `zh-TW` / `zh-HK` / `zh-Hant` → `/zh-Hant`
+   - `zh` / `zh-CN` / `zh-Hans` → `/zh-Hans`
+   - `en*` → `/en`
+   - else page default (`index` → `/zh-Hans`, `en.html` → `/en`)
+4. If health fails → stay on China entry; `reachability.js` still shows fail UI.
+
+**Install / privacy HTML never auto-redirect** (docs must remain openable when Workers is up).
+
+UI hint + stay link: `data-testid="china-region-redirect-hint"` / `china-stay-link`.
 
 ## 与 Workers 的关系
 
@@ -57,8 +74,8 @@ Pages **不能**替代 `POST /api/check`。
 
 | China Pages | Workers 完整检查 / 设置 / 隐私 |
 |-------------|--------------------------------|
-| 中文页（`index` / `install` / `privacy`） | `/zh-Hans`、`/zh-Hans/settings#settings-desktop`、`/zh-Hans/privacy` |
-| 英文页（`en` / `install-en` / `privacy-en`） | `/en`、`/en/settings#settings-desktop`、`/en/privacy` |
+| 中文页（`index` / `install` / `privacy`） | `/zh-Hans`、`/zh-Hans/downloads`、`/zh-Hans/privacy` |
+| 英文页（`en` / `install-en` / `privacy-en`） | `/en`、`/en/downloads`、`/en/privacy` |
 
 别名：`/zh`、`/zh-CN`、`/zh-SG` 在 Workers 上 **redirect → `/zh-Hans`**；`/zh-TW`、`/zh-HK` → `/zh-Hant`（避免旧链 404）。简体文案包：`i18n/packs/zh-Hans.json`。摘要对齐清单见 `docs/CHINA_PRIVACY_DIFF.md`。
 

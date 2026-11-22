@@ -110,6 +110,12 @@
           </p>
           <p class="reach-detail" data-reach-detail></p>
         </div>
+        <p class="hint" data-testid="china-region-redirect-hint">
+          若当前网络可到达完整检查站，本页会自动切换到 Workers 产品站（按语言进入
+          <code>/zh-Hans</code> 或 <code>/zh-Hant</code> / <code>/en</code>）。
+          若要留在本说明页，请使用
+          <a href="./index.html?china_stay=1" data-testid="china-stay-link">留在中国入口</a>。
+        </p>
       </section>
 
       <section class="stage">
@@ -155,5 +161,6 @@
       </footer>
     </main>
     <script src="./reachability.js" defer></script>
+    <script src="./region-redirect.js" defer></script>
   </body>
 </html>

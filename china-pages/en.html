@@ -88,6 +88,12 @@
           </p>
           <p class="reach-detail" data-reach-detail></p>
         </div>
+        <p class="hint" data-testid="china-region-redirect-hint">
+          If this network can reach the full checker, this entry auto-switches to the Workers
+          product site (<code>/en</code>, <code>/zh-Hans</code>, or <code>/zh-Hant</code> from
+          browser language). To stay on this explain page, use
+          <a href="./en.html?china_stay=1" data-testid="china-stay-link">Stay on China entry</a>.
+        </p>
       </section>
 
       <section class="stage">
@@ -147,5 +153,6 @@
       </footer>
     </main>
     <script src="./reachability.js" defer></script>
+    <script src="./region-redirect.js" defer></script>
   </body>
 </html>
