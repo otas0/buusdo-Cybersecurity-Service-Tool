@@ -49,8 +49,15 @@ test("EN / pt-PT / zh-Hans privacy message bodies never mention /survey/", () =>
   }
 });
 
-test("China privacy HTML mirrors have zero /survey/ links", () => {
-  for (const rel of ["china-pages/privacy.html", "china-pages/privacy-en.html"]) {
+test("China notice + legacy stubs have zero /survey/ links", () => {
+  for (const rel of [
+    "china-pages/index.html",
+    "china-pages/en.html",
+    "china-pages/privacy.html",
+    "china-pages/privacy-en.html",
+    "china-pages/install.html",
+    "china-pages/install-en.html"
+  ]) {
     const html = readFileSync(path.join(root, rel), "utf8");
     assert.doesNotMatch(html, SURVEY, rel);
     assert.doesNotMatch(html, /survey-round2/i, rel);

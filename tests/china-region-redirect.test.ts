@@ -1,5 +1,5 @@
 /**
- * China entry auto-guides to Workers when health would succeed (script + markup contract).
+ * China notice auto-guides to Workers when health succeeds (all notice pages).
  *
  *   npx tsx --test tests/china-region-redirect.test.ts
  */
@@ -21,11 +21,8 @@ test("region-redirect.js ships opt-out, health probe, and Workers locale paths",
   assert.match(src, /\/zh-Hant/);
   assert.match(src, /\/en/);
   assert.match(src, /EXPECTED_SERVICE|buusdocst/);
-  // Entry-only — install/privacy must not be in ENTRY map as redirect targets that bounce
-  assert.match(src, /index\.html/);
-  assert.match(src, /en\.html/);
-  assert.doesNotMatch(src, /install\.html["']:\s*true/);
-  assert.doesNotMatch(src, /privacy\.html["']:\s*true/);
+  assert.doesNotMatch(src, /Only entry pages/);
+  assert.doesNotMatch(src, /ENTRY\s*=/);
 });
 
 test("index.html and en.html load region-redirect and expose stay link", () => {
@@ -35,10 +32,11 @@ test("index.html and en.html load region-redirect and expose stay link", () => {
     assert.match(html, /data-testid="china-region-redirect-hint"/, file);
     assert.match(html, /data-testid="china-stay-link"/, file);
     assert.match(html, /china_stay=1/, file);
+    assert.match(html, /data-testid="china-notice-title"/, file);
   }
 });
 
-test("install and privacy pages do not load region-redirect", () => {
+test("legacy stubs redirect to notice without region-redirect", () => {
   for (const file of [
     "china-pages/install.html",
     "china-pages/install-en.html",
@@ -47,6 +45,7 @@ test("install and privacy pages do not load region-redirect", () => {
   ]) {
     const html = readFileSync(file, "utf8");
     assert.doesNotMatch(html, /region-redirect\.js/, file);
+    assert.match(html, /location\.replace/, file);
   }
 });
 
@@ -158,7 +157,7 @@ test("vm: china_stay=1 skips redirect and persists stay key", async () => {
   assert.equal(run.storage["buusdocst-china-stay"], "1");
 });
 
-test("vm: health fail leaves entry in place", async () => {
+test("vm: health fail leaves notice in place", async () => {
   const run = runRedirect({
     pathname: "/buusdocst/index.html",
     health: null

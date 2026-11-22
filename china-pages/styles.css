@@ -430,3 +430,29 @@ a {
     align-items: stretch;
   }
 }
+
+/* Suspension notice (sole China Pages content) */
+.shell .notice h3 {
+  margin: 28px 0 10px;
+  font-family: var(--mono);
+  font-size: 13px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.shell .notice ul,
+.shell .notice ol {
+  margin: 0 0 16px;
+  padding-left: 1.25rem;
+}
+
+.shell .notice li {
+  margin: 6px 0;
+}
+
+.shell .notice-sign {
+  margin-top: 24px;
+  color: var(--muted);
+  font-size: 14px;
+}

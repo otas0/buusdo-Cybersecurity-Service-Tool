@@ -104,15 +104,8 @@ async function checkGithubDescription() {
   }
 }
 
-/** China Pages wordmark alt must match formalName on every bilingual HTML. */
-const chinaPages = [
-  "index.html",
-  "en.html",
-  "install.html",
-  "install-en.html",
-  "privacy.html",
-  "privacy-en.html"
-];
+/** China Pages notice wordmark alt must match formalName (stubs have no brand img). */
+const chinaPages = ["index.html", "en.html"];
 for (const file of chinaPages) {
   const html = readFileSync(join(root, "china-pages", file), "utf8");
   const expectedAlt = `alt="${formal}"`;

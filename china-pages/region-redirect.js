@@ -1,12 +1,9 @@
 /**
- * Region / network auto-guide: China entry → Workers product site when reachable.
+ * Region / network auto-guide: any China Pages HTML → Workers when reachable.
  *
- * When GET /api/health succeeds on an entry page (index / en), replace location with
- * the matching Workers locale path (另一套站点). Install / privacy pages never auto-bounce
- * so docs remain readable. Opt out: ?china_stay=1 or localStorage buusdocst-china-stay=1.
- *
- * Load: defer after reachability UI is optional — this file does its own short health probe
- * so entry redirect does not wait on DOM widgets. Keep after lang-persist in document order.
+ * GET /api/health succeeds → location.replace matching Workers locale path.
+ * Opt out: ?china_stay=1 or localStorage buusdocst-china-stay=1 (read the notice).
+ * Legacy install/privacy stubs bounce to index/en first; those stubs also load this script.
  */
 (function () {
   var WORKERS_ORIGIN = "https://buusdocst.mtsu.workers.dev";
@@ -23,10 +20,8 @@
     return base;
   }
 
-  /** Only entry pages auto-switch to Workers; install/privacy stay put. */
-  var ENTRY = { "index.html": true, "en.html": true, "": true };
   var file = pageFile();
-  if (!ENTRY[file] && file !== "") return;
+  /* All China site HTML pages auto-guide when reachable (no entry-only gate). */
 
   function wantsStay() {
     try {
@@ -54,12 +49,11 @@
 
   if (wantsStay()) return;
 
-  /**
-   * Pick Workers locale path from page language + browser tags (region/language signal).
-   * zh / zh-CN / zh-SG → /zh-Hans; zh-TW / zh-HK / zh-MO → /zh-Hant; en* → /en; else page default.
-   */
   function workersPath() {
-    var pageIsEn = file === "en.html" || document.documentElement.lang === "en";
+    var pageIsEn =
+      file === "en.html" ||
+      /-en\.html$/.test(file) ||
+      (document.documentElement && document.documentElement.lang === "en");
     var tags = [];
     try {
       if (navigator.languages && navigator.languages.length) {
@@ -70,10 +64,22 @@
     } catch (_) {}
     for (var j = 0; j < tags.length; j += 1) {
       var raw = String(tags[j] || "").toLowerCase();
-      if (raw === "zh-tw" || raw.indexOf("zh-tw") === 0 || raw === "zh-hk" || raw.indexOf("zh-hk") === 0 || raw === "zh-mo" || raw.indexOf("zh-hant") === 0) {
+      if (
+        raw === "zh-tw" ||
+        raw.indexOf("zh-tw") === 0 ||
+        raw === "zh-hk" ||
+        raw.indexOf("zh-hk") === 0 ||
+        raw === "zh-mo" ||
+        raw.indexOf("zh-hant") === 0
+      ) {
         return "/zh-Hant";
       }
-      if (raw === "zh" || raw.indexOf("zh-cn") === 0 || raw.indexOf("zh-sg") === 0 || raw.indexOf("zh-hans") === 0) {
+      if (
+        raw === "zh" ||
+        raw.indexOf("zh-cn") === 0 ||
+        raw.indexOf("zh-sg") === 0 ||
+        raw.indexOf("zh-hans") === 0
+      ) {
         return "/zh-Hans";
       }
       if (raw.indexOf("en") === 0) return "/en";
@@ -94,6 +100,25 @@
           : "正在切换到完整检查站…";
     }
     el.dataset.state = "ok";
+  }
+
+  function markFail() {
+    var el = document.getElementById("workers-reach");
+    if (!el) return;
+    var status = el.querySelector("[data-reach-status]");
+    var detail = el.querySelector("[data-reach-detail]");
+    var isEn = document.documentElement.lang === "en";
+    if (status) {
+      status.textContent = isEn
+        ? "Workers unreachable — showing notice"
+        : "Workers 不可达 — 显示本告知书";
+    }
+    if (detail) {
+      detail.textContent = isEn
+        ? "Stay on this page, or retry when your network can reach Cloudflare."
+        : "请停留在本页；待网络可到达 Cloudflare 后再试。";
+    }
+    el.dataset.state = "fail";
   }
 
   var ctrl = new AbortController();
@@ -130,6 +155,6 @@
     })
     .catch(function () {
       clearTimeout(timer);
-      /* Stay on China entry — reachability.js (if present) still shows fail UI. */
+      markFail();
     });
 })();

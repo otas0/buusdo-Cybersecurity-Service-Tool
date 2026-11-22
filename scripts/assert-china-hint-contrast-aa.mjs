@@ -71,18 +71,22 @@ for (const [name, hex] of [
   console.info(`ok ${name} ${hex} contrast ${ratio.toFixed(2)}`);
 }
 
-// Europe-full bilingual hint uses the same .hint AA path — require the nodes exist.
+// Region-redirect hint uses the same .hint AA path — require the nodes exist.
 for (const page of ["china-pages/index.html", "china-pages/en.html"]) {
   const html = readFileSync(path.join(root, page), "utf8");
-  if (!html.includes('data-testid="china-europe-packs-full"')) {
-    console.error(`FAIL: ${page} missing data-testid="china-europe-packs-full" hint`);
+  if (!html.includes('data-testid="china-region-redirect-hint"')) {
+    console.error(`FAIL: ${page} missing data-testid="china-region-redirect-hint" hint`);
     process.exit(1);
   }
-  if (!/class="hint"[^>]*data-testid="china-europe-packs-full"|data-testid="china-europe-packs-full"[^>]*class="hint"/.test(html)
-    && !html.includes('class="hint" data-testid="china-europe-packs-full"')) {
-    console.error(`FAIL: ${page} china-europe-packs-full must use class="hint" for AA`);
+  if (
+    !/class="hint"[^>]*data-testid="china-region-redirect-hint"|data-testid="china-region-redirect-hint"[^>]*class="hint"/.test(
+      html
+    ) &&
+    !html.includes('class="hint" data-testid="china-region-redirect-hint"')
+  ) {
+    console.error(`FAIL: ${page} china-region-redirect-hint must use class="hint" for AA`);
     process.exit(1);
   }
-  console.info(`ok ${page} china-europe-packs-full hint present`);
+  console.info(`ok ${page} china-region-redirect-hint present`);
 }
 console.info("assert-china-hint-contrast-aa ok");

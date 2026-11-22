@@ -1,13 +1,7 @@
 /**
- * Persist China Pages language (zh | en) across Entry / Install / Privacy.
+ * Persist China Pages language (zh | en) between notice pages only.
  *
- * Load order (do not change casually):
- * - This file: synchronous in <head>, no defer/async — may location.replace before paint.
- * - reachability.js: defer at end of <body> — only runs after DOM parse; must not run on a
- *   page that is about to redirect, and must not rewrite language preference.
- *
- * Explicit 中文/EN uses data-china-lang and ?china_lang= on the href so a later click is not
- * bounced back by the mismatch redirect (click + sessionStorage alone can race).
+ * Load: synchronous in <head>. region-redirect.js is defer at end of <body>.
  */
 (function () {
   var KEY = "buusdocst-china-lang";
@@ -15,11 +9,7 @@
   var PAIRS = {
     "index.html": { zh: "index.html", en: "en.html" },
     "en.html": { zh: "index.html", en: "en.html" },
-    "": { zh: "index.html", en: "en.html" },
-    "install.html": { zh: "install.html", en: "install-en.html" },
-    "install-en.html": { zh: "install.html", en: "install-en.html" },
-    "privacy.html": { zh: "privacy.html", en: "privacy-en.html" },
-    "privacy-en.html": { zh: "privacy.html", en: "privacy-en.html" }
+    "": { zh: "index.html", en: "en.html" }
   };
 
   function pageFile() {
@@ -30,7 +20,7 @@
   }
 
   function pageLang(file) {
-    return /-en\.html$/.test(file) || file === "en.html" ? "en" : "zh";
+    return file === "en.html" ? "en" : "zh";
   }
 
   function readPref() {

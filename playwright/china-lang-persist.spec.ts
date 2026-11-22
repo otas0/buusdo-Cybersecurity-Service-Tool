@@ -1,5 +1,5 @@
 /**
- * China Pages: language persist across Entry / Install; EN → 中文 does not bounce.
+ * China notice: language persist between index / en; EN → 中文 does not bounce.
  *
  *   PLAYWRIGHT_SKIP_WEBSERVER=1 npx playwright test playwright/china-lang-persist.spec.ts
  */
@@ -50,36 +50,43 @@ function closeServer(server: Server) {
   server.close();
 }
 
-test("EN preference keeps Install on install-en", async ({ page }) => {
+test("EN preference then open index with china_lang=zh stays Chinese", async ({ page }) => {
   const { server, port } = await startStaticServer();
   const base = `http://127.0.0.1:${port}`;
   try {
-    await page.goto(`${base}/en.html?china_lang=en`, { waitUntil: "domcontentloaded" });
+    await page.route("**/api/health", async (route) => {
+      await route.abort();
+    });
+    await page.goto(`${base}/en.html?china_lang=en&china_stay=1`, {
+      waitUntil: "domcontentloaded",
+    });
     expect(await page.evaluate(() => localStorage.getItem("buusdocst-china-lang"))).toBe("en");
 
-    await page.locator(".china-site-nav a", { hasText: /^Install$/ }).click({ noWaitAfter: true });
-    await expect(page).toHaveURL(/install-en\.html/, { timeout: 8_000 });
+    await page.goto(`${base}/index.html?china_lang=zh&china_stay=1`, {
+      waitUntil: "domcontentloaded",
+    });
+    expect(page.url()).toMatch(/index\.html/);
+    expect(page.url()).not.toMatch(/\/en\.html(\?|$)/);
+    expect(await page.evaluate(() => localStorage.getItem("buusdocst-china-lang"))).toBe("zh");
   } finally {
     closeServer(server);
   }
 });
 
-test("EN then 中文 stays on Chinese page (no bounce back to EN)", async ({ page }) => {
+test("EN then 中文 click stays on Chinese notice", async ({ page }) => {
   const { server, port } = await startStaticServer();
   const base = `http://127.0.0.1:${port}`;
   try {
-    await page.goto(`${base}/en.html?china_lang=en`, { waitUntil: "domcontentloaded" });
-    expect(await page.evaluate(() => localStorage.getItem("buusdocst-china-lang"))).toBe("en");
-
-    await page.goto(`${base}/index.html?china_lang=zh`, { waitUntil: "domcontentloaded" });
-    expect(page.url()).toMatch(/index\.html/);
-    expect(page.url()).not.toMatch(/\/en\.html(\?|$)/);
-    expect(await page.evaluate(() => localStorage.getItem("buusdocst-china-lang"))).toBe("zh");
-
-    await page.goto(`${base}/en.html?china_lang=en`, { waitUntil: "domcontentloaded" });
+    await page.route("**/api/health", async (route) => {
+      await route.abort();
+    });
+    await page.goto(`${base}/en.html?china_lang=en&china_stay=1`, {
+      waitUntil: "domcontentloaded",
+    });
     await page.locator('a[data-china-lang="zh"]').click({ noWaitAfter: true });
     await expect(page).toHaveURL(/index\.html/, { timeout: 8_000 });
     expect(await page.evaluate(() => localStorage.getItem("buusdocst-china-lang"))).toBe("zh");
+    await expect(page.getByTestId("china-notice")).toBeVisible();
   } finally {
     closeServer(server);
   }

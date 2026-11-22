@@ -26,11 +26,11 @@ function contrastRatio(fg: string, bg: string): number {
 }
 
 for (const theme of ["dark", "light"] as const) {
-  test(`china Europe-full hint AA under ${theme} theme`, async ({ page }) => {
+  test(`china region-redirect hint AA under ${theme} theme`, async ({ page }) => {
     const tokens = readFileSync("china-pages/assets/tokens.css", "utf8");
     const index = readFileSync("china-pages/index.html", "utf8");
     const hintMatch = index.match(
-      /<p class="hint" data-testid="china-europe-packs-full">([\s\S]*?)<\/p>/
+      /<p class="hint" data-testid="china-region-redirect-hint">([\s\S]*?)<\/p>/
     );
     expect(hintMatch).toBeTruthy();
     const html = `<!doctype html>
@@ -44,7 +44,7 @@ for (const theme of ["dark", "light"] as const) {
   </style>
 </head>
 <body>
-  <p class="hint" data-testid="china-europe-packs-full">${hintMatch![1]}</p>
+  <p class="hint" data-testid="china-region-redirect-hint">${hintMatch![1]}</p>
 </body>
 </html>`;
     const server = createServer((_req, res) => {
@@ -55,7 +55,7 @@ for (const theme of ["dark", "light"] as const) {
     const { port } = server.address() as { port: number };
     try {
       await page.goto(`http://127.0.0.1:${port}/`);
-      const hint = page.getByTestId("china-europe-packs-full");
+      const hint = page.getByTestId("china-region-redirect-hint");
       await expect(hint).toBeVisible();
       const colors = await hint.evaluate((el) => {
         const cs = getComputedStyle(el);
@@ -64,7 +64,7 @@ for (const theme of ["dark", "light"] as const) {
       });
       const ratio = contrastRatio(colors.fg, colors.bg);
       expect(ratio).toBeGreaterThanOrEqual(4.5);
-      await expect(hint).toHaveScreenshot(`china-europe-hint-${theme}.png`, {
+      await expect(hint).toHaveScreenshot(`china-region-hint-${theme}.png`, {
         animations: "disabled",
         maxDiffPixelRatio: 0.12
       });

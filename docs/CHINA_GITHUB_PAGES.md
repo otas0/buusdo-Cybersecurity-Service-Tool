@@ -1,6 +1,6 @@
-# GitHub Pages — 中国大陆访问入口
+# GitHub Pages — 中国大陆入口（告知书）
 
-Workers（`*.workers.dev`）在部分大陆网络会 TCP 超时。产品检查 API 仍在 Cloudflare；**中国入口固定 URL**：
+Workers（`*.workers.dev`）在部分大陆网络会 TCP 超时。**中国入口固定 URL**：
 
 **https://otas0.github.io/buusdocst/**
 
@@ -13,89 +13,49 @@ Actions **Pages China** 将 `china-pages/` 发布到 `otas0/buusdocst`（secret 
 
 ## 设计语言
 
-与 Workers 产品站同一套 instrument 体系：`shared/tokens.css`（部署前同步到 `china-pages/assets/tokens.css`），深色场、直角、Halt `#ff4d00`、透明底深色场 wordmark（勿再套白底框）。勿单独改中国入口色板。
+与 Workers 产品站同一套 instrument 体系：`shared/tokens.css`（部署前同步到 `china-pages/assets/tokens.css`），深色场、直角、Halt `#ff4d00`、透明底深色场 wordmark。
 
-## 内容
+## 内容（仅告知书）
+
+自 **2026-11-22** 起，中国入口**只保留**中英告知书与 Workers 产品站入口；说明 / 隐私摘要 / 安装指引已下线。
 
 | 路径 | 用途 |
 |------|------|
-| `/` (`index.html`) | 中文入口 |
-| `/en.html` | English entry |
-| `/privacy.html` | 隐私摘要（中文） |
-| `/privacy-en.html` | Privacy summary (English) |
-| `/install.html` | 安装说明（中文） |
-| `/install-en.html` | Install (English) |
+| `/` (`index.html`) | 中文告知书 + Workers 入口 |
+| `/en.html` | English notice + Workers entry |
+| `/install.html` · `/privacy.html` | 薄跳转 → `index.html`（旧链兼容） |
+| `/install-en.html` · `/privacy-en.html` | 薄跳转 → `en.html` |
 
-每一页顶栏统一：`中文 · EN`（`data-testid="china-lang-switch"`）+ 站点导航（入口/安装/隐私 或 Entry/Install/Privacy）。三对中英页面内容对等，无「仅中文子页」死链。
+顶栏：`中文 · EN`（`data-testid="china-lang-switch"`）。无站点「入口/安装/隐私」导航。
 
-**Locale packs:** 欧洲目录语言包均为完整包（含中欧 / 南欧 / 波罗的海 / `ca` / `ga` / `mt` / `uk` / `is` / `sl`）— 无「精简欧洲」或部分包暗示。English: all Europe catalog packs are full — no thin-Europe implication. See entry pages `data-testid="china-europe-packs-full"`.
+语言偏好：`lang-persist.js`（`<head>` 同步）→ `localStorage` `buusdocst-china-lang`。
 
-语言偏好：`lang-persist.js`（`<head>` 同步加载，先于 `reachability.js` / `region-redirect.js` defer）把选择写入 `localStorage`（`buusdocst-china-lang`）。顶栏 `中文` / `EN` 带 `data-china-lang`；显式切换用 session 标记，避免「点了 EN 再点中文又跳回 EN」。选 EN 后打开中文 URL（如 `/` 或 `install.html`）会落到对应英文页。入口自动切站见下文 **Region auto-guide**。
+## Region auto-guide（全站）
 
-**本地验证默认中文：** 打开 Pages 任意页 → DevTools → Application → Local Storage → 删除 `buusdocst-china-lang`（并清 `sessionStorage` 的 `buusdocst-china-lang-nav`）→ 再打开 `/` 或 `install.html`，应停在中文页。
+`china-pages/region-redirect.js`（defer on **every** notice HTML; stubs jump to notice first）：
 
-
-## Nav-only China entry (no A4, no site-config)
-
-China Pages is a **static explain / privacy / install** entry — not a second product UI.
-
-- **Do** ship: top-bar `中文 · EN` + site nav (入口/安装/隐私), reachability to Workers, Halt next-steps summary.
-- **Do not** revive `china-pages/site-config.js` (dropped; `tests/china-no-a4-poster.test.ts` keeps it absent).
-- **Do not** link `/promo/poster.html` or show an A4 海报 CTA on any `china-pages/**/*.html` page (Pages China workflow greps for this).
-- Poster print handoff stays on Workers `/promo/` only — never from China nav.
-
-## Region auto-guide (entry → Workers)
-
-`china-pages/region-redirect.js` (defer on **entry** pages only: `index.html` / `en.html`):
-
-1. Opt-out: `?china_stay=1` (also sets `localStorage buusdocst-china-stay=1`) or existing stay flag — no bounce.
-2. Else `GET https://buusdocst.mtsu.workers.dev/api/health` (CORS, credentials omit, ~5s).
-3. If `ok && service === buusdocst` → `location.replace` to Workers locale path:
-   - browser `zh-TW` / `zh-HK` / `zh-Hant` → `/zh-Hant`
+1. Opt-out: `?china_stay=1` → `localStorage buusdocst-china-stay=1`（便于阅读告知书）。
+2. Else `GET https://buusdocst.mtsu.workers.dev/api/health`（CORS、omit credentials、~5s）。
+3. If `ok && service === buusdocst` → `location.replace` Workers locale：
+   - `zh-TW` / `zh-HK` / `zh-Hant` → `/zh-Hant`
    - `zh` / `zh-CN` / `zh-Hans` → `/zh-Hans`
    - `en*` → `/en`
-   - else page default (`index` → `/zh-Hans`, `en.html` → `/en`)
-4. If health fails → stay on China entry; `reachability.js` still shows fail UI.
+   - else page default（中文页 `/zh-Hans`，英文页 `/en`）
+4. If health fails → stay on notice；`#workers-reach` 显示不可达。
 
-**Install / privacy HTML never auto-redirect** (docs must remain openable when Workers is up).
-
-UI hint + stay link: `data-testid="china-region-redirect-hint"` / `china-stay-link`.
+UI：`data-testid="china-notice"` / `china-notice-title` / `china-workers-entry` / `china-region-redirect-hint` / `china-stay-link`。
 
 ## 与 Workers 的关系
 
 | 表面 | 宿主 |
 |------|------|
-| 完整检查 / API | Cloudflare Workers `buusdocst.mtsu.workers.dev` |
-| 说明、隐私摘要、安装指引（大陆友好入口） | GitHub Pages `otas0.github.io/buusdocst` |
+| 完整检查 / API / 隐私 / 安装 | Cloudflare Workers `buusdocst.mtsu.workers.dev` |
+| 暂停服务告知书（大陆友好静态页） | GitHub Pages `otas0.github.io/buusdocst` |
 
-Pages **不能**替代 `POST /api/check`。
+Pages **不能**替代 `POST /api/check`。正式隐私以 Workers `/zh-Hans/privacy` · `/en/privacy` 为准。
 
-### Workers locale 对照（China Pages → Workers）
-
-| China Pages | Workers 完整检查 / 设置 / 隐私 |
-|-------------|--------------------------------|
-| 中文页（`index` / `install` / `privacy`） | `/zh-Hans`、`/zh-Hans/downloads`、`/zh-Hans/privacy` |
-| 英文页（`en` / `install-en` / `privacy-en`） | `/en`、`/en/downloads`、`/en/privacy` |
-
-别名：`/zh`、`/zh-CN`、`/zh-SG` 在 Workers 上 **redirect → `/zh-Hans`**；`/zh-TW`、`/zh-HK` → `/zh-Hant`（避免旧链 404）。简体文案包：`i18n/packs/zh-Hans.json`。摘要对齐清单见 `docs/CHINA_PRIVACY_DIFF.md`。
-
-Pacific / SEA（`mi`、`id`、`ms`、`th`、`vi`、`fil`、`km`、`lo`、`my`）已恢复真实文案包（无 EN stub）。
-
-### EN entry secondary `/zh-Hans` CTA (required bilingual pattern)
-
-English China Pages must expose Workers Simplified Chinese as a **secondary** CTA (primary stays `/en`):
-
-| Surface | Primary | Secondary `/zh-Hans` |
-|---------|---------|----------------------|
-| `en.html` | Open full check (EN) → `/en` | ghost button `data-testid="china-workers-zh-hans"` + foot-note `data-testid="china-workers-zh-hans-footnote"` |
-| `privacy-en.html` | Workers `/en/privacy` summary links | same foot-note test id → `https://buusdocst.mtsu.workers.dev/zh-Hans` |
-| `install-en.html` | Workers `/en` when reachable | optional; match en.html when adding CTAs |
-
-`privacy.html` (zh) documents the same Workers `/zh-Hans` secondary pattern so EN/zh twins stay aligned. Do not ship an EN entry that only links `/en` with no `/zh-Hans` escape hatch.
-
-### Halt next-steps on Pages
-
-`index.html` / `en.html` include `#halt-next-steps` (`data-testid="china-halt-next-steps"`): the same leave / no-credentials / verify / optional-report summary as the Workers Halt result. Full interactive Halt UI remains on Workers (`/zh-Hans` or `/en`) — open **打开完整检查** / **Open full check (EN)** when Cloudflare is reachable.
+- **Do not** revive `china-pages/site-config.js` or A4 / `/promo/poster.html` CTAs.
+- Poster print handoff stays on Workers `/promo/` only.
 
 ## 运维
 

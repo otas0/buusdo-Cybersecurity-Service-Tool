@@ -169,10 +169,10 @@ const chinaBase = (process.env.CHINA_PAGES_BASE_URL || "https://otas0.github.io/
   .trim()
   .replace(/\/$/, "");
 
-test.describe("China Pages privacy mirrors (soft)", () => {
+test.describe("China Pages notice (soft)", () => {
   test.beforeAll(async () => {
     try {
-      const res = await fetch(`${chinaBase}/privacy-en.html`, {
+      const res = await fetch(`${chinaBase}/en.html`, {
         signal: AbortSignal.timeout(12_000),
         redirect: "follow"
       });
@@ -182,7 +182,7 @@ test.describe("China Pages privacy mirrors (soft)", () => {
         );
         test.skip(true, `China Pages unreachable: ${chinaBase} HTTP ${res.status}`);
       }
-      console.info(`[privacy-prod] China Pages privacy checks active at ${chinaBase}`);
+      console.info(`[privacy-prod] China Pages notice checks active at ${chinaBase}`);
     } catch (err) {
       const msg = err instanceof Error ? err.message : String(err);
       console.info(
@@ -192,9 +192,9 @@ test.describe("China Pages privacy mirrors (soft)", () => {
     }
   });
 
-  for (const pagePath of ["/privacy.html", "/privacy-en.html"] as const) {
+  for (const pagePath of ["/", "/en.html"] as const) {
     test(`${pagePath} has zero /survey/ links`, async ({ page }) => {
-      await page.goto(`${chinaBase}${pagePath}`, {
+      await page.goto(`${chinaBase}${pagePath}?china_stay=1`, {
         waitUntil: "domcontentloaded",
         timeout: 45_000
       });

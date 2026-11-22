@@ -5,15 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta
       name="description"
-      content="buusdo Cybersecurity Service Tool。面向中国大陆访客的说明与入口。"
+      content="关于暂停中国大陆入口页服务及地区入口自动引导的告知书 — buusdo Cybersecurity Service Tool"
     />
-    <title>buusdo Cybersecurity Service Tool · 中国访问入口</title>
+    <title>告知书 · buusdo Cybersecurity Service Tool</title>
     <link rel="icon" href="./assets/favicon.svg" type="image/svg+xml" />
     <link rel="stylesheet" href="./styles.css" />
     <script src="./lang-persist.js"></script>
   </head>
   <body>
-    <main class="shell">
+    <main class="shell" data-testid="china-notice">
       <header class="top">
         <h1 class="brand-lockup">
           <a href="./index.html" aria-current="page">
@@ -33,134 +33,183 @@
             ·
             <a href="./en.html?china_lang=en" data-china-lang="en">EN</a>
           </p>
-          <nav class="china-site-nav" aria-label="站点导航">
-            <a href="./index.html" aria-current="page">入口</a>
-            <a href="./install.html">安装</a>
-            <a href="./privacy.html">隐私</a>
-          </nav>
         </div>
       </header>
 
-      <section class="stage">
-        <p class="kicker"><span class="mark" aria-hidden="true"></span>中国入口</p>
-        <h2>中国大陆访问说明</h2>
-        <p class="lede">
-          完整检查服务运行在 Cloudflare Workers（
-          <code>buusdocst.mtsu.workers.dev</code>
-          ）。在部分大陆网络下该域名可能较慢或超时，这不一定代表服务宕机。
+      <article class="stage notice">
+        <p class="kicker"><span class="mark" aria-hidden="true"></span>告知书</p>
+        <h2 data-testid="china-notice-title">关于暂停中国大陆入口页服务及地区入口自动引导的告知书</h2>
+
+        <p class="lede">尊敬的用户：</p>
+        <p>
+          感谢您对 buusdo Cybersecurity Service Tool（以下简称「本项目」）的关注与支持。现就中国大陆入口页服务调整、以及访问入口的自动引导安排，告知如下：
+        </p>
+
+        <h3>一、暂停服务的原因及范围</h3>
+        <p>
+          本项目的完整检查能力运行在 Cloudflare Workers（
+          <code>https://buusdocst.mtsu.workers.dev</code>
+          ）。经技术评估，在部分中国大陆网络环境下，该域名可能出现延迟、超时或不可达，用户难以正常完成检查。
         </p>
         <p>
-          本页由 GitHub Pages 托管，便于在 Workers 不可达时仍能打开产品说明、隐私政策与扩展安装指引。
+          为避免在无法稳定使用完整检查时产生误解与异常体验，本项目自
+          <strong>2026 年 11 月 22 日</strong>
+          起，
+          <strong>暂停中国大陆入口页</strong>
+          （GitHub Pages：
+          <code>https://otas0.github.io/buusdocst/</code>
+          ）的常规对外服务。该入口此前提供的产品说明、隐私摘要与安装指引已下线；本站仅保留本告知书。
+          <strong>完整检查界面位于 Workers 产品站。</strong>
         </p>
-        <p class="hint" data-testid="china-europe-packs-full">
-          欧洲目录语言包均为完整包（含中欧 / 南欧 / 波罗的海 / ca / ga / mt / uk / is / sl），无「精简欧洲」或部分包暗示。
+        <p>
+          说明：暂停范围限于上述中国大陆入口页；
+          <strong>不表示</strong>
+          Workers 产品站在全球其他可访问网络中一律不可用。
         </p>
-        <div class="actions">
+
+        <h3>二、地区入口自动引导（按网络环境切换到另一套站点）</h3>
+        <p>本项目存在两套相关站点入口：</p>
+        <ul>
+          <li>
+            中国大陆入口页 —
+            <code>https://otas0.github.io/buusdocst/</code>
+            （本告知书；网络不可达 Workers 时可见）
+          </li>
+          <li>
+            Workers 完整检查站 —
+            <code>https://buusdocst.mtsu.workers.dev</code>
+            （正式检查与产品界面，如
+            <code>/zh-Hans</code>、<code>/zh-Hant</code>、<code>/en</code>）
+          </li>
+        </ul>
+        <p>
+          当用户访问中国大陆入口页的
+          <strong>任意页面</strong>
+          时，系统将根据当前网络是否可达 Workers（只读健康探测，见第三节）进行引导：
+        </p>
+        <ol>
+          <li>
+            <strong>网络经检测可到达 Workers</strong>
+            ：自动引导至与语言相对应的 Workers 完整检查入口（例如简体中文
+            <code>/zh-Hans</code>、繁体中文
+            <code>/zh-Hant</code>、英文
+            <code>/en</code>），无需自行查找主站地址。
+          </li>
+          <li>
+            <strong>当前网络无法到达 Workers</strong>
+            ：停留在本告知书；本项目不对中国大陆地区访问可用性作出承诺。
+          </li>
+        </ol>
+        <p>
+          「自动引导」指：中国入口页 → 对应语言的 Workers 完整检查站；并非全球多套国家镜像产品站。
+        </p>
+
+        <h3>三、关于网络环境检测与隐私</h3>
+        <ul>
+          <li>
+            <strong>检测内容</strong>
+            ：浏览器向 Workers 发起只读
+            <code>GET /api/health</code>
+            （短超时、不携带 Cookie），用于判断当前网络是否可达完整检查站并完成引导。
+          </li>
+          <li>
+            <strong>不用于</strong>
+            ：用户画像、广告、营销，或与引导无关的其他目的。
+          </li>
+          <li>
+            <strong>不调用</strong>
+            ：检查接口
+            <code>/api/check</code>
+            （完整检查仅在您进入 Workers 并提交地址后发生）。
+          </li>
+          <li>
+            <strong>语言偏好</strong>
+            ：中文 / 英文选择仅保存在本机
+            <code>localStorage</code>
+            （<code>buusdocst-china-lang</code>），不上传。
+          </li>
+        </ul>
+        <p>
+          更完整的隐私说明以 Workers 正式隐私页为准：
+          <a href="https://buusdocst.mtsu.workers.dev/zh-Hans/privacy" rel="noreferrer"
+            >https://buusdocst.mtsu.workers.dev/zh-Hans/privacy</a
+          >
+        </p>
+
+        <h3>四、服务恢复</h3>
+        <p>
+          中国大陆入口页的恢复时间暂无法确定。待条件具备后，本项目将另行发布通知。在此期间，
+          <strong>本项目不对中国大陆地区访问入口页或 Workers 的可用性作出任何承诺</strong>。
+        </p>
+
+        <h3>五、联系方式</h3>
+        <p>
+          如您位于可到达 Cloudflare 的网络却无法进入 Workers，或对本告知书有疑问，请通过
           <a
-            class="primary-button"
-            data-full-check
-            href="https://buusdocst.mtsu.workers.dev/zh-Hans"
+            href="https://github.com/otas0/buusdo-Cybersecurity-Service-Tool/issues"
             rel="noreferrer"
-            data-testid="china-workers-zh-hans"
-            >打开完整检查（简体中文 /zh-Hans）</a
+            >GitHub Issues</a
           >
-          <a class="ghost-button" href="./install.html">扩展安装</a>
-          <a class="ghost-button" href="./privacy.html">隐私摘要</a>
-        </div>
-        <p class="hint" data-testid="china-workers-locale-hint" id="china-workers-locale-hint">
-          完整检查与 Workers 产品站同文：默认 <code>/zh-Hans</code>；顶栏可改语言。
-          <button
-            type="button"
-            class="hint-dismiss"
-            data-testid="china-workers-locale-hint-dismiss"
-            hidden
-          >
-            关闭
-          </button>
+          联系。对由此带来的不便，我们深表歉意，并感谢您的理解与支持。
         </p>
-        <script>
-          (function () {
-            var KEY = "buusdocst-china-hint-dismissed";
-            var el = document.getElementById("china-workers-locale-hint");
-            var btn = el && el.querySelector("[data-testid='china-workers-locale-hint-dismiss']");
-            if (!el || !btn) return;
-            try {
-              if (localStorage.getItem(KEY) === "1") {
-                el.hidden = true;
-                return;
-              }
-            } catch (e) {}
-            btn.hidden = false;
-            btn.addEventListener("click", function () {
-              try {
-                localStorage.setItem(KEY, "1");
-              } catch (e) {}
-              el.hidden = true;
-            });
-          })();
-        </script>
+        <p>特此告知。</p>
+        <p class="notice-sign">
+          buusdo Cybersecurity Service Tool 项目开发者<br />
+          发布日期：2026 年 11 月 22 日
+        </p>
+
         <div
           id="workers-reach"
           class="reach"
           data-state="checking"
           aria-live="polite"
+          data-testid="china-workers-reach"
         >
           <p class="reach-row">
-            <span class="reach-status" data-reach-status>正在探测 Workers…</span>
+            <span class="reach-status" data-reach-status>正在检测 Workers 可达性…</span>
           </p>
           <p class="reach-detail" data-reach-detail></p>
         </div>
-        <p class="hint" data-testid="china-region-redirect-hint">
-          若当前网络可到达完整检查站，本页会自动切换到 Workers 产品站（按语言进入
-          <code>/zh-Hans</code> 或 <code>/zh-Hant</code> / <code>/en</code>）。
-          若要留在本说明页，请使用
-          <a href="./index.html?china_stay=1" data-testid="china-stay-link">留在中国入口</a>。
-        </p>
-      </section>
 
-      <section class="stage">
-        <p class="kicker">产品</p>
-        <h2>产品做什么</h2>
-        <p>
-          buusdo Cybersecurity Service Tool（Buusdo 产品线中的独立产品）在信任网址前，用自有威胁列表、地址结构、品牌仿冒信号、DNS
-          与可达性做检查。不把网址送给第三方信誉服务。
-        </p>
-      </section>
-
-      <section class="stage" data-testid="china-halt-next-steps" id="halt-next-steps">
-        <p class="kicker"><span class="mark" aria-hidden="true"></span>停止</p>
-        <h2>出现 Halt（停止）时怎么办</h2>
-        <p class="lede">
-          完整 Halt 结果页在 Workers 检查站（离开、独立核实、可选举报）。本页只提供同样的下一步摘要；请在可访问 Cloudflare 时打开完整检查。
-        </p>
-        <ol class="halt-steps">
-          <li>立刻离开该页面，不要继续使用刚才检查的地址。</li>
-          <li>不要在该站点输入密码、银行卡号或短信验证码。</li>
-          <li>用你已经信任的官方域名或 App（书签、银行卡、已知应用商店）独立核实——不要用可疑页上的电话或邮箱。</li>
-          <li>可选：在完整检查结果里保存本地举报草稿；扩展或桌面端可加入个人拦截列表。</li>
-        </ol>
-        <p class="hint">
-          诚实边界：不能清除网站已收集的个人信息；不是杀毒软件；结果来自自有列表与地址信号，不是大众投票数。
-        </p>
         <div class="actions">
           <a
             class="primary-button"
+            data-testid="china-workers-entry"
             data-full-check
             href="https://buusdocst.mtsu.workers.dev/zh-Hans"
             rel="noreferrer"
-            >打开完整检查（简体中文 /zh-Hans）</a
+            >打开完整检查站（/zh-Hans）</a
+          >
+          <a
+            class="ghost-button"
+            data-testid="china-workers-zh-hans"
+            href="https://buusdocst.mtsu.workers.dev/zh-Hans"
+            rel="noreferrer"
+            >/zh-Hans</a
+          >
+          <a
+            class="ghost-button"
+            href="https://buusdocst.mtsu.workers.dev/en"
+            rel="noreferrer"
+            >/en</a
           >
         </div>
-      </section>
+        <p class="hint" data-testid="china-region-redirect-hint">
+          若当前网络可达完整检查站，本页会自动跳转。若要留在本告知书，请使用
+          <a href="./index.html?china_stay=1" data-testid="china-stay-link">留在本页</a>。
+        </p>
+      </article>
 
       <footer class="foot">
         <p>buusdo Cybersecurity Service Tool · GitHub Pages</p>
-        <p class="foot-note">
-          <a href="./privacy.html#china-lang-pref">语言偏好仅保存在本机</a>。
+        <p class="foot-note" id="china-lang-pref">
+          语言偏好仅保存在本机（<code>buusdocst-china-lang</code>）。正式隐私页见
+          <a href="https://buusdocst.mtsu.workers.dev/zh-Hans/privacy" rel="noreferrer"
+            >Workers /zh-Hans/privacy</a
+          >。
         </p>
       </footer>
     </main>
-    <script src="./reachability.js" defer></script>
     <script src="./region-redirect.js" defer></script>
   </body>
 </html>

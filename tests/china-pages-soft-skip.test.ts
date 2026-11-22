@@ -9,7 +9,7 @@ import { test } from "node:test";
 async function chinaPagesReachable(base: string): Promise<{ ok: boolean; reason: string }> {
   const origin = base.replace(/\/$/, "");
   try {
-    const res = await fetch(`${origin}/privacy-en.html`, {
+    const res = await fetch(`${origin}/en.html`, {
       signal: AbortSignal.timeout(4_000),
       redirect: "follow"
     });

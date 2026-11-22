@@ -1,5 +1,5 @@
 /**
- * China Pages: wrong health.service → soft-fail (not network fail).
+ * China notice: wrong health.service → stay on notice (no Workers bounce).
  *
  *   PLAYWRIGHT_SKIP_WEBSERVER=1 npx playwright test playwright/china-soft-fail.spec.ts
  */
@@ -10,19 +10,13 @@ import { expect, test } from "@playwright/test";
 
 const root = process.cwd();
 const html = readFileSync(join(root, "china-pages/index.html"), "utf8");
-const reach = readFileSync(join(root, "china-pages/reachability.js"), "utf8");
 const persist = readFileSync(join(root, "china-pages/lang-persist.js"), "utf8");
 const regionRedirect = readFileSync(join(root, "china-pages/region-redirect.js"), "utf8");
 const css = readFileSync(join(root, "china-pages/styles.css"), "utf8");
 
-test("China health soft-fail when service ≠ buusdocst", async ({ page }) => {
+test("China health soft-fail when service ≠ buusdocst stays on notice", async ({ page }) => {
   const server = createServer((req, res) => {
     const url = req.url || "/";
-    if (url.startsWith("/reachability.js")) {
-      res.writeHead(200, { "Content-Type": "application/javascript; charset=utf-8" });
-      res.end(reach);
-      return;
-    }
     if (url.startsWith("/region-redirect.js")) {
       res.writeHead(200, { "Content-Type": "application/javascript; charset=utf-8" });
       res.end(regionRedirect);
@@ -44,11 +38,9 @@ test("China health soft-fail when service ≠ buusdocst", async ({ page }) => {
       return;
     }
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8" });
-    // Point script at local reachability.js
     res.end(
       html
         .replace(/src="\.?\/?lang-persist\.js"/, 'src="/lang-persist.js"')
-        .replace(/src="\.?\/?reachability\.js"/, 'src="/reachability.js"')
         .replace(/src="\.?\/?region-redirect\.js"/, 'src="/region-redirect.js"')
         .replace(/href="\.?\/?styles\.css"/, 'href="/styles.css"')
         .replace(/href="\.?\/?assets\/tokens\.css"/, 'href="/styles.css"'),
@@ -71,16 +63,13 @@ test("China health soft-fail when service ≠ buusdocst", async ({ page }) => {
   });
 
   try {
-    await page.goto(`http://127.0.0.1:${port}/`);
-    await expect(page.locator("#halt-next-steps")).toBeVisible();
-    await expect(page.getByTestId("china-halt-next-steps")).toBeVisible();
-    await expect(page.locator("#halt-next-steps .halt-steps li").first()).toBeVisible();
+    await page.goto(`http://127.0.0.1:${port}/?china_stay=0`, { waitUntil: "domcontentloaded" });
+    await expect(page.getByTestId("china-notice")).toBeVisible();
+    await expect(page.getByTestId("china-notice-title")).toBeVisible();
     const reachEl = page.locator("#workers-reach");
-    await expect(reachEl).toHaveAttribute("data-state", "soft-fail", { timeout: 10_000 });
-    await expect(page.locator("[data-reach-status]")).toContainText(/service 异常|unexpected service/i);
-    const cta = page.locator("[data-full-check]").first();
-    await expect(cta).toHaveClass(/ghost-button/);
-    await expect(cta).not.toHaveClass(/is-disabled/);
+    await expect(reachEl).toHaveAttribute("data-state", "fail", { timeout: 10_000 });
+    expect(page.url()).toContain(`127.0.0.1:${port}`);
+    expect(page.url()).not.toMatch(/workers\.dev/);
   } finally {
     try {
       const anyServer = server as typeof server & { closeAllConnections?: () => void };
@@ -88,6 +77,6 @@ test("China health soft-fail when service ≠ buusdocst", async ({ page }) => {
     } catch {
       /* ignore */
     }
-    server.close();
+    await new Promise<void>((resolve) => server.close(() => resolve()));
   }
 });

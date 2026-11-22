@@ -1,61 +1,47 @@
 /**
- * China Pages install Setup guide links match workers.dev Settings (same DESKTOP_SETUP_GUIDE URL).
+ * China Pages notice points at Workers; legacy install stubs redirect.
+ *
+ *   npx tsx --test tests/china-setup-guide-parity.test.ts
  */
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import path from "node:path";
 import { test } from "node:test";
 
-const repo = path.resolve(".");
-const downloads = JSON.parse(
-  readFileSync(path.join(repo, "shared/desktop-downloads.json"), "utf8")
-) as { setupGuideUrl?: string };
-const expected = String(downloads.setupGuideUrl || "").trim();
+const repo = process.cwd();
 
-function assertInstallPage(file: string, labelRe: RegExp, workersLocale: "zh-Hans" | "en") {
-  const html = readFileSync(path.join(repo, "china-pages", file), "utf8");
-  assert.ok(expected.includes("DESKTOP_SETUP_GUIDE"), "setupGuideUrl must point at DESKTOP_SETUP_GUIDE");
-  assert.match(html, /data-testid="china-setup-guide"/);
-  assert.match(html, labelRe);
-  assert.ok(html.includes(expected), `${file} must include setupGuideUrl ${expected}`);
-  assert.match(
-    html,
-    new RegExp(`buusdocst\\.mtsu\\.workers\\.dev\\/${workersLocale}/settings#settings-desktop`)
-  );
-}
-
-test("china-pages zh install Setup guide href matches desktop-downloads setupGuideUrl", () => {
-  assertInstallPage("install.html", /安装指南（未签名）|Setup guide \(unsigned\)/, "zh-Hans");
-});
-
-test("china-pages en install Setup guide href matches desktop-downloads setupGuideUrl", () => {
-  assertInstallPage("install-en.html", /Setup guide \(unsigned\)/, "en");
-});
-
-test("china-pages EN entry links to English install/privacy (not zh-only)", () => {
+test("china notice exposes Workers entry CTAs", () => {
+  const zh = readFileSync(path.join(repo, "china-pages/index.html"), "utf8");
   const en = readFileSync(path.join(repo, "china-pages/en.html"), "utf8");
-  assert.match(en, /href="\.\/install-en\.html"/);
-  assert.match(en, /href="\.\/privacy-en\.html"/);
-  assert.match(en, /What the product does/);
+  assert.match(zh, /data-testid="china-workers-entry"/);
+  assert.match(zh, /workers\.dev\/zh-Hans/);
+  assert.match(en, /data-testid="china-workers-entry"/);
+  assert.match(en, /workers\.dev\/en/);
+  assert.match(en, /data-testid="china-workers-zh-hans"/);
 });
 
-test("CHINA_GITHUB_PAGES locale table matches install Workers settings hrefs", () => {
+test("CHINA_GITHUB_PAGES documents notice-only China entry", () => {
   const docs = readFileSync(path.join(repo, "docs/CHINA_GITHUB_PAGES.md"), "utf8");
-  assert.match(docs, /\/zh-Hans\/settings#settings-desktop/);
-  assert.match(docs, /\/en\/settings#settings-desktop/);
-  const zhInstall = readFileSync(path.join(repo, "china-pages/install.html"), "utf8");
-  const enInstall = readFileSync(path.join(repo, "china-pages/install-en.html"), "utf8");
-  assert.match(zhInstall, /buusdocst\.mtsu\.workers\.dev\/zh-Hans\/settings#settings-desktop/);
-  assert.match(enInstall, /buusdocst\.mtsu\.workers\.dev\/en\/settings#settings-desktop/);
-  assert.match(zhInstall, /data-testid="china-workers-zh-hans"/);
-  assert.match(zhInstall, /打开完整检查（简体中文 \/zh-Hans）/);
-  const enEntry = readFileSync(path.join(repo, "china-pages/en.html"), "utf8");
-  assert.match(enInstall, /Open full check \(EN\)/);
-  assert.match(enEntry, /Open full check \(EN\)/);
-  assert.doesNotMatch(enInstall, /Open full check<\/a>/);
-  assert.doesNotMatch(enEntry, /Halt detail/);
-  const enPrivacy = readFileSync(path.join(repo, "china-pages/privacy-en.html"), "utf8");
-  assert.match(enPrivacy, /Open full check \(EN\)/);
-  assert.match(enPrivacy, /data-testid="china-workers-en"/);
-  assert.doesNotMatch(enPrivacy, />Open full check<\/a/);
+  assert.match(docs, /告知书/);
+  assert.match(docs, /region-redirect\.js/);
+  assert.match(docs, /全站/);
+});
+
+test("legacy install/privacy stubs bounce to notice", () => {
+  assert.match(
+    readFileSync(path.join(repo, "china-pages/install.html"), "utf8"),
+    /index\.html/
+  );
+  assert.match(
+    readFileSync(path.join(repo, "china-pages/install-en.html"), "utf8"),
+    /en\.html/
+  );
+  assert.match(
+    readFileSync(path.join(repo, "china-pages/privacy.html"), "utf8"),
+    /index\.html/
+  );
+  assert.match(
+    readFileSync(path.join(repo, "china-pages/privacy-en.html"), "utf8"),
+    /en\.html/
+  );
 });

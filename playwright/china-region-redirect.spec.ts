@@ -1,5 +1,5 @@
 /**
- * China entry auto-switches to Workers when health is OK; stay opt-out skips bounce.
+ * China notice auto-switches to Workers when health is OK; stay opt-out skips bounce.
  *
  *   PLAYWRIGHT_SKIP_WEBSERVER=1 npx playwright test playwright/china-region-redirect.spec.ts
  */
@@ -10,19 +10,13 @@ import { expect, test } from "@playwright/test";
 
 const root = process.cwd();
 const html = readFileSync(join(root, "china-pages/index.html"), "utf8");
-const reach = readFileSync(join(root, "china-pages/reachability.js"), "utf8");
 const persist = readFileSync(join(root, "china-pages/lang-persist.js"), "utf8");
 const regionRedirect = readFileSync(join(root, "china-pages/region-redirect.js"), "utf8");
 const css = readFileSync(join(root, "china-pages/styles.css"), "utf8");
 
-function serveChinaEntry() {
+function serveChinaNotice() {
   return createServer((req, res) => {
     const url = req.url || "/";
-    if (url.startsWith("/reachability.js")) {
-      res.writeHead(200, { "Content-Type": "application/javascript; charset=utf-8" });
-      res.end(reach);
-      return;
-    }
     if (url.startsWith("/region-redirect.js")) {
       res.writeHead(200, { "Content-Type": "application/javascript; charset=utf-8" });
       res.end(regionRedirect);
@@ -47,7 +41,6 @@ function serveChinaEntry() {
     res.end(
       html
         .replace(/src="\.?\/?lang-persist\.js"/, 'src="/lang-persist.js"')
-        .replace(/src="\.?\/?reachability\.js"/, 'src="/reachability.js"')
         .replace(/src="\.?\/?region-redirect\.js"/, 'src="/region-redirect.js"')
         .replace(/href="\.?\/?styles\.css"/, 'href="/styles.css"')
         .replace(/href="\.?\/?assets\/tokens\.css"/, 'href="/styles.css"'),
@@ -55,8 +48,8 @@ function serveChinaEntry() {
   });
 }
 
-test("entry redirects to Workers when health ok", async ({ page }) => {
-  const server = serveChinaEntry();
+test("notice redirects to Workers when health ok", async ({ page }) => {
+  const server = serveChinaNotice();
   await new Promise<void>((resolve) => server.listen(0, "127.0.0.1", resolve));
   const { port } = server.address() as { port: number };
 
@@ -90,8 +83,8 @@ test("entry redirects to Workers when health ok", async ({ page }) => {
   }
 });
 
-test("china_stay=1 keeps entry on China Pages", async ({ page }) => {
-  const server = serveChinaEntry();
+test("china_stay=1 keeps notice on China Pages", async ({ page }) => {
+  const server = serveChinaNotice();
   await new Promise<void>((resolve) => server.listen(0, "127.0.0.1", resolve));
   const { port } = server.address() as { port: number };
 
@@ -112,10 +105,8 @@ test("china_stay=1 keeps entry on China Pages", async ({ page }) => {
     await page.goto(`http://127.0.0.1:${port}/?china_stay=1`, {
       waitUntil: "domcontentloaded",
     });
+    await expect(page.getByTestId("china-notice")).toBeVisible();
     await expect(page.getByTestId("china-stay-link")).toBeVisible();
-    await expect(page.locator("#workers-reach")).toHaveAttribute("data-state", "ok", {
-      timeout: 10_000,
-    });
     expect(page.url()).toContain(`127.0.0.1:${port}`);
     expect(page.url()).not.toMatch(/workers\.dev/);
     const stay = await page.evaluate(() => localStorage.getItem("buusdocst-china-stay"));
