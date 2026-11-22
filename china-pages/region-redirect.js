@@ -154,23 +154,32 @@
     var detail = el.querySelector("[data-reach-detail]");
     var isEn = document.documentElement.lang === "en";
     var preflight = kind === "preflight";
+    var timedOut = kind === "timeout";
     if (status) {
-      status.textContent = preflight
+      status.textContent = timedOut
         ? isEn
-          ? "Workers probe blocked"
-          : "Workers 探测被拦截"
-        : isEn
-          ? "Workers unreachable"
-          : "Workers 不可达";
+          ? "Workers probe timed out"
+          : "Workers 探测超时"
+        : preflight
+          ? isEn
+            ? "Workers probe blocked"
+            : "Workers 探测被拦截"
+          : isEn
+            ? "Workers unreachable"
+            : "Workers 不可达";
     }
     if (detail) {
-      detail.textContent = preflight
+      detail.textContent = timedOut
         ? isEn
-          ? "Health OPTIONS/CORS failed. Showing this notice — retry on another network, or open Workers directly."
-          : "健康探测 OPTIONS/CORS 失败。显示本告知书 — 请换网络重试，或直接打开 Workers。"
-        : isEn
-          ? "Showing this notice. Retry when Cloudflare is reachable."
-          : "显示本告知书。待可达 Cloudflare 后再试。";
+          ? "Health request timed out. Showing this notice — retry on another network, or open Workers directly."
+          : "健康探测超时。显示本告知书 — 请换网络重试，或直接打开 Workers。"
+        : preflight
+          ? isEn
+            ? "Health OPTIONS/CORS failed. Showing this notice — retry on another network, or open Workers directly."
+            : "健康探测 OPTIONS/CORS 失败。显示本告知书 — 请换网络重试，或直接打开 Workers。"
+          : isEn
+            ? "Showing this notice. Retry when Cloudflare is reachable."
+            : "显示本告知书。待可达 Cloudflare 后再试。";
     }
     el.dataset.state = "fail";
   }
@@ -210,9 +219,12 @@
       clearTimeout(timer);
       var msg = String((err && err.message) || err || "");
       var name = String((err && err.name) || "");
+      var timedOut =
+        name === "AbortError" || /aborted|timeout|timed?\s*out/i.test(msg);
       var preflight =
-        name === "TypeError" ||
-        /Failed to fetch|NetworkError|Load failed|CORS|cross-origin|aborted/i.test(msg);
-      markFail(preflight ? "preflight" : "unreachable");
+        !timedOut &&
+        (name === "TypeError" ||
+          /Failed to fetch|NetworkError|Load failed|CORS|cross-origin/i.test(msg));
+      markFail(timedOut ? "timeout" : preflight ? "preflight" : "unreachable");
     });
 })();

@@ -335,6 +335,10 @@ a {
   color: var(--muted);
 }
 
+.shell .reach[data-state="checking"] .reach-status {
+  color: var(--muted);
+}
+
 .shell .reach[data-state="soft-fail"] .reach-status {
   color: #d4a574; /* caution — reachable but wrong service */
 }

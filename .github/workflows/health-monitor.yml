@@ -114,11 +114,14 @@ jobs:
           echo "::notice::assert:prod-auth-gone OK against $HEALTH_BASE_URL"
 
       - name: Smoke privacy China section
+        id: privacy_china
         env:
           PRODUCTION_HEALTH_URL: ${{ env.HEALTH_BASE_URL }}
         run: |
           npm run smoke:privacy-china
-          echo "::notice::smoke:privacy-china OK against $HEALTH_BASE_URL"
+          PASSED_AT=$(date -u +%Y-%m-%dT%H:%MZ)
+          echo "passed_at=$PASSED_AT" >> "$GITHUB_OUTPUT"
+          echo "::notice::smoke:privacy-china OK against $HEALTH_BASE_URL at $PASSED_AT"
 
       # Soft HEAD check of Settings download URLs (never fails the health job).
       - name: Desktop download HEAD (soft)
@@ -272,7 +275,7 @@ jobs:
             --url "${{ steps.target.outputs.url }}" \
             --result OK \
             --runner "github-actions/${{ github.run_id }}" \
-            --notes "health+check · softDownloadWarn=${{ steps.downloads.outputs.soft_warn }} · notarized=${{ steps.downloads.outputs.notarized_kind }} · ${{ steps.target.outputs.run_url }}"
+            --notes "health+check · softDownloadWarn=${{ steps.downloads.outputs.soft_warn }} · notarized=${{ steps.downloads.outputs.notarized_kind }} · smoke:privacy-china=${{ steps.privacy_china.outputs.passed_at }} · ${{ steps.target.outputs.run_url }}"
 
       - name: Append checklist log (FAIL)
         if: failure()

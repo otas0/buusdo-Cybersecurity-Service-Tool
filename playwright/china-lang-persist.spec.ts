@@ -87,6 +87,9 @@ test("EN then 中文 click stays on Chinese notice", async ({ page }) => {
     await expect(page).toHaveURL(/index\.html/, { timeout: 8_000 });
     expect(await page.evaluate(() => localStorage.getItem("buusdocst-china-lang"))).toBe("zh");
     await expect(page.getByTestId("china-notice")).toBeVisible();
+    await expect(page.locator("#workers-reach")).toHaveAttribute("data-state", "stay", {
+      timeout: 5_000,
+    });
   } finally {
     closeServer(server);
   }
@@ -100,6 +103,9 @@ test("lang switch keeps china_stay=1 in the URL", async ({ page }) => {
       await route.abort();
     });
     await page.goto(`${base}/index.html?china_stay=1`, { waitUntil: "domcontentloaded" });
+    await expect(page.locator("#workers-reach")).toHaveAttribute("data-state", "stay", {
+      timeout: 5_000,
+    });
     await expect(page.locator('a[data-china-lang="en"]')).toHaveAttribute(
       "href",
       /china_stay=1/,
@@ -108,6 +114,9 @@ test("lang switch keeps china_stay=1 in the URL", async ({ page }) => {
     await expect(page).toHaveURL(/en\.html/, { timeout: 8_000 });
     expect(page.url()).toMatch(/china_stay=1/);
     await expect(page.getByTestId("china-notice")).toBeVisible();
+    await expect(page.locator("#workers-reach")).toHaveAttribute("data-state", "stay", {
+      timeout: 5_000,
+    });
   } finally {
     closeServer(server);
   }

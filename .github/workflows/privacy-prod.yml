@@ -41,12 +41,26 @@ jobs:
           if [ -z "$IN" ]; then IN="https://buusdocst.mtsu.workers.dev"; fi
           echo "url=$(echo "$IN" | sed 's:/*$::')" >> "$GITHUB_OUTPUT"
       - name: Playwright privacy
+        id: pw_privacy
         env:
           PLAYWRIGHT_SKIP_WEBSERVER: "1"
           PLAYWRIGHT_BASE_URL: ${{ steps.origin.outputs.url }}
         run: npm run test:playwright:privacy
       - name: Playwright /zh → /zh-Hans alias (soft skip if unreachable)
+        id: pw_zh_alias
+        if: always() && steps.pw_privacy.outcome != 'cancelled'
         env:
           PLAYWRIGHT_SKIP_WEBSERVER: "1"
           PLAYWRIGHT_BASE_URL: ${{ steps.origin.outputs.url }}
         run: npm run test:playwright:zh-alias
+      - name: Upload Playwright HTML report (on failure)
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: privacy-prod-playwright-report
+          path: |
+            playwright/report/**
+            playwright-report/**
+            test-results/**
+          if-no-files-found: ignore
+          retention-days: 14

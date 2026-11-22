@@ -105,6 +105,10 @@ for (const page of ["china-pages/index.html", "china-pages/en.html"]) {
     console.error('FAIL: .reach stay state must style .reach-status (not leave checking)');
     process.exit(1);
   }
+  if (!css.includes('.reach[data-state="checking"] .reach-status')) {
+    console.error('FAIL: .reach checking state must style .reach-status with AA color');
+    process.exit(1);
+  }
   if (!css.includes(".reach-detail") || !/reach-detail[\s\S]*?color:\s*var\(--muted\)/.test(css)) {
     console.error("FAIL: .reach-detail must use --muted");
     process.exit(1);
@@ -119,11 +123,22 @@ for (const page of ["china-pages/index.html", "china-pages/en.html"]) {
     console.error(`FAIL: reach detail --muted contrast ${mutedRatio.toFixed(2)} < 4.5`);
     process.exit(1);
   }
-  console.info(`ok weak-network reach AA halt ${haltRatio.toFixed(2)} muted ${mutedRatio.toFixed(2)}`);
+  // Initial checking uses --muted (same AA path as stay / detail).
+  if (mutedRatio < 4.5) {
+    console.error(`FAIL: reach checking --muted contrast ${mutedRatio.toFixed(2)} < 4.5`);
+    process.exit(1);
+  }
+  console.info(
+    `ok weak-network reach AA halt ${haltRatio.toFixed(2)} muted/checking/stay ${mutedRatio.toFixed(2)}`
+  );
   for (const page of ["china-pages/index.html", "china-pages/en.html"]) {
     const html = readFileSync(path.join(root, page), "utf8");
     if (!html.includes('id="workers-reach"') || !html.includes("data-reach-detail")) {
       console.error(`FAIL: ${page} missing workers-reach fail copy hooks`);
+      process.exit(1);
+    }
+    if (!html.includes('data-state="checking"')) {
+      console.error(`FAIL: ${page} #workers-reach must start at data-state="checking"`);
       process.exit(1);
     }
   }
@@ -138,10 +153,14 @@ for (const page of ["china-pages/index.html", "china-pages/en.html"]) {
     console.error("FAIL: preflight fail copy missing EN or zh-Hans string");
     process.exit(1);
   }
+  if (!/Health request timed out/.test(redirect) || !/健康探测超时/.test(redirect)) {
+    console.error("FAIL: timeout fail copy missing EN or zh-Hans string");
+    process.exit(1);
+  }
   if (!redirect.includes('dataset.state = "stay"') && !redirect.includes('el.dataset.state = "stay"')) {
     console.error('FAIL: region-redirect must set data-state="stay" when china_stay pauses auto-guide');
     process.exit(1);
   }
-  console.info("ok preflight fail copy AA path (OPTIONS/CORS + stay state)");
+  console.info("ok preflight/timeout fail copy AA path (OPTIONS/CORS + timeout + stay state)");
 }
 console.info("assert-china-hint-contrast-aa ok");

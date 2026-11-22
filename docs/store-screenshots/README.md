@@ -12,3 +12,4 @@ Every Chrome / Safari store screenshot must include the formal product name **bu
 - `npm run sync:brand-web` rebuilds OG / icons but **does not** overwrite FRAME PNGs.
 - Captions: see [CHROME_STORE_LISTING_DRAFT.md](../CHROME_STORE_LISTING_DRAFT.md).
 - `FRAME-privacy-china-notice.png` — instrument reference for Workers privacy China mainland entry (`npm run capture:privacy-china-frame`). Live HTML smoke: `npm run smoke:privacy-china`. See [LAUNCH_CHECKLIST.md](../LAUNCH_CHECKLIST.md).
+- `FRAME-privacy-china-notice-en.png` — EN twin for `/en/privacy#privacy-china-notice` (same capture script).

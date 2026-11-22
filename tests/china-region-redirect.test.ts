@@ -22,6 +22,8 @@ test("region-redirect.js ships opt-out, health probe, and Workers locale paths",
   assert.match(src, /\/en/);
   assert.match(src, /EXPECTED_SERVICE|buusdocst/);
   assert.match(src, /preflight|OPTIONS\/CORS/);
+  assert.match(src, /timeout|AbortError/);
+  assert.match(src, /Health request timed out|健康探测超时/);
   assert.doesNotMatch(src, /Only entry pages/);
   assert.doesNotMatch(src, /ENTRY\s*=/);
 });

@@ -880,6 +880,7 @@ jobs:
             echo ""
             echo "- \`npm run test:playwright:china-soft-fail\` — wrong \`health.service\` stays on notice (no Workers bounce)"
             echo "- outcome: **passed**"
+            echo "- Artifact name: \`china-soft-fail-playwright\` (see [docs/CI.md](https://github.com/${{ github.repository }}/blob/${{ github.sha }}/docs/CI.md))"
             echo "- Playwright report / traces (if uploaded): [run artifacts](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})"
             echo "- Spec: \`playwright/china-soft-fail.spec.ts\`"
           } >> "$GITHUB_STEP_SUMMARY"

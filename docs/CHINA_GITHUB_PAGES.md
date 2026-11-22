@@ -47,6 +47,8 @@ UI：`data-testid="china-notice"` / `china-notice-title` / `china-workers-entry`
 
 **Traffic gate before delete:** GitHub Pages / repo Insights do not expose path hits for `otas0/buusdocst`. Until a path log exists (Cloudflare Logpush on a custom domain, or Pages analytics if enabled), **do not remove** the stubs — **re-evaluate delete only after path-level logs exist** and show near-zero hits for `/install.html` · `/privacy.html` (and EN twins) for ≥30 days. Optional check: search referrers in Issues / store listing drafts for those paths.
 
+**When Logpush exists:** export 30 days of path counts for `/install.html`, `/install-en.html`, `/privacy.html`, `/privacy-en.html` on the China entry host; if each is near zero, delete the thin stubs in a dedicated PR and keep only `index.html` / `en.html` notice routes.
+
 ### Probe fail copy
 
 - Network timeout / unreachable → `#workers-reach` fail (short).

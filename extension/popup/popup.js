@@ -22,6 +22,7 @@ import {
 } from "../shared/retry-after.mjs";
 import { DEFAULT_API_BASE, migrateLegacyApiBase } from "../shared/api-base-migrate.mjs";
 import { CHINA_PAGES_URL } from "../shared/china-entry.mjs";
+import { openChinaPagesUrl } from "../shared/china-pages-open.mjs";
 import {
   TRACKERS_ANNOUNCE_CLEAR_MS,
   createTrackersAnnounceClearScheduler,
@@ -633,26 +634,22 @@ async function runWebsiteApiCheck() {
       };
       const noticeUrl = withStay("1");
       const clearUrl = withStay("0");
-      /** Prefer an existing China Pages tab (same origin) over a new tab. */
-      const openChinaPages = async (url, { preferSameOrigin = false } = {}) => {
+      const chinaOrigin = (() => {
         try {
-          if (preferSameOrigin && typeof chrome !== "undefined" && chrome.tabs?.query) {
-            const origin = new URL(CHINA_PAGES_URL).origin;
-            const tabs = await chrome.tabs.query({});
-            const hit = tabs.find((tab) => typeof tab.url === "string" && tab.url.startsWith(origin));
-            if (hit?.id != null) {
-              await chrome.tabs.update(hit.id, { url, active: true });
-              if (hit.windowId != null && chrome.windows?.update) {
-                await chrome.windows.update(hit.windowId, { focused: true });
-              }
-              return;
-            }
-          }
+          return new URL(CHINA_PAGES_URL).origin;
         } catch {
-          /* fall through */
+          return "https://otas0.github.io";
         }
-        window.open(url, "_blank", "noopener,noreferrer");
-      };
+      })();
+      const openChinaPages = (url, { preferSameOrigin = false } = {}) =>
+        openChinaPagesUrl({
+          url,
+          origin: chinaOrigin,
+          preferSameOrigin,
+          tabs: typeof chrome !== "undefined" ? chrome.tabs : undefined,
+          windows: typeof chrome !== "undefined" ? chrome.windows : undefined,
+          openBlank: (u, target, features) => window.open(u, target, features)
+        });
       const line = t(lang, "websiteApiCfUnreachable", { chinaEntry: noticeUrl });
       els.websiteApiStatus.replaceChildren();
       els.websiteApiStatus.append(document.createTextNode(line));
