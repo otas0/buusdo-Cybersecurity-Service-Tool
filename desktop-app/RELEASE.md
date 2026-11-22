@@ -31,7 +31,7 @@
 
 - **Unsigned ship:** Gatekeeper / SmartScreen steps → [`docs/DESKTOP_SETUP_GUIDE.md`](../docs/DESKTOP_SETUP_GUIDE.md) (also linked from website Downloads → Setup guide).
 - **minSupportedVersion:** embedded via packed `shared/desktop-downloads.json` (see `PACKAGING.md`). Raise only for security hotfixes; `desktop-release` runs `scripts/assert-desktop-min-supported.mjs`.
-- **When raising `minSupportedVersion`:** rewrite `minSupportedBumpReason` to a single-line reason (required by assert). Template: `Security hotfix — <what broke / CVE-or-issue> — floor raised to <semver> on <date>.` Leave the field alone for ordinary `releaseTag` / URL bumps. Then run `PREV_REF=<prior-desktop-v*> node scripts/inject-desktop-min-bump-release-note.mjs` so the reason lands under [Min-supported bumps](#min-supported-bumps) (bullet includes an ISO date). **Then:** `git add desktop-app/RELEASE.md` so the bump note ships with the min raise.
+- **When raising `minSupportedVersion`:** rewrite `minSupportedBumpReason` to a single-line reason (required by assert). Template: `Security hotfix — <what broke / CVE-or-issue> — floor raised to <semver> on <date>.` Leave the field alone for ordinary `releaseTag` / URL bumps. Then run `PREV_REF=<prior-desktop-v*> node scripts/inject-desktop-min-bump-release-note.mjs` (optional `--stage` to `git add desktop-app/RELEASE.md`) so the reason lands under [Min-supported bumps](#min-supported-bumps) with an ISO date. Historical bullets missing dates: `node scripts/inject-desktop-min-bump-release-note.mjs --backfill-dates`.
 - Silent install does **not** enable open-at-login.
 - First open shows an **honest limits** confirm (ack → scan, skip → idle, reversible via “Show honest limits again”). Smokes may set `SHIELD_HONEST_LIMITS=0`.
 - Dashboard explains how to point OS/browser HTTP proxy at `127.0.0.1:8080` (otherwise the block log stays quiet).
@@ -43,7 +43,7 @@
 History of floor raises (auto-inserted by `scripts/inject-desktop-min-bump-release-note.mjs` when `minSupportedVersion` rises vs `PREV_REF`).
 
 <!-- __MIN_SUPPORTED_BUMP_NOTES__ -->
-- **0.2.0** (initial): Initial floor at desktop-v0.2.0 ship — raise only for security hotfixes and replace this reason line.
+- **0.2.0** (2026-11-22, initial): Initial floor at desktop-v0.2.0 ship — raise only for security hotfixes and replace this reason line.
 
 ## Verify before ship
 

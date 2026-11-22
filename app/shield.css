@@ -20,7 +20,8 @@
   border-bottom: 1px solid var(--line);
 }
 
-#downloads-extension {
+#downloads-extension,
+#privacy-faq-common {
   scroll-margin-top: var(--shell-top-scroll-margin);
 }
 
