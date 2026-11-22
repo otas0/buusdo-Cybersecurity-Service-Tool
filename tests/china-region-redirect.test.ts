@@ -21,6 +21,7 @@ test("region-redirect.js ships opt-out, health probe, and Workers locale paths",
   assert.match(src, /\/zh-Hant/);
   assert.match(src, /\/en/);
   assert.match(src, /EXPECTED_SERVICE|buusdocst/);
+  assert.match(src, /preflight|OPTIONS\/CORS/);
   assert.doesNotMatch(src, /Only entry pages/);
   assert.doesNotMatch(src, /ENTRY\s*=/);
 });

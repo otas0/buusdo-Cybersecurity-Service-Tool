@@ -880,7 +880,20 @@ jobs:
             echo ""
             echo "- \`npm run test:playwright:china-soft-fail\` — wrong \`health.service\` stays on notice (no Workers bounce)"
             echo "- outcome: **passed**"
+            echo "- Playwright report / traces (if uploaded): [run artifacts](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})"
+            echo "- Spec: \`playwright/china-soft-fail.spec.ts\`"
           } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload China soft-fail Playwright output
+        if: always() && steps.pw_china_soft_fail.outcome != 'skipped'
+        uses: actions/upload-artifact@v4
+        with:
+          name: china-soft-fail-playwright
+          path: |
+            playwright/report/**
+            playwright/output/**
+            test-results/**
+          if-no-files-found: ignore
 
       - name: Halt survey blocks (RiskResult Round-1 UX)
         id: pw_halt_survey
@@ -994,6 +1007,14 @@ jobs:
       - name: Desktop Halt ignore-risk
         if: steps.pw_install.outcome == 'success'
         run: npm run test:playwright:desktop-halt-ignore-risk
+
+      - name: Desktop force/optional update gates (mock update-check)
+        if: steps.pw_install.outcome == 'success'
+        run: |
+          export PLAYWRIGHT_SKIP_WEBSERVER=1
+          npm run test:playwright:desktop-update-gates
+        env:
+          PLAYWRIGHT_SKIP_WEBSERVER: "1"
 
       - name: Account sync (cancelled — soft skip)
         id: pw_account

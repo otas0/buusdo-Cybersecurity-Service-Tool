@@ -622,42 +622,36 @@ async function runWebsiteApiCheck() {
         message
       );
     if (looksCfTimeout) {
-      const noticeUrl = (() => {
+      const withStay = (stay) => {
         try {
           const u = new URL(CHINA_PAGES_URL);
-          u.searchParams.set("china_stay", "1");
+          u.searchParams.set("china_stay", stay);
           return u.toString();
         } catch {
-          return `${CHINA_PAGES_URL.replace(/\?.*$/, "")}?china_stay=1`;
+          return `${CHINA_PAGES_URL.replace(/\?.*$/, "")}?china_stay=${stay}`;
         }
-      })();
+      };
+      const noticeUrl = withStay("1");
+      const clearUrl = withStay("0");
       const line = t(lang, "websiteApiCfUnreachable", { chinaEntry: noticeUrl });
       els.websiteApiStatus.replaceChildren();
-      const parts = String(line).split(noticeUrl);
-      if (parts.length === 1) {
-        els.websiteApiStatus.append(document.createTextNode(line));
-        const a = document.createElement("a");
-        a.href = noticeUrl;
-        a.target = "_blank";
-        a.rel = "noreferrer noopener";
-        a.textContent = noticeUrl;
-        a.dataset.testid = "china-notice-link";
-        els.websiteApiStatus.append(document.createTextNode(" "));
-        els.websiteApiStatus.append(a);
-      } else {
-        parts.forEach((chunk, i) => {
-          if (chunk) els.websiteApiStatus.append(document.createTextNode(chunk));
-          if (i < parts.length - 1) {
-            const a = document.createElement("a");
-            a.href = noticeUrl;
-            a.target = "_blank";
-            a.rel = "noreferrer noopener";
-            a.textContent = noticeUrl;
-            a.dataset.testid = "china-notice-link";
-            els.websiteApiStatus.append(a);
-          }
-        });
-      }
+      els.websiteApiStatus.append(document.createTextNode(line));
+      els.websiteApiStatus.append(document.createTextNode(" "));
+      const notice = document.createElement("a");
+      notice.href = noticeUrl;
+      notice.target = "_blank";
+      notice.rel = "noreferrer noopener";
+      notice.textContent = t(lang, "websiteApiChinaNoticeLink");
+      notice.dataset.testid = "china-notice-link";
+      els.websiteApiStatus.append(notice);
+      els.websiteApiStatus.append(document.createTextNode(" · "));
+      const clear = document.createElement("a");
+      clear.href = clearUrl;
+      clear.target = "_blank";
+      clear.rel = "noreferrer noopener";
+      clear.textContent = t(lang, "websiteApiChinaStayClearLink");
+      clear.dataset.testid = "china-stay-clear-link";
+      els.websiteApiStatus.append(clear);
     } else {
       els.websiteApiStatus.textContent = t(lang, "websiteApiFail", { error: message });
     }

@@ -11,3 +11,4 @@ Every Chrome / Safari store screenshot must include the formal product name **bu
 - Extension Halt toast DOM is shared via `extension/content/phishing-toast-mount.js` (content script + fixture) so store-adjacent Halt chrome does not drift from the live toast.
 - `npm run sync:brand-web` rebuilds OG / icons but **does not** overwrite FRAME PNGs.
 - Captions: see [CHROME_STORE_LISTING_DRAFT.md](../CHROME_STORE_LISTING_DRAFT.md).
+- `FRAME-privacy-china-notice.png` — Workers privacy China mainland entry block (`#privacy-china-notice` on `/zh-Hans/privacy`). Optional EN: `FRAME-privacy-china-notice-en.png`. Capture after `npm run smoke:privacy-china` (or Production health smoke) passes on a CF-reachable runner; see [LAUNCH_CHECKLIST.md](../LAUNCH_CHECKLIST.md).

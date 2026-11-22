@@ -43,7 +43,14 @@ UI：`data-testid="china-notice"` / `china-notice-title` / `china-workers-entry`
 
 ### Legacy install / privacy paths — keep thin redirects
 
-**Decision (2026-11-22):** keep `/install.html` · `/privacy.html` · EN twins as **thin redirects** to the notice. Old bookmarks and store listing drafts still point there; deleting them would 404 without gain. Revisit only after traffic/logs show zero hits.
+**Decision (2026-11-22):** keep `/install.html` · `/privacy.html` · EN twins as **thin redirects** to the notice. Old bookmarks and store listing drafts still point there; deleting them would 404 without gain.
+
+**Traffic gate before delete:** GitHub Pages / repo Insights do not expose path hits for `otas0/buusdocst`. Until a path log exists (Cloudflare Logpush on a custom domain, or Pages analytics if enabled), **do not remove** the stubs. Optional check: search referrers in Issues / store drafts for `/install.html` and `/privacy.html`. Revisit when path-level traffic is measurable and near zero for 30 days.
+
+### Probe fail copy
+
+- Network timeout / unreachable → `#workers-reach` fail (short).
+- OPTIONS / CORS / `Failed to fetch` → preflight fail copy (points users to retry or open Workers directly).
 
 ## 与 Workers 的关系
 

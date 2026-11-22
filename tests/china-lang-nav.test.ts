@@ -45,6 +45,9 @@ test("lang-persist maps index/en only", () => {
   assert.doesNotMatch(js, /privacy-en\.html/);
   assert.match(js, /location\.replace/);
   assert.match(js, /localStorage\.setItem/);
+  assert.match(js, /china_stay/);
+  assert.match(js, /buusdocst-china-stay-session/);
+  assert.match(js, /withStay/);
 });
 
 test("notice pages mark 中文/EN and Workers entry CTAs", () => {

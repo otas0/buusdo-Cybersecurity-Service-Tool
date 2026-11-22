@@ -91,3 +91,24 @@ test("EN then 中文 click stays on Chinese notice", async ({ page }) => {
     closeServer(server);
   }
 });
+
+test("lang switch keeps china_stay=1 in the URL", async ({ page }) => {
+  const { server, port } = await startStaticServer();
+  const base = `http://127.0.0.1:${port}`;
+  try {
+    await page.route("**/api/health", async (route) => {
+      await route.abort();
+    });
+    await page.goto(`${base}/index.html?china_stay=1`, { waitUntil: "domcontentloaded" });
+    await expect(page.locator('a[data-china-lang="en"]')).toHaveAttribute(
+      "href",
+      /china_stay=1/,
+    );
+    await page.locator('a[data-china-lang="en"]').click({ noWaitAfter: true });
+    await expect(page).toHaveURL(/en\.html/, { timeout: 8_000 });
+    expect(page.url()).toMatch(/china_stay=1/);
+    await expect(page.getByTestId("china-notice")).toBeVisible();
+  } finally {
+    closeServer(server);
+  }
+});

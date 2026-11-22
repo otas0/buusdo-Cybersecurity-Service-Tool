@@ -1,16 +1,43 @@
 /**
  * Persist China Pages language (zh | en) between notice pages only.
  *
- * Load: synchronous in <head>. region-redirect.js is defer at end of <body>.
+ * Load: synchronous in <head> (before region-redirect.js).
+ * When the tab is in temporary stay (?china_stay=1 / session), lang switch keeps china_stay=1.
  */
 (function () {
   var KEY = "buusdocst-china-lang";
   var NAV_KEY = "buusdocst-china-lang-nav";
+  var STAY_SESSION = "buusdocst-china-stay-session";
   var PAIRS = {
     "index.html": { zh: "index.html", en: "en.html" },
     "en.html": { zh: "index.html", en: "en.html" },
     "": { zh: "index.html", en: "en.html" }
   };
+
+  function wantsStayParam() {
+    try {
+      if (new URLSearchParams(location.search || "").get("china_stay") === "1") return true;
+    } catch (_) {}
+    try {
+      if (sessionStorage.getItem(STAY_SESSION) === "1") return true;
+    } catch (_) {}
+    return false;
+  }
+
+  function withStay(href) {
+    if (!wantsStayParam() || !href) return href;
+    try {
+      var abs = new URL(href, location.href);
+      if (abs.origin !== location.origin) return href;
+      abs.searchParams.set("china_stay", "1");
+      var file = abs.pathname.split("/").pop() || "index.html";
+      var prefix = href.indexOf("./") === 0 || !/^\//.test(href) ? "./" : "";
+      return prefix + file + abs.search + abs.hash;
+    } catch (_) {
+      if (/[?&]china_stay=/.test(href)) return href;
+      return href + (href.indexOf("?") >= 0 ? "&" : "?") + "china_stay=1";
+    }
+  }
 
   function pageFile() {
     var path = location.pathname || "";
@@ -105,6 +132,11 @@
       if (!a) return;
       var lang = a.getAttribute("data-china-lang");
       if (lang === "en" || lang === "zh") markLangSwitchClick(lang);
+      if (wantsStayParam()) {
+        var href = a.getAttribute("href");
+        var next = withStay(href);
+        if (next && next !== href) a.setAttribute("href", next);
+      }
     },
     true
   );
@@ -162,8 +194,19 @@
   if (!fromSwitch && pref !== current) {
     var dest = counterpart(file, pref);
     if (dest && dest !== file) {
-      var next =
-        location.pathname.replace(/[^/]*$/, dest) + location.search + location.hash;
+      var search = location.search || "";
+      if (wantsStayParam()) {
+        try {
+          var sp = new URLSearchParams(search);
+          sp.set("china_stay", "1");
+          search = "?" + sp.toString();
+        } catch (_) {
+          if (!/[?&]china_stay=1/.test(search)) {
+            search += (search.indexOf("?") >= 0 ? "&" : "?") + "china_stay=1";
+          }
+        }
+      }
+      var next = location.pathname.replace(/[^/]*$/, dest) + search + location.hash;
       location.replace(next);
       return;
     }
@@ -173,6 +216,14 @@
 
   function boot() {
     rewriteInternalLinks(current);
+    if (!wantsStayParam()) return;
+    var switches = document.querySelectorAll("a[data-china-lang]");
+    for (var i = 0; i < switches.length; i += 1) {
+      var a = switches[i];
+      var href = a.getAttribute("href");
+      var nextHref = withStay(href);
+      if (nextHref && nextHref !== href) a.setAttribute("href", nextHref);
+    }
   }
 
   if (document.readyState === "loading") {

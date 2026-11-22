@@ -59,11 +59,15 @@ test.describe("production privacy pages", () => {
     await expect(page.getByTestId("privacy-policy-updated")).toContainText(/2026/);
     await expect(page.getByTestId("privacy-honest-limits")).toBeVisible();
     await expect(page.getByTestId("privacy-honest-limits")).toContainText(/No TLS decryption/i);
+    await expect(page.getByTestId("privacy-desktop-offline")).toBeVisible();
+    await expect(page.getByTestId("privacy-desktop-offline")).toContainText(/offline/i);
     await expect(page.getByRole("heading", { name: /No cloud account sync/i })).toBeVisible();
     await expect(page.getByTestId("privacy-contact")).toBeVisible();
     await expect(page.getByTestId("privacy-contact")).toContainText(/official email|Cloudflare Worker/i);
     await expect(page.getByTestId("privacy-faq-common")).toBeVisible();
     await expect(page.getByTestId("privacy-faq-common")).toContainText(/antivirus|votes/i);
+    await expect(page.getByTestId("privacy-faq-ext-offline")).toBeVisible();
+    await expect(page.getByTestId("privacy-faq-ext-offline")).toContainText(/Chrome Web Store|Mac App Store/i);
     // Round-2 survey removed — privacy must not link /survey/
     await expect(page.locator('a[href*="/survey/"]')).toHaveCount(0);
   });
@@ -72,6 +76,22 @@ test.describe("production privacy pages", () => {
     await page.goto(`${base}/en/privacy#privacy-honest-limits`, { waitUntil: "domcontentloaded" });
     await expect(page.locator("#privacy-honest-limits")).toBeVisible();
     await expect(page.getByTestId("privacy-honest-limits")).toBeVisible();
+  });
+
+  test("/en/privacy China mainland entry section", async ({ page }) => {
+    await page.goto(`${base}/en/privacy#privacy-china-notice`, { waitUntil: "domcontentloaded" });
+    await expect(page.getByTestId("privacy-china-notice")).toBeVisible();
+    await expect(page.getByTestId("privacy-china-notice")).toContainText(/China mainland entry/i);
+    await expect(page.getByTestId("privacy-china-notice")).toContainText(/otas0\.github\.io\/buusdocst/);
+  });
+
+  test("/zh-Hans/privacy China mainland entry section", async ({ page }) => {
+    await page.goto(`${base}/zh-Hans/privacy#privacy-china-notice`, {
+      waitUntil: "domcontentloaded"
+    });
+    await expect(page.getByTestId("privacy-china-notice")).toBeVisible();
+    await expect(page.getByTestId("privacy-china-notice")).toContainText(/中国大陆入口/);
+    await expect(page.getByTestId("privacy-china-notice")).toContainText(/otas0\.github\.io\/buusdocst/);
   });
 
   test("/en/privacy#privacy-faq-common deep-link", async ({ page }) => {
@@ -87,11 +107,17 @@ test.describe("production privacy pages", () => {
     await expect(page.getByRole("heading", { name: /Política de privacidade/i })).toBeVisible();
     await expect(page.getByTestId("privacy-honest-limits")).toBeVisible();
     await expect(page.getByTestId("privacy-honest-limits")).toContainText(/Sem desencriptação TLS/i);
+    await expect(page.getByTestId("privacy-desktop-offline")).toBeVisible();
+    await expect(page.getByTestId("privacy-desktop-offline")).toContainText(/offline/i);
     await expect(
       page.getByRole("heading", { name: /Sem sincronização de conta na nuvem/i })
     ).toBeVisible();
     await expect(page.getByTestId("privacy-contact")).toBeVisible();
     await expect(page.getByTestId("privacy-faq-common")).toBeVisible();
+    await expect(page.getByTestId("privacy-faq-ext-offline")).toBeVisible();
+    await expect(page.getByTestId("privacy-faq-ext-offline")).toContainText(
+      /Chrome Web Store|Mac App Store|extensão|Transferências/i
+    );
     // Round-2 survey removed — privacy must not link /survey/
     await expect(page.locator('a[href*="/survey/"]')).toHaveCount(0);
   });
@@ -113,6 +139,28 @@ test.describe("production privacy pages", () => {
     // Round-2 survey removed — privacy must not link /survey/
     await expect(page.locator('a[href*="/survey/"]')).toHaveCount(0);
   });
+
+  // Soft-live: locale Privacy FAQ extension-offline question stays visible when origin is up.
+  for (const locale of ["ja", "de", "fr", "zh-Hans"] as const) {
+    test(`/${locale}/privacy soft-live faqExtOffline visible`, async ({ page }) => {
+      await page.goto(`${base}/${locale}/privacy`, {
+        waitUntil: "domcontentloaded",
+        timeout: 45_000
+      });
+      const faq = page.getByTestId("privacy-faq-ext-offline");
+      if ((await faq.count()) === 0) {
+        console.warn(`[soft-live] privacy-faq-ext-offline missing on ${locale}`);
+        return;
+      }
+      await expect(faq).toBeVisible();
+      const text = ((await faq.textContent()) || "").replace(/\s+/g, " ").trim();
+      if (!text) {
+        console.warn(`[soft-live] privacy-faq-ext-offline empty on ${locale}`);
+      } else {
+        console.info(`[soft-live] ${locale} faqExtOffline ok (${text.slice(0, 72)}…)`);
+      }
+    });
+  }
 
   test("/en/settings shows desktop download slots", async ({ page }) => {
     await page.goto(`${base}/en/downloads`, { waitUntil: "domcontentloaded" });

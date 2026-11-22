@@ -120,19 +120,30 @@
     el.dataset.state = "ok";
   }
 
-  function markFail() {
+  function markFail(kind) {
     var el = document.getElementById("workers-reach");
     if (!el) return;
     var status = el.querySelector("[data-reach-status]");
     var detail = el.querySelector("[data-reach-detail]");
     var isEn = document.documentElement.lang === "en";
+    var preflight = kind === "preflight";
     if (status) {
-      status.textContent = isEn ? "Workers unreachable" : "Workers 不可达";
+      status.textContent = preflight
+        ? isEn
+          ? "Workers probe blocked"
+          : "Workers 探测被拦截"
+        : isEn
+          ? "Workers unreachable"
+          : "Workers 不可达";
     }
     if (detail) {
-      detail.textContent = isEn
-        ? "Showing this notice. Retry when Cloudflare is reachable."
-        : "显示本告知书。待可达 Cloudflare 后再试。";
+      detail.textContent = preflight
+        ? isEn
+          ? "Health OPTIONS/CORS failed. Showing this notice — retry on another network, or open Workers directly."
+          : "健康探测 OPTIONS/CORS 失败。显示本告知书 — 请换网络重试，或直接打开 Workers。"
+        : isEn
+          ? "Showing this notice. Retry when Cloudflare is reachable."
+          : "显示本告知书。待可达 Cloudflare 后再试。";
     }
     el.dataset.state = "fail";
   }
@@ -168,8 +179,13 @@
       );
       bounce(dest);
     })
-    .catch(function () {
+    .catch(function (err) {
       clearTimeout(timer);
-      markFail();
+      var msg = String((err && err.message) || err || "");
+      var name = String((err && err.name) || "");
+      var preflight =
+        name === "TypeError" ||
+        /Failed to fetch|NetworkError|Load failed|CORS|cross-origin|aborted/i.test(msg);
+      markFail(preflight ? "preflight" : "unreachable");
     });
 })();
