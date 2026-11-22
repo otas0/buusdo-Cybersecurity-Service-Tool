@@ -480,5 +480,7 @@
   "privacyDesktopOfflineNote": "Desktop app: computer scan and personal block lists work offline. Live website address checks need the internet when you use that path.",
   "extensionStoreOnlyNote": "Vafraviðbótin er aðeins sett upp úr Chrome Web Store eða Mac App Store. Engin heildarrepo-niðurhal og enginn sjálfstæður pakki án nettengingar.",
   "faqExtOfflineTitle": "Get ég sett upp vafraviðbótina sem heildar pakka án nettengingar?",
-  "faqExtOfflineBody": "Nei. Viðbótin er aðeins sett upp úr Chrome Web Store eða Mac App Store. Engin heildarrepo-niðurhal og enginn sjálfstæður pakki án nettengingar — sjá Downloads."
+  "faqExtOfflineBody": "Nei. Viðbótin er aðeins sett upp úr Chrome Web Store eða Mac App Store. Engin heildarrepo-niðurhal og enginn sjálfstæður pakki án nettengingar — sjá Downloads.",
+  "optionalUpdateShowHint": "Sýna uppfærslutipp",
+  "honestLimitsMinSupportedNote": "Lágmarksútgáfa: {min} · uppruni {source}"
 }

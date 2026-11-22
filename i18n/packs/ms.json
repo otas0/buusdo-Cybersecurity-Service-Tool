@@ -480,5 +480,7 @@
   "privacyDesktopOfflineNote": "Desktop app: computer scan and personal block lists work offline. Live website address checks need the internet when you use that path.",
   "extensionStoreOnlyNote": "Sambungan pelayar hanya dipasang dari Chrome Web Store atau Mac App Store. Tiada muat turun keseluruhan repositori dan tiada pakej sambungan luar talian yang berdiri sendiri.",
   "faqExtOfflineTitle": "Bolehkah saya memasang sambungan pelayar sebagai pakej penuh luar talian?",
-  "faqExtOfflineBody": "Tidak. Sambungan hanya dipasang dari Chrome Web Store atau Mac App Store. Tiada muat turun seluruh repo dan tiada pakej sambungan luar talian mandiri — lihat Downloads."
+  "faqExtOfflineBody": "Tidak. Sambungan hanya dipasang dari Chrome Web Store atau Mac App Store. Tiada muat turun seluruh repo dan tiada pakej sambungan luar talian mandiri — lihat Downloads.",
+  "optionalUpdateShowHint": "Tunjukkan petua kemas kini",
+  "honestLimitsMinSupportedNote": "Versi minimum: {min} · sumber {source}"
 }

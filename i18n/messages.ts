@@ -139,6 +139,8 @@ export const messages = {
       "No. The extension installs only from the Chrome Web Store or Mac App Store. There is no whole-repo download and no offline self-contained extension package — see Downloads.",
     /** Desktop dashboard tip reset — packs + overlay stay in lockstep. */
     optionalUpdateShowHint: "Show update tip",
+    /** Honest-limits floor tip — {min} + {source}; CORE + packs. */
+    honestLimitsMinSupportedNote: "Minimum supported: {min} · source {source}",
     // EVAL surface-copy keys (no website block UI): protection, blockedInPrototype, removed, currentlyBlocked
     verified: "Open the listed domain",
     protection: "Use the extension or desktop app to update protection lists.",
@@ -654,6 +656,7 @@ export const messages = {
     faqExtOfflineBody:
       "Não. A extensão instala-se apenas na Chrome Web Store ou na Mac App Store. Não há descarga do repositório completo nem pacote offline autónomo — veja Transferências.",
     optionalUpdateShowHint: "Mostrar aviso de atualização",
+    honestLimitsMinSupportedNote: "Versão mínima suportada: {min} · origem {source}",
     verified: "Abrir o domínio listado",
     protection: "Use a extensão ou a app para atualizar as listas de proteção.",
     currentlyBlocked: "fica bloqueado na extensão ou na app quando o adicionar aí.",

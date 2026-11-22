@@ -480,5 +480,7 @@
   "privacyDesktopOfflineNote": "Desktop app: computer scan and personal block lists work offline. Live website address checks need the internet when you use that path.",
   "extensionStoreOnlyNote": "Розширення браузера встановлюється лише з Chrome Web Store або Mac App Store. Немає завантаження всього репозиторію й автономного офлайн-пакета.",
   "faqExtOfflineTitle": "Чи можу я встановити розширення браузера як повний офлайн-пакет?",
-  "faqExtOfflineBody": "Ні. Розширення встановлюється лише з Chrome Web Store або Mac App Store. Немає завантаження всього репозиторію й автономного офлайн-пакета — див. Downloads."
+  "faqExtOfflineBody": "Ні. Розширення встановлюється лише з Chrome Web Store або Mac App Store. Немає завантаження всього репозиторію й автономного офлайн-пакета — див. Downloads.",
+  "optionalUpdateShowHint": "Показати підказку оновлення",
+  "honestLimitsMinSupportedNote": "Мінімальна версія: {min} · джерело {source}"
 }

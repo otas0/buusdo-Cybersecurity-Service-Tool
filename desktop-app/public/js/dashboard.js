@@ -1589,6 +1589,9 @@ function isFocusTarget(el) {
   return true;
 }
 
+/** True when force-gate close landed on show-hint — tip re-open must Tab into banner. */
+let forceCloseLandedOnShowHint = false;
+
 /**
  * After force-gate close or optional-banner dismiss: never leave AT on a hidden control.
  * Prefer update-check → show-hint → scan; else honest-limits ack or document start.
@@ -1605,6 +1608,9 @@ function focusAfterUpdateChromeHide() {
     (isFocusTarget(els.pathScanMachine) && els.pathScanMachine) ||
     (isFocusTarget(els.honestLimitsAck) && els.honestLimitsAck) ||
     (docStart && isFocusTarget(docStart) && docStart);
+  forceCloseLandedOnShowHint = Boolean(
+    target && els.optionalUpdateShowHint && target === els.optionalUpdateShowHint
+  );
   if (!target) return;
   try {
     target.focus({ preventScroll: true });
@@ -1695,6 +1701,41 @@ function applySameOriginDownloadAttr(anchor, url) {
   }
 }
 
+/**
+ * When banner is up without a download URL, dismiss must stay in the tab order
+ * (explicit tabindex=0 — never leave AT with nowhere to go).
+ */
+function ensureOptionalUpdateDismissFocusable() {
+  if (!els.optionalUpdateDismiss) return;
+  els.optionalUpdateDismiss.hidden = false;
+  els.optionalUpdateDismiss.removeAttribute("aria-hidden");
+  els.optionalUpdateDismiss.removeAttribute("disabled");
+  const noDownload =
+    !els.optionalUpdateDownload ||
+    els.optionalUpdateDownload.hidden ||
+    els.optionalUpdateDownload.getAttribute("aria-hidden") === "true";
+  if (noDownload) {
+    els.optionalUpdateDismiss.tabIndex = 0;
+  } else if (els.optionalUpdateDismiss.getAttribute("tabindex") === "0") {
+    els.optionalUpdateDismiss.removeAttribute("tabindex");
+  }
+}
+
+/** After show-hint restores the banner, land AT on download (or dismiss). */
+function focusOptionalUpdateBannerControls() {
+  if (!els.optionalUpdateBanner || els.optionalUpdateBanner.hidden) return;
+  ensureOptionalUpdateDismissFocusable();
+  const target =
+    (isFocusTarget(els.optionalUpdateDownload) && els.optionalUpdateDownload) ||
+    (isFocusTarget(els.optionalUpdateDismiss) && els.optionalUpdateDismiss);
+  if (!target) return;
+  try {
+    target.focus({ preventScroll: true });
+  } catch {
+    /* ignore */
+  }
+}
+
 function showOptionalUpdateBanner(res) {
   if (!els.optionalUpdateBanner) return;
   const tag = String(res.releaseTag || "").trim();
@@ -1714,13 +1755,22 @@ function showOptionalUpdateBanner(res) {
   }
   if (els.optionalUpdateDownload && res.downloadUrl) {
     els.optionalUpdateDownload.hidden = false;
+    els.optionalUpdateDownload.removeAttribute("aria-hidden");
     els.optionalUpdateDownload.href = res.downloadUrl;
     applySameOriginDownloadAttr(els.optionalUpdateDownload, res.downloadUrl);
     els.optionalUpdateDownload.textContent = res.preferNotarized
       ? t(lang, "updateCheckDownload")
       : t(lang, "updateCheckDownloadUnsigned");
+  } else if (els.optionalUpdateDownload) {
+    els.optionalUpdateDownload.hidden = true;
+    els.optionalUpdateDownload.setAttribute("aria-hidden", "true");
+    els.optionalUpdateDownload.removeAttribute("href");
   }
+  ensureOptionalUpdateDismissFocusable();
   syncOptionalUpdateShowHint();
+  // Move AT into banner (download or dismiss). Required after force-close → show-hint → tip re-open.
+  focusOptionalUpdateBannerControls();
+  forceCloseLandedOnShowHint = false;
 }
 
 function wireForceUpdateDownloadCta(res) {
@@ -1914,6 +1964,8 @@ els.optionalUpdateShowHint?.addEventListener("click", async () => {
     try {
       const res = await fetch("/api/update-check").then((r) => r.json());
       await applyUpdateCheckResult(res, { fromBoot: false });
+      // applyUpdateCheckResult may show the banner — ensure AT leaves the (now hidden) hint.
+      focusOptionalUpdateBannerControls();
     } catch {
       /* leave hint button; offline path must not clear dismiss again */
     }

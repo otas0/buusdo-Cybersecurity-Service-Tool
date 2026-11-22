@@ -746,7 +746,8 @@ jobs:
 
   playwright-settings-skipped-notice:
     name: playwright-settings skipped notice
-    if: ${{ vars.RUN_PLAYWRIGHT_SETTINGS != 'true' }}
+    # Skip notice when optional job runs (var on or nightly schedule).
+    if: ${{ vars.RUN_PLAYWRIGHT_SETTINGS != 'true' && github.event_name != 'schedule' }}
     runs-on: ubuntu-latest
     steps:
       - name: Soft-fail annotation (var not enabled)

@@ -480,5 +480,7 @@
   "privacyDesktopOfflineNote": "Desktop app: computer scan and personal block lists work offline. Live website address checks need the internet when you use that path.",
   "extensionStoreOnlyNote": "Ang extension ng browser ay ini-install lamang mula sa Chrome Web Store o Mac App Store. Walang buong-repo download at walang offline na self-contained na extension package.",
   "faqExtOfflineTitle": "Maaari ko bang i-install ang browser extension bilang buong offline package?",
-  "faqExtOfflineBody": "Hindi. Ang extension ay ini-install lang mula sa Chrome Web Store o Mac App Store. Walang whole-repo download at walang offline self-contained extension package — tingnan ang Downloads."
+  "faqExtOfflineBody": "Hindi. Ang extension ay ini-install lang mula sa Chrome Web Store o Mac App Store. Walang whole-repo download at walang offline self-contained extension package — tingnan ang Downloads.",
+  "optionalUpdateShowHint": "Ipakita ang update tip",
+  "honestLimitsMinSupportedNote": "Minimum na bersyon: {min} · pinagmulan {source}"
 }

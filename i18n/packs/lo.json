@@ -480,5 +480,7 @@
   "privacyDesktopOfflineNote": "Desktop app: computer scan and personal block lists work offline. Live website address checks need the internet when you use that path.",
   "extensionStoreOnlyNote": "ສ່ວນຂະຫຍາຍບຣາວເຊີຕິດຕັ້ງໄດ້ຈາກ Chrome Web Store ຫຼື Mac App Store ເທົ່ານັ້ນ. ບໍ່ມີການດາວໂຫຼດ repo ທັງໝົດ ແລະບໍ່ມີແພັກເກັດ Offline ແບບຄົບໃນຕົວ.",
   "faqExtOfflineTitle": "ຂ້ອຍສາມາດຕິດຕັ້ງສ່ວນຂະຫຍາຍບຣາວເຊີເປັນແພັກເກັດອອບລາຍຄົບຊຸດໄດ້ບໍ?",
-  "faqExtOfflineBody": "ບໍ່. ສ່ວນຂະຫຍາຍຕິດຕັ້ງໄດ້ຈາກ Chrome Web Store ຫຼື Mac App Store ເທົ່ານັ້ນ. ບໍ່ມີການດາວໂຫຼດ repo ທັງໝົດ ແລະບໍ່ມີແພັກເກັດສ່ວນຂະຫຍາຍອອບລາຍແບບຄົບຊຸດ — ເບິ່ງ Downloads."
+  "faqExtOfflineBody": "ບໍ່. ສ່ວນຂະຫຍາຍຕິດຕັ້ງໄດ້ຈາກ Chrome Web Store ຫຼື Mac App Store ເທົ່ານັ້ນ. ບໍ່ມີການດາວໂຫຼດ repo ທັງໝົດ ແລະບໍ່ມີແພັກເກັດສ່ວນຂະຫຍາຍອອບລາຍແບບຄົບຊຸດ — ເບິ່ງ Downloads.",
+  "optionalUpdateShowHint": "ສະແດງຄຳແນະນຳອັບເດດ",
+  "honestLimitsMinSupportedNote": "ເວີຊັນຂັ້ນຕ່ຳ: {min} · ແຫຼ່ງ {source}"
 }

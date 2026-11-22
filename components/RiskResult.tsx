@@ -20,6 +20,7 @@ import {
   riskLevelCopy
 } from "./risk-evidence-copy";
 import { riskWhyItems, whyEvidenceDisplay } from "./risk-why-items";
+import { MinSupportedFloorNote } from "./MinSupportedFloorNote";
 
 export function RiskResult({
   analysis,
@@ -420,6 +421,10 @@ export function RiskResult({
             <li>{t.honestLimitNoCrowd}</li>
             <li>{t.honestLimitNoAv}</li>
           </ul>
+          <MinSupportedFloorNote
+            template={bag.honestLimitsMinSupportedNote}
+            testId="result-honest-limits-min-supported"
+          />
         </section>
       </section>
 

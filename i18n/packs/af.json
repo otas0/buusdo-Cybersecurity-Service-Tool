@@ -481,5 +481,7 @@
   "privacyDesktopOfflineNote": "Desktop app: computer scan and personal block lists work offline. Live website address checks need the internet when you use that path.",
   "extensionStoreOnlyNote": "Die blaaieruitbreiding installeer slegs vanaf die Chrome Web Store of Mac App Store. Daar is geen heel-repo-aflaai en geen vanlyn selfstandige uitbreidingspakket nie.",
   "faqExtOfflineTitle": "Kan ek die blaaier-uitbreiding as 'n vanlyn heelpakket installeer?",
-  "faqExtOfflineBody": "Nee. Die uitbreiding installeer slegs vanaf die Chrome Web Store of Mac App Store. Daar is geen heel-repo-aflaai en geen vanlyn selfstandige uitbreidingspakket nie — sien Downloads."
+  "faqExtOfflineBody": "Nee. Die uitbreiding installeer slegs vanaf die Chrome Web Store of Mac App Store. Daar is geen heel-repo-aflaai en geen vanlyn selfstandige uitbreidingspakket nie — sien Downloads.",
+  "optionalUpdateShowHint": "Wys opdateringwenk",
+  "honestLimitsMinSupportedNote": "Minimum weergawe: {min} · bron {source}"
 }

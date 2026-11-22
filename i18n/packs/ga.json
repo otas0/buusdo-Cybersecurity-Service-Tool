@@ -480,5 +480,7 @@
   "privacyDesktopOfflineNote": "Desktop app: computer scan and personal block lists work offline. Live website address checks need the internet when you use that path.",
   "extensionStoreOnlyNote": "Suiteáiltear an eisínteacht brabhsálaí ó Chrome Web Store nó Mac App Store amháin. Níl íoslódáil an stórais iomláin ann ná pacáiste neamhspleách as líne.",
   "faqExtOfflineTitle": "An féidir liom an eisínteacht brabhsálaí a shuiteáil mar phacáiste iomlán as líne?",
-  "faqExtOfflineBody": "Ní féidir. Suiteáiltear an eisínteacht ó Chrome Web Store nó Mac App Store amháin. Níl íoslódáil an stórais iomláin ann ná pacáiste neamhspleách as líne — féach Downloads."
+  "faqExtOfflineBody": "Ní féidir. Suiteáiltear an eisínteacht ó Chrome Web Store nó Mac App Store amháin. Níl íoslódáil an stórais iomláin ann ná pacáiste neamhspleách as líne — féach Downloads.",
+  "optionalUpdateShowHint": "Taispeáin leid nuashonraithe",
+  "honestLimitsMinSupportedNote": "Íosleagan: {min} · foinse {source}"
 }

@@ -7,7 +7,7 @@
   max-width: 920px;
   margin: 0 auto;
   padding: 28px 28px 48px;
-  /* Top bar height ≈ logo (40px) + bottom pad (26px) + small buffer — deep-link scroll clearance. */
+  /* Top bar height ≈ logo (40px) + bottom pad (26px) + small buffer — see shared/tokens.css. */
   --shell-top-scroll-margin: 4.5rem;
 }
 
@@ -18,10 +18,26 @@
   gap: 28px;
   padding: 0 0 26px;
   border-bottom: 1px solid var(--line);
+  /* Sticky chrome on narrow viewports so --shell-top-scroll-margin clears the bar. */
+  position: sticky;
+  top: 0;
+  z-index: 4;
+  background: var(--bg);
+}
+
+/* Light theme: sticky top must track --bg (never a hardcoded dark plate).
+ * Opaque plate + border so scrolled content does not show through. */
+:root[data-theme="light"] .shell .top {
+  background: var(--bg);
+  border-bottom: 1px solid var(--line);
+  box-shadow: 0 1px 0 var(--bg);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
 }
 
 #downloads-extension,
-#privacy-faq-common {
+#privacy-faq-common,
+#privacy-honest-limits {
   scroll-margin-top: var(--shell-top-scroll-margin);
 }
 

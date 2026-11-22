@@ -482,5 +482,6 @@
   "extensionStoreOnlyNote": "Selainlaajennus asennetaan vain Chrome Web Storesta tai Mac App Storesta. Ei koko repon latausta eikä offline-itsenäistä laajennuspakettia.",
   "faqExtOfflineTitle": "Voinko asentaa selainlaajennuksen offline-kokonaispakettina?",
   "faqExtOfflineBody": "Ei. Laajennus asennetaan vain Chrome Web Storesta tai Mac App Storesta. Ei koko repon latausta eikä offline-itsenäistä laajennuspakettia — katso Downloads.",
-  "optionalUpdateShowHint": "Näytä päivitysvinkki"
+  "optionalUpdateShowHint": "Näytä päivitysvinkki",
+  "honestLimitsMinSupportedNote": "Vähimmäisversio: {min} · lähde {source}"
 }

@@ -480,5 +480,7 @@
   "privacyDesktopOfflineNote": "Desktop app: computer scan and personal block lists work offline. Live website address checks need the internet when you use that path.",
   "extensionStoreOnlyNote": "Naršyklės plėtinys diegiamas tik iš Chrome Web Store arba Mac App Store. Nėra viso saugyklos atsisiuntimo ir nėra savarankiško neprisijungusio paketo.",
   "faqExtOfflineTitle": "Ar galiu įdiegti naršyklės plėtinį kaip visą neprisijungusį paketą?",
-  "faqExtOfflineBody": "Ne. Plėtinys diegiamas tik iš Chrome Web Store arba Mac App Store. Nėra viso saugyklos atsisiuntimo ir nėra savarankiško neprisijungusio paketo — žr. Downloads."
+  "faqExtOfflineBody": "Ne. Plėtinys diegiamas tik iš Chrome Web Store arba Mac App Store. Nėra viso saugyklos atsisiuntimo ir nėra savarankiško neprisijungusio paketo — žr. Downloads.",
+  "optionalUpdateShowHint": "Rodyti naujinimo patarimą",
+  "honestLimitsMinSupportedNote": "Minimali versija: {min} · šaltinis {source}"
 }

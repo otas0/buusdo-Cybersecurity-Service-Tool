@@ -482,5 +482,6 @@
   "extensionStoreOnlyNote": "La extensión del navegador solo se instala desde Chrome Web Store o Mac App Store. No hay descarga del repositorio completo ni paquete offline autónomo de la extensión.",
   "faqExtOfflineTitle": "¿Puedo instalar la extensión del navegador como paquete offline completo?",
   "faqExtOfflineBody": "No. La extensión solo se instala desde Chrome Web Store o Mac App Store. No hay descarga del repositorio completo ni paquete offline autónomo — vea Descargas.",
-  "optionalUpdateShowHint": "Mostrar aviso de actualización"
+  "optionalUpdateShowHint": "Mostrar aviso de actualización",
+  "honestLimitsMinSupportedNote": "Versión mínima: {min} · origen {source}"
 }

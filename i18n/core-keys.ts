@@ -76,6 +76,11 @@ export const CORE_MESSAGE_KEYS = [
   "faqNoCrowdBody",
   "faqExtOfflineTitle",
   "faqExtOfflineBody",
+  "optionalUpdateShowHint",
+  // Honest-limits floor tip — {min} + {source}; same CORE gate as optionalUpdateShowHint.
+  // Next tip key: land EN + pt-PT in messages.ts AND every must-stay-full pack in the same PR
+  // before adding here (docs/I18N.md — Core tip keys).
+  "honestLimitsMinSupportedNote",
   "partialPackBanner",
   "localeRecommendTitle",
   "localeRecommendBody",

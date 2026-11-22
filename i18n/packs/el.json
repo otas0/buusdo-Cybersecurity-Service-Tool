@@ -480,5 +480,7 @@
   "privacyDesktopOfflineNote": "Desktop app: computer scan and personal block lists work offline. Live website address checks need the internet when you use that path.",
   "extensionStoreOnlyNote": "Η επέκταση προγράμματος περιήγησης εγκαθίσταται μόνο από το Chrome Web Store ή το Mac App Store. Δεν υπάρχει λήψη ολόκληρου αποθετηρίου ούτε αυτόνομο πακέτο εκτός σύνδεσης.",
   "faqExtOfflineTitle": "Μπορώ να εγκαταστήσω την επέκταση προγράμματος περιήγησης ως πλήρες πακέτο εκτός σύνδεσης;",
-  "faqExtOfflineBody": "Όχι. Η επέκταση εγκαθίσταται μόνο από το Chrome Web Store ή το Mac App Store. Δεν υπάρχει λήψη ολόκληρου αποθετηρίου ούτε αυτόνομο πακέτο εκτός σύνδεσης — δείτε Downloads."
+  "faqExtOfflineBody": "Όχι. Η επέκταση εγκαθίσταται μόνο από το Chrome Web Store ή το Mac App Store. Δεν υπάρχει λήψη ολόκληρου αποθετηρίου ούτε αυτόνομο πακέτο εκτός σύνδεσης — δείτε Downloads.",
+  "optionalUpdateShowHint": "Εμφάνιση συμβουλής ενημέρωσης",
+  "honestLimitsMinSupportedNote": "Ελάχιστη έκδοση: {min} · πηγή {source}"
 }

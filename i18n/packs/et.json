@@ -480,5 +480,7 @@
   "privacyDesktopOfflineNote": "Desktop app: computer scan and personal block lists work offline. Live website address checks need the internet when you use that path.",
   "extensionStoreOnlyNote": "Brauserilaiendus paigaldatakse ainult Chrome Web Store’ist või Mac App Store’ist. Terve repo allalaadimist ega iseseisvat võrguühenduseta paketti pole.",
   "faqExtOfflineTitle": "Kas saan brauserilaiendust paigaldada täieliku võrguühenduseta paketina?",
-  "faqExtOfflineBody": "Ei. Laiendus paigaldatakse ainult Chrome Web Store’ist või Mac App Store’ist. Terve repo allalaadimist ega iseseisvat võrguühenduseta paketti pole — vt Downloads."
+  "faqExtOfflineBody": "Ei. Laiendus paigaldatakse ainult Chrome Web Store’ist või Mac App Store’ist. Terve repo allalaadimist ega iseseisvat võrguühenduseta paketti pole — vt Downloads.",
+  "optionalUpdateShowHint": "Kuva värskenduse vihje",
+  "honestLimitsMinSupportedNote": "Miinimumversioon: {min} · allikas {source}"
 }

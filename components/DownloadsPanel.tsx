@@ -243,6 +243,7 @@ export function DownloadsPanel({
         id="downloads-extension"
         data-testid="downloads-extension"
         aria-labelledby="downloads-extension-heading"
+        style={{ scrollMarginTop: "var(--shell-top-scroll-margin)" }}
       >
         <h3 id="downloads-extension-heading" className="settings-subhead">
           {t.blockListsInstallExt}

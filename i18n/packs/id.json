@@ -480,5 +480,7 @@
   "privacyDesktopOfflineNote": "Desktop app: computer scan and personal block lists work offline. Live website address checks need the internet when you use that path.",
   "extensionStoreOnlyNote": "Ekstensi peramban hanya dipasang dari Chrome Web Store atau Mac App Store. Tidak ada unduhan seluruh repositori dan tidak ada paket ekstensi mandiri luring.",
   "faqExtOfflineTitle": "Bisakah saya memasang ekstensi peramban sebagai paket lengkap offline?",
-  "faqExtOfflineBody": "Tidak. Ekstensi hanya dipasang dari Chrome Web Store atau Mac App Store. Tidak ada unduhan seluruh repositori dan tidak ada paket ekstensi mandiri offline — lihat Downloads."
+  "faqExtOfflineBody": "Tidak. Ekstensi hanya dipasang dari Chrome Web Store atau Mac App Store. Tidak ada unduhan seluruh repositori dan tidak ada paket ekstensi mandiri offline — lihat Downloads.",
+  "optionalUpdateShowHint": "Tampilkan tips pembaruan",
+  "honestLimitsMinSupportedNote": "Versi minimum: {min} · sumber {source}"
 }

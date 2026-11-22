@@ -480,5 +480,7 @@
   "privacyDesktopOfflineNote": "Desktop app: computer scan and personal block lists work offline. Live website address checks need the internet when you use that path.",
   "extensionStoreOnlyNote": "Razširitev brskalnika se namesti le iz Chrome Web Store ali Mac App Store. Ni prenosa celotnega repozitorija niti samostojnega paketa brez povezave.",
   "faqExtOfflineTitle": "Ali lahko namestim razširitev brskalnika kot celovit paket brez povezave?",
-  "faqExtOfflineBody": "Ne. Razširitev se namesti le iz Chrome Web Store ali Mac App Store. Ni prenosa celotnega repozitorija niti samostojnega paketa brez povezave — glej Downloads."
+  "faqExtOfflineBody": "Ne. Razširitev se namesti le iz Chrome Web Store ali Mac App Store. Ni prenosa celotnega repozitorija niti samostojnega paketa brez povezave — glej Downloads.",
+  "optionalUpdateShowHint": "Prikaži namig za posodobitev",
+  "honestLimitsMinSupportedNote": "Najnižja različica: {min} · vir {source}"
 }

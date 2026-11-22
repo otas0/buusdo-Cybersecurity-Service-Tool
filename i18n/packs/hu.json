@@ -480,5 +480,7 @@
   "privacyDesktopOfflineNote": "Desktop app: computer scan and personal block lists work offline. Live website address checks need the internet when you use that path.",
   "extensionStoreOnlyNote": "A böngésző-bővítmény csak a Chrome Web Store-ból vagy a Mac App Store-ból telepíthető. Nincs teljes repo letöltés, sem önálló offline csomag.",
   "faqExtOfflineTitle": "Telepíthetem a böngésző-bővítményt teljes offline csomagként?",
-  "faqExtOfflineBody": "Nem. A bővítmény csak a Chrome Web Store-ból vagy a Mac App Store-ból telepíthető. Nincs teljes repo letöltés, sem önálló offline csomag — lásd Downloads."
+  "faqExtOfflineBody": "Nem. A bővítmény csak a Chrome Web Store-ból vagy a Mac App Store-ból telepíthető. Nincs teljes repo letöltés, sem önálló offline csomag — lásd Downloads.",
+  "optionalUpdateShowHint": "Frissítési tipp megjelenítése",
+  "honestLimitsMinSupportedNote": "Minimális verzió: {min} · forrás {source}"
 }

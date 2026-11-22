@@ -482,5 +482,6 @@
   "extensionStoreOnlyNote": "Die Browser-Erweiterung wird nur über den Chrome Web Store oder den Mac App Store installiert. Es gibt keinen Gesamt-Repo-Download und kein offline-autarkes Erweiterungs-Paket.",
   "faqExtOfflineTitle": "Kann ich die Browser-Erweiterung als Offline-Gesamtpaket installieren?",
   "faqExtOfflineBody": "Nein. Die Erweiterung wird nur über den Chrome Web Store oder den Mac App Store installiert. Es gibt keinen Gesamt-Repo-Download und kein offline-autarkes Erweiterungs-Paket — siehe Downloads.",
-  "optionalUpdateShowHint": "Update-Hinweis anzeigen"
+  "optionalUpdateShowHint": "Update-Hinweis anzeigen",
+  "honestLimitsMinSupportedNote": "Mindestversion: {min} · Quelle {source}"
 }

@@ -480,5 +480,7 @@
   "privacyDesktopOfflineNote": "Desktop app: computer scan and personal block lists work offline. Live website address checks need the internet when you use that path.",
   "extensionStoreOnlyNote": "Isandiso sesikhangeli sifakwa kuphela kwi-Chrome Web Store okanye kwi-Mac App Store. Akukho ukukhuphela kwenqolobane yonke kwaye akukho iphakheji engaxhunyiwe ezimeleyo.",
   "faqExtOfflineTitle": "Ndingakwazi na ukufaka isongezelelo sesikhangeli njengepakethi epheleleyo engaxhunywanga?",
-  "faqExtOfflineBody": "Hayi. Isongezelelo sifakwa kuphela kwi-Chrome Web Store okanye i-Mac App Store. Akukho ukhuphelo lwe-repo yonke kwaye akukho ipakethi yesongezelelo ezimeleyo engaxhunywanga — bona Downloads."
+  "faqExtOfflineBody": "Hayi. Isongezelelo sifakwa kuphela kwi-Chrome Web Store okanye i-Mac App Store. Akukho ukhuphelo lwe-repo yonke kwaye akukho ipakethi yesongezelelo ezimeleyo engaxhunywanga — bona Downloads.",
+  "optionalUpdateShowHint": "Bonisa icebiso lohlaziyo",
+  "honestLimitsMinSupportedNote": "Inguqulelo encinci: {min} · umthombo {source}"
 }

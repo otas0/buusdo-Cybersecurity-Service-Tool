@@ -484,5 +484,6 @@
   "extensionStoreOnlyNote": "瀏覽器擴充功能僅透過 Chrome 線上應用程式商店或 Mac App Store 安裝。不提供整庫下載，也沒有離線自包含擴充包。",
   "faqExtOfflineTitle": "瀏覽器擴充功能能否以離線整包安裝？",
   "faqExtOfflineBody": "不能。擴充功能僅透過 Chrome 線上應用程式商店或 Mac App Store 安裝。不提供整庫下載，也沒有離線自包含擴充包 — 見下載頁。",
-  "optionalUpdateShowHint": "顯示更新提示"
+  "optionalUpdateShowHint": "顯示更新提示",
+  "honestLimitsMinSupportedNote": "最低支援版本：{min} · 來源 {source}"
 }

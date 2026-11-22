@@ -480,5 +480,7 @@
   "privacyDesktopOfflineNote": "Desktop app: computer scan and personal block lists work offline. Live website address checks need the internet when you use that path.",
   "extensionStoreOnlyNote": "Rozšíření prohlížeče se instaluje jen z Chrome Web Store nebo Mac App Store. Neexistuje stažení celého repozitáře ani samostatný offline balíček.",
   "faqExtOfflineTitle": "Mohu nainstalovat rozšíření prohlížeče jako kompletní offline balíček?",
-  "faqExtOfflineBody": "Ne. Rozšíření se instaluje jen z Chrome Web Store nebo Mac App Store. Neexistuje stažení celého repozitáře ani samostatný offline balíček — viz Downloads."
+  "faqExtOfflineBody": "Ne. Rozšíření se instaluje jen z Chrome Web Store nebo Mac App Store. Neexistuje stažení celého repozitáře ani samostatný offline balíček — viz Downloads.",
+  "optionalUpdateShowHint": "Zobrazit tip k aktualizaci",
+  "honestLimitsMinSupportedNote": "Minimální verze: {min} · zdroj {source}"
 }

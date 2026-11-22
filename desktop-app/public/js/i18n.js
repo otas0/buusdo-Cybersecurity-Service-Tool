@@ -191,6 +191,7 @@ export const STRINGS = {
     optionalUpdateBanner: "A newer desktop package is ready ({tag}). You are on {version}.",
     optionalUpdateDismiss: "Dismiss",
     optionalUpdateShowHint: "Show update tip",
+    honestLimitsMinSupportedNote: "Minimum supported: {min} · source {source}",
     proxyMacSet: "Set macOS HTTP proxy (needs authorization)",
     proxyMacClear: "Turn off macOS HTTP proxy",
     proxyMacSetHonest:
@@ -455,6 +456,7 @@ export const STRINGS = {
     optionalUpdateBanner: "Há um pacote desktop mais recente ({tag}). Tem a {version}.",
     optionalUpdateDismiss: "Dispensar",
     optionalUpdateShowHint: "Mostrar aviso de atualização",
+    honestLimitsMinSupportedNote: "Versão mínima suportada: {min} · origem {source}",
     proxyMacSet: "Definir proxy HTTP no macOS (precisa de autorização)",
     proxyMacClear: "Desligar proxy HTTP no macOS",
     proxyMacSetHonest:
@@ -828,7 +830,8 @@ STRINGS["zh-Hans"] = {
   "machineReason_startup-temp": "从 Temp 或下载启动",
   "machineReason_startup-item": "启动项",
   "machineReason_dropped-file": "下载或桌面上的文件",
-  "optionalUpdateShowHint": "显示更新提示"
+  "optionalUpdateShowHint": "显示更新提示",
+  "honestLimitsMinSupportedNote": "最低支持版本：{min} · 来源 {source}"
 };
 STRINGS["zh-Hant"] = {
   "appTitle": "buusdo Cybersecurity Service Tool",
@@ -1077,7 +1080,8 @@ STRINGS["zh-Hant"] = {
   "machineReason_startup-temp": "从 Temp 或下载启动",
   "machineReason_startup-item": "启动项",
   "machineReason_dropped-file": "下载或桌面上的文件",
-  "optionalUpdateShowHint": "顯示更新提示"
+  "optionalUpdateShowHint": "顯示更新提示",
+  "honestLimitsMinSupportedNote": "最低支援版本：{min} · 來源 {source}"
 };
 STRINGS["ja"] = {
   "appTitle": "buusdo Cybersecurity Service Tool",
@@ -1208,6 +1212,7 @@ STRINGS["ja"] = {
   "optionalUpdateBanner": "新しいデスクトップパッケージがあります（{tag}）。現在は {version}。",
   "optionalUpdateDismiss": "閉じる",
   "optionalUpdateShowHint": "更新のヒントを表示",
+  "honestLimitsMinSupportedNote": "サポート下限：{min} · 出典 {source}",
   "proxyMacSet": "macOS HTTP プロキシを設定（承認が必要）",
   "proxyMacClear": "macOS HTTP プロキシをオフ",
   "proxyMacSetHonest": "任意。Wi-Fi の HTTP/HTTPS を networksetup で 127.0.0.1:8080 にします。パスワードを求められることがあります。",
@@ -1449,6 +1454,7 @@ STRINGS["pt-BR"] = {
   "optionalUpdateBanner": "Há um pacote desktop mais recente ({tag}). Você está na {version}.",
   "optionalUpdateDismiss": "Dispensar",
   "optionalUpdateShowHint": "Mostrar aviso de atualização",
+  "honestLimitsMinSupportedNote": "Versão mínima suportada: {min} · origem {source}",
   "proxyMacSet": "Definir proxy HTTP no macOS (precisa de autorização)",
   "proxyMacClear": "Desligar proxy HTTP no macOS",
   "proxyMacSetHonest": "Opcional. Executa networksetup para Wi-Fi HTTP/HTTPS → 127.0.0.1:8080. O macOS pode pedir a palavra-passe. Reversível em Definições do Sistema → Rede. Só cobre apps que usam o proxy do sistema.",
@@ -1690,6 +1696,7 @@ STRINGS["sv"] = {
   "optionalUpdateBanner": "Ett nyare skrivbordspaket är klart ({tag}). Du har {version}.",
   "optionalUpdateDismiss": "Stäng",
   "optionalUpdateShowHint": "Visa uppdateringstips",
+  "honestLimitsMinSupportedNote": "Lägsta version: {min} · källa {source}",
   "proxyMacSet": "Set macOS HTTP proxy (needs authorization)",
   "proxyMacClear": "Turn off macOS HTTP proxy",
   "proxyMacSetHonest": "Optional. Runs networksetup for Wi-Fi HTTP/HTTPS → 127.0.0.1:8080. macOS may ask for your password. Reversible in System Settings → Network. Only covers apps that use the system proxy.",
@@ -1931,6 +1938,7 @@ STRINGS["da"] = {
   "optionalUpdateBanner": "En nyere skrivebordspakke er klar ({tag}). Du har {version}.",
   "optionalUpdateDismiss": "Luk",
   "optionalUpdateShowHint": "Vis opdateringstip",
+  "honestLimitsMinSupportedNote": "Minimumversion: {min} · kilde {source}",
   "proxyMacSet": "Set macOS HTTP proxy (needs authorization)",
   "proxyMacClear": "Turn off macOS HTTP proxy",
   "proxyMacSetHonest": "Optional. Runs networksetup for Wi-Fi HTTP/HTTPS → 127.0.0.1:8080. macOS may ask for your password. Reversible in System Settings → Network. Only covers apps that use the system proxy.",
@@ -2172,6 +2180,7 @@ STRINGS["fi"] = {
   "optionalUpdateBanner": "Uudempi työpöytäpaketti on valmis ({tag}). Sinulla on {version}.",
   "optionalUpdateDismiss": "Sulje",
   "optionalUpdateShowHint": "Näytä päivitysvinkki",
+  "honestLimitsMinSupportedNote": "Vähimmäisversio: {min} · lähde {source}",
   "proxyMacSet": "Set macOS HTTP proxy (needs authorization)",
   "proxyMacClear": "Turn off macOS HTTP proxy",
   "proxyMacSetHonest": "Optional. Runs networksetup for Wi-Fi HTTP/HTTPS → 127.0.0.1:8080. macOS may ask for your password. Reversible in System Settings → Network. Only covers apps that use the system proxy.",
@@ -2413,6 +2422,7 @@ STRINGS["nb"] = {
   "optionalUpdateBanner": "En nyere skrivebordspakke er klar ({tag}). Du har {version}.",
   "optionalUpdateDismiss": "Lukk",
   "optionalUpdateShowHint": "Vis oppdateringstips",
+  "honestLimitsMinSupportedNote": "Minimumsversjon: {min} · kilde {source}",
   "proxyMacSet": "Set macOS HTTP proxy (needs authorization)",
   "proxyMacClear": "Turn off macOS HTTP proxy",
   "proxyMacSetHonest": "Optional. Runs networksetup for Wi-Fi HTTP/HTTPS → 127.0.0.1:8080. macOS may ask for your password. Reversible in System Settings → Network. Only covers apps that use the system proxy.",
@@ -2654,6 +2664,7 @@ STRINGS["de"] = {
   "optionalUpdateBanner": "Ein neueres Desktop-Paket ist bereit ({tag}). Sie haben {version}.",
   "optionalUpdateDismiss": "Schließen",
   "optionalUpdateShowHint": "Update-Hinweis anzeigen",
+  "honestLimitsMinSupportedNote": "Mindestversion: {min} · Quelle {source}",
   "proxyMacSet": "Set macOS HTTP proxy (needs authorization)",
   "proxyMacClear": "Turn off macOS HTTP proxy",
   "proxyMacSetHonest": "Optional. Runs networksetup for Wi-Fi HTTP/HTTPS → 127.0.0.1:8080. macOS may ask for your password. Reversible in System Settings → Network. Only covers apps that use the system proxy.",
@@ -2895,6 +2906,7 @@ STRINGS["fr"] = {
   "optionalUpdateBanner": "Un paquet bureau plus récent est prêt ({tag}). Vous êtes en {version}.",
   "optionalUpdateDismiss": "Ignorer",
   "optionalUpdateShowHint": "Afficher l’avis de mise à jour",
+  "honestLimitsMinSupportedNote": "Version minimale : {min} · source {source}",
   "proxyMacSet": "Set macOS HTTP proxy (needs authorization)",
   "proxyMacClear": "Turn off macOS HTTP proxy",
   "proxyMacSetHonest": "Optional. Runs networksetup for Wi-Fi HTTP/HTTPS → 127.0.0.1:8080. macOS may ask for your password. Reversible in System Settings → Network. Only covers apps that use the system proxy.",
@@ -3136,6 +3148,7 @@ STRINGS["es"] = {
   "optionalUpdateBanner": "Hay un paquete de escritorio más reciente ({tag}). Tiene la {version}.",
   "optionalUpdateDismiss": "Descartar",
   "optionalUpdateShowHint": "Mostrar aviso de actualización",
+  "honestLimitsMinSupportedNote": "Versión mínima: {min} · origen {source}",
   "proxyMacSet": "Set macOS HTTP proxy (needs authorization)",
   "proxyMacClear": "Turn off macOS HTTP proxy",
   "proxyMacSetHonest": "Optional. Runs networksetup for Wi-Fi HTTP/HTTPS → 127.0.0.1:8080. macOS may ask for your password. Reversible in System Settings → Network. Only covers apps that use the system proxy.",
@@ -3377,6 +3390,7 @@ STRINGS["it"] = {
   "optionalUpdateBanner": "È pronto un pacchetto desktop più recente ({tag}). Hai la {version}.",
   "optionalUpdateDismiss": "Ignora",
   "optionalUpdateShowHint": "Mostra suggerimento aggiornamento",
+  "honestLimitsMinSupportedNote": "Versione minima: {min} · origine {source}",
   "proxyMacSet": "Set macOS HTTP proxy (needs authorization)",
   "proxyMacClear": "Turn off macOS HTTP proxy",
   "proxyMacSetHonest": "Optional. Runs networksetup for Wi-Fi HTTP/HTTPS → 127.0.0.1:8080. macOS may ask for your password. Reversible in System Settings → Network. Only covers apps that use the system proxy.",
@@ -3618,6 +3632,7 @@ STRINGS["nl"] = {
   "optionalUpdateBanner": "Er is een nieuwer desktoppakket klaar ({tag}). U heeft {version}.",
   "optionalUpdateDismiss": "Sluiten",
   "optionalUpdateShowHint": "Updatehint tonen",
+  "honestLimitsMinSupportedNote": "Minimumversie: {min} · bron {source}",
   "proxyMacSet": "Set macOS HTTP proxy (needs authorization)",
   "proxyMacClear": "Turn off macOS HTTP proxy",
   "proxyMacSetHonest": "Optional. Runs networksetup for Wi-Fi HTTP/HTTPS → 127.0.0.1:8080. macOS may ask for your password. Reversible in System Settings → Network. Only covers apps that use the system proxy.",

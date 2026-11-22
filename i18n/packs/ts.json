@@ -480,5 +480,7 @@
   "privacyDesktopOfflineNote": "Desktop app: computer scan and personal block lists work offline. Live website address checks need the internet when you use that path.",
   "extensionStoreOnlyNote": "Xiengeteri xa bhurawuza xi nghenisiwa ntsena ku suka eka Chrome Web Store kumbe Mac App Store. A ku na ku koka repo hinkwayo naswona a ku na phakheji ya offline leyi tiyimeleke.",
   "faqExtOfflineTitle": "Ndzi nga swi kota ku nghenisa extension ya browser tanihi phakethe leyi heleleke ya offline?",
-  "faqExtOfflineBody": "E-e. Extension yi nghenisiwa ntsena kusuka e Chrome Web Store kumbe Mac App Store. A ku na ku koka repo hinkwayo naswona a ku na phakethe ya extension leyi tiyimeleke ya offline — vona Downloads."
+  "faqExtOfflineBody": "E-e. Extension yi nghenisiwa ntsena kusuka e Chrome Web Store kumbe Mac App Store. A ku na ku koka repo hinkwayo naswona a ku na phakethe ya extension leyi tiyimeleke ya offline — vona Downloads.",
+  "optionalUpdateShowHint": "Kombisa tip ya update",
+  "honestLimitsMinSupportedNote": "Vhexini leyi tsongo: {min} · xihlovo {source}"
 }

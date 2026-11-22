@@ -480,5 +480,7 @@
   "privacyDesktopOfflineNote": "Desktop app: computer scan and personal block lists work offline. Live website address checks need the internet when you use that path.",
   "extensionStoreOnlyNote": "L’extensió del navegador només s’instal·la des de Chrome Web Store o Mac App Store. No hi ha baixada del repositori sencer ni paquet autònom fora de línia.",
   "faqExtOfflineTitle": "Puc instal·lar l’extensió del navegador com a paquet fora de línia complet?",
-  "faqExtOfflineBody": "No. L’extensió només s’instal·la des de Chrome Web Store o Mac App Store. No hi ha baixada del repositori sencer ni paquet autònom fora de línia — vegeu Downloads."
+  "faqExtOfflineBody": "No. L’extensió només s’instal·la des de Chrome Web Store o Mac App Store. No hi ha baixada del repositori sencer ni paquet autònom fora de línia — vegeu Downloads.",
+  "optionalUpdateShowHint": "Mostra l’avís d’actualització",
+  "honestLimitsMinSupportedNote": "Versió mínima: {min} · origen {source}"
 }

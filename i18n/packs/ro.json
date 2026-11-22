@@ -480,5 +480,7 @@
   "privacyDesktopOfflineNote": "Desktop app: computer scan and personal block lists work offline. Live website address checks need the internet when you use that path.",
   "extensionStoreOnlyNote": "Extensia de browser se instalează doar din Chrome Web Store sau Mac App Store. Nu există descărcarea întregului depozit și nici un pachet offline autonom.",
   "faqExtOfflineTitle": "Pot instala extensia de browser ca pachet offline complet?",
-  "faqExtOfflineBody": "Nu. Extensia se instalează doar din Chrome Web Store sau Mac App Store. Nu există descărcarea întregului depozit și nici un pachet offline autonom — vezi Downloads."
+  "faqExtOfflineBody": "Nu. Extensia se instalează doar din Chrome Web Store sau Mac App Store. Nu există descărcarea întregului depozit și nici un pachet offline autonom — vezi Downloads.",
+  "optionalUpdateShowHint": "Afișează sfatul de actualizare",
+  "honestLimitsMinSupportedNote": "Versiune minimă: {min} · sursă {source}"
 }

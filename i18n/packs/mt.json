@@ -480,5 +480,7 @@
   "privacyDesktopOfflineNote": "Desktop app: computer scan and personal block lists work offline. Live website address checks need the internet when you use that path.",
   "extensionStoreOnlyNote": "L-estensjoni tal-browser tiġi installata biss mill-Chrome Web Store jew Mac App Store. M’hemmx download tar-repo kollu u lanqas pakkett offline awtonomu.",
   "faqExtOfflineTitle": "Nista’ ninstalla l-estensjoni tal-browser bħala pakkett offline sħiħ?",
-  "faqExtOfflineBody": "Le. L-estensjoni tiġi installata biss mill-Chrome Web Store jew Mac App Store. M’hemmx download tar-repo kollu u lanqas pakkett offline awtonomu — ara Downloads."
+  "faqExtOfflineBody": "Le. L-estensjoni tiġi installata biss mill-Chrome Web Store jew Mac App Store. M’hemmx download tar-repo kollu u lanqas pakkett offline awtonomu — ara Downloads.",
+  "optionalUpdateShowHint": "Uri parir ta’ aġġornament",
+  "honestLimitsMinSupportedNote": "Verżjoni minima: {min} · sors {source}"
 }

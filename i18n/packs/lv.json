@@ -480,5 +480,7 @@
   "privacyDesktopOfflineNote": "Desktop app: computer scan and personal block lists work offline. Live website address checks need the internet when you use that path.",
   "extensionStoreOnlyNote": "Pārlūkprogrammas paplašinājums tiek instalēts tikai no Chrome Web Store vai Mac App Store. Nav visas krātuves lejupielādes un nav autonomas bezsaistes pakotnes.",
   "faqExtOfflineTitle": "Vai es varu instalēt pārlūkprogrammas paplašinājumu kā pilnu bezsaistes pakotni?",
-  "faqExtOfflineBody": "Nē. Paplašinājums tiek instalēts tikai no Chrome Web Store vai Mac App Store. Nav visas krātuves lejupielādes un nav autonomas bezsaistes pakotnes — skat. Downloads."
+  "faqExtOfflineBody": "Nē. Paplašinājums tiek instalēts tikai no Chrome Web Store vai Mac App Store. Nav visas krātuves lejupielādes un nav autonomas bezsaistes pakotnes — skat. Downloads.",
+  "optionalUpdateShowHint": "Rādīt atjauninājuma padomu",
+  "honestLimitsMinSupportedNote": "Minimālā versija: {min} · avots {source}"
 }

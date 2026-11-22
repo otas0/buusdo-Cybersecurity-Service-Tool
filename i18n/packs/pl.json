@@ -481,5 +481,7 @@
   "privacyDesktopOfflineNote": "Desktop app: computer scan and personal block lists work offline. Live website address checks need the internet when you use that path.",
   "extensionStoreOnlyNote": "Rozszerzenie przeglądarki instaluje się tylko z Chrome Web Store lub Mac App Store. Nie ma pobierania całego repozytorium ani samodzielnego pakietu offline.",
   "faqExtOfflineTitle": "Czy mogę zainstalować rozszerzenie przeglądarki jako kompletny pakiet offline?",
-  "faqExtOfflineBody": "Nie. Rozszerzenie instaluje się tylko z Chrome Web Store lub Mac App Store. Nie ma pobierania całego repozytorium ani samodzielnego pakietu offline — zobacz Downloads."
+  "faqExtOfflineBody": "Nie. Rozszerzenie instaluje się tylko z Chrome Web Store lub Mac App Store. Nie ma pobierania całego repozytorium ani samodzielnego pakietu offline — zobacz Downloads.",
+  "optionalUpdateShowHint": "Pokaż wskazówkę aktualizacji",
+  "honestLimitsMinSupportedNote": "Minimalna wersja: {min} · źródło {source}"
 }

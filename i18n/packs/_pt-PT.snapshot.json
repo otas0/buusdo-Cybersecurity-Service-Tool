@@ -483,5 +483,6 @@
   "privacyPolicyChinaBody": "Desde 22 de novembro de 2026 o site GitHub Pages da China continental (https://otas0.github.io/buusdocst/) suspende as páginas habituais de explicação/instalação/privacidade e mantém só um aviso bilingue. Quando a rede alcança este site Workers, esse aviso encaminha automaticamente para aqui; quando não alcança, o aviso pode ainda abrir. A privacidade formal é esta página — não um resumo separado na China.",
   "faqExtOfflineTitle": "Can I install the browser extension as an offline whole package?",
   "faqExtOfflineBody": "No. The extension installs only from the Chrome Web Store or Mac App Store. There is no whole-repo download and no offline self-contained extension package — see Downloads.",
-  "optionalUpdateShowHint": "Mostrar aviso de atualização"
+  "optionalUpdateShowHint": "Mostrar aviso de atualização",
+  "honestLimitsMinSupportedNote": "Versão mínima suportada: {min} · origem {source}"
 }

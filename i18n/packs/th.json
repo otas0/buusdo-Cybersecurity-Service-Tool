@@ -481,5 +481,7 @@
   "privacyDesktopOfflineNote": "Desktop app: computer scan and personal block lists work offline. Live website address checks need the internet when you use that path.",
   "extensionStoreOnlyNote": "ส่วนขยายเบราว์เซอร์ติดตั้งได้จาก Chrome Web Store หรือ Mac App Store เท่านั้น ไม่มีการดาวน์โหลดทั้งคลัง และไม่มีแพ็กเกจออฟไลน์แบบครบในตัว",
   "faqExtOfflineTitle": "ฉันสามารถติดตั้งส่วนขยายเบราว์เซอร์เป็นแพ็กเกจออฟไลน์ครบชุดได้หรือไม่?",
-  "faqExtOfflineBody": "ไม่ได้ ส่วนขยายติดตั้งได้เฉพาะจาก Chrome Web Store หรือ Mac App Store เท่านั้น ไม่มีการดาวน์โหลดทั้งคลังและไม่มีแพ็กเกจส่วนขยายออฟไลน์แบบครบชุด — ดู Downloads"
+  "faqExtOfflineBody": "ไม่ได้ ส่วนขยายติดตั้งได้เฉพาะจาก Chrome Web Store หรือ Mac App Store เท่านั้น ไม่มีการดาวน์โหลดทั้งคลังและไม่มีแพ็กเกจส่วนขยายออฟไลน์แบบครบชุด — ดู Downloads",
+  "optionalUpdateShowHint": "แสดงคำแนะนำการอัปเดต",
+  "honestLimitsMinSupportedNote": "เวอร์ชันขั้นต่ำ: {min} · แหล่งที่มา {source}"
 }
