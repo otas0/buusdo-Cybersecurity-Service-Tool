@@ -34,6 +34,7 @@ Recorded via `npm run production:origin` → README + `shared/production-site.js
 
 | When (UTC) | Runner | Result | Notes |
 |------------|--------|--------|-------|
+| 2026-11-22 | github-actions/45073717268 | **OK** | `https://buusdocst.mtsu.workers.dev` — health+check · softDownloadWarn=0 · notarized=missing · smoke:privacy-china=2026-11-22T21:43Z · https://github.com/otas0/buusdo-Cybersecurity-Service-Tool/actions/runs/45073717268 |
 | 2026-11-22 | github-actions/45041539248 | **OK** | `https://buusdocst.mtsu.workers.dev` — health+check · softDownloadWarn=0 · notarized=missing · smoke:privacy-china=2026-11-22T16:02Z · https://github.com/otas0/buusdo-Cybersecurity-Service-Tool/actions/runs/45041539248 |
 | 2026-11-22 | github-actions/45000685739 | **OK** | `https://buusdocst.mtsu.workers.dev` — health+check · softDownloadWarn=0 · notarized=missing · https://github.com/otas0/buusdo-Cybersecurity-Service-Tool/actions/runs/45000685739 |
 | 2026-11-22 | github-actions/44970448022 | **OK** | `https://buusdocst.mtsu.workers.dev` — health+check · softDownloadWarn=0 · notarized=missing · https://github.com/otas0/buusdo-Cybersecurity-Service-Tool/actions/runs/44970448022 |
@@ -73,7 +74,6 @@ Recorded via `npm run production:origin` → README + `shared/production-site.js
 | 2026-11-12 | github-actions/43280268951 | **OK** | `https://buusdocst.mtsu.workers.dev` — health+check · softDownloadWarn=0 · notarized=missing · https://github.com/otas0/buusdo-Cybersecurity-Service-Tool/actions/runs/43280268951 |
 | 2026-11-12 | github-actions/43199068441 | **OK** | `https://buusdocst.mtsu.workers.dev` — health+check · softDownloadWarn=0 · notarized=missing · https://github.com/otas0/buusdo-Cybersecurity-Service-Tool/actions/runs/43199068441 |
 | 2026-11-12 | github-actions/43142656013 | **OK** | `https://buusdocst.mtsu.workers.dev` — health+check · softDownloadWarn=0 · notarized=missing · https://github.com/otas0/buusdo-Cybersecurity-Service-Tool/actions/runs/43142656013 |
-| 2026-11-11 | github-actions/43107073537 | **OK** | `https://buusdocst.mtsu.workers.dev` — health+check · softDownloadWarn=0 · notarized=missing · https://github.com/otas0/buusdo-Cybersecurity-Service-Tool/actions/runs/43107073537 |
 
 
 ## C. Monitoring
