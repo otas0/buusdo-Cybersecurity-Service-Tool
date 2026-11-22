@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { getMessages, type Locale } from "../i18n/messages";
 import { showsPartialPackBanner } from "../i18n/pack-coverage";
 import { macMirrorUrl, resolveDesktopDownloads } from "../shared/desktop-downloads-resolve";
+import { MinSupportedFloorNote } from "./MinSupportedFloorNote";
 
 export function PrivacyPanel({
   locale,
@@ -53,6 +54,10 @@ export function PrivacyPanel({
         <p className="hint" data-testid="privacy-honest-limits">
           {t.privacyPolicyLimitsBody}
         </p>
+        <MinSupportedFloorNote
+          template={t.honestLimitsMinSupportedNote}
+          testId="privacy-honest-limits-min-supported"
+        />
         <p className="hint" data-testid="privacy-desktop-offline">
           {t.privacyDesktopOfflineNote}
         </p>
