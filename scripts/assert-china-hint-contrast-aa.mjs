@@ -101,6 +101,10 @@ for (const page of ["china-pages/index.html", "china-pages/en.html"]) {
     console.error("FAIL: .reach fail state must use --halt");
     process.exit(1);
   }
+  if (!css.includes('.reach[data-state="stay"] .reach-status')) {
+    console.error('FAIL: .reach stay state must style .reach-status (not leave checking)');
+    process.exit(1);
+  }
   if (!css.includes(".reach-detail") || !/reach-detail[\s\S]*?color:\s*var\(--muted\)/.test(css)) {
     console.error("FAIL: .reach-detail must use --muted");
     process.exit(1);
@@ -123,5 +127,21 @@ for (const page of ["china-pages/index.html", "china-pages/en.html"]) {
       process.exit(1);
     }
   }
+
+  // Preflight fail copy (OPTIONS/CORS) — same AA path via .reach-detail / --halt status.
+  const redirect = readFileSync(path.join(root, "china-pages/region-redirect.js"), "utf8");
+  if (!redirect.includes("OPTIONS/CORS")) {
+    console.error("FAIL: region-redirect preflight copy must mention OPTIONS/CORS");
+    process.exit(1);
+  }
+  if (!/Health OPTIONS\/CORS failed/.test(redirect) || !/健康探测 OPTIONS\/CORS 失败/.test(redirect)) {
+    console.error("FAIL: preflight fail copy missing EN or zh-Hans string");
+    process.exit(1);
+  }
+  if (!redirect.includes('dataset.state = "stay"') && !redirect.includes('el.dataset.state = "stay"')) {
+    console.error('FAIL: region-redirect must set data-state="stay" when china_stay pauses auto-guide');
+    process.exit(1);
+  }
+  console.info("ok preflight fail copy AA path (OPTIONS/CORS + stay state)");
 }
 console.info("assert-china-hint-contrast-aa ok");

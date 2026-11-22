@@ -113,6 +113,13 @@ jobs:
           npm run assert:prod-auth-gone
           echo "::notice::assert:prod-auth-gone OK against $HEALTH_BASE_URL"
 
+      - name: Smoke privacy China section
+        env:
+          PRODUCTION_HEALTH_URL: ${{ env.HEALTH_BASE_URL }}
+        run: |
+          npm run smoke:privacy-china
+          echo "::notice::smoke:privacy-china OK against $HEALTH_BASE_URL"
+
       # Soft HEAD check of Settings download URLs (never fails the health job).
       - name: Desktop download HEAD (soft)
         id: downloads

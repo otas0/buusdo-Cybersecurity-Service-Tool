@@ -633,6 +633,26 @@ async function runWebsiteApiCheck() {
       };
       const noticeUrl = withStay("1");
       const clearUrl = withStay("0");
+      /** Prefer an existing China Pages tab (same origin) over a new tab. */
+      const openChinaPages = async (url, { preferSameOrigin = false } = {}) => {
+        try {
+          if (preferSameOrigin && typeof chrome !== "undefined" && chrome.tabs?.query) {
+            const origin = new URL(CHINA_PAGES_URL).origin;
+            const tabs = await chrome.tabs.query({});
+            const hit = tabs.find((tab) => typeof tab.url === "string" && tab.url.startsWith(origin));
+            if (hit?.id != null) {
+              await chrome.tabs.update(hit.id, { url, active: true });
+              if (hit.windowId != null && chrome.windows?.update) {
+                await chrome.windows.update(hit.windowId, { focused: true });
+              }
+              return;
+            }
+          }
+        } catch {
+          /* fall through */
+        }
+        window.open(url, "_blank", "noopener,noreferrer");
+      };
       const line = t(lang, "websiteApiCfUnreachable", { chinaEntry: noticeUrl });
       els.websiteApiStatus.replaceChildren();
       els.websiteApiStatus.append(document.createTextNode(line));
@@ -647,10 +667,13 @@ async function runWebsiteApiCheck() {
       els.websiteApiStatus.append(document.createTextNode(" · "));
       const clear = document.createElement("a");
       clear.href = clearUrl;
-      clear.target = "_blank";
       clear.rel = "noreferrer noopener";
       clear.textContent = t(lang, "websiteApiChinaStayClearLink");
       clear.dataset.testid = "china-stay-clear-link";
+      clear.addEventListener("click", (ev) => {
+        ev.preventDefault();
+        void openChinaPages(clearUrl, { preferSameOrigin: true });
+      });
       els.websiteApiStatus.append(clear);
     } else {
       els.websiteApiStatus.textContent = t(lang, "websiteApiFail", { error: message });

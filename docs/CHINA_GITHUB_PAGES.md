@@ -45,7 +45,7 @@ UI：`data-testid="china-notice"` / `china-notice-title` / `china-workers-entry`
 
 **Decision (2026-11-22):** keep `/install.html` · `/privacy.html` · EN twins as **thin redirects** to the notice. Old bookmarks and store listing drafts still point there; deleting them would 404 without gain.
 
-**Traffic gate before delete:** GitHub Pages / repo Insights do not expose path hits for `otas0/buusdocst`. Until a path log exists (Cloudflare Logpush on a custom domain, or Pages analytics if enabled), **do not remove** the stubs. Optional check: search referrers in Issues / store drafts for `/install.html` and `/privacy.html`. Revisit when path-level traffic is measurable and near zero for 30 days.
+**Traffic gate before delete:** GitHub Pages / repo Insights do not expose path hits for `otas0/buusdocst`. Until a path log exists (Cloudflare Logpush on a custom domain, or Pages analytics if enabled), **do not remove** the stubs — **re-evaluate delete only after path-level logs exist** and show near-zero hits for `/install.html` · `/privacy.html` (and EN twins) for ≥30 days. Optional check: search referrers in Issues / store listing drafts for those paths.
 
 ### Probe fail copy
 

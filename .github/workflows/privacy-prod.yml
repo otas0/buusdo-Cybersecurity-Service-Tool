@@ -5,6 +5,9 @@
 name: Privacy prod smoke
 
 on:
+  schedule:
+    # Nightly 05:45 UTC — CF-reachable ubuntu Playwright privacy-prod
+    - cron: "45 5 * * *"
   workflow_dispatch:
     inputs:
       url:

@@ -5,7 +5,9 @@ name: Production health smoke
 
 on:
   workflow_dispatch:
-  # No schedule — avoid dual */15 cron with health-monitor.yml
+  schedule:
+    # Nightly 05:20 UTC — privacy-china + health (health-monitor stays */15)
+    - cron: "20 5 * * *"
 
 jobs:
   health:

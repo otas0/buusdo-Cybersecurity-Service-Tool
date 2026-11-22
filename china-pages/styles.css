@@ -347,6 +347,10 @@ a {
   color: var(--halt);
 }
 
+.shell .reach[data-state="stay"] .reach-status {
+  color: var(--muted);
+}
+
 .shell .reach-detail {
   margin: 6px 0 0;
   font-size: 13px;

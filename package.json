@@ -53,6 +53,7 @@
     "assert:safari-largeicon": "node scripts/assert-safari-largeicon.mjs",
     "assert:public-promotion": "node scripts/assert-public-promotion.mjs",
     "capture:store-halt-frame": "node scripts/capture-store-halt-frame.mjs",
+    "capture:privacy-china-frame": "node scripts/capture-privacy-china-frame.mjs",
     "assert:store-halt-frame-floors": "node scripts/assert-store-halt-frame-floors.mjs",
     "capture:store-halt-frame:playwright": "PLAYWRIGHT_SKIP_WEBSERVER=1 playwright test playwright/store-halt-frame.spec.ts",
     "test:playwright:china-soft-fail": "PLAYWRIGHT_SKIP_WEBSERVER=1 playwright test playwright/china-soft-fail.spec.ts",

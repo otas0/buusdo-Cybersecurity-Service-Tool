@@ -53,17 +53,34 @@ test("legacy stubs redirect to notice without region-redirect", () => {
   }
 });
 
+function makeReachEl() {
+  const status = { textContent: "Checking…" };
+  const detail = { textContent: "" };
+  return {
+    dataset: { state: "checking" } as { state: string },
+    querySelector(sel: string) {
+      if (sel === "[data-reach-status]") return status;
+      if (sel === "[data-reach-detail]") return detail;
+      return null;
+    },
+    _status: status,
+    _detail: detail
+  };
+}
+
 function runRedirect(opts: {
   pathname: string;
   search?: string;
   languages?: string[];
   lang?: string;
   health?: { ok: boolean; service: string } | null;
+  withReach?: boolean;
 }) {
   const js = readFileSync(scriptPath, "utf8");
   const storage: Record<string, string> = {};
   const session: Record<string, string> = {};
   const state = { replaced: "" };
+  const reach = opts.withReach ? makeReachEl() : null;
   const context: Record<string, unknown> = {
     location: {
       pathname: opts.pathname,
@@ -95,8 +112,12 @@ function runRedirect(opts: {
       language: (opts.languages && opts.languages[0]) || "zh-CN"
     },
     document: {
+      readyState: "complete",
       documentElement: { lang: opts.lang ?? "zh-CN" },
-      getElementById: () => null
+      getElementById: (id: string) => (id === "workers-reach" ? reach : null),
+      addEventListener() {
+        /* no-op when readyState is complete */
+      }
     },
     AbortController,
     Promise,
@@ -123,6 +144,7 @@ function runRedirect(opts: {
       return state.replaced;
     },
     storage,
+    reach,
     flush: () =>
       new Promise<void>((resolve) => {
         setImmediate(() => setImmediate(() => resolve()));
@@ -154,11 +176,15 @@ test("vm: china_stay=1 skips redirect (session only; clears sticky localStorage)
   const run = runRedirect({
     pathname: "/buusdocst/index.html",
     search: "?china_stay=1",
-    health: { ok: true, service: "buusdocst" }
+    health: { ok: true, service: "buusdocst" },
+    withReach: true
   });
   await run.flush();
   assert.equal(run.replaced, "");
   assert.equal(run.storage["buusdocst-china-stay"], undefined);
+  assert.equal(run.reach?.dataset.state, "stay");
+  assert.notEqual(run.reach?.dataset.state, "checking");
+  assert.match(run.reach?._status.textContent || "", /留在本告知书|Staying on notice/);
 });
 
 test("vm: legacy localStorage stay is cleared and force-redirects", async () => {

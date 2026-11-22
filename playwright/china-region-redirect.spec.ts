@@ -125,6 +125,9 @@ test("china_stay=1 keeps notice on China Pages", async ({ page }) => {
     });
     await expect(page.getByTestId("china-notice")).toBeVisible();
     await expect(page.getByTestId("china-stay-link")).toBeVisible();
+    await expect(page.locator("#workers-reach")).toHaveAttribute("data-state", "stay", {
+      timeout: 5_000,
+    });
     expect(page.url()).toContain(`127.0.0.1:${port}`);
     expect(page.url()).not.toMatch(/workers\.dev/);
     const sticky = await page.evaluate(() => localStorage.getItem("buusdocst-china-stay"));

@@ -54,7 +54,34 @@
     return false;
   }
 
-  if (wantsStay()) return;
+  function markStay() {
+    var el = document.getElementById("workers-reach");
+    if (!el) return;
+    var status = el.querySelector("[data-reach-status]");
+    var detail = el.querySelector("[data-reach-detail]");
+    var isEn = document.documentElement.lang === "en";
+    if (status) {
+      status.textContent = isEn ? "Staying on notice" : "留在本告知书";
+    }
+    if (detail) {
+      detail.textContent = isEn
+        ? "Auto-guide paused for this tab (?china_stay=1)."
+        : "本标签已暂停自动引导（?china_stay=1）。";
+    }
+    el.dataset.state = "stay";
+  }
+
+  if (wantsStay()) {
+    function applyStayUi() {
+      markStay();
+    }
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", applyStayUi);
+    } else {
+      applyStayUi();
+    }
+    return;
+  }
 
   function workersPath() {
     var pageIsEn =
