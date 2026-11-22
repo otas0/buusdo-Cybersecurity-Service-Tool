@@ -8,7 +8,7 @@
  * or embedded Node next to app when present).
  */
 import { spawn } from "node:child_process";
-import { existsSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import { mkdtemp, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
@@ -61,6 +61,22 @@ function resolveSharedRoot() {
 }
 
 const sharedRoot = resolveSharedRoot();
+
+const downloadsJson = path.join(sharedRoot, "desktop-downloads.json");
+if (!existsSync(downloadsJson)) {
+  fail(`staged shared missing desktop-downloads.json: ${downloadsJson}`);
+}
+try {
+  const downloads = JSON.parse(readFileSync(downloadsJson, "utf8"));
+  const min = String(downloads.minSupportedVersion || "").trim();
+  if (!/^\d+\.\d+\.\d+/.test(min)) {
+    fail(`staged desktop-downloads.json minSupportedVersion missing/invalid: ${JSON.stringify(min)}`);
+  }
+} catch (err) {
+  fail(
+    `staged desktop-downloads.json unreadable: ${err instanceof Error ? err.message : String(err)}`
+  );
+}
 
 const child = spawn(nodeBin, [launcher], {
   cwd: appRoot,

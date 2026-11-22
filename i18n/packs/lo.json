@@ -472,5 +472,13 @@
   "langRegionPacific": "Pacific",
   "langRegionSoutheastAsia": "ອາຊີຕາເວັນອອກສຽງໃຕ້",
   "langRegionSouthernAfrica": "Southern Africa",
-  "themeHeaderHint": "Use the one Appearance button in the header (next to language)."
+  "themeHeaderHint": "Use the one Appearance button in the header (next to language).",
+  "desktopInstallStepsTitle": "Install in three steps",
+  "desktopInstallStep1": "Download the package for your system (Windows, macOS, or Linux).",
+  "desktopInstallStep2": "Open or install it. If the OS warns that the publisher is unknown, follow the setup guide once.",
+  "desktopInstallStep3": "Launch the app — the dashboard opens on this computer. Updates install the same way when the app asks.",
+  "privacyDesktopOfflineNote": "Desktop app: computer scan and personal block lists work offline. Live website address checks need the internet when you use that path.",
+  "extensionStoreOnlyNote": "ສ່ວນຂະຫຍາຍບຣາວເຊີຕິດຕັ້ງໄດ້ຈາກ Chrome Web Store ຫຼື Mac App Store ເທົ່ານັ້ນ. ບໍ່ມີການດາວໂຫຼດ repo ທັງໝົດ ແລະບໍ່ມີແພັກເກັດ Offline ແບບຄົບໃນຕົວ.",
+  "faqExtOfflineTitle": "ຂ້ອຍສາມາດຕິດຕັ້ງສ່ວນຂະຫຍາຍບຣາວເຊີເປັນແພັກເກັດອອບລາຍຄົບຊຸດໄດ້ບໍ?",
+  "faqExtOfflineBody": "ບໍ່. ສ່ວນຂະຫຍາຍຕິດຕັ້ງໄດ້ຈາກ Chrome Web Store ຫຼື Mac App Store ເທົ່ານັ້ນ. ບໍ່ມີການດາວໂຫຼດ repo ທັງໝົດ ແລະບໍ່ມີແພັກເກັດສ່ວນຂະຫຍາຍອອບລາຍແບບຄົບຊຸດ — ເບິ່ງ Downloads."
 }

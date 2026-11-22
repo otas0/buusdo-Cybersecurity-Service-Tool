@@ -472,5 +472,13 @@
   "langRegionPacific": "Pacific",
   "langRegionSoutheastAsia": "Southeast Asia",
   "langRegionSouthernAfrica": "Southern Africa",
-  "themeHeaderHint": "Use the one Appearance button in the header (next to language)."
+  "themeHeaderHint": "Use the one Appearance button in the header (next to language).",
+  "desktopInstallStepsTitle": "Install in three steps",
+  "desktopInstallStep1": "Download the package for your system (Windows, macOS, or Linux).",
+  "desktopInstallStep2": "Open or install it. If the OS warns that the publisher is unknown, follow the setup guide once.",
+  "desktopInstallStep3": "Launch the app — the dashboard opens on this computer. Updates install the same way when the app asks.",
+  "privacyDesktopOfflineNote": "Desktop app: computer scan and personal block lists work offline. Live website address checks need the internet when you use that path.",
+  "extensionStoreOnlyNote": "Rozšíření prohlížeče se instaluje jen z Chrome Web Store nebo Mac App Store. Neexistuje stažení celého repozitáře ani samostatný offline balíček.",
+  "faqExtOfflineTitle": "Mohu nainstalovat rozšíření prohlížeče jako kompletní offline balíček?",
+  "faqExtOfflineBody": "Ne. Rozšíření se instaluje jen z Chrome Web Store nebo Mac App Store. Neexistuje stažení celého repozitáře ani samostatný offline balíček — viz Downloads."
 }

@@ -472,5 +472,13 @@
   "langRegionPacific": "ပစိဖိတ်",
   "langRegionSoutheastAsia": "အရှေ့တောင်အာရှ",
   "langRegionSouthernAfrica": "တောင်အာဖရိက",
-  "themeHeaderHint": "Use the one Appearance button in the header (next to language)."
+  "themeHeaderHint": "Use the one Appearance button in the header (next to language).",
+  "desktopInstallStepsTitle": "Install in three steps",
+  "desktopInstallStep1": "Download the package for your system (Windows, macOS, or Linux).",
+  "desktopInstallStep2": "Open or install it. If the OS warns that the publisher is unknown, follow the setup guide once.",
+  "desktopInstallStep3": "Launch the app — the dashboard opens on this computer. Updates install the same way when the app asks.",
+  "privacyDesktopOfflineNote": "Desktop app: computer scan and personal block lists work offline. Live website address checks need the internet when you use that path.",
+  "extensionStoreOnlyNote": "ဘရောက်ဇာ တိုးချဲ့မှုကို Chrome Web Store သို့မဟုတ် Mac App Store မှသာ ထည့်သွင်းသည်။ repo အားလုံး ဒေါင်းလုဒ် မရှိသလို အော့ဖ်လိုင်း ကိုယ်ပိုင် တိုးချဲ့အထုပ်လည်း မရှိပါ။",
+  "faqExtOfflineTitle": "ဘရောက်ဇာ တိုးချဲ့မှုကို အော့ဖ်လိုင်း အပြည့်အစုံ ပက်ကေ့ချ်အဖြစ် ထည့်သွင်းနိုင်ပါသလား?",
+  "faqExtOfflineBody": "မရပါ။ တိုးချဲ့မှုကို Chrome Web Store သို့မဟုတ် Mac App Store မှသာ ထည့်သွင်းသည်။ repo တစ်ခုလုံး ဒေါင်းလုဒ်နှင့် အော့ဖ်လိုင်း ကိုယ်ပိုင် တိုးချဲ့မှု ပက်ကေ့ချ် မရှိပါ — Downloads ကို ကြည့်ပါ။"
 }

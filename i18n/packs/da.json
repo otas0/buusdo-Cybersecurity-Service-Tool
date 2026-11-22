@@ -473,5 +473,14 @@
   "langRegionSoutheastAsia": "Southeast Asia",
   "langRegionSouthernAfrica": "Southern Africa",
   "themeHeaderHint": "Brug Udseende-knappen i sidehovedet (ved siden af sprog).",
-  "localeRecommendSearchHint": "Forslag nedenfor. Søg for hele sproglisten."
+  "localeRecommendSearchHint": "Forslag nedenfor. Søg for hele sproglisten.",
+  "desktopInstallStepsTitle": "Installer i tre trin",
+  "desktopInstallStep1": "Download pakken til dit system (Windows, macOS eller Linux).",
+  "desktopInstallStep2": "Åbn eller installer. Hvis OS advarer om ukendt udgiver, følg installationsvejledningen én gang.",
+  "desktopInstallStep3": "Start appen — dashboardet åbner på denne computer. Opdateringer installeres på samme måde.",
+  "privacyDesktopOfflineNote": "Skrivebordsapp: computerscan og personlige blokeringslister virker offline. Adressekontrol på websitet kræver internet på den sti.",
+  "extensionStoreOnlyNote": "Browserudvidelsen installeres kun fra Chrome Web Store eller Mac App Store. Ingen hele-repo-download og ingen offline selvstændig udvidelsespakke.",
+  "faqExtOfflineTitle": "Kan jeg installere browserudvidelsen som en offline hel pakke?",
+  "faqExtOfflineBody": "Nej. Udvidelsen installeres kun fra Chrome Web Store eller Mac App Store. Ingen hele-repo-download og ingen offline selvstændig udvidelsespakke — se Downloads.",
+  "optionalUpdateShowHint": "Vis opdateringstip"
 }

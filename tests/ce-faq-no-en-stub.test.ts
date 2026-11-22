@@ -15,6 +15,8 @@ const FAQ_KEYS = [
   "faqNoAvBody",
   "faqNoCrowdTitle",
   "faqNoCrowdBody",
+  "faqExtOfflineTitle",
+  "faqExtOfflineBody",
   "faqCommonTitle",
   "faqCommonIntro"
 ] as const;

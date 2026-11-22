@@ -473,5 +473,14 @@
   "langRegionSoutheastAsia": "Sudeste asiático",
   "langRegionSouthernAfrica": "África austral",
   "themeHeaderHint": "Use el botón Apariencia del encabezado (junto al idioma).",
-  "localeRecommendSearchHint": "Sugerencias abajo. Busque para ver la lista completa."
+  "localeRecommendSearchHint": "Sugerencias abajo. Busque para ver la lista completa.",
+  "desktopInstallStepsTitle": "Instalar en tres pasos",
+  "desktopInstallStep1": "Descargue el paquete de su sistema (Windows, macOS o Linux).",
+  "desktopInstallStep2": "Ábralo o instálelo. Si el SO avisa de editor desconocido, siga la guía de instalación una vez.",
+  "desktopInstallStep3": "Abra la app — el panel se abre en este ordenador. Las actualizaciones se instalan igual cuando lo pida.",
+  "privacyDesktopOfflineNote": "App de escritorio: el análisis de este ordenador y las listas personales de bloqueo funcionan sin conexión. Las comprobaciones de dirección en el sitio necesitan internet en ese camino.",
+  "extensionStoreOnlyNote": "La extensión del navegador solo se instala desde Chrome Web Store o Mac App Store. No hay descarga del repositorio completo ni paquete offline autónomo de la extensión.",
+  "faqExtOfflineTitle": "¿Puedo instalar la extensión del navegador como paquete offline completo?",
+  "faqExtOfflineBody": "No. La extensión solo se instala desde Chrome Web Store o Mac App Store. No hay descarga del repositorio completo ni paquete offline autónomo — vea Descargas.",
+  "optionalUpdateShowHint": "Mostrar aviso de actualización"
 }

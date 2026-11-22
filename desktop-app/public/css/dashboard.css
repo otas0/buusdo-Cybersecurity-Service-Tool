@@ -911,7 +911,8 @@ button:focus-visible, input:focus-visible, select:focus-visible {
   margin-top: 16px;
 }
 
-.ask-actions button:not(.text-button) {
+.ask-actions button:not(.text-button),
+.ask-actions a.halt-button {
   background: var(--halt);
   color: var(--bg);
   border: 0;
@@ -921,6 +922,48 @@ button:focus-visible, input:focus-visible, select:focus-visible {
   font-family: var(--mono);
   font-size: 12px;
   cursor: pointer;
+  text-decoration: none;
+  display: inline-block;
+}
+
+.ask-actions a.halt-button:hover,
+.ask-actions a.halt-button:focus-visible {
+  filter: brightness(1.08);
+  outline: 1px solid var(--halt);
+  outline-offset: 2px;
+}
+
+.force-update-after-download.is-emphasized {
+  color: var(--halt);
+  border-left: 3px solid var(--halt);
+  padding-left: 10px;
+  font-weight: 500;
+}
+
+.optional-update-banner {
+  display: none;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin: 0 0 12px;
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  background: var(--bg-elev);
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: 0.04em;
+}
+
+.optional-update-banner:not([hidden]) {
+  display: flex;
+}
+
+.optional-update-banner .optional-update-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
 }
 
 .proxy-guide {

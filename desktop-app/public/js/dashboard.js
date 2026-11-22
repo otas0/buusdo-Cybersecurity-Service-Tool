@@ -103,6 +103,20 @@ const els = {
   honestLimitsItemKill: document.getElementById("honestLimitsItemKill"),
   honestLimitsItemSystem: document.getElementById("honestLimitsItemSystem"),
   honestLimitsItemAv: document.getElementById("honestLimitsItemAv"),
+  honestLimitsItemOffline: document.getElementById("honestLimitsItemOffline"),
+  honestLimitsMinSupported: document.getElementById("honestLimitsMinSupported"),
+  forceUpdateGate: document.getElementById("forceUpdateGate"),
+  forceUpdateKicker: document.getElementById("forceUpdateKicker"),
+  forceUpdateTitle: document.getElementById("forceUpdateTitle"),
+  forceUpdateBody: document.getElementById("forceUpdateBody"),
+  forceUpdateAfterDownload: document.getElementById("forceUpdateAfterDownload"),
+  forceUpdateDownload: document.getElementById("forceUpdateDownload"),
+  forceUpdateSetupGuide: document.getElementById("forceUpdateSetupGuide"),
+  optionalUpdateBanner: document.getElementById("optionalUpdateBanner"),
+  optionalUpdateText: document.getElementById("optionalUpdateText"),
+  optionalUpdateDownload: document.getElementById("optionalUpdateDownload"),
+  optionalUpdateDismiss: document.getElementById("optionalUpdateDismiss"),
+  optionalUpdateShowHint: document.getElementById("optionalUpdateShowHint"),
   honestLimitsAck: document.getElementById("honestLimitsAck"),
   honestLimitsSkip: document.getElementById("honestLimitsSkip"),
   honestLimitsReset: document.getElementById("honestLimitsReset"),
@@ -396,6 +410,26 @@ function applyI18n() {
   if (els.honestLimitsItemKill) els.honestLimitsItemKill.textContent = t(lang, "honestLimitsItemKill");
   if (els.honestLimitsItemSystem) els.honestLimitsItemSystem.textContent = t(lang, "honestLimitsItemSystem");
   if (els.honestLimitsItemAv) els.honestLimitsItemAv.textContent = t(lang, "honestLimitsItemAv");
+  if (els.honestLimitsItemOffline) {
+    els.honestLimitsItemOffline.textContent = t(lang, "honestLimitsItemOffline");
+  }
+  if (els.forceUpdateKicker) els.forceUpdateKicker.textContent = t(lang, "forceUpdateKicker");
+  if (els.forceUpdateTitle) els.forceUpdateTitle.textContent = t(lang, "forceUpdateTitle");
+  if (els.forceUpdateDownload) {
+    els.forceUpdateDownload.textContent = t(lang, "forceUpdateDownload");
+  }
+  if (els.forceUpdateAfterDownload) {
+    els.forceUpdateAfterDownload.textContent = t(lang, "forceUpdateAfterDownload");
+  }
+  if (els.forceUpdateSetupGuide) {
+    els.forceUpdateSetupGuide.textContent = t(lang, "forceUpdateSetupGuide");
+  }
+  if (els.optionalUpdateDismiss) {
+    els.optionalUpdateDismiss.textContent = t(lang, "optionalUpdateDismiss");
+  }
+  if (els.optionalUpdateShowHint) {
+    els.optionalUpdateShowHint.textContent = t(lang, "optionalUpdateShowHint");
+  }
   if (els.honestLimitsAck) els.honestLimitsAck.textContent = t(lang, "honestLimitsAck");
   if (els.honestLimitsSkip) els.honestLimitsSkip.textContent = t(lang, "honestLimitsSkip");
   if (els.honestLimitsReset) els.honestLimitsReset.textContent = t(lang, "honestLimitsReset");
@@ -752,6 +786,9 @@ async function fetchState() {
   if (els.openAtLogin) {
     els.openAtLogin.checked = data.settings?.openAtLogin === true;
   }
+  optionalUpdateDismissedTag = data.settings?.optionalUpdateDismissedTag
+    ? String(data.settings.optionalUpdateDismissedTag)
+    : null;
   if (typeof data.platform === "string" && data.platform) {
     hostPlatform = data.platform;
   }
@@ -1529,47 +1566,367 @@ els.pathCheckWeb?.addEventListener("click", () => {
   document.getElementById("checkForm")?.scrollIntoView({ block: "center" });
 });
 
-els.updateCheckBtn?.addEventListener("click", async () => {
-  if (els.updateCheckStatus) els.updateCheckStatus.hidden = false;
-  if (els.updateCheckDownload) els.updateCheckDownload.hidden = true;
+/** Last known optional-update release tag (for dismiss persist). */
+let lastOptionalUpdateTag = "";
+/** Last optional-update payload (re-show after dismiss reset). */
+let lastOptionalUpdateRes = null;
+/** From settings.json — same tag → do not re-show optional banner. */
+let optionalUpdateDismissedTag = null;
+
+function hideOptionalUpdateBanner() {
+  if (els.optionalUpdateBanner) els.optionalUpdateBanner.hidden = true;
+  if (els.optionalUpdateDownload) els.optionalUpdateDownload.hidden = true;
+  syncOptionalUpdateShowHint();
+}
+
+/** Track force-gate open so we can restore focus when it closes. */
+let forceGateWasUp = false;
+
+/** When force gate is up, keep show-hint + update-check out of the tab order. */
+function syncForceGateChromeAria() {
+  const forceUp = Boolean(els.forceUpdateGate && !els.forceUpdateGate.hidden);
+  for (const el of [els.optionalUpdateShowHint, els.updateCheckBtn]) {
+    if (!el) continue;
+    if (forceUp) {
+      el.setAttribute("aria-hidden", "true");
+      el.setAttribute("tabindex", "-1");
+    } else {
+      el.removeAttribute("aria-hidden");
+      el.removeAttribute("tabindex");
+    }
+  }
+  // Closing the force gate: move focus back to update-check (not a leftover hidden control).
+  if (forceGateWasUp && !forceUp && els.updateCheckBtn) {
+    try {
+      els.updateCheckBtn.focus({ preventScroll: true });
+    } catch {
+      /* ignore */
+    }
+  }
+  forceGateWasUp = forceUp;
+}
+
+function syncOptionalUpdateShowHint() {
+  if (!els.optionalUpdateShowHint) return;
+  const forceUp = els.forceUpdateGate && !els.forceUpdateGate.hidden;
+  const tag = lastOptionalUpdateTag;
+  const dismissed =
+    Boolean(tag) &&
+    Boolean(optionalUpdateDismissedTag) &&
+    optionalUpdateDismissedTag === tag;
+  const bannerUp = els.optionalUpdateBanner && !els.optionalUpdateBanner.hidden;
+  els.optionalUpdateShowHint.hidden = Boolean(forceUp) || !dismissed || Boolean(bannerUp);
+  syncForceGateChromeAria();
+}
+
+/** offline / fail use distinct data-testid so E2E does not confuse them with status. */
+function setUpdateCheckStatus(kind, text) {
+  if (!els.updateCheckStatus) return;
+  els.updateCheckStatus.hidden = false;
+  els.updateCheckStatus.textContent = text;
+  const testId =
+    kind === "offline"
+      ? "update-check-offline"
+      : kind === "fail"
+        ? "update-check-fail"
+        : "update-check-status";
+  els.updateCheckStatus.setAttribute("data-testid", testId);
+  // Offline / status: polite; fail: assertive (AT should announce urgently).
+  els.updateCheckStatus.setAttribute(
+    "aria-live",
+    kind === "fail" ? "assertive" : "polite"
+  );
+}
+
+/** `download` attribute only for same-origin package URLs (cross-origin ignores it). */
+function applySameOriginDownloadAttr(anchor, url) {
+  if (!anchor) return;
   try {
-    const res = await fetch("/api/update-check").then((r) => r.json());
-    if (!res?.ok) {
-      if (els.updateCheckStatus) {
-        els.updateCheckStatus.textContent = t(lang, "updateCheckFail", { error: res?.error || "fail" });
-      }
-      return;
+    const resolved = new URL(String(url || ""), window.location.href);
+    if (resolved.origin === window.location.origin) {
+      const name =
+        resolved.pathname.split("/").filter(Boolean).pop() || "buusdo-desktop-update";
+      anchor.setAttribute("download", name);
+    } else {
+      anchor.removeAttribute("download");
     }
-    if (els.updateCheckStatus) {
-      const headNote = t(lang, "updateCheckNotarizedHead", {
-        status: String(res.notarizedHeadStatus ?? (res.notarizedHeadOk ? 200 : "?"))
+  } catch {
+    anchor.removeAttribute("download");
+  }
+}
+
+function showOptionalUpdateBanner(res) {
+  if (!els.optionalUpdateBanner) return;
+  const tag = String(res.releaseTag || "").trim();
+  lastOptionalUpdateTag = tag;
+  lastOptionalUpdateRes = res;
+  if (tag && optionalUpdateDismissedTag && optionalUpdateDismissedTag === tag) {
+    hideOptionalUpdateBanner();
+    syncOptionalUpdateShowHint();
+    return;
+  }
+  els.optionalUpdateBanner.hidden = false;
+  if (els.optionalUpdateText) {
+    els.optionalUpdateText.textContent = t(lang, "optionalUpdateBanner", {
+      version: res.version || "?",
+      tag: res.releaseTag || "?"
+    });
+  }
+  if (els.optionalUpdateDownload && res.downloadUrl) {
+    els.optionalUpdateDownload.hidden = false;
+    els.optionalUpdateDownload.href = res.downloadUrl;
+    applySameOriginDownloadAttr(els.optionalUpdateDownload, res.downloadUrl);
+    els.optionalUpdateDownload.textContent = res.preferNotarized
+      ? t(lang, "updateCheckDownload")
+      : t(lang, "updateCheckDownloadUnsigned");
+  }
+  syncOptionalUpdateShowHint();
+}
+
+function wireForceUpdateDownloadCta(res) {
+  const hasDownload = Boolean(res.downloadUrl);
+  const guideUrl = String(res.setupGuideUrl || "").trim();
+  if (els.forceUpdateDownload) {
+    if (hasDownload) {
+      els.forceUpdateDownload.href = res.downloadUrl;
+      els.forceUpdateDownload.hidden = false;
+      els.forceUpdateDownload.textContent = t(lang, "forceUpdateDownload");
+      applySameOriginDownloadAttr(els.forceUpdateDownload, res.downloadUrl);
+    } else if (guideUrl) {
+      els.forceUpdateDownload.href = guideUrl;
+      els.forceUpdateDownload.hidden = false;
+      els.forceUpdateDownload.textContent = t(lang, "forceUpdateSetupGuide");
+      els.forceUpdateDownload.removeAttribute("download");
+    } else {
+      els.forceUpdateDownload.hidden = true;
+      els.forceUpdateDownload.removeAttribute("download");
+    }
+  }
+  if (els.forceUpdateSetupGuide) {
+    if (hasDownload && guideUrl) {
+      els.forceUpdateSetupGuide.href = guideUrl;
+      els.forceUpdateSetupGuide.hidden = false;
+    } else {
+      els.forceUpdateSetupGuide.hidden = true;
+    }
+  }
+  if (els.forceUpdateAfterDownload) {
+    els.forceUpdateAfterDownload.hidden = !hasDownload;
+    if (hasDownload) {
+      els.forceUpdateAfterDownload.textContent = t(lang, "forceUpdateAfterDownload");
+    }
+  }
+}
+
+async function clearStaleOptionalUpdateDismiss(releaseTag) {
+  const tag = String(releaseTag || "").trim();
+  if (!tag || !optionalUpdateDismissedTag) return;
+  if (optionalUpdateDismissedTag === tag) return;
+  // New releaseTag — clear old dismiss so the banner can show again.
+  // Do not touch updateCheckStatus (offline / manual check copy stays).
+  optionalUpdateDismissedTag = null;
+  syncOptionalUpdateShowHint();
+  try {
+    await fetch("/api/settings", {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ optionalUpdateDismissedTag: "" })
+    });
+  } catch {
+    /* in-memory clear already applied */
+  }
+}
+
+function emphasizeForceAfterDownload() {
+  if (!els.forceUpdateAfterDownload || els.forceUpdateAfterDownload.hidden) return;
+  els.forceUpdateAfterDownload.classList.add("is-emphasized");
+  els.forceUpdateAfterDownload.setAttribute("aria-live", "assertive");
+  // Re-announce for AT by briefly clearing then restoring text.
+  const text = els.forceUpdateAfterDownload.textContent || t(lang, "forceUpdateAfterDownload");
+  els.forceUpdateAfterDownload.textContent = "";
+  requestAnimationFrame(() => {
+    if (els.forceUpdateAfterDownload) els.forceUpdateAfterDownload.textContent = text;
+  });
+}
+
+async function applyUpdateCheckResult(res, { fromBoot = false } = {}) {
+  if (!res?.ok) {
+    if (!fromBoot) {
+      setUpdateCheckStatus(
+        "fail",
+        t(lang, "updateCheckFail", { error: res?.error || "fail" })
+      );
+    }
+    return;
+  }
+
+  await clearStaleOptionalUpdateDismiss(res.releaseTag);
+
+  if (res.forceUpdate && els.forceUpdateGate) {
+    els.forceUpdateGate.hidden = false;
+    hideOptionalUpdateBanner();
+    syncForceGateChromeAria();
+    if (els.forceUpdateBody) {
+      els.forceUpdateBody.textContent = t(lang, "forceUpdateBody", {
+        version: res.version || "?",
+        min: res.minSupportedVersion || "?",
+        tag: res.releaseTag || "?"
       });
-      const base = res.preferNotarized
-        ? t(lang, "updateCheckNotarizedReady", {
-            version: res.version || "?",
-            tag: res.releaseTag || "?"
-          })
-        : t(lang, "updateCheckCurrent", {
-            version: res.version || "?",
-            tag: res.releaseTag || "?"
-          });
-      els.updateCheckStatus.textContent = `${base} ${headNote}`;
     }
-    if (els.updateCheckDownload && res.downloadUrl) {
+    wireForceUpdateDownloadCta(res);
+    if (els.forceUpdateAfterDownload) {
+      els.forceUpdateAfterDownload.classList.remove("is-emphasized");
+      els.forceUpdateAfterDownload.setAttribute("aria-live", "polite");
+    }
+    // Block scan / machine ask while forced.
+    if (els.honestLimitsGate) els.honestLimitsGate.hidden = true;
+    return;
+  }
+
+  if (els.forceUpdateGate) els.forceUpdateGate.hidden = true;
+  syncForceGateChromeAria();
+
+  if (res.updateAvailable) {
+    // Non-blocking banner — never a modal.
+    showOptionalUpdateBanner(res);
+    if (!fromBoot) {
+      setUpdateCheckStatus(
+        "status",
+        t(lang, "updateCheckAvailable", {
+          version: res.version || "?",
+          tag: res.releaseTag || "?"
+        })
+      );
+    }
+    if (!fromBoot && els.updateCheckDownload && res.downloadUrl) {
       els.updateCheckDownload.hidden = false;
       els.updateCheckDownload.href = res.downloadUrl;
       els.updateCheckDownload.textContent = res.preferNotarized
         ? t(lang, "updateCheckDownload")
         : t(lang, "updateCheckDownloadUnsigned");
     }
-  } catch (err) {
-    if (els.updateCheckStatus) {
-      els.updateCheckStatus.textContent = t(lang, "updateCheckFail", {
-        error: err instanceof Error ? err.message : "fail"
-      });
+    return;
+  }
+
+  hideOptionalUpdateBanner();
+
+  if (!fromBoot) {
+    const headNote = t(lang, "updateCheckNotarizedHead", {
+      status: String(res.notarizedHeadStatus ?? (res.notarizedHeadOk ? 200 : "?"))
+    });
+    const base = res.preferNotarized
+      ? t(lang, "updateCheckNotarizedReady", {
+          version: res.version || "?",
+          tag: res.releaseTag || "?"
+        })
+      : t(lang, "updateCheckCurrent", {
+          version: res.version || "?",
+          tag: res.releaseTag || "?"
+        });
+    setUpdateCheckStatus("status", `${base} ${headNote}`);
+  }
+  if (!fromBoot && els.updateCheckDownload && res.downloadUrl) {
+    els.updateCheckDownload.hidden = false;
+    els.updateCheckDownload.href = res.downloadUrl;
+    els.updateCheckDownload.textContent = res.preferNotarized
+      ? t(lang, "updateCheckDownload")
+      : t(lang, "updateCheckDownloadUnsigned");
+  }
+}
+
+els.optionalUpdateDismiss?.addEventListener("click", async () => {
+  hideOptionalUpdateBanner();
+  const tag = lastOptionalUpdateTag;
+  if (!tag) return;
+  optionalUpdateDismissedTag = tag;
+  syncOptionalUpdateShowHint();
+  try {
+    await fetch("/api/settings", {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ optionalUpdateDismissedTag: tag })
+    });
+  } catch {
+    /* keep in-memory dismiss for this session */
+  }
+});
+
+els.optionalUpdateShowHint?.addEventListener("click", async () => {
+  optionalUpdateDismissedTag = null;
+  syncOptionalUpdateShowHint();
+  try {
+    await fetch("/api/settings", {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ optionalUpdateDismissedTag: "" })
+    });
+  } catch {
+    /* in-memory clear already applied */
+  }
+  if (lastOptionalUpdateRes?.updateAvailable && !lastOptionalUpdateRes.forceUpdate) {
+    showOptionalUpdateBanner(lastOptionalUpdateRes);
+  } else {
+    try {
+      const res = await fetch("/api/update-check").then((r) => r.json());
+      await applyUpdateCheckResult(res, { fromBoot: false });
+    } catch {
+      /* leave hint button; offline path must not clear dismiss again */
     }
   }
 });
+
+els.forceUpdateDownload?.addEventListener("click", () => {
+  // Highlight post-download steps after the user starts the download (or opens setup guide as Halt CTA).
+  if (els.forceUpdateAfterDownload && !els.forceUpdateAfterDownload.hidden) {
+    emphasizeForceAfterDownload();
+  }
+});
+
+els.updateCheckBtn?.addEventListener("click", async () => {
+  if (els.updateCheckStatus) els.updateCheckStatus.hidden = false;
+  if (els.updateCheckDownload) els.updateCheckDownload.hidden = true;
+  try {
+    const res = await fetch("/api/update-check").then((r) => r.json());
+    await applyUpdateCheckResult(res, { fromBoot: false });
+  } catch (err) {
+    // Fail path must not clear optionalUpdateDismissedTag.
+    setUpdateCheckStatus(
+      "fail",
+      t(lang, "updateCheckFail", {
+        error: err instanceof Error ? err.message : "fail"
+      })
+    );
+  }
+});
+
+/** Soft auto-check on boot — force gate only when minSupportedVersion says so. */
+void (async () => {
+  try {
+    const res = await fetch("/api/update-check").then((r) => r.json());
+    await applyUpdateCheckResult(res, { fromBoot: true });
+  } catch {
+    /* Offline — keep dismiss state; do not clear dismiss; quiet status only if no update UI. */
+    const forceUp = els.forceUpdateGate && !els.forceUpdateGate.hidden;
+    const bannerUp = els.optionalUpdateBanner && !els.optionalUpdateBanner.hidden;
+    if (!forceUp && !bannerUp) {
+      setUpdateCheckStatus("offline", t(lang, "updateCheckOffline"));
+    }
+  }
+})();
+
+/** Optional: one-line MIN_SUPPORTED.txt (or json floor) beside honest-limits gate. */
+void (async () => {
+  if (!els.honestLimitsMinSupported) return;
+  try {
+    const res = await fetch("/api/min-supported").then((r) => r.json());
+    if (res?.ok && res.line) {
+      els.honestLimitsMinSupported.hidden = false;
+      els.honestLimitsMinSupported.textContent = res.line;
+    }
+  } catch {
+    /* optional — gate still works without the floor line */
+  }
+})();
 
 els.proxyMacSetBtn?.addEventListener("click", async () => {
   if (els.proxyMacSetStatus) {

@@ -472,5 +472,13 @@
   "langRegionPacific": "Pacific",
   "langRegionSoutheastAsia": "Southeast Asia",
   "langRegionSouthernAfrica": "eNingizimu Afrika",
-  "themeHeaderHint": "Use the one Appearance button in the header (next to language)."
+  "themeHeaderHint": "Use the one Appearance button in the header (next to language).",
+  "desktopInstallStepsTitle": "Install in three steps",
+  "desktopInstallStep1": "Download the package for your system (Windows, macOS, or Linux).",
+  "desktopInstallStep2": "Open or install it. If the OS warns that the publisher is unknown, follow the setup guide once.",
+  "desktopInstallStep3": "Launch the app — the dashboard opens on this computer. Updates install the same way when the app asks.",
+  "privacyDesktopOfflineNote": "Desktop app: computer scan and personal block lists work offline. Live website address checks need the internet when you use that path.",
+  "extensionStoreOnlyNote": "Sengehto sesiphequluli sifakwa kuphela ku-Chrome Web Store noma ku-Mac App Store. Akukho kukhandla kwenqolobane yonke futsi akukho liphakheji lelingaxhunyiwe lelizimele.",
+  "faqExtOfflineTitle": "Ngingakwazi yini kufaka lesandiso selibhrawuza njengephakethe leliphelele le-offline?",
+  "faqExtOfflineBody": "Cha. Lesandiso lifakwa kuphela kusuka ku-Chrome Web Store noma i-Mac App Store. Akukho kulanda i-repo yonke futhi akukho liphakethe lesandiso lelizimele le-offline — bona Downloads."
 }

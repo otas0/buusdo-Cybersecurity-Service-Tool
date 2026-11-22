@@ -1,7 +1,8 @@
 #!/usr/bin/env node
 /**
  * Overlay website pack chrome onto desktop STRINGS for ja / zh-Hant / zh-Hans,
- * Nordic packs (sv / da / fi / nb), and Europe popup locales (de / fr / es / it / nl).
+ * pt-BR (from pt-PT base + pack), Nordic packs (sv / da / fi / nb), and Europe
+ * popup locales (de / fr / es / it / nl).
  * Preserves existing bag keys (machine*, etc.) and only overwrites MAP keys from packs.
  *
  *   node scripts/sync-desktop-i18n-from-packs.mjs
@@ -75,7 +76,9 @@ const MAP = {
   proxyGuideBrowser: "proxyGuideBrowser",
   proxyGuideCurl: "proxyGuideCurl",
   proxyGuideAfterBlock: "proxyGuideAfterBlock",
-  proxyBody: "proxyGuideLead"
+  proxyBody: "proxyGuideLead",
+  // Desktop update tip reset — packs keep overlay locales from drifting to EN.
+  optionalUpdateShowHint: "optionalUpdateShowHint"
 };
 
 // Desktop-only ja strings (website / lists UI without pack twins). Applied after MAP.
@@ -86,11 +89,19 @@ const markerEnd = "/* __DESKTOP_PACK_OVERLAY_END__ */";
 const NORDIC = ["sv", "da", "fi", "nb"];
 const EUROPE_DESKTOP = ["de", "fr", "es", "it", "nl"];
 const OVERLAY_LOCALES = [...NORDIC, ...EUROPE_DESKTOP];
+/** Managed inside the overlay block (pt-PT bag base + pt-BR pack MAP). */
+const PT_BR = "pt-BR";
 
 function parseEnBag(src) {
   const enMatch = src.match(/export const STRINGS = \{\s*en:\s*(\{[\s\S]*?\n  \}),\s*\n  "pt-PT":/);
   if (!enMatch) throw new Error("could not parse STRINGS.en");
   return Function(`"use strict"; return (${enMatch[1]});`)();
+}
+
+function parsePtPtBag(src) {
+  const m = src.match(/"pt-PT":\s*(\{[\s\S]*?\n  \})\s*\n\};/);
+  if (!m) throw new Error("could not parse STRINGS[pt-PT]");
+  return Function(`"use strict"; return (${m[1]});`)();
 }
 
 function extractBag(src, id) {
@@ -131,6 +142,7 @@ function buildBlock(bags) {
     assignLiteral("zh-Hans", bags["zh-Hans"]),
     assignLiteral("zh-Hant", bags["zh-Hant"]),
     assignLiteral("ja", bags.ja),
+    assignLiteral(PT_BR, bags[PT_BR]),
     ...OVERLAY_LOCALES.map((id) => assignLiteral(id, bags[id])),
     markerEnd
   ].join("\n");
@@ -158,6 +170,7 @@ const packs = {
   "zh-Hans": loadPack("zh-Hans"),
   "zh-Hant": loadPack("zh-Hant"),
   ja: loadPack("ja"),
+  [PT_BR]: loadPack(PT_BR),
   ...Object.fromEntries(OVERLAY_LOCALES.map((id) => [id, loadPack(id)]))
 };
 for (const [id, pack] of Object.entries(packs)) {
@@ -167,6 +180,8 @@ for (const [id, pack] of Object.entries(packs)) {
   }
 }
 
+const ptPtBag = parsePtPtBag(src);
+
 const bags = {
   "zh-Hans": applyOverlay(priorZhHans || enBag, packs["zh-Hans"]),
   // zh-Hant: start from zh-Hans bag (CJK machine*) then overlay Hant pack chrome
@@ -175,6 +190,11 @@ const bags = {
     packs["zh-Hant"]
   ),
   ja: applyOverlay({ ...enBag, ...(extractBag(src, "ja") || {}) }, packs.ja),
+  // pt-BR: Portugal bag base + prior pt-BR desktop-only keys + BR pack chrome
+  [PT_BR]: applyOverlay(
+    { ...ptPtBag, ...(extractBag(src, PT_BR) || {}) },
+    packs[PT_BR]
+  ),
   ...Object.fromEntries(
     OVERLAY_LOCALES.map((id) => [
       id,
@@ -201,11 +221,27 @@ if (src.includes(markerStart) && src.includes(markerEnd)) {
   next = next.replace(/\nSTRINGS\["zh-Hans"\] = \{[\s\S]*?\n\};\n/, "\n");
   next = next.replace(/\nSTRINGS\["zh-Hant"\] = \{[\s\S]*?\n\};\n/, "\n");
   next = next.replace(/\nSTRINGS\["ja"\] = \{[\s\S]*?\n\};\n/, "\n");
+  next = next.replace(/\nSTRINGS\["pt-BR"\] = \{[\s\S]*?\n\};\n/, "\n");
   for (const id of OVERLAY_LOCALES) {
     next = next.replace(new RegExp(`\\nSTRINGS\\[${JSON.stringify(id)}\\] = \\{[\\s\\S]*?\\n\\};\\n`), "\n");
   }
   next = next.replace("\nexport function t(", `\n${block}\n\nexport function t(`);
 }
+
+/** Desktop-only force/update keys preserved in overlay bags (not all in MAP). */
+const FORCE_UPDATE_KEYS = [
+  "forceUpdateKicker",
+  "forceUpdateTitle",
+  "forceUpdateBody",
+  "forceUpdateDownload",
+  "forceUpdateAfterDownload",
+  "forceUpdateSetupGuide",
+  "optionalUpdateBanner",
+  "optionalUpdateDismiss",
+  "optionalUpdateShowHint",
+  "updateCheckOffline",
+  "honestLimitsItemOffline"
+];
 
 if (checkOnly) {
   const zhHansAssigns = src.match(/STRINGS\["zh-Hans"\]\s*=/g) || [];
@@ -219,11 +255,22 @@ if (checkOnly) {
     console.error("[sync-desktop-i18n] drift — run: node scripts/sync-desktop-i18n-from-packs.mjs");
     process.exit(1);
   }
-  console.info("[sync-desktop-i18n] OK");
+  const forceLocales = [PT_BR, "ja", "zh-Hant", ...OVERLAY_LOCALES];
+  for (const locale of forceLocales) {
+    for (const key of FORCE_UPDATE_KEYS) {
+      if (!bags[locale][key]?.trim()) {
+        console.error(`[sync-desktop-i18n] ${locale} missing force/update key ${key}`);
+        process.exit(1);
+      }
+    }
+  }
+  console.info(
+    `[sync-desktop-i18n] OK (force keys: ${forceLocales.join(",")})`
+  );
   process.exit(0);
 }
 
 fs.writeFileSync(i18nPath, next);
 console.log(
-  `Synced desktop STRINGS ja/zh-Hant/zh-Hans + ${OVERLAY_LOCALES.join(",")} (zh-Hans machineScope zh? ${/[\u4e00-\u9fff]/.test(bags["zh-Hans"].machineScope || "")})`
+  `Synced desktop STRINGS ja/zh-Hant/zh-Hans/pt-BR + ${OVERLAY_LOCALES.join(",")} (zh-Hans machineScope zh? ${/[\u4e00-\u9fff]/.test(bags["zh-Hans"].machineScope || "")})`
 );

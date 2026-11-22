@@ -26,6 +26,9 @@ jobs:
       tag: ${{ steps.tag.outputs.tag }}
       version: ${{ steps.tag.outputs.version }}
     steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - id: tag
         run: |
           if [ "${{ github.event_name }}" = "push" ]; then
@@ -38,6 +41,19 @@ jobs:
           echo "tag=$TAG" >> "$GITHUB_OUTPUT"
           echo "version=$VER" >> "$GITHUB_OUTPUT"
           echo "Publishing $TAG (version $VER)"
+          RELEASE_TAG="$TAG" node scripts/assert-desktop-min-supported.mjs
+          # If minSupportedVersion rose vs prior desktop-v* tag, bump reason must change.
+          PREV_REF="$(git describe --tags --match 'desktop-v*' --abbrev=0 "${TAG}^" 2>/dev/null || true)"
+          if [ -z "$PREV_REF" ]; then
+            PREV_REF="$(git tag -l 'desktop-v*' --sort=-v:refname | grep -v "^${TAG}$" | head -1 || true)"
+          fi
+          if [ -n "$PREV_REF" ]; then
+            echo "Comparing minSupportedBumpReason vs $PREV_REF"
+            PREV_REF="$PREV_REF" node scripts/assert-desktop-min-bump-reason-diff.mjs
+            PREV_REF="$PREV_REF" node scripts/inject-desktop-min-bump-release-note.mjs
+          else
+            echo "No prior desktop-v* tag — skip bump-reason diff / RELEASE inject"
+          fi
 
   linux:
     needs: resolve-tag
@@ -94,6 +110,8 @@ jobs:
         run: |
           cd desktop-app
           npm run pack:windows-stage
+          REQUIRE_NSH=1 node ../scripts/assert-min-supported-nsh.mjs
+          echo "min-supported.nsh matches desktop-downloads.json before makensis"
           choco install nsis -y --no-progress
           export PATH="/c/Program Files (x86)/NSIS:/c/Program Files/NSIS:$PATH"
           mkdir -p dist/windows

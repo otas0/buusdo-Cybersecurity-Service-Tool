@@ -473,5 +473,14 @@
   "langRegionSoutheastAsia": "Asie du Sud-Est",
   "langRegionSouthernAfrica": "Afrique australe",
   "themeHeaderHint": "Utilisez le bouton Apparence dans l’en-tête (à côté de la langue).",
-  "localeRecommendSearchHint": "Suggestions ci-dessous. Recherchez pour la liste complète."
+  "localeRecommendSearchHint": "Suggestions ci-dessous. Recherchez pour la liste complète.",
+  "desktopInstallStepsTitle": "Installer en trois étapes",
+  "desktopInstallStep1": "Téléchargez le paquet pour votre système (Windows, macOS ou Linux).",
+  "desktopInstallStep2": "Ouvrez ou installez. Si le système signale un éditeur inconnu, suivez une fois le guide d’installation.",
+  "desktopInstallStep3": "Lancez l’app — le tableau de bord s’ouvre sur cet ordinateur. Les mises à jour s’installent de la même façon.",
+  "privacyDesktopOfflineNote": "App bureau : l’analyse de cet ordinateur et les listes de blocage personnelles fonctionnent hors ligne. Les vérifications d’adresse sur le site nécessitent Internet sur ce chemin.",
+  "extensionStoreOnlyNote": "L’extension navigateur s’installe uniquement depuis le Chrome Web Store ou le Mac App Store. Pas de téléchargement du dépôt entier ni de paquet d’extension autonome hors ligne.",
+  "faqExtOfflineTitle": "Puis-je installer l’extension navigateur comme paquet hors ligne complet ?",
+  "faqExtOfflineBody": "Non. L’extension s’installe uniquement depuis le Chrome Web Store ou le Mac App Store. Pas de téléchargement du dépôt entier ni de paquet autonome hors ligne — voir Downloads.",
+  "optionalUpdateShowHint": "Afficher l’avis de mise à jour"
 }

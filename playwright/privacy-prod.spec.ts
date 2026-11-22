@@ -141,7 +141,7 @@ test.describe("production privacy pages", () => {
   });
 
   // Soft-live: locale Privacy FAQ extension-offline question stays visible when origin is up.
-  for (const locale of ["ja", "de", "fr", "zh-Hans"] as const) {
+  for (const locale of ["ja", "de", "fr", "zh-Hans", "pt-BR", "zh-Hant"] as const) {
     test(`/${locale}/privacy soft-live faqExtOffline visible`, async ({ page }) => {
       await page.goto(`${base}/${locale}/privacy`, {
         waitUntil: "domcontentloaded",
@@ -158,6 +158,17 @@ test.describe("production privacy pages", () => {
         console.warn(`[soft-live] privacy-faq-ext-offline empty on ${locale}`);
       } else {
         console.info(`[soft-live] ${locale} faqExtOffline ok (${text.slice(0, 72)}…)`);
+      }
+      const deeplink = faq.locator('a[href*="#downloads-extension"]');
+      if ((await deeplink.count()) === 0) {
+        console.warn(`[soft-live] ${locale} FAQ missing #downloads-extension href (soft)`);
+      } else {
+        const href = (await deeplink.first().getAttribute("href")) || "";
+        if (!href.includes("#downloads-extension")) {
+          console.warn(`[soft-live] ${locale} FAQ href soft mismatch: ${href}`);
+        } else {
+          console.info(`[soft-live] ${locale} FAQ → #downloads-extension ok`);
+        }
       }
     });
   }

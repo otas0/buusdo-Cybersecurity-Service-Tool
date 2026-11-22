@@ -45,7 +45,9 @@ test("EN / pt-PT / zh-Hans privacy message bodies never mention /survey/", () =>
       t.faqCommonIntro,
       t.faqNoWipeBody,
       t.faqNoAvBody,
-      t.faqNoCrowdBody
+      t.faqNoCrowdBody,
+      t.faqExtOfflineTitle,
+      t.faqExtOfflineBody
     ].join("\n");
     assert.doesNotMatch(blob, SURVEY, `${locale} privacy copy`);
   }

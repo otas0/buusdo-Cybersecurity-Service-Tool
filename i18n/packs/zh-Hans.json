@@ -481,5 +481,8 @@
   "desktopInstallStep2": "打开或安装。若系统提示未知发布者，请按安装指南操作一次。",
   "desktopInstallStep3": "启动应用 — 仪表板在本机打开。需要更新时按同样方式安装。",
   "privacyDesktopOfflineNote": "桌面应用：本机扫描与个人拦截列表可离线使用。网站地址检查在走该路径时需要联网。",
-  "extensionStoreOnlyNote": "浏览器扩展仅通过 Chrome 网上应用店或 Mac App Store 安装。不提供整库下载，也没有离线自包含扩展包。"
+  "extensionStoreOnlyNote": "浏览器扩展仅通过 Chrome 网上应用店或 Mac App Store 安装。不提供整库下载，也没有离线自包含扩展包。",
+  "faqExtOfflineTitle": "浏览器扩展能否作为离线整包安装？",
+  "faqExtOfflineBody": "不能。扩展仅通过 Chrome 网上应用店或 Mac App Store 安装。不提供整库下载，也没有离线自包含扩展包 — 见下载页。",
+  "optionalUpdateShowHint": "显示更新提示"
 }

@@ -111,6 +111,15 @@ export function PrivacyPanel({
             <strong>{t.faqNoCrowdTitle}</strong>
             <span>{t.faqNoCrowdBody}</span>
           </li>
+          <li data-testid="privacy-faq-ext-offline">
+            <strong>{t.faqExtOfflineTitle}</strong>
+            <span>
+              {t.faqExtOfflineBody}{" "}
+              <a className="text-button" href={`/${locale}/downloads#downloads-extension`}>
+                {t.navDownloads}
+              </a>
+            </span>
+          </li>
         </ul>
       </section>
 

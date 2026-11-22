@@ -74,4 +74,21 @@ test("DESKTOP_BAGS includes Nordic + full Europe popup set", () => {
   for (const id of OVERLAY) {
     assert.match(block, new RegExp(`["']${id}["']`), `DESKTOP_BAGS missing ${id}`);
   }
+  assert.match(block, /["']pt-BR["']/, "DESKTOP_BAGS missing pt-BR");
+});
+
+test("pt-BR desktop bag has force/offline update keys", () => {
+  const bag = extractBag("pt-BR");
+  assert.ok(bag, "missing STRINGS[pt-BR]");
+  for (const key of [
+    "honestLimitsItemOffline",
+    "forceUpdateBody",
+    "forceUpdateAfterDownload",
+    "forceUpdateSetupGuide",
+    "optionalUpdateBanner",
+    "optionalUpdateShowHint",
+    "updateCheckOffline"
+  ] as const) {
+    assert.ok(bag![key]?.trim(), `pt-BR missing ${key}`);
+  }
 });

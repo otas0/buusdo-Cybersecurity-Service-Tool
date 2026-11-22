@@ -36,15 +36,22 @@ paths:
                         type: string
                         format: date-time
                         nullable: true
+                      optionalUpdateDismissedTag:
+                        type: string
+                        nullable: true
+                        description: Last releaseTag for which the optional update banner was dismissed
 ```
 
 ## `PUT /api/settings`
 
-Body (JSON):
+Body (JSON) — one of:
 
 | Field | Type | Required | Notes |
 |-------|------|----------|-------|
-| `openAtLogin` | boolean | yes | Writes/clears the OS login item. |
+| `openAtLogin` | boolean | yes* | Writes/clears the OS login item. |
+| `optionalUpdateDismissedTag` | string | yes* | Persist optional-banner dismiss for this `releaseTag` (same tag → no re-show). Omit `openAtLogin` for this path. |
+
+\* Either `openAtLogin` **or** `optionalUpdateDismissedTag` (not both required together).
 
 ### Response `200`
 
@@ -97,6 +104,8 @@ paths:
 ```
 
 `honestLimitsAckAt` / `honestLimitsSkippedAt` are **read-only** on PUT (set only via `/api/honest-limits/*`). PUT must echo the prior stamps unchanged — covered by `smoke:desktop-first-open` and `tests/desktop-honest-limits-diagnostics.test.ts`. Silent install (`install.js`) only toggles `openAtLogin` via merge and must not clear these stamps.
+
+`optionalUpdateDismissedTag` is writable via PUT without `openAtLogin` (empty string clears). Covered by `npm run smoke:desktop-optional-update-dismiss`. A newer `releaseTag` from `/api/update-check` clears a stale dismiss in the dashboard.
 
 ## `/api/honest-limits/*` (first-open gate)
 

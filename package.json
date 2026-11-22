@@ -69,7 +69,7 @@
     "sync:extension-sea-i18n:check": "node scripts/sync-extension-sea-i18n-from-packs.mjs --check",
     "test:playwright:zh-alias": "PLAYWRIGHT_SKIP_WEBSERVER=1 PLAYWRIGHT_BASE_URL=${PLAYWRIGHT_BASE_URL:-https://buusdocst.mtsu.workers.dev} playwright test playwright/locale-zh-alias.spec.ts",
     "test:playwright:zh-hans-evidence": "PLAYWRIGHT_SKIP_WEBSERVER=1 playwright test playwright/risk-result-zh-hans-evidence.spec.ts",
-    "typecheck": "tsc --noEmit && npm run assert:pack-index && npm run assert:formal-name && npm run sync:extension-tokens:check && npm run assert:china-wordmark-parity && npm run assert:brand-web-alpha && npm run assert:safari-largeicon && npm run assert:public-promotion && npm run assert:promo-cachebust && npm run assert:promo-i18n && npm run assert:settings-a4-print-hint && npm run assert:promo-poster-pdf-floor:if-present && node scripts/assert-desktop-download-messages.mjs && node scripts/assert-desktop-min-supported.mjs && node scripts/assert-desktop-min-bump-reason-diff.mjs && node scripts/assert-desktop-setup-guide-locale-links.mjs && node scripts/assert-listing-honest-limits.mjs && node scripts/assert-notarize-release-tag-default.mjs && npm run verify:desktop-downloads:fixture && npm run verify:desktop-downloads:fixture:notarized-404 && npm run sync:home-continue-stamp:check && npm run assert:china-hint-contrast && npm run sync:toast-i18n:check && npm run sync:desktop-i18n:check && npm run sync:extension-sea-i18n:check",
+    "typecheck": "tsc --noEmit && npm run assert:pack-index && npm run assert:formal-name && npm run sync:extension-tokens:check && npm run assert:china-wordmark-parity && npm run assert:brand-web-alpha && npm run assert:safari-largeicon && npm run assert:public-promotion && npm run assert:promo-cachebust && npm run assert:promo-i18n && npm run assert:settings-a4-print-hint && npm run assert:promo-poster-pdf-floor:if-present && node scripts/assert-desktop-download-messages.mjs && node scripts/assert-desktop-min-supported.mjs && node scripts/assert-desktop-min-bump-reason-diff.mjs && node scripts/inject-desktop-min-bump-release-note.mjs --check && node scripts/assert-desktop-setup-guide-locale-links.mjs && node scripts/assert-listing-honest-limits.mjs && node scripts/assert-notarize-release-tag-default.mjs && npm run verify:desktop-downloads:fixture && npm run verify:desktop-downloads:fixture:notarized-404 && npm run sync:home-continue-stamp:check && npm run assert:china-hint-contrast && npm run sync:toast-i18n:check && npm run sync:desktop-i18n:check && npm run sync:extension-sea-i18n:check",
     "test": "tsx --test tests/*.test.ts",
     "evaluate": "tsx evaluation/evaluation-runner.ts",
     "evaluate:diff": "tsx scripts/diff-evaluation-results.ts",
@@ -148,7 +148,8 @@
     "assert:desktop-about-frame": "node scripts/assert-desktop-about-frame.mjs",
     "sync:latest-deploy-run-url": "node scripts/sync-latest-deploy-run-url.mjs",
     "test:playwright:locale-chrome-a11y": "PLAYWRIGHT_SKIP_WEBSERVER=1 playwright test playwright/locale-recommend-aria-describedby.spec.ts playwright/extension-popup-zh-hant-live.spec.ts playwright/home-downloads-settings-deeplink.spec.ts playwright/home-downloads-cta-narrow.spec.ts",
-    "test:playwright:downloads-extension-narrow": "PLAYWRIGHT_SKIP_WEBSERVER=1 playwright test playwright/downloads-extension-narrow.spec.ts"
+    "test:playwright:downloads-extension-narrow": "PLAYWRIGHT_SKIP_WEBSERVER=1 playwright test playwright/downloads-extension-narrow.spec.ts",
+    "assert:min-supported-nsh": "node scripts/assert-min-supported-nsh.mjs"
   },
   "dependencies": {
     "next": "16.3.4",

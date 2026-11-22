@@ -473,5 +473,13 @@
   "langRegionSoutheastAsia": "Southeast Asia",
   "langRegionSouthernAfrica": "Southern Africa",
   "themeHeaderHint": "Użyj jednego przycisku Wygląd w nagłówku (obok języka).",
-  "localeRecommendSearchHint": "Sugestie poniżej. Szukaj, by zobaczyć pełną listę."
+  "localeRecommendSearchHint": "Sugestie poniżej. Szukaj, by zobaczyć pełną listę.",
+  "desktopInstallStepsTitle": "Install in three steps",
+  "desktopInstallStep1": "Download the package for your system (Windows, macOS, or Linux).",
+  "desktopInstallStep2": "Open or install it. If the OS warns that the publisher is unknown, follow the setup guide once.",
+  "desktopInstallStep3": "Launch the app — the dashboard opens on this computer. Updates install the same way when the app asks.",
+  "privacyDesktopOfflineNote": "Desktop app: computer scan and personal block lists work offline. Live website address checks need the internet when you use that path.",
+  "extensionStoreOnlyNote": "Rozszerzenie przeglądarki instaluje się tylko z Chrome Web Store lub Mac App Store. Nie ma pobierania całego repozytorium ani samodzielnego pakietu offline.",
+  "faqExtOfflineTitle": "Czy mogę zainstalować rozszerzenie przeglądarki jako kompletny pakiet offline?",
+  "faqExtOfflineBody": "Nie. Rozszerzenie instaluje się tylko z Chrome Web Store lub Mac App Store. Nie ma pobierania całego repozytorium ani samodzielnego pakietu offline — zobacz Downloads."
 }

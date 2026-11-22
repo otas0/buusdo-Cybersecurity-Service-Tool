@@ -28,13 +28,15 @@ function readSettings() {
     return {
       openAtLogin: data?.openAtLogin === true,
       honestLimitsAckAt: isoOrNull(data?.honestLimitsAckAt),
-      honestLimitsSkippedAt: isoOrNull(data?.honestLimitsSkippedAt)
+      honestLimitsSkippedAt: isoOrNull(data?.honestLimitsSkippedAt),
+      optionalUpdateDismissedTag: isoOrNull(data?.optionalUpdateDismissedTag)
     };
   } catch {
     return {
       openAtLogin: false,
       honestLimitsAckAt: null,
-      honestLimitsSkippedAt: null
+      honestLimitsSkippedAt: null,
+      optionalUpdateDismissedTag: null
     };
   }
 }
@@ -51,11 +53,20 @@ function writeSettings(patch) {
     honestLimitsSkippedAt:
       patch.honestLimitsSkippedAt === undefined
         ? prev.honestLimitsSkippedAt
-        : isoOrNull(patch.honestLimitsSkippedAt)
+        : isoOrNull(patch.honestLimitsSkippedAt),
+    optionalUpdateDismissedTag:
+      patch.optionalUpdateDismissedTag === undefined
+        ? prev.optionalUpdateDismissedTag
+        : isoOrNull(patch.optionalUpdateDismissedTag)
   };
   fs.mkdirSync(path.dirname(settingsPath()), { recursive: true });
   fs.writeFileSync(settingsPath(), `${JSON.stringify(merged, null, 2)}\n`, "utf8");
   return merged;
+}
+
+/** Persist optional-update banner dismiss for this release tag (same tag → no re-show). */
+function setOptionalUpdateDismissedTag(tag) {
+  return writeSettings({ optionalUpdateDismissedTag: String(tag || "").trim() || null });
 }
 
 /** Env bypass for CI/smokes — never set in production installers. */
@@ -210,6 +221,7 @@ module.exports = {
   setOpenAtLogin,
   readSettings,
   writeSettings,
+  setOptionalUpdateDismissedTag,
   settingsPath,
   applyOpenAtLogin,
   honestLimitsResolved,

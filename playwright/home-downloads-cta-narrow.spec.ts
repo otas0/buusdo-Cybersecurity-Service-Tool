@@ -32,5 +32,17 @@ test("DownloadsPanel hosts desktop + extension sections", () => {
   const panel = readFileSync("components/DownloadsPanel.tsx", "utf8");
   expect(panel).toMatch(/data-testid="downloads-page"/);
   expect(panel).toMatch(/data-testid="settings-desktop-downloads"/);
+  expect(panel).toMatch(/data-testid="downloads-desktop-install-steps"/);
   expect(panel).toMatch(/data-testid="downloads-extension"/);
+  expect(panel).toMatch(/id="downloads-extension"/);
+  expect(panel).toMatch(/data-testid="downloads-extension-store-only"/);
+  expect(panel).toMatch(/desktopInstallStep1/);
+  expect(panel).toMatch(/extensionStoreOnlyNote/);
+});
+
+test("AppShell scrolls #downloads-extension when opening downloads", () => {
+  const shell = readFileSync("components/AppShell.tsx", "utf8");
+  expect(shell).toMatch(/#downloads-extension/);
+  expect(shell).toMatch(/scrollIntoView/);
+  expect(shell).toMatch(/downloads-extension/);
 });

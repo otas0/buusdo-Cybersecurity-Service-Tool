@@ -13,8 +13,14 @@ const root = path.resolve(".");
 const REQUIRED = [
   "privacyPolicyLimitsTitle",
   "privacyPolicyLimitsBody",
+  "privacyDesktopOfflineNote",
+  "extensionStoreOnlyNote",
   "desktopDownloadsTitle",
   "desktopDownloadsIntro",
+  "desktopInstallStepsTitle",
+  "desktopInstallStep1",
+  "desktopInstallStep2",
+  "desktopInstallStep3",
   "desktopDownloadWindows",
   "desktopDownloadMac",
   "desktopDownloadLinux",
@@ -32,6 +38,9 @@ const REQUIRED = [
   "privacyDesktopMirrorNote"
 ];
 
+/** Desktop tip keys that must stay non-empty in messages + packs + i18n bags. */
+const DESKTOP_TIP_KEYS = ["optionalUpdateShowHint"];
+
 const downloads = JSON.parse(
   readFileSync(path.join(root, "shared/desktop-downloads.json"), "utf8")
 );
@@ -45,6 +54,8 @@ for (const key of [
   "setupGuideUrl",
   "releaseNotesUrl",
   "releaseTag",
+  "minSupportedVersion",
+  "minSupportedBumpReason",
   "mirrors"
 ]) {
   if (!(key in downloads)) {
@@ -54,6 +65,12 @@ for (const key of [
 }
 if (!String(downloads.releaseTag || "").trim()) {
   console.error("shared/desktop-downloads.json releaseTag must be non-empty");
+  process.exit(1);
+}
+if (!/^\d+\.\d+\.\d+/.test(String(downloads.minSupportedVersion || "").trim())) {
+  console.error(
+    "shared/desktop-downloads.json minSupportedVersion must be a semver like 0.2.0"
+  );
   process.exit(1);
 }
 
@@ -83,6 +100,16 @@ for (const key of REQUIRED) {
     failed += 1;
   }
 }
+for (const key of DESKTOP_TIP_KEYS) {
+  if (!hasKey(enBlock, key)) {
+    console.error(`EN messages.ts missing overlay key: ${key}`);
+    failed += 1;
+  }
+  if (!hasKey(ptBlock, key)) {
+    console.error(`pt-PT messages.ts missing overlay key: ${key}`);
+    failed += 1;
+  }
+}
 
 const downloadsPanel = readFileSync(path.join(root, "components/DownloadsPanel.tsx"), "utf8");
 if (!downloadsPanel.includes('data-testid="settings-desktop-mac-cdn-desc"')) {
@@ -95,6 +122,29 @@ if (!downloadsPanel.includes('data-testid="settings-desktop-setup-guide"')) {
 }
 if (!downloadsPanel.includes('data-testid="downloads-extension"')) {
   console.error("DownloadsPanel missing downloads-extension section");
+  failed += 1;
+}
+const shieldCss = readFileSync(path.join(root, "app/shield.css"), "utf8");
+if (!shieldCss.includes("--shell-top-scroll-margin")) {
+  console.error("app/shield.css missing --shell-top-scroll-margin (deep-link clearance)");
+  failed += 1;
+}
+if (!/#downloads-extension\s*\{[^}]*scroll-margin-top:\s*var\(--shell-top-scroll-margin\)/s.test(shieldCss)) {
+  console.error("app/shield.css #downloads-extension must use scroll-margin-top: var(--shell-top-scroll-margin)");
+  failed += 1;
+}
+if (!downloadsPanel.includes('data-testid="downloads-desktop-install-steps"')) {
+  console.error("DownloadsPanel missing downloads-desktop-install-steps (3-step install copy)");
+  failed += 1;
+}
+if (!downloadsPanel.includes('data-testid="downloads-extension-store-only"')) {
+  console.error("DownloadsPanel missing downloads-extension-store-only");
+  failed += 1;
+}
+
+const privacyPanel = readFileSync(path.join(root, "components/PrivacyPanel.tsx"), "utf8");
+if (!privacyPanel.includes('data-testid="privacy-desktop-offline"')) {
+  console.error("PrivacyPanel missing privacy-desktop-offline");
   failed += 1;
 }
 if (!String(downloads.setupGuideUrl || "").includes("DESKTOP_SETUP_GUIDE")) {
@@ -169,5 +219,40 @@ if (settingsPanel.includes('id="settings-desktop"')) {
   failed += 1;
 }
 
+const desktopI18n = readFileSync(path.join(root, "desktop-app/public/js/i18n.js"), "utf8");
+for (const key of DESKTOP_TIP_KEYS) {
+  if (!new RegExp(`${key}\\s*:`).test(desktopI18n)) {
+    console.error(`desktop i18n missing overlay key: ${key}`);
+    failed += 1;
+  }
+}
+
+for (const packId of [
+  "_en.snapshot",
+  "_pt-PT.snapshot",
+  "pt-BR",
+  "ja",
+  "zh-Hans",
+  "zh-Hant",
+  "de",
+  "fr"
+]) {
+  const packPath = path.join(root, "i18n/packs", `${packId}.json`);
+  let pack;
+  try {
+    pack = JSON.parse(readFileSync(packPath, "utf8"));
+  } catch {
+    console.error(`cannot read pack ${packId}.json`);
+    failed += 1;
+    continue;
+  }
+  for (const key of DESKTOP_TIP_KEYS) {
+    if (!String(pack[key] || "").trim()) {
+      console.error(`i18n/packs/${packId}.json missing ${key}`);
+      failed += 1;
+    }
+  }
+}
+
 if (failed) process.exit(1);
-console.log("desktop download + honest-limits message keys ok (EN / pt-PT)");
+console.log("desktop download + honest-limits message keys ok (EN / pt-PT + overlay packs)");

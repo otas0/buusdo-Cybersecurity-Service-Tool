@@ -134,6 +134,11 @@ export const messages = {
     faqNoCrowdTitle: "Does the score come from other users’ votes?",
     faqNoCrowdBody:
       "No. Results use buusdo’s curated threat list and address signals — not a public “how many people flagged this” count.",
+    faqExtOfflineTitle: "Can I install the browser extension as an offline whole package?",
+    faqExtOfflineBody:
+      "No. The extension installs only from the Chrome Web Store or Mac App Store. There is no whole-repo download and no offline self-contained extension package — see Downloads.",
+    /** Desktop dashboard tip reset — packs + overlay stay in lockstep. */
+    optionalUpdateShowHint: "Show update tip",
     // EVAL surface-copy keys (no website block UI): protection, blockedInPrototype, removed, currentlyBlocked
     verified: "Open the listed domain",
     protection: "Use the extension or desktop app to update protection lists.",
@@ -645,6 +650,10 @@ export const messages = {
     faqNoCrowdTitle: "O resultado vem de votos de outros utilizadores?",
     faqNoCrowdBody:
       "Não. Os resultados usam a lista curada do buusdo e sinais do endereço — não um contador público de denúncias.",
+    faqExtOfflineTitle: "Posso instalar a extensão do browser como pacote offline completo?",
+    faqExtOfflineBody:
+      "Não. A extensão instala-se apenas na Chrome Web Store ou na Mac App Store. Não há descarga do repositório completo nem pacote offline autónomo — veja Transferências.",
+    optionalUpdateShowHint: "Mostrar aviso de atualização",
     verified: "Abrir o domínio listado",
     protection: "Use a extensão ou a app para atualizar as listas de proteção.",
     currentlyBlocked: "fica bloqueado na extensão ou na app quando o adicionar aí.",

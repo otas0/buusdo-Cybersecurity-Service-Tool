@@ -648,6 +648,24 @@ export function AppShell({ locale, slug }: { locale: Locale; slug: string[] }) {
     };
   }, [view, slug]);
 
+  // Downloads deep-link (#downloads-extension): scroll after DownloadsPanel mounts.
+  useEffect(() => {
+    if (view !== "downloads") return;
+    function scrollDownloadsHash() {
+      const hash = typeof window !== "undefined" ? window.location.hash : "";
+      if (hash !== "#downloads-extension") return;
+      document.getElementById("downloads-extension")?.scrollIntoView({ block: "start" });
+    }
+    const raf = window.requestAnimationFrame(() => {
+      window.requestAnimationFrame(scrollDownloadsHash);
+    });
+    window.addEventListener("hashchange", scrollDownloadsHash);
+    return () => {
+      window.cancelAnimationFrame(raf);
+      window.removeEventListener("hashchange", scrollDownloadsHash);
+    };
+  }, [view, slug]);
+
   // Legacy Settings #settings-desktop → dedicated /downloads page.
   useEffect(() => {
     if (view !== "settings") return;
@@ -696,6 +714,11 @@ export function AppShell({ locale, slug }: { locale: Locale; slug: string[] }) {
       ) {
         window.setTimeout(() => {
           document.getElementById(hash.slice(1))?.scrollIntoView({ block: "start" });
+        }, 0);
+      }
+      if (next === "downloads" && hash === "#downloads-extension") {
+        window.setTimeout(() => {
+          document.getElementById("downloads-extension")?.scrollIntoView({ block: "start" });
         }, 0);
       }
     }

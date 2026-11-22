@@ -473,5 +473,14 @@
   "langRegionSoutheastAsia": "Südostasien",
   "langRegionSouthernAfrica": "Südliches Afrika",
   "themeHeaderHint": "Nutzen Sie die eine Erscheinungsbild-Schaltfläche in der Kopfzeile (neben der Sprache).",
-  "localeRecommendSearchHint": "Unten Vorschläge. Suche öffnet die volle Sprachenliste."
+  "localeRecommendSearchHint": "Unten Vorschläge. Suche öffnet die volle Sprachenliste.",
+  "desktopInstallStepsTitle": "In drei Schritten installieren",
+  "desktopInstallStep1": "Laden Sie das Paket für Ihr System (Windows, macOS oder Linux).",
+  "desktopInstallStep2": "Öffnen oder installieren. Warnt das OS vor einem unbekannten Herausgeber, folgen Sie einmal der Einrichtungsanleitung.",
+  "desktopInstallStep3": "App starten — das Dashboard öffnet sich auf diesem Computer. Updates installieren sich auf demselben Weg.",
+  "privacyDesktopOfflineNote": "Desktop-App: Computerscan und persönliche Blocklisten funktionieren offline. Live-Adressprüfungen auf der Website brauchen Internet, wenn Sie diesen Weg nutzen.",
+  "extensionStoreOnlyNote": "Die Browser-Erweiterung wird nur über den Chrome Web Store oder den Mac App Store installiert. Es gibt keinen Gesamt-Repo-Download und kein offline-autarkes Erweiterungs-Paket.",
+  "faqExtOfflineTitle": "Kann ich die Browser-Erweiterung als Offline-Gesamtpaket installieren?",
+  "faqExtOfflineBody": "Nein. Die Erweiterung wird nur über den Chrome Web Store oder den Mac App Store installiert. Es gibt keinen Gesamt-Repo-Download und kein offline-autarkes Erweiterungs-Paket — siehe Downloads.",
+  "optionalUpdateShowHint": "Update-Hinweis anzeigen"
 }

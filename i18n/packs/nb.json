@@ -473,5 +473,14 @@
   "langRegionSoutheastAsia": "Southeast Asia",
   "langRegionSouthernAfrica": "Southern Africa",
   "themeHeaderHint": "Bruk Utseende-knappen i toppteksten (ved siden av språk).",
-  "localeRecommendSearchHint": "Forslag nedenfor. Søk for hele språklisten."
+  "localeRecommendSearchHint": "Forslag nedenfor. Søk for hele språklisten.",
+  "desktopInstallStepsTitle": "Installer i tre trinn",
+  "desktopInstallStep1": "Last ned pakken for systemet ditt (Windows, macOS eller Linux).",
+  "desktopInstallStep2": "Åpne eller installer. Hvis OS advarer om ukjent utgiver, følg installasjonsveiledningen én gang.",
+  "desktopInstallStep3": "Start appen — dashbordet åpnes på denne datamaskinen. Oppdateringer installeres på samme måte.",
+  "privacyDesktopOfflineNote": "Skrivebordsappen: datascan og personlige blokkeringslister fungerer offline. Adressesjekker på nettstedet trenger internett på den stien.",
+  "extensionStoreOnlyNote": "Nettleserutvidelsen installeres kun fra Chrome Web Store eller Mac App Store. Ingen hele-repo-nedlasting og ingen offline selvstendig utvidelsespakke.",
+  "faqExtOfflineTitle": "Kan jeg installere nettleserutvidelsen som en offline hel pakke?",
+  "faqExtOfflineBody": "Nei. Utvidelsen installeres kun fra Chrome Web Store eller Mac App Store. Ingen hele-repo-nedlasting og ingen offline selvstendig utvidelsespakke — se Downloads.",
+  "optionalUpdateShowHint": "Vis oppdateringstips"
 }

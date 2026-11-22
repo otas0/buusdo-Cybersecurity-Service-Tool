@@ -8,10 +8,12 @@
   "setupGuideUrl": "https://github.com/otas0/buusdo-Cybersecurity-Service-Tool/blob/main/docs/DESKTOP_SETUP_GUIDE.md",
   "releaseNotesUrl": "https://github.com/otas0/buusdo-Cybersecurity-Service-Tool/blob/main/desktop-app/RELEASE.md",
   "releaseTag": "desktop-v0.2.0",
+  "minSupportedVersion": "0.2.0",
+  "minSupportedBumpReason": "Initial floor at desktop-v0.2.0 ship — raise only for security hotfixes and replace this reason line.",
   "mirrors": {
     "windowsNsisUrl": "",
     "macosAppZipUrl": "",
     "linuxDebAmd64Url": ""
   },
-  "notes": "Ship unsigned GitHub Release assets as Settings primary. macosAppZipUrlNotarized stays empty — notarization / desktop-promote-macos-url are out of scope. Point users at setupGuideUrl (Gatekeeper / SmartScreen). Leave mirrors.* empty unless a CDN is required."
+  "notes": "Ship unsigned GitHub Release assets as Downloads primary. macosAppZipUrlNotarized stays empty. Point users at setupGuideUrl (Gatekeeper / SmartScreen). Leave mirrors.* empty unless a CDN is required. Raise minSupportedVersion only for security hotfixes that old desktop builds must not keep running (force gate); ordinary feature releases leave minSupportedVersion unchanged and bump releaseTag / download URLs only. Every raise of minSupportedVersion must rewrite minSupportedBumpReason (one line)."
 }

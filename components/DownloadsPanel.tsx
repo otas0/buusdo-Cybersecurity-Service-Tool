@@ -115,6 +115,14 @@ export function DownloadsPanel({
           {t.desktopDownloadsTitle}
         </h3>
         <p className="hint">{t.desktopDownloadsIntro}</p>
+        <p className="hint" style={{ marginBottom: "0.35rem" }}>
+          <strong>{t.desktopInstallStepsTitle}</strong>
+        </p>
+        <ol className="hint" data-testid="downloads-desktop-install-steps" style={{ margin: "0 0 0.75rem" }}>
+          <li>{t.desktopInstallStep1}</li>
+          <li>{t.desktopInstallStep2}</li>
+          <li>{t.desktopInstallStep3}</li>
+        </ol>
         <p className="hint" data-testid="settings-desktop-download-row">
           <a
             className="text-button"
@@ -240,6 +248,9 @@ export function DownloadsPanel({
           {t.blockListsInstallExt}
         </h3>
         <p className="hint">{t.blockOnSurfaces}</p>
+        <p className="hint" data-testid="downloads-extension-store-only">
+          {t.extensionStoreOnlyNote}
+        </p>
         <p className="hint" data-testid="downloads-extension-row">
           <a
             className="text-button"

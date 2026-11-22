@@ -473,5 +473,13 @@
   "langRegionSoutheastAsia": "Đông Nam Á",
   "langRegionSouthernAfrica": "Nam Phi",
   "themeHeaderHint": "Use the one Appearance button in the header (next to language).",
-  "localeRecommendSearchHint": "Gợi ý bên dưới. Tìm kiếm để xem toàn bộ ngôn ngữ."
+  "localeRecommendSearchHint": "Gợi ý bên dưới. Tìm kiếm để xem toàn bộ ngôn ngữ.",
+  "desktopInstallStepsTitle": "Install in three steps",
+  "desktopInstallStep1": "Download the package for your system (Windows, macOS, or Linux).",
+  "desktopInstallStep2": "Open or install it. If the OS warns that the publisher is unknown, follow the setup guide once.",
+  "desktopInstallStep3": "Launch the app — the dashboard opens on this computer. Updates install the same way when the app asks.",
+  "privacyDesktopOfflineNote": "Desktop app: computer scan and personal block lists work offline. Live website address checks need the internet when you use that path.",
+  "extensionStoreOnlyNote": "Tiện ích trình duyệt chỉ cài từ Chrome Web Store hoặc Mac App Store. Không có tải toàn bộ kho mã và không có gói tiện ích ngoại tuyến độc lập.",
+  "faqExtOfflineTitle": "Tôi có thể cài tiện ích trình duyệt dưới dạng gói ngoại tuyến đầy đủ không?",
+  "faqExtOfflineBody": "Không. Tiện ích chỉ cài từ Chrome Web Store hoặc Mac App Store. Không có tải toàn bộ kho mã và không có gói tiện ích ngoại tuyến độc lập — xem Downloads."
 }

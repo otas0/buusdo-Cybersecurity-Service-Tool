@@ -473,5 +473,14 @@
   "langRegionSoutheastAsia": "Southeast Asia",
   "langRegionSouthernAfrica": "Southern Africa",
   "themeHeaderHint": "Använd Utseende-knappen i sidhuvudet (bredvid språk).",
-  "localeRecommendSearchHint": "Förslag nedan. Sök för hela språklistan."
+  "localeRecommendSearchHint": "Förslag nedan. Sök för hela språklistan.",
+  "desktopInstallStepsTitle": "Installera i tre steg",
+  "desktopInstallStep1": "Ladda ner paketet för ditt system (Windows, macOS eller Linux).",
+  "desktopInstallStep2": "Öppna eller installera. Om OS varnar för okänd utgivare, följ installationsguiden en gång.",
+  "desktopInstallStep3": "Starta appen — instrumentpanelen öppnas på den här datorn. Uppdateringar installeras på samma sätt.",
+  "privacyDesktopOfflineNote": "Skrivbordsappen: datorscan och personliga blocklistor fungerar offline. Adresskontroller på webbplatsen behöver internet på den vägen.",
+  "extensionStoreOnlyNote": "Webbläsartillägget installeras endast från Chrome Web Store eller Mac App Store. Ingen hel-repo-nedladdning och inget offline fristående tilläggspaket.",
+  "faqExtOfflineTitle": "Kan jag installera webbläsartillägget som ett offline helhets paket?",
+  "faqExtOfflineBody": "Nej. Tillägget installeras endast från Chrome Web Store eller Mac App Store. Ingen hel-repo-nedladdning och inget offline fristående tilläggspaket — se Downloads.",
+  "optionalUpdateShowHint": "Visa uppdateringstips"
 }

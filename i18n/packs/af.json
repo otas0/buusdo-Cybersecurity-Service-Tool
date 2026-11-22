@@ -473,5 +473,13 @@
   "langRegionSoutheastAsia": "Suidoos-Asië",
   "langRegionSouthernAfrica": "Suider-Afrika",
   "themeHeaderHint": "Use the one Appearance button in the header (next to language).",
-  "localeRecommendSearchHint": "Voorstelle hieronder. Soek vir die volle lys."
+  "localeRecommendSearchHint": "Voorstelle hieronder. Soek vir die volle lys.",
+  "desktopInstallStepsTitle": "Install in three steps",
+  "desktopInstallStep1": "Download the package for your system (Windows, macOS, or Linux).",
+  "desktopInstallStep2": "Open or install it. If the OS warns that the publisher is unknown, follow the setup guide once.",
+  "desktopInstallStep3": "Launch the app — the dashboard opens on this computer. Updates install the same way when the app asks.",
+  "privacyDesktopOfflineNote": "Desktop app: computer scan and personal block lists work offline. Live website address checks need the internet when you use that path.",
+  "extensionStoreOnlyNote": "Die blaaieruitbreiding installeer slegs vanaf die Chrome Web Store of Mac App Store. Daar is geen heel-repo-aflaai en geen vanlyn selfstandige uitbreidingspakket nie.",
+  "faqExtOfflineTitle": "Kan ek die blaaier-uitbreiding as 'n vanlyn heelpakket installeer?",
+  "faqExtOfflineBody": "Nee. Die uitbreiding installeer slegs vanaf die Chrome Web Store of Mac App Store. Daar is geen heel-repo-aflaai en geen vanlyn selfstandige uitbreidingspakket nie — sien Downloads."
 }

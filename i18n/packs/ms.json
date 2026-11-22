@@ -472,5 +472,13 @@
   "langRegionPacific": "Pasifik",
   "langRegionSoutheastAsia": "Asia Tenggara",
   "langRegionSouthernAfrica": "Afrika Selatan",
-  "themeHeaderHint": "Use the one Appearance button in the header (next to language)."
+  "themeHeaderHint": "Use the one Appearance button in the header (next to language).",
+  "desktopInstallStepsTitle": "Install in three steps",
+  "desktopInstallStep1": "Download the package for your system (Windows, macOS, or Linux).",
+  "desktopInstallStep2": "Open or install it. If the OS warns that the publisher is unknown, follow the setup guide once.",
+  "desktopInstallStep3": "Launch the app — the dashboard opens on this computer. Updates install the same way when the app asks.",
+  "privacyDesktopOfflineNote": "Desktop app: computer scan and personal block lists work offline. Live website address checks need the internet when you use that path.",
+  "extensionStoreOnlyNote": "Sambungan pelayar hanya dipasang dari Chrome Web Store atau Mac App Store. Tiada muat turun keseluruhan repositori dan tiada pakej sambungan luar talian yang berdiri sendiri.",
+  "faqExtOfflineTitle": "Bolehkah saya memasang sambungan pelayar sebagai pakej penuh luar talian?",
+  "faqExtOfflineBody": "Tidak. Sambungan hanya dipasang dari Chrome Web Store atau Mac App Store. Tiada muat turun seluruh repo dan tiada pakej sambungan luar talian mandiri — lihat Downloads."
 }

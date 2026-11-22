@@ -180,6 +180,14 @@ app.get("/api/settings", (_req, res) => {
 });
 
 app.put("/api/settings", (req, res) => {
+  // Optional-update dismiss only (no openAtLogin) — merges settings.json.
+  if (
+    typeof req.body?.optionalUpdateDismissedTag === "string" &&
+    typeof req.body?.openAtLogin !== "boolean"
+  ) {
+    const settings = autostart.setOptionalUpdateDismissedTag(req.body.optionalUpdateDismissedTag);
+    return res.json({ ok: true, settings });
+  }
   if (typeof req.body?.openAtLogin !== "boolean") {
     return res.status(400).json({ ok: false, error: "openAtLogin-required" });
   }
@@ -601,30 +609,82 @@ async function softHead(url) {
   }
 }
 
-/** Desktop update hint — prefer notarized zip when HEAD 200. */
+/** Optional one-line floor from packed MIN_SUPPORTED.txt (or desktop-downloads.json). */
+app.get("/api/min-supported", (_req, res) => {
+  try {
+    const { readMinSupportedLine } = require("./min-supported-line");
+    res.json(
+      readMinSupportedLine({
+        root: ROOT,
+        sharedRoot: sharedRoot(),
+        env: process.env,
+        resourcesPath: typeof process.resourcesPath === "string" ? process.resourcesPath : null
+      })
+    );
+  } catch (err) {
+    res.status(500).json({
+      ok: false,
+      error: err instanceof Error ? err.message : "min-supported-failed"
+    });
+  }
+});
+
+/** Desktop update hint — prefer notarized zip when HEAD 200; force when below minSupportedVersion. */
 app.get("/api/update-check", async (_req, res) => {
   try {
+    const { isBelowMin, isNewer, parseSemver } = require("./semver");
     const downloadsPath = path.join(sharedRoot(), "desktop-downloads.json");
     const pkg = JSON.parse(fs.readFileSync(path.join(ROOT, "package.json"), "utf8"));
     const downloads = JSON.parse(fs.readFileSync(downloadsPath, "utf8"));
-    const primary = String(downloads.macosAppZipUrl || "").trim() || null;
+    const installed = String(pkg.version || "").trim() || null;
+    const releaseTag = String(downloads.releaseTag || "").trim() || null;
+    const minSupported = String(downloads.minSupportedVersion || "").trim() || null;
+    const remoteVer =
+      (parseSemver(releaseTag) && String(releaseTag).replace(/^desktop-v/i, "").replace(/^v/i, "")) ||
+      null;
+
+    const macPrimary = String(downloads.macosAppZipUrl || "").trim() || null;
     const notarized = String(downloads.macosAppZipUrlNotarized || "").trim() || null;
+    const winUrl = String(downloads.windowsNsisUrl || "").trim() || null;
+    const linuxUrl = String(downloads.linuxDebAmd64Url || "").trim() || null;
     const notarizedHead = await softHead(notarized);
     const preferNotarized = Boolean(notarized && notarizedHead.ok);
-    const downloadUrl = preferNotarized ? notarized : primary;
+
+    let downloadUrl = preferNotarized ? notarized : macPrimary;
+    if (process.platform === "win32" && winUrl) downloadUrl = winUrl;
+    else if (process.platform === "linux" && linuxUrl) downloadUrl = linuxUrl;
+    else if (preferNotarized) downloadUrl = notarized;
+    else downloadUrl = macPrimary || winUrl || linuxUrl;
+
+    const setupGuideUrl = String(downloads.setupGuideUrl || "").trim() || null;
+
+    const forceUpdate = Boolean(minSupported && installed && isBelowMin(installed, minSupported));
+    const updateAvailable = Boolean(
+      remoteVer && installed && (isNewer(remoteVer, installed) || forceUpdate)
+    );
+
     res.json({
       ok: true,
-      version: pkg.version || null,
-      releaseTag: downloads.releaseTag || null,
-      macosAppZipUrl: primary,
+      version: installed,
+      releaseTag,
+      remoteVersion: remoteVer,
+      minSupportedVersion: minSupported,
+      forceUpdate,
+      updateAvailable,
+      macosAppZipUrl: macPrimary,
       macosAppZipUrlNotarized: notarized,
+      windowsNsisUrl: winUrl,
+      linuxDebAmd64Url: linuxUrl,
       notarizedHeadOk: notarizedHead.ok,
       notarizedHeadStatus: notarizedHead.status,
       preferNotarized,
       downloadUrl,
-      notes: preferNotarized
-        ? "Notarized zip HEAD 200 — use downloadUrl for install/update."
-        : "Notarized not ready — unsigned primary (or attach via desktop-notarize-macos)."
+      setupGuideUrl,
+      notes: forceUpdate
+        ? "Installed version below minSupportedVersion — update required."
+        : preferNotarized
+          ? "Notarized zip HEAD 200 — use downloadUrl for install/update."
+          : "Notarized not ready — unsigned primary package."
     });
   } catch (err) {
     res.status(500).json({

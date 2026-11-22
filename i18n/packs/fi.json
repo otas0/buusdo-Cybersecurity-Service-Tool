@@ -473,5 +473,14 @@
   "langRegionSoutheastAsia": "Southeast Asia",
   "langRegionSouthernAfrica": "Southern Africa",
   "themeHeaderHint": "Käytä Ulkoasu-painiketta yläpalkissa (kielen vieressä).",
-  "localeRecommendSearchHint": "Ehdotukset alla. Hae koko kieliluettelo."
+  "localeRecommendSearchHint": "Ehdotukset alla. Hae koko kieliluettelo.",
+  "desktopInstallStepsTitle": "Asenna kolmessa vaiheessa",
+  "desktopInstallStep1": "Lataa paketti järjestelmällesi (Windows, macOS tai Linux).",
+  "desktopInstallStep2": "Avaa tai asenna. Jos käyttöjärjestelmä varoittaa tuntemattomasta julkaisijasta, noudata asennusopasta kerran.",
+  "desktopInstallStep3": "Käynnistä sovellus — kojelauta avautuu tällä tietokoneella. Päivitykset asennetaan samalla tavalla.",
+  "privacyDesktopOfflineNote": "Työpöytäsovellus: tämän tietokoneen skannaus ja henkilökohtaiset estolistat toimivat offline. Sivuston osoitetarkistukset tarvitsevat internetin sillä polulla.",
+  "extensionStoreOnlyNote": "Selainlaajennus asennetaan vain Chrome Web Storesta tai Mac App Storesta. Ei koko repon latausta eikä offline-itsenäistä laajennuspakettia.",
+  "faqExtOfflineTitle": "Voinko asentaa selainlaajennuksen offline-kokonaispakettina?",
+  "faqExtOfflineBody": "Ei. Laajennus asennetaan vain Chrome Web Storesta tai Mac App Storesta. Ei koko repon latausta eikä offline-itsenäistä laajennuspakettia — katso Downloads.",
+  "optionalUpdateShowHint": "Näytä päivitysvinkki"
 }

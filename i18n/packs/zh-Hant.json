@@ -481,5 +481,8 @@
   "desktopInstallStep2": "開啟或安裝。若系統提示未知發行者，請依安裝指南操作一次。",
   "desktopInstallStep3": "啟動應用 — 儀表板在本機開啟。需要更新時以同樣方式安裝。",
   "privacyDesktopOfflineNote": "桌面應用：本機掃描與個人攔截列表可離線使用。網站地址檢查在走該路徑時需要連網。",
-  "extensionStoreOnlyNote": "瀏覽器擴充功能僅透過 Chrome 線上應用程式商店或 Mac App Store 安裝。不提供整庫下載，也沒有離線自包含擴充包。"
+  "extensionStoreOnlyNote": "瀏覽器擴充功能僅透過 Chrome 線上應用程式商店或 Mac App Store 安裝。不提供整庫下載，也沒有離線自包含擴充包。",
+  "faqExtOfflineTitle": "瀏覽器擴充功能能否以離線整包安裝？",
+  "faqExtOfflineBody": "不能。擴充功能僅透過 Chrome 線上應用程式商店或 Mac App Store 安裝。不提供整庫下載，也沒有離線自包含擴充包 — 見下載頁。",
+  "optionalUpdateShowHint": "顯示更新提示"
 }

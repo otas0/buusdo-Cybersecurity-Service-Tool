@@ -247,6 +247,8 @@ Setup and desktop download copy ship in **every** UI locale below. Open **Downlo
 | `my` | မြန်မာ | Burmese | southeast-asia | [/my/downloads](https://buusdocst.mtsu.workers.dev/my/downloads) |
 
 Canonical English steps stay in this file. Locale packs carry `desktopDownloads*` + `desktopInstallStep*` + setup-guide link labels for the same Release URLs. Spot-check: each language section above should match the website Downloads three-step copy for that locale.
+
+**CI / local spot-check:** `node scripts/assert-desktop-setup-guide-locale-links.mjs` — verifies every locale row in the table links to `/{locale}/downloads` and major language sections keep a three-step lead.
 ## Slack / ops
 
 Slack webhook is **not** configured for this product ops path (skipped). Health failures still go through GitHub Actions email / watch notifications — see [`HEALTH_ALERTS.md`](HEALTH_ALERTS.md).

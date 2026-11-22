@@ -473,5 +473,14 @@
   "langRegionSoutheastAsia": "Zuidoost-Azië",
   "langRegionSouthernAfrica": "Zuidelijk Afrika",
   "themeHeaderHint": "Gebruik de knop Weergave in de kop (naast taal).",
-  "localeRecommendSearchHint": "Suggesties hieronder. Zoek voor de volledige talenlijst."
+  "localeRecommendSearchHint": "Suggesties hieronder. Zoek voor de volledige talenlijst.",
+  "desktopInstallStepsTitle": "In drie stappen installeren",
+  "desktopInstallStep1": "Download het pakket voor uw systeem (Windows, macOS of Linux).",
+  "desktopInstallStep2": "Open of installeer. Waarschuwt het OS voor een onbekende uitgever, volg één keer de installatiegids.",
+  "desktopInstallStep3": "Start de app — het dashboard opent op deze computer. Updates installeren op dezelfde manier.",
+  "privacyDesktopOfflineNote": "Desktop-app: computerscan en persoonlijke blokkeerlijsten werken offline. Live adrescontroles op de site hebben internet nodig op dat pad.",
+  "extensionStoreOnlyNote": "De browserextensie installeert u alleen via de Chrome Web Store of Mac App Store. Geen volledige-repo-download en geen offline zelfstandig extensiepakket.",
+  "faqExtOfflineTitle": "Kan ik de browserextensie als offline volledig pakket installeren?",
+  "faqExtOfflineBody": "Nee. De extensie installeert u alleen via de Chrome Web Store of Mac App Store. Geen volledige-repo-download en geen offline zelfstandig extensiepakket — zie Downloads.",
+  "optionalUpdateShowHint": "Updatehint tonen"
 }

@@ -73,6 +73,29 @@
             <span id="statusHost" class="status-host" hidden></span>
           </p>
           <p id="statusDetail" class="detail">Type an address.</p>
+          <div
+            id="optionalUpdateBanner"
+            class="optional-update-banner"
+            hidden
+            role="status"
+            data-testid="optional-update-banner"
+          >
+            <p id="optionalUpdateText" class="hint" style="margin: 0"></p>
+            <div class="optional-update-actions">
+              <a
+                id="optionalUpdateDownload"
+                class="text-button"
+                data-testid="optional-update-download"
+                href="#"
+                rel="noopener noreferrer"
+                target="_blank"
+                hidden
+              ></a>
+              <button type="button" id="optionalUpdateDismiss" class="text-button" data-testid="optional-update-dismiss">
+                Dismiss
+              </button>
+            </div>
+          </div>
           <p
             id="resultDangerLevel"
             class="detail result-danger-level"
@@ -141,6 +164,15 @@
           </div>
           <p id="updateCheckStatus" class="hint" data-testid="update-check-status" hidden></p>
           <a id="updateCheckDownload" class="text-button" data-testid="update-check-download" hidden href="#" rel="noopener noreferrer"></a>
+          <button
+            type="button"
+            id="optionalUpdateShowHint"
+            class="text-button"
+            data-testid="optional-update-show-hint"
+            hidden
+          >
+            Show update tip
+          </button>
           <button type="button" id="updateCheckBtn" class="text-button" data-testid="update-check">Check for desktop update</button>
         </section>
 
@@ -333,12 +365,64 @@
           <li id="honestLimitsItemKill"></li>
           <li id="honestLimitsItemSystem"></li>
           <li id="honestLimitsItemAv"></li>
+          <li id="honestLimitsItemOffline"></li>
         </ul>
+        <p
+          id="honestLimitsMinSupported"
+          class="hint"
+          data-testid="honest-limits-min-supported"
+          hidden
+        ></p>
         <div class="ask-actions">
           <button type="button" id="honestLimitsAck" data-testid="honest-limits-ack">I understand — scan</button>
           <button type="button" id="honestLimitsSkip" class="text-button" data-testid="honest-limits-skip">
             Skip for now
           </button>
+        </div>
+      </div>
+    </div>
+
+    <div
+      id="forceUpdateGate"
+      class="ask"
+      hidden
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="forceUpdateTitle"
+      data-testid="force-update-gate"
+      style="z-index: 30"
+    >
+      <div class="ask-card">
+        <p class="kicker" id="forceUpdateKicker">Update required</p>
+        <h2 id="forceUpdateTitle">Install the new desktop package</h2>
+        <p id="forceUpdateBody" class="detail"></p>
+        <p
+          id="forceUpdateAfterDownload"
+          class="hint force-update-after-download"
+          data-testid="force-update-after-download"
+          aria-live="polite"
+          hidden
+        ></p>
+        <div class="ask-actions">
+          <a
+            id="forceUpdateDownload"
+            class="halt-button"
+            data-testid="force-update-download"
+            href="#"
+            rel="noopener noreferrer"
+            target="_blank"
+            >Download update</a
+          >
+          <a
+            id="forceUpdateSetupGuide"
+            class="text-button"
+            data-testid="force-update-setup-guide"
+            href="#"
+            rel="noopener noreferrer"
+            target="_blank"
+            hidden
+            >Setup guide</a
+          >
         </div>
       </div>
     </div>

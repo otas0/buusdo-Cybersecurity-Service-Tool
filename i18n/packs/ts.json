@@ -472,5 +472,13 @@
   "langRegionPacific": "Pacific",
   "langRegionSoutheastAsia": "Southeast Asia",
   "langRegionSouthernAfrica": "Afrika Dzonga",
-  "themeHeaderHint": "Use the one Appearance button in the header (next to language)."
+  "themeHeaderHint": "Use the one Appearance button in the header (next to language).",
+  "desktopInstallStepsTitle": "Install in three steps",
+  "desktopInstallStep1": "Download the package for your system (Windows, macOS, or Linux).",
+  "desktopInstallStep2": "Open or install it. If the OS warns that the publisher is unknown, follow the setup guide once.",
+  "desktopInstallStep3": "Launch the app — the dashboard opens on this computer. Updates install the same way when the app asks.",
+  "privacyDesktopOfflineNote": "Desktop app: computer scan and personal block lists work offline. Live website address checks need the internet when you use that path.",
+  "extensionStoreOnlyNote": "Xiengeteri xa bhurawuza xi nghenisiwa ntsena ku suka eka Chrome Web Store kumbe Mac App Store. A ku na ku koka repo hinkwayo naswona a ku na phakheji ya offline leyi tiyimeleke.",
+  "faqExtOfflineTitle": "Ndzi nga swi kota ku nghenisa extension ya browser tanihi phakethe leyi heleleke ya offline?",
+  "faqExtOfflineBody": "E-e. Extension yi nghenisiwa ntsena kusuka e Chrome Web Store kumbe Mac App Store. A ku na ku koka repo hinkwayo naswona a ku na phakethe ya extension leyi tiyimeleke ya offline — vona Downloads."
 }

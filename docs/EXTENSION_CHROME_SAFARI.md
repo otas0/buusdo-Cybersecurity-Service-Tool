@@ -2,6 +2,8 @@
 
 Website MVP: `https://buusdocst.mtsu.workers.dev`. Desktop app is out of scope here.
 
+**Store install only.** End users get the extension from the **Chrome Web Store** or **Mac App Store**. There is **no** whole-repository download and **no** offline self-contained extension package for the public path (operators may still load unpacked for engineering).
+
 ## Users (public install)
 
 | Browser | Download |
@@ -11,7 +13,7 @@ Website MVP: `https://buusdocst.mtsu.workers.dev`. Desktop app is out of scope h
 
 Store URLs live in [`shared/extension-stores.json`](../shared/extension-stores.json) (filled after each store approves). Full submit steps: [EXTENSION_STORE_DISTRIBUTE.md](EXTENSION_STORE_DISTRIBUTE.md).
 
-Until a URL is set, the website Settings button shows “listing soon” and links here for operators.
+Until a URL is set, the website Downloads page shows “listing soon” and links here for operators.
 
 ## Operators (dev only)
 

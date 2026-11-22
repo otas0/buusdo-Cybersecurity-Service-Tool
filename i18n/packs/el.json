@@ -472,5 +472,13 @@
   "langRegionPacific": "Pacific",
   "langRegionSoutheastAsia": "Southeast Asia",
   "langRegionSouthernAfrica": "Southern Africa",
-  "themeHeaderHint": "Use the one Appearance button in the header (next to language)."
+  "themeHeaderHint": "Use the one Appearance button in the header (next to language).",
+  "desktopInstallStepsTitle": "Install in three steps",
+  "desktopInstallStep1": "Download the package for your system (Windows, macOS, or Linux).",
+  "desktopInstallStep2": "Open or install it. If the OS warns that the publisher is unknown, follow the setup guide once.",
+  "desktopInstallStep3": "Launch the app — the dashboard opens on this computer. Updates install the same way when the app asks.",
+  "privacyDesktopOfflineNote": "Desktop app: computer scan and personal block lists work offline. Live website address checks need the internet when you use that path.",
+  "extensionStoreOnlyNote": "Η επέκταση προγράμματος περιήγησης εγκαθίσταται μόνο από το Chrome Web Store ή το Mac App Store. Δεν υπάρχει λήψη ολόκληρου αποθετηρίου ούτε αυτόνομο πακέτο εκτός σύνδεσης.",
+  "faqExtOfflineTitle": "Μπορώ να εγκαταστήσω την επέκταση προγράμματος περιήγησης ως πλήρες πακέτο εκτός σύνδεσης;",
+  "faqExtOfflineBody": "Όχι. Η επέκταση εγκαθίσταται μόνο από το Chrome Web Store ή το Mac App Store. Δεν υπάρχει λήψη ολόκληρου αποθετηρίου ούτε αυτόνομο πακέτο εκτός σύνδεσης — δείτε Downloads."
 }

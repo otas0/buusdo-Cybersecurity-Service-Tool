@@ -473,5 +473,14 @@
   "langRegionSoutheastAsia": "東南アジア",
   "langRegionSouthernAfrica": "南部アフリカ",
   "themeHeaderHint": "ヘッダーの外観ボタン（言語の横）を使ってください。",
-  "localeRecommendSearchHint": "下は候補です。検索で全言語を表示できます。"
+  "localeRecommendSearchHint": "下は候補です。検索で全言語を表示できます。",
+  "desktopInstallStepsTitle": "3 ステップでインストール",
+  "desktopInstallStep1": "お使いの OS 用パッケージをダウンロード（Windows / macOS / Linux）。",
+  "desktopInstallStep2": "開く／インストール。発行元不明の警告が出たらセットアップガイドに一度従ってください。",
+  "desktopInstallStep3": "アプリを起動 — ダッシュボードがこのパソコンで開きます。更新も同じ流れです。",
+  "privacyDesktopOfflineNote": "デスクトップ：このパソコンのスキャンと個人ブロックリストはオフラインで動作します。サイトのアドレス確認はその経路ではインターネットが必要です。",
+  "extensionStoreOnlyNote": "ブラウザー拡張は Chrome ウェブストアまたは Mac App Store からのみインストールします。リポジトリ一式のダウンロードやオフライン完結の拡張パッケージはありません。",
+  "faqExtOfflineTitle": "ブラウザー拡張をオフラインの一式パッケージとして入れられますか？",
+  "faqExtOfflineBody": "いいえ。拡張は Chrome ウェブストアまたは Mac App Store からのみインストールします。リポジトリ一式のダウンロードやオフライン完結の拡張パッケージはありません — Downloads を参照。",
+  "optionalUpdateShowHint": "更新のヒントを表示"
 }

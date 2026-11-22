@@ -42,7 +42,12 @@ const LOCALES = [
   "de"
 ] as const;
 
-const FAQ_KEYS = ["faqNoWipeTitle", "faqNoAvTitle", "faqNoCrowdTitle"] as const;
+const FAQ_KEYS = [
+  "faqNoWipeTitle",
+  "faqNoAvTitle",
+  "faqNoCrowdTitle",
+  "faqExtOfflineTitle"
+] as const;
 
 for (const id of LOCALES) {
   test(`${id} FAQ titles are native questions (not EN stubs)`, () => {

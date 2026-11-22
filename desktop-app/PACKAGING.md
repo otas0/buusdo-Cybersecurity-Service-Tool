@@ -8,6 +8,11 @@ Product core is Node (`src/server.js` / `src/launcher.js`). The shell is **syste
 2. Dashboard **proxy guide** (`#proxyGuide`) — how to point OS/browser HTTP traffic at `127.0.0.1:8080` (otherwise the block log stays quiet). Nested OS details open for the current platform only.
 3. Footer **Export diagnostics** writes a URL-free snapshot into the user data directory (optional Copy path after export).
 
+**Minimum supported version (shipped in every installer):** pack scripts rsync `shared/` into the `.app` / `.deb` / NSIS stage, including `shared/desktop-downloads.json` → `minSupportedVersion` (same semver family as `releaseTag` unless a hotfix raised the floor). The desktop `/api/update-check` reads that file; clients below the floor see a blocking update gate. Raise `minSupportedVersion` only for security hotfixes — ordinary releases bump `releaseTag` / URLs only.
+
+- **macOS:** `packaging/macos/build-app.sh` writes `Contents/Resources/MIN_SUPPORTED.txt` and prints the floor on the build console. Dashboard honest-limits may soft-load the first line via `GET /api/min-supported`.
+- **Windows NSIS:** `pack:windows-stage` writes `packaging/windows/min-supported.nsh`; CI runs `REQUIRE_NSH=1 node scripts/assert-min-supported-nsh.mjs` before `makensis` (nsh value must match `desktop-downloads.json`); the installer **Welcome** page shows `Minimum supported version: …`.
+
 Ship checklist: [RELEASE.md](./RELEASE.md) · Install / first open. Smoke env (`SHIELD_HONEST_LIMITS=0`, `SHIELD_QUIT_GRACE_MS=0`): [RELEASE.md § Smoke env](./RELEASE.md#smoke-env). Settings PUT (`honestLimitsAckAt` preserved): [DESKTOP_SETTINGS_CONTRACT.md](../docs/DESKTOP_SETTINGS_CONTRACT.md).
 
 ## Shell choice (current)

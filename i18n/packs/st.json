@@ -472,5 +472,13 @@
   "langRegionPacific": "Pacific",
   "langRegionSoutheastAsia": "Southeast Asia",
   "langRegionSouthernAfrica": "Afrika Boroa",
-  "themeHeaderHint": "Use the one Appearance button in the header (next to language)."
+  "themeHeaderHint": "Use the one Appearance button in the header (next to language).",
+  "desktopInstallStepsTitle": "Install in three steps",
+  "desktopInstallStep1": "Download the package for your system (Windows, macOS, or Linux).",
+  "desktopInstallStep2": "Open or install it. If the OS warns that the publisher is unknown, follow the setup guide once.",
+  "desktopInstallStep3": "Launch the app — the dashboard opens on this computer. Updates install the same way when the app asks.",
+  "privacyDesktopOfflineNote": "Desktop app: computer scan and personal block lists work offline. Live website address checks need the internet when you use that path.",
+  "extensionStoreOnlyNote": "Koketso ea sebatli e kenngoa feela ho tsoa ho Chrome Web Store kapa Mac App Store. Ha ho na ho jarolla repo eohle le ha ho na sephuthelwana sa offline se ikemetseng.",
+  "faqExtOfflineTitle": "Na nka kenya katoloso ya sebatli e le sephuthelwana se feletseng sa offline?",
+  "faqExtOfflineBody": "Che. Katoloso e kenngoa feela ho tsoa Chrome Web Store kapa Mac App Store. Ha ho na ho jarolla repo eohle 'me ha ho sephuthelwana sa katoloso se ikemetseng sa offline — bona Downloads."
 }

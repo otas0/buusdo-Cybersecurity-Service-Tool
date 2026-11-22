@@ -35,6 +35,14 @@ rsync -a --delete \
   --exclude node_modules --exclude dist --exclude data --exclude '*.log' \
   "$ROOT/" "$RES/app/"
 rsync -a --delete "$REPO/shared/" "$RES/shared/"
+MIN_SUPPORTED="$(node -e "const d=require('$REPO/shared/desktop-downloads.json'); process.stdout.write(String(d.minSupportedVersion||'').trim())")"
+if [[ -z "$MIN_SUPPORTED" ]]; then
+  echo "pack:macos missing minSupportedVersion in shared/desktop-downloads.json" >&2
+  exit 1
+fi
+printf '%s\n' "buusdo Cybersecurity Service Tool — minimum supported version: ${MIN_SUPPORTED}" \
+  > "$RES/MIN_SUPPORTED.txt"
+echo "Welcome / pack note: minimum supported version ${MIN_SUPPORTED}"
 # Production deps must ship inside the .app (rsync excludes host node_modules).
 (
   cd "$RES/app"

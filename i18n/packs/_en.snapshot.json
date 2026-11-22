@@ -480,5 +480,8 @@
   "privacyDesktopOfflineNote": "Desktop app: computer scan and personal block lists work offline. Live website address checks need the internet when you use that path.",
   "extensionStoreOnlyNote": "The browser extension installs from the Chrome Web Store or Mac App Store only. There is no whole-repo download and no offline self-contained extension package.",
   "privacyPolicyChinaTitle": "China mainland entry (GitHub Pages)",
-  "privacyPolicyChinaBody": "From 22 November 2026 the China mainland GitHub Pages site (https://otas0.github.io/buusdocst/) suspends regular product explain/install/privacy pages and keeps only a bilingual notice. When your network can reach this Workers product site, that Pages notice auto-guides here; when it cannot, you may still open the notice. Formal privacy is this page — not a separate China privacy summary."
+  "privacyPolicyChinaBody": "From 22 November 2026 the China mainland GitHub Pages site (https://otas0.github.io/buusdocst/) suspends regular product explain/install/privacy pages and keeps only a bilingual notice. When your network can reach this Workers product site, that Pages notice auto-guides here; when it cannot, you may still open the notice. Formal privacy is this page — not a separate China privacy summary.",
+  "faqExtOfflineTitle": "Can I install the browser extension as an offline whole package?",
+  "faqExtOfflineBody": "No. The extension installs only from the Chrome Web Store or Mac App Store. There is no whole-repo download and no offline self-contained extension package — see Downloads.",
+  "optionalUpdateShowHint": "Show update tip"
 }

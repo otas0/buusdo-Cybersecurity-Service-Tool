@@ -26,7 +26,15 @@ Unicode true
   !error "stage\app\src\launcher.js missing. Run: npm run pack:windows-stage"
 !endif
 
+!include "min-supported.nsh"
+!ifndef SHIELD_MIN_SUPPORTED
+  !error "min-supported.nsh missing SHIELD_MIN_SUPPORTED — run npm run pack:windows-stage first"
+!endif
+
 !define MUI_ABORTWARNING
+!define MUI_WELCOMEPAGE_TITLE "buusdo Cybersecurity Service Tool"
+!define MUI_WELCOMEPAGE_TEXT "Install the desktop app on this computer.$\r$\n$\r$\nMinimum supported version: ${SHIELD_MIN_SUPPORTED}$\r$\n(Clients below this floor must install a newer package.)$\r$\n$\r$\nBuilds are unsigned — Windows SmartScreen may warn once."
+!insertmacro MUI_PAGE_WELCOME
 !insertmacro MUI_PAGE_DIRECTORY
 !insertmacro MUI_PAGE_INSTFILES
 !insertmacro MUI_PAGE_FINISH
