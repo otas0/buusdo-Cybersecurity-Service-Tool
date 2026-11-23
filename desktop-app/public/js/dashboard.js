@@ -7,6 +7,10 @@ import { LOCALE_CATALOG_DATA } from "./locale-catalog.js";
 import { afterRingClear, lifetimeChipTitles } from "./lifetime-chip.mjs";
 import { hashFocusOnlyScrolls, shouldFocusAskDecline } from "./machine-focus.mjs";
 import {
+  formatMinSupportedFloorNote,
+  formatMinSupportedSourceLabel
+} from "/shared/min-supported-floor.mjs";
+import {
   clearPersistedScanResourcesStorage,
   readPersistedScanResources,
   shouldPersistScanResources,
@@ -1601,9 +1605,14 @@ function focusAfterUpdateChromeHide() {
   if (docStart && !docStart.hasAttribute("tabindex")) {
     docStart.setAttribute("tabindex", "-1");
   }
+  // Prefer show-hint when tip is available so force→hint + tip toast stay aligned.
+  const tipUp =
+    Boolean(els.optionalUpdateShowHint) &&
+    !els.optionalUpdateShowHint.hidden &&
+    isFocusTarget(els.optionalUpdateShowHint);
   const target =
+    (tipUp && els.optionalUpdateShowHint) ||
     (isFocusTarget(els.updateCheckBtn) && els.updateCheckBtn) ||
-    (isFocusTarget(els.optionalUpdateShowHint) && els.optionalUpdateShowHint) ||
     (isFocusTarget(els.scanBtn) && els.scanBtn) ||
     (isFocusTarget(els.pathScanMachine) && els.pathScanMachine) ||
     (isFocusTarget(els.honestLimitsAck) && els.honestLimitsAck) ||
@@ -1616,6 +1625,12 @@ function focusAfterUpdateChromeHide() {
     target.focus({ preventScroll: true });
   } catch {
     /* ignore */
+  }
+  // Polite live announce when force-close lands on show-hint (tip available).
+  if (forceCloseLandedOnShowHint) {
+    showMessageToast(t(lang, "optionalUpdateTipAvailable"), "caution", {
+      testId: "optional-update-tip-available"
+    });
   }
 }
 
@@ -2020,14 +2035,12 @@ void (async () => {
     const min = String(res.minSupportedVersion || "").trim();
     const sourceRaw = String(res.source || "").trim();
     if (sourceRaw && min) {
-      const source =
-        sourceRaw === "desktop-downloads.json"
-          ? sourceRaw
-          : sourceRaw.split(/[/\\]/).filter(Boolean).pop() || sourceRaw;
+      // Same helper as website MinSupportedFloorNote / shared/min-supported-floor.mjs.
+      const template = t(lang, "honestLimitsMinSupportedNote");
       els.honestLimitsMinSupported.hidden = false;
-      els.honestLimitsMinSupported.textContent = t(lang, "honestLimitsMinSupportedNote", {
+      els.honestLimitsMinSupported.textContent = formatMinSupportedFloorNote(template, {
         min,
-        source
+        source: formatMinSupportedSourceLabel(sourceRaw)
       });
       return;
     }

@@ -20,3 +20,8 @@ npm run sync:extension-tokens:check || {
   echo "╚══════════════════════════════════════════════════════════════════╝" >&2
   exit 1
 }
+# Soft-live streak bumps are CI artifacts only — refuse streak>0 in the index.
+node scripts/assert-soft-live-hash-streak-baseline.mjs --index || {
+  echo "hint: reset baseline — node scripts/bump-soft-live-hash-streak.mjs --reset && git add ci/soft-live-hash-streak.json" >&2
+  exit 1
+}

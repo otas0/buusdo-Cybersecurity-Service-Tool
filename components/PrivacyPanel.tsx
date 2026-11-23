@@ -57,6 +57,7 @@ export function PrivacyPanel({
         <MinSupportedFloorNote
           template={t.honestLimitsMinSupportedNote}
           testId="privacy-honest-limits-min-supported"
+          resolveFromStatus
         />
         <p className="hint" data-testid="privacy-desktop-offline">
           {t.privacyDesktopOfflineNote}

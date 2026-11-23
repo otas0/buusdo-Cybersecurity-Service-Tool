@@ -2,7 +2,7 @@
 
 Chrome and Safari (macOS) share the same `extension/` folder: Manifest V3, vanilla JS / CSS / HTML.
 
-**UI polish is parked** until website deep-link soft-live (`#downloads-extension` / `#privacy-honest-limits` in-view) is green for **three consecutive** Privacy prod schedule runs (`ci/soft-live-hash-streak.json` artifact; `scripts/bump-soft-live-hash-streak.mjs`). PR gate `npm run assert:extension-ui-unpark` stays **soft** until repo var `EXT_UI_UNPARK_HARD=1` after streak≥3 — see [`docs/CI.md`](../docs/CI.md). Prefer website (`app/`, `components/`, `security/`) first — [`docs/I18N.md`](../docs/I18N.md).
+**UI polish is parked** until website deep-link soft-live (`#downloads-extension` / `#privacy-honest-limits` in-view) is green for **three consecutive** Privacy prod schedule runs (`ci/soft-live-hash-streak.json` artifact; `scripts/bump-soft-live-hash-streak.mjs`). PR gate `npm run assert:extension-ui-unpark` stays **soft** until repo var `EXT_UI_UNPARK_HARD=1` after streak≥3 — see [`docs/CI.md`](../docs/CI.md). Soft-live env / artifact table: [`docs/I18N.md` SOFT_LIVE_*](../docs/I18N.md#soft_live-hash-extension-unpark). Prefer website (`app/`, `components/`, `security/`) first — [`docs/I18N.md`](../docs/I18N.md).
 
 **Blocking** (trackers, phishing host signals, personal lists) belongs here and in the desktop app. The website only **checks** addresses. Move lists across devices with a portable JSON export (USB / free Drive / Syncthing) — see the website README “Free cross-device data” and [`shared/SHIELD_LISTS_V1.md`](../shared/SHIELD_LISTS_V1.md).
 

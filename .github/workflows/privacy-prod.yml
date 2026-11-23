@@ -50,14 +50,36 @@ jobs:
           # Best-effort: latest non-expired artifact named soft-live-hash-streak from this repo.
           ART=$(gh api "repos/${{ github.repository }}/actions/artifacts?name=soft-live-hash-streak&per_page=10" \
             --jq '[.artifacts[] | select(.expired==false)] | first | .id // empty' 2>/dev/null || true)
-          if [ -z "$ART" ]; then
-            echo "No prior soft-live-hash-streak artifact — starting from baseline"
-            exit 0
+          if [ -n "$ART" ]; then
+            if gh api "repos/${{ github.repository }}/actions/artifacts/${ART}/zip" > /tmp/prior-soft-live.zip 2>/tmp/prior-soft-live.err; then
+              unzip -o /tmp/prior-soft-live.zip -d /tmp/prior-soft-live-hash-streak
+              echo "Downloaded prior artifact id=$ART via gh api"
+              find /tmp/prior-soft-live-hash-streak -name 'soft-live-hash-streak.json' -print
+              exit 0
+            fi
+            echo "gh api zip failed (forks often lack permission) — trying run download fallback"
+            cat /tmp/prior-soft-live.err || true
+          else
+            echo "No artifact id from gh api — trying run download fallback (forks)"
           fi
-          gh api "repos/${{ github.repository }}/actions/artifacts/${ART}/zip" > /tmp/prior-soft-live.zip
-          unzip -o /tmp/prior-soft-live.zip -d /tmp/prior-soft-live-hash-streak
-          echo "Downloaded prior artifact id=$ART"
-          find /tmp/prior-soft-live-hash-streak -name 'soft-live-hash-streak.json' -print
+          # Fallback when gh api lacks permission on forks: resolve latest successful run + download-artifact.
+          RUN=$(gh run list --workflow=privacy-prod.yml --status=success --limit 5 --json databaseId \
+            --jq '.[0].databaseId // empty' 2>/dev/null || true)
+          if [ -z "$RUN" ]; then
+            RUN=$(gh run list --workflow=privacy-prod.yml --limit 5 --json databaseId,conclusion \
+              --jq '[.[] | select(.conclusion=="success")] | first | .databaseId // empty' 2>/dev/null || true)
+          fi
+          if [ -n "$RUN" ]; then
+            if gh run download "$RUN" -n soft-live-hash-streak -D /tmp/prior-soft-live-hash-streak 2>/tmp/prior-soft-live-dl.err; then
+              echo "Downloaded prior via gh run download run=$RUN"
+              find /tmp/prior-soft-live-hash-streak -name 'soft-live-hash-streak.json' -print
+              exit 0
+            fi
+            echo "gh run download soft-fail:"
+            cat /tmp/prior-soft-live-dl.err || true
+          fi
+          echo "No prior soft-live-hash-streak artifact — starting from baseline"
+          exit 0
       - name: Playwright privacy
         id: pw_privacy
         env:
@@ -81,13 +103,19 @@ jobs:
           elif [ -f /tmp/prior-soft-live-hash-streak/ci/soft-live-hash-streak.json ]; then
             PRIOR=/tmp/prior-soft-live-hash-streak/ci/soft-live-hash-streak.json
           fi
-          if [ "${{ steps.pw_privacy.outcome }}" = "success" ]; then
+          # Reset when suite hard-fails OR hash in-view soft-failed (even if suite soft-green).
+          INVIEW_OK=true
+          if [ -f ci/soft-live-hash-inview-outcome.json ]; then
+            INVIEW_OK=$(node -e 'const j=JSON.parse(require("fs").readFileSync("ci/soft-live-hash-inview-outcome.json","utf8")); console.log(j.ok===true?"true":"false")')
+          fi
+          if [ "${{ steps.pw_privacy.outcome }}" = "success" ] && [ "$INVIEW_OK" = "true" ]; then
             if [ -n "$PRIOR" ]; then
               node scripts/bump-soft-live-hash-streak.mjs --green --from-artifact "$PRIOR"
             else
               node scripts/bump-soft-live-hash-streak.mjs --green
             fi
           else
+            echo "Resetting soft-live streak (pw=${{ steps.pw_privacy.outcome }} inview_ok=$INVIEW_OK)"
             node scripts/bump-soft-live-hash-streak.mjs --reset
           fi
           STREAK=$(node -e 'const j=require("./ci/soft-live-hash-streak.json"); console.log(j.streak)')
@@ -100,6 +128,7 @@ jobs:
             echo '```'
             echo ""
             echo "- Hard PR gate (\`assert-extension-ui-unpark\`) stays soft until schedule proves streak≥3 (then set \`EXT_UI_UNPARK_HARD=1\`)."
+            echo "- Hash in-view soft-fail resets streak even when the suite exits soft-green."
           } >> "$GITHUB_STEP_SUMMARY"
       - name: Upload soft-live hash streak artifact
         if: always() && steps.soft_live_streak.outcome == 'success'
@@ -108,7 +137,8 @@ jobs:
           name: soft-live-hash-streak
           path: ci/soft-live-hash-streak.json
           if-no-files-found: ignore
-          retention-days: 30
+          # 90 days once EXT_UI_UNPARK_HARD=1 (docs/CI.md); 30 while soft.
+          retention-days: ${{ vars.EXT_UI_UNPARK_HARD == '1' && 90 || 30 }}
       - name: Soft unpark probe (deferred hard until streak≥3)
         if: always() && steps.soft_live_streak.outcome == 'success'
         continue-on-error: true
@@ -117,6 +147,9 @@ jobs:
         run: |
           node scripts/assert-extension-ui-unpark.mjs || true
           echo "::notice::assert-extension-ui-unpark soft probe (hard PR gate after streak≥3 on schedule)"
+          if [ "${{ steps.soft_live_streak.outputs.streak }}" -ge 3 ] 2>/dev/null; then
+            echo "::notice::streak≥3 — ready to flip repo var EXT_UI_UNPARK_HARD=1 (document date in docs/CI.md)"
+          fi
       - name: Upload Playwright HTML report (on failure)
         if: failure()
         uses: actions/upload-artifact@v4

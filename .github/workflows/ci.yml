@@ -71,6 +71,20 @@ jobs:
           # Core tip keys on every must-stay-full pack (same PR rule as docs/I18N.md).
           npx tsx --test tests/optional-update-show-hint-must-stay-full.test.ts
 
+      - name: Pack CAPTIONS China FRAME (listing-draft PRs only)
+        if: github.event_name == 'pull_request'
+        run: |
+          # Only when listing draft / China FRAME / pack script changes in the PR.
+          BASE="origin/${{ github.base_ref || 'main' }}"
+          git fetch --depth=1 origin "${{ github.base_ref || 'main' }}" 2>/dev/null || true
+          CHANGED=$(git diff --name-only "$BASE...HEAD" 2>/dev/null || true)
+          if ! printf '%s\n' "$CHANGED" | grep -qE 'docs/CHROME_STORE_LISTING_DRAFT\.md|docs/store-screenshots/FRAME-privacy-china|scripts/pack-chrome-webstore\.mjs'; then
+            echo "::notice::pack-chrome-captions-china skipped (no listing/FRAME/pack script in PR)"
+            exit 0
+          fi
+          npx tsx --test tests/pack-chrome-captions-china.test.ts
+          echo "::notice::pack-chrome-captions-china OK"
+
       - name: i18n gate — no dead language-panel keys
         run: |
           npx tsx --test tests/pack-no-dead-lang-panel-keys.test.ts
@@ -1062,7 +1076,7 @@ jobs:
           name: soft-live-hash-streak
           path: ci/soft-live-hash-streak.json
           if-no-files-found: ignore
-          retention-days: 14
+          retention-days: ${{ vars.EXT_UI_UNPARK_HARD == '1' && 90 || 14 }}
 
       - name: Extension UI unpark gate (soft until schedule streak≥3 / EXT_UI_UNPARK_HARD)
         id: ext_ui_unpark

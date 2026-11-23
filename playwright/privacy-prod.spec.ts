@@ -10,6 +10,11 @@ import { expect, test } from "@playwright/test";
 import { readFileSync } from "node:fs";
 import path from "node:path";
 import { assertHashSectionInView, waitForReactHydration } from "./helpers/spa-settings-nav";
+import {
+  softLiveHashInViewFail,
+  softLiveHashInViewOk,
+  softLiveHashOutcomeReset
+} from "./helpers/soft-live-hash-outcome";
 
 const minSupportedVersion = String(
   (
@@ -60,6 +65,7 @@ test.describe("production privacy pages", () => {
       );
     }
     console.info(`[privacy-prod] Workers privacy checks active at ${base}`);
+    softLiveHashOutcomeReset();
   });
 
   test("/en/privacy shows policy", async ({ page }) => {
@@ -106,6 +112,22 @@ test.describe("production privacy pages", () => {
     await expect(page.getByTestId("privacy-china-notice")).toBeVisible();
     await expect(page.getByTestId("privacy-china-notice")).toContainText(/中国大陆入口/);
     await expect(page.getByTestId("privacy-china-notice")).toContainText(/otas0\.github\.io\/buusdocst/);
+  });
+
+  test("/zh-Hans/privacy soft-live China section (hard 中国大陆入口 when Workers up)", async ({
+    page
+  }) => {
+    // Same suite already soft-skips when Workers unreachable — hard-assert title when live.
+    await page.goto(`${base}/zh-Hans/privacy#privacy-china-notice`, {
+      waitUntil: "domcontentloaded",
+      timeout: 45_000
+    });
+    const section = page.getByTestId("privacy-china-notice");
+    await expect(section).toBeVisible();
+    const text = ((await section.textContent()) || "").replace(/\s+/g, " ").trim();
+    expect(text).toMatch(/中国大陆入口/);
+    expect(text).toMatch(/otas0\.github\.io\/buusdocst/);
+    console.info(`[soft-live] zh-Hans China section ok (${text.slice(0, 72)}…)`);
   });
 
   test("/pt-PT/privacy China mainland entry section", async ({ page }) => {
@@ -265,9 +287,11 @@ test.describe("production privacy pages", () => {
               console.info(`[soft-live] ${locale} click → #downloads-extension landed`);
               try {
                 await assertHashSectionInView(page, "#downloads-extension", 12_000);
+                softLiveHashInViewOk(locale, "#downloads-extension");
                 console.info(`[soft-live] ${locale} #downloads-extension in view`);
               } catch (viewErr) {
                 const msg = viewErr instanceof Error ? viewErr.message : String(viewErr);
+                softLiveHashInViewFail(locale, "#downloads-extension", msg);
                 console.warn(`[soft-live] ${locale} #downloads-extension in-view soft fail: ${msg}`);
               }
             }
@@ -286,8 +310,15 @@ test.describe("production privacy pages", () => {
         if ((await page.locator("#privacy-honest-limits").count()) === 0) {
           console.warn(`[soft-live] ${locale} #privacy-honest-limits missing after FAQ intro`);
         } else {
-          await assertHashSectionInView(page, "#privacy-honest-limits", 12_000);
-          console.info(`[soft-live] ${locale} #privacy-honest-limits in view`);
+          try {
+            await assertHashSectionInView(page, "#privacy-honest-limits", 12_000);
+            softLiveHashInViewOk(locale, "#privacy-honest-limits");
+            console.info(`[soft-live] ${locale} #privacy-honest-limits in view`);
+          } catch (viewErr) {
+            const msg = viewErr instanceof Error ? viewErr.message : String(viewErr);
+            softLiveHashInViewFail(locale, "#privacy-honest-limits", msg);
+            console.warn(`[soft-live] ${locale} #privacy-honest-limits in-view soft fail: ${msg}`);
+          }
         }
         // Floor note (shared MinSupportedFloorNote) — soft skip when not yet deployed.
         const floor = page.getByTestId("privacy-honest-limits-min-supported");
@@ -301,7 +332,7 @@ test.describe("production privacy pages", () => {
         }
       } catch (limitsErr) {
         const msg = limitsErr instanceof Error ? limitsErr.message : String(limitsErr);
-        console.warn(`[soft-live] ${locale} #privacy-honest-limits in-view soft fail: ${msg}`);
+        console.warn(`[soft-live] ${locale} #privacy-honest-limits soft fail: ${msg}`);
       }
     });
   }

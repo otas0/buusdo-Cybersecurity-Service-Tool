@@ -279,12 +279,17 @@ jobs:
             --notes "health+check · softDownloadWarn=${{ steps.downloads.outputs.soft_warn }} · notarized=${{ steps.downloads.outputs.notarized_kind }} · smoke:privacy-china=${{ steps.privacy_china.outputs.passed_at }} · ${{ steps.target.outputs.run_url }}"
           DROPPED=$(grep -E '^dropped_rows=' "$GITHUB_OUTPUT" 2>/dev/null | tail -n1 | cut -d= -f2- || true)
           DROPPED="${DROPPED:-0}"
+          MAX_ROWS="${CHECKLIST_LOG_MAX_ROWS:-40}"
+          HALF=$(( MAX_ROWS / 2 ))
           {
             echo "### Checklist log cap"
             echo ""
-            echo "- \`CHECKLIST_LOG_MAX_ROWS\` dropped rows this append: **${DROPPED}**"
+            echo "- \`CHECKLIST_LOG_MAX_ROWS\` dropped rows this append: **${DROPPED}** (max ${MAX_ROWS})"
             echo ""
           } >> "$GITHUB_STEP_SUMMARY"
+          if [ "$DROPPED" -gt "$HALF" ] 2>/dev/null; then
+            echo "::warning::DROPPED_ROWS=${DROPPED} exceeds half of CHECKLIST_LOG_MAX_ROWS=${MAX_ROWS} (threshold ${HALF}) — raise cap or trim LAUNCH_CHECKLIST log"
+          fi
 
       - name: Append checklist log (FAIL)
         id: checklist_fail
@@ -297,12 +302,17 @@ jobs:
             --notes "${{ steps.target.outputs.run_url }}" || true
           DROPPED=$(grep -E '^dropped_rows=' "$GITHUB_OUTPUT" 2>/dev/null | tail -n1 | cut -d= -f2- || true)
           DROPPED="${DROPPED:-0}"
+          MAX_ROWS="${CHECKLIST_LOG_MAX_ROWS:-40}"
+          HALF=$(( MAX_ROWS / 2 ))
           {
             echo "### Checklist log cap"
             echo ""
-            echo "- \`CHECKLIST_LOG_MAX_ROWS\` dropped rows this append: **${DROPPED}**"
+            echo "- \`CHECKLIST_LOG_MAX_ROWS\` dropped rows this append: **${DROPPED}** (max ${MAX_ROWS})"
             echo ""
           } >> "$GITHUB_STEP_SUMMARY"
+          if [ "$DROPPED" -gt "$HALF" ] 2>/dev/null; then
+            echo "::warning::DROPPED_ROWS=${DROPPED} exceeds half of CHECKLIST_LOG_MAX_ROWS=${MAX_ROWS} (threshold ${HALF}) — raise cap or trim LAUNCH_CHECKLIST log"
+          fi
 
       - name: Commit checklist log
         id: push

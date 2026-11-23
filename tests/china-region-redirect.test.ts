@@ -126,12 +126,14 @@ function runRedirect(opts: {
   lang?: string;
   health?: { ok: boolean; service: string } | null;
   withReach?: boolean;
+  /** Reuse an existing reach element across harness phases (soft-fail → stay clear). */
+  reach?: ReturnType<typeof makeReachEl> | null;
 }) {
   const js = readFileSync(scriptPath, "utf8");
   const storage: Record<string, string> = {};
   const session: Record<string, string> = {};
   const state = { replaced: "" };
-  const reach = opts.withReach ? makeReachEl() : null;
+  const reach = opts.reach ?? (opts.withReach ? makeReachEl() : null);
   const context: Record<string, unknown> = {
     location: {
       pathname: opts.pathname,
@@ -370,6 +372,35 @@ test("vm: soft-fail anyway is removed when setReach(ok) runs via seeded child", 
     parentNode?: { removeChild: (n: unknown) => void } | null;
   } | null;
   if (stale?.parentNode) stale.parentNode.removeChild(stale);
+  assert.equal(anywayCount(reach), 0);
+});
+
+test("vm: soft-fail then stay clear removes anyway in one harness", async () => {
+  const reach = makeReachEl();
+  const soft = runRedirect({
+    pathname: "/buusdocst/en.html",
+    languages: ["en"],
+    lang: "en",
+    health: { ok: true, service: "pcpd" },
+    withReach: true,
+    reach
+  });
+  await soft.flush();
+  assert.equal(soft.reach?.dataset.state, "soft-fail");
+  assert.equal(anywayCount(reach), 1);
+
+  // Same reach element: re-run with china_stay=1 → setReach("stay") strips anyway.
+  const stay = runRedirect({
+    pathname: "/buusdocst/en.html",
+    search: "?china_stay=1",
+    languages: ["en"],
+    lang: "en",
+    health: { ok: true, service: "pcpd" },
+    withReach: true,
+    reach
+  });
+  await stay.flush();
+  assert.equal(stay.reach?.dataset.state, "stay");
   assert.equal(anywayCount(reach), 0);
 });
 

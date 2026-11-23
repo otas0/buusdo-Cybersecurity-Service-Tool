@@ -9,8 +9,10 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import path from "node:path";
 import { test } from "node:test";
-// Explicit .ts suffix works with node --experimental-strip-types and tsx.
-import { formatMinSupportedFloorNote } from "../security/min-supported-floor.ts";
+import {
+  formatMinSupportedFloorNote,
+  formatMinSupportedSourceLabel
+} from "../shared/min-supported-floor.mjs";
 
 test("formatMinSupportedFloorNote keeps desktop-downloads.json source literal", () => {
   const out = formatMinSupportedFloorNote("Minimum supported: {min} · source {source}", {
@@ -45,10 +47,21 @@ test("RiskResult and PrivacyPanel both import MinSupportedFloorNote", () => {
   const risk = readFileSync(path.join("components/RiskResult.tsx"), "utf8");
   const privacy = readFileSync(path.join("components/PrivacyPanel.tsx"), "utf8");
   const helper = readFileSync(path.join("components/MinSupportedFloorNote.tsx"), "utf8");
+  const dash = readFileSync(path.join("desktop-app/public/js/dashboard.js"), "utf8");
   assert.match(risk, /from ["']\.\/MinSupportedFloorNote["']/);
   assert.match(privacy, /from ["']\.\/MinSupportedFloorNote["']/);
   assert.match(helper, /\bsource\b/);
   assert.match(helper, /formatMinSupportedFloorNote/);
   assert.doesNotMatch(risk, /formatMinSupportedFloorNote/);
   assert.doesNotMatch(privacy, /formatMinSupportedFloorNote/);
+  assert.match(dash, /shared\/min-supported-floor\.mjs/);
+  assert.match(dash, /formatMinSupportedFloorNote/);
+});
+
+test("formatMinSupportedSourceLabel matches floor note basename rules", () => {
+  assert.equal(formatMinSupportedSourceLabel("desktop-downloads.json"), "desktop-downloads.json");
+  assert.equal(
+    formatMinSupportedSourceLabel("/a/b/MIN_SUPPORTED.txt"),
+    "MIN_SUPPORTED.txt"
+  );
 });

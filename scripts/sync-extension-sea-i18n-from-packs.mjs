@@ -34,7 +34,9 @@ const LOCALES = [
   "af",
   "zu",
   "xh",
-  "st"
+  "st",
+  "nr",
+  "nso"
 ];
 
 /** extension key → website pack key */
