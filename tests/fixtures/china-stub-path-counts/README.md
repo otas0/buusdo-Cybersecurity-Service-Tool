@@ -8,4 +8,7 @@ node scripts/parse-china-stub-path-counts.mjs --dump tests/fixtures/china-stub-p
 
 node scripts/parse-china-stub-path-counts.mjs --dump tests/fixtures/china-stub-path-counts/hot-stubs.csv
 # → GATE=keep
+
+node scripts/parse-china-stub-path-counts.mjs --dump tests/fixtures/china-stub-path-counts/cloudflare-logpush.jsonl
+# → Cloudflare Logpush-shaped rows (ClientRequestURI / ClientRequestPath)
 ```

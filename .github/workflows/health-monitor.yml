@@ -269,6 +269,7 @@ jobs:
           key: soft-download-slack-state-v1-${{ runner.os }}-${{ github.run_id }}
 
       - name: Append checklist log (OK)
+        id: checklist_ok
         if: success()
         run: |
           node scripts/append-check-prod-log.mjs \
@@ -276,8 +277,17 @@ jobs:
             --result OK \
             --runner "github-actions/${{ github.run_id }}" \
             --notes "health+check · softDownloadWarn=${{ steps.downloads.outputs.soft_warn }} · notarized=${{ steps.downloads.outputs.notarized_kind }} · smoke:privacy-china=${{ steps.privacy_china.outputs.passed_at }} · ${{ steps.target.outputs.run_url }}"
+          DROPPED=$(grep -E '^dropped_rows=' "$GITHUB_OUTPUT" 2>/dev/null | tail -n1 | cut -d= -f2- || true)
+          DROPPED="${DROPPED:-0}"
+          {
+            echo "### Checklist log cap"
+            echo ""
+            echo "- \`CHECKLIST_LOG_MAX_ROWS\` dropped rows this append: **${DROPPED}**"
+            echo ""
+          } >> "$GITHUB_STEP_SUMMARY"
 
       - name: Append checklist log (FAIL)
+        id: checklist_fail
         if: failure()
         run: |
           node scripts/append-check-prod-log.mjs \
@@ -285,6 +295,14 @@ jobs:
             --result FAIL \
             --runner "github-actions/${{ github.run_id }}" \
             --notes "${{ steps.target.outputs.run_url }}" || true
+          DROPPED=$(grep -E '^dropped_rows=' "$GITHUB_OUTPUT" 2>/dev/null | tail -n1 | cut -d= -f2- || true)
+          DROPPED="${DROPPED:-0}"
+          {
+            echo "### Checklist log cap"
+            echo ""
+            echo "- \`CHECKLIST_LOG_MAX_ROWS\` dropped rows this append: **${DROPPED}**"
+            echo ""
+          } >> "$GITHUB_STEP_SUMMARY"
 
       - name: Commit checklist log
         id: push

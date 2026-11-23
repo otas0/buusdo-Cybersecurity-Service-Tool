@@ -1,9 +1,17 @@
-import mustStayFull from "./must-stay-full-locales.json";
+import mustStayFullRaw from "./must-stay-full-locales.json";
 import { messages } from "./messages";
 import { LOCALE_PACKS } from "./pack-index";
 import { normalizeLocale } from "./locales";
 
 const EN_KEYS = Object.keys(messages.en);
+
+function localesFromMustStayFullFile(raw: unknown): string[] {
+  if (Array.isArray(raw)) return raw as string[];
+  if (raw && typeof raw === "object" && Array.isArray((raw as { locales?: unknown }).locales)) {
+    return (raw as { locales: string[] }).locales;
+  }
+  return [];
+}
 
 /** Near-complete vs EN snapshot — avoid marking ~80-key stubs as full. */
 export const FULL_PACK_MIN_KEYS = Math.max(400, Math.floor(EN_KEYS.length * 0.9));
@@ -34,7 +42,8 @@ export function packCoverageRatio(locale: string): number {
  * Locales that must stay full once shipped — CI hard-fails if any drop below
  * FULL_PACK_MIN_KEYS (regression guard). Source: i18n/must-stay-full-locales.json
  */
-export const MUST_STAY_FULL_LOCALES: readonly string[] = mustStayFull as string[];
+export const MUST_STAY_FULL_LOCALES: readonly string[] =
+  localesFromMustStayFullFile(mustStayFullRaw);
 
 export function assertMustStayFullLocales(): string[] {
   return MUST_STAY_FULL_LOCALES.filter((id) => !isFullLocalePack(id));

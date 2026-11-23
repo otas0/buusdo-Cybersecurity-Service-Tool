@@ -8,9 +8,13 @@ import { readFileSync } from "node:fs";
 import path from "node:path";
 import { test } from "node:test";
 import { getMessages } from "../i18n/messages";
-import mustStayFull from "../i18n/must-stay-full-locales.json";
+import mustStayFullRaw from "../i18n/must-stay-full-locales.json";
 
-const SPOT = mustStayFull as string[];
+const SPOT = (
+  Array.isArray(mustStayFullRaw)
+    ? mustStayFullRaw
+    : (mustStayFullRaw as { locales: string[] }).locales
+) as string[];
 
 test("must-stay-full locales: extensionStoreOnlyNote differs from EN", () => {
   const en = getMessages("en").extensionStoreOnlyNote;

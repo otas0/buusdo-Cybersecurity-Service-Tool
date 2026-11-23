@@ -114,13 +114,13 @@ for (const name of frames) {
 }
 {
   const draft = readFileSync(join(root, "docs", "CHROME_STORE_LISTING_DRAFT.md"), "utf8");
-  const chunk =
+  let chunk =
     draft.split("## Screenshot captions")[1]?.split("## Privacy policy URL")[0]?.trim() ||
     "See docs/CHROME_STORE_LISTING_DRAFT.md";
-  writeFileSync(join(shotDir, "CAPTIONS.txt"), `${chunk}\n`, "utf8");
   // Optional China privacy FRAME — only when listing draft mentions 告知书 / China notice.
   const chinaFrames = [];
-  if (/告知书|China notice/i.test(draft)) {
+  const mentionsChinaNotice = /告知书|China notice/i.test(draft);
+  if (mentionsChinaNotice) {
     for (const name of [
       "FRAME-privacy-china-notice.png",
       "FRAME-privacy-china-notice-en.png",
@@ -134,11 +134,17 @@ for (const name of frames) {
       chinaFrames.push(name);
       console.info(`[pack:chrome-store] packed China privacy FRAME ${name} (listing mentions 告知书)`);
     }
+    if (chinaFrames.length) {
+      chunk +=
+        "\n\nOptional (listing mentions 告知书 / China notice):\n" +
+        chinaFrames.map((n) => `- ${n} — Workers privacy China entry instrument FRAME`).join("\n");
+    }
   } else {
     console.info(
       "[pack:chrome-store] listing draft has no 告知书 / China notice — skip China privacy FRAMEs",
     );
   }
+  writeFileSync(join(shotDir, "CAPTIONS.txt"), `${chunk}\n`, "utf8");
   writeFileSync(
     join(shotDir, "README.txt"),
     [

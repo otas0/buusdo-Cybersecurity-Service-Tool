@@ -70,6 +70,8 @@ Rebuild FRAMEs after brand sync: `npm run sync:brand-web && npm run capture:stor
 | 3 — Desktop About | Desktop companion About footer — same product name; unsigned Release builds. | Rodapé About da app — mesmo nome de produto; builds Release não assinados. |
 | Settings | Reversible privacy and list choices on this device. | Escolhas de privacidade e listas reversíveis neste dispositivo. |
 | Privacy / desktop note | Companion desktop (unsigned GitHub Release): Gatekeeper/SmartScreen may warn — expected. No TLS decryption, no process kill, system folders report-only. | App (Release não assinado): Gatekeeper/SmartScreen pode avisar — esperado. Sem desencriptação TLS, sem terminar processos, pastas de sistema só reportadas. |
+| optional — China FRAME | Workers privacy China mainland entry (告知书 section present) — instrument FRAME for listing when China Pages notice is documented. | Entrada China no Workers (secção 告知书 presente) — FRAME de instrumento quando o aviso China Pages está documentado. |
+| optional — China FRAME EN | EN twin of the China privacy entry FRAME (`FRAME-privacy-china-notice-en.png`). | Gémeo EN do FRAME da entrada China (`FRAME-privacy-china-notice-en.png`). |
 
 ## Privacy policy URL
 

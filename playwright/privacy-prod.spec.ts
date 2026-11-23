@@ -7,7 +7,17 @@
  * without workers.dev access do not fail the suite falsely.
  */
 import { expect, test } from "@playwright/test";
+import { readFileSync } from "node:fs";
+import path from "node:path";
 import { assertHashSectionInView, waitForReactHydration } from "./helpers/spa-settings-nav";
+
+const minSupportedVersion = String(
+  (
+    JSON.parse(
+      readFileSync(path.join(process.cwd(), "shared/desktop-downloads.json"), "utf8")
+    ) as { minSupportedVersion?: string }
+  ).minSupportedVersion || ""
+);
 
 const base = (
   process.env.PLAYWRIGHT_BASE_URL ||
@@ -59,10 +69,9 @@ test.describe("production privacy pages", () => {
     await expect(page.getByTestId("privacy-policy-updated")).toContainText(/2026/);
     await expect(page.getByTestId("privacy-honest-limits")).toBeVisible();
     await expect(page.getByTestId("privacy-honest-limits")).toContainText(/No TLS decryption/i);
-    const { minSupportedVersion } = await import("../shared/desktop-downloads.json");
     await expect(page.getByTestId("privacy-honest-limits-min-supported")).toBeVisible();
     await expect(page.getByTestId("privacy-honest-limits-min-supported")).toContainText(
-      String(minSupportedVersion)
+      minSupportedVersion
     );
     await expect(page.getByTestId("privacy-desktop-offline")).toBeVisible();
     await expect(page.getByTestId("privacy-desktop-offline")).toContainText(/offline/i);
@@ -129,6 +138,26 @@ test.describe("production privacy pages", () => {
       console.warn(`[soft-live] pt-PT China title soft mismatch: ${text.slice(0, 80)}`);
     } else {
       console.info(`[soft-live] pt-PT China section ok (${text.slice(0, 72)}…)`);
+    }
+  });
+
+  test("/pt-BR/privacy soft-live China section when locale ships the key", async ({ page }) => {
+    await page.goto(`${base}/pt-BR/privacy#privacy-china-notice`, {
+      waitUntil: "domcontentloaded",
+      timeout: 45_000
+    });
+    const section = page.getByTestId("privacy-china-notice");
+    if ((await section.count()) === 0) {
+      console.warn("[soft-live] pt-BR privacy-china-notice missing (locale may not ship key yet)");
+      return;
+    }
+    await expect(section).toBeVisible();
+    const text = ((await section.textContent()) || "").replace(/\s+/g, " ").trim();
+    // Soft: accept PT-BR or shared PT copy when the section is present.
+    if (!/Entrada da China continental|China continental|otas0\.github\.io\/buusdocst/i.test(text)) {
+      console.warn(`[soft-live] pt-BR China section soft mismatch: ${text.slice(0, 80)}`);
+    } else {
+      console.info(`[soft-live] pt-BR China section ok (${text.slice(0, 72)}…)`);
     }
   });
 
@@ -240,6 +269,21 @@ test.describe("production privacy pages", () => {
         } else {
           await assertHashSectionInView(page, "#privacy-honest-limits", 12_000);
           console.info(`[soft-live] ${locale} #privacy-honest-limits in view`);
+        }
+        // Floor note (shared MinSupportedFloorNote) — soft skip when not yet deployed.
+        const floor = page.getByTestId("privacy-honest-limits-min-supported");
+        if ((await floor.count()) === 0) {
+          console.warn(`[soft-live] ${locale} privacy-honest-limits-min-supported missing (soft)`);
+        } else {
+          await expect(floor).toBeVisible();
+          const floorText = ((await floor.textContent()) || "").trim();
+          if (minSupportedVersion && !floorText.includes(minSupportedVersion)) {
+            console.warn(
+              `[soft-live] ${locale} floor missing min ${minSupportedVersion}: ${floorText.slice(0, 80)}`
+            );
+          } else {
+            console.info(`[soft-live] ${locale} floor testid ok (${floorText.slice(0, 64)}…)`);
+          }
         }
       } catch (limitsErr) {
         const msg = limitsErr instanceof Error ? limitsErr.message : String(limitsErr);

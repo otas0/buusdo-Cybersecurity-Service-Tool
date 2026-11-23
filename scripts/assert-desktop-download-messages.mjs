@@ -39,7 +39,7 @@ const REQUIRED = [
 ];
 
 /** Desktop tip keys that must stay non-empty in messages + packs + i18n bags. */
-const DESKTOP_TIP_KEYS = ["optionalUpdateShowHint"];
+const DESKTOP_TIP_KEYS = ["optionalUpdateShowHint", "honestLimitsMinSupportedNote"];
 
 const downloads = JSON.parse(
   readFileSync(path.join(root, "shared/desktop-downloads.json"), "utf8")
@@ -124,13 +124,81 @@ if (!downloadsPanel.includes('data-testid="downloads-extension"')) {
   console.error("DownloadsPanel missing downloads-extension section");
   failed += 1;
 }
+if (!downloadsPanel.includes('scrollMarginTop: "var(--shell-top-scroll-margin)"')) {
+  console.error(
+    "DownloadsPanel #downloads-extension must set scrollMarginTop: var(--shell-top-scroll-margin)"
+  );
+  failed += 1;
+}
 const shieldCss = readFileSync(path.join(root, "app/shield.css"), "utf8");
+const tokensCss = readFileSync(path.join(root, "shared/tokens.css"), "utf8");
+if (!tokensCss.includes("--shell-top-scroll-margin")) {
+  console.error("shared/tokens.css must document --shell-top-scroll-margin for deep-link ids");
+  failed += 1;
+}
 if (!shieldCss.includes("--shell-top-scroll-margin")) {
   console.error("app/shield.css missing --shell-top-scroll-margin (deep-link clearance)");
   failed += 1;
 }
-if (!/#downloads-extension\s*\{[^}]*scroll-margin-top:\s*var\(--shell-top-scroll-margin\)/s.test(shieldCss)) {
-  console.error("app/shield.css #downloads-extension must use scroll-margin-top: var(--shell-top-scroll-margin)");
+if (!shieldCss.includes("#privacy-faq-common") || !shieldCss.includes("#privacy-honest-limits")) {
+  console.error(
+    "app/shield.css must apply --shell-top-scroll-margin to #privacy-faq-common and #privacy-honest-limits"
+  );
+  failed += 1;
+}
+if (
+  !/#downloads-extension[\s\S]{0,120}#privacy-faq-common[\s\S]{0,120}#privacy-honest-limits[\s\S]{0,120}scroll-margin-top:\s*var\(--shell-top-scroll-margin\)/.test(
+    shieldCss
+  )
+) {
+  console.error(
+    "app/shield.css deep-link ids must share scroll-margin-top: var(--shell-top-scroll-margin)"
+  );
+  failed += 1;
+}
+// Deep-link ids must not hardcode rem — only var(--shell-top-scroll-margin) (shared/tokens.css).
+for (const id of ["#downloads-extension", "#privacy-faq-common", "#privacy-honest-limits"]) {
+  const idIdx = shieldCss.indexOf(id);
+  if (idIdx < 0) continue;
+  const window = shieldCss.slice(idIdx, idIdx + 280);
+  if (/scroll-margin-top:\s*[\d.]+rem/.test(window)) {
+    console.error(
+      `app/shield.css ${id} must not hardcode rem for scroll-margin-top — use var(--shell-top-scroll-margin)`
+    );
+    failed += 1;
+  }
+}
+if (!/:root\[data-theme="light"\]\s*\.shell\s*\.top[\s\S]{0,120}background:\s*var\(--bg\)/.test(shieldCss)) {
+  console.error(
+    'app/shield.css must set :root[data-theme="light"] .shell .top { background: var(--bg) }'
+  );
+  failed += 1;
+}
+if (
+  !/:root\[data-theme="light"\]\s*\.shell\s*\.top[\s\S]{0,200}border-bottom:\s*1px solid var\(--line\)/.test(
+    shieldCss
+  )
+) {
+  console.error(
+    "app/shield.css light sticky .shell .top must keep border-bottom: var(--line) (no content show-through)"
+  );
+  failed += 1;
+}
+if (!/\.shell\s*\.top[\s\S]{0,200}box-shadow:\s*0 1px 0 var\(--bg\)/.test(shieldCss)) {
+  console.error(
+    "app/shield.css sticky .shell .top must use opaque plate (box-shadow: 0 1px 0 var(--bg))"
+  );
+  failed += 1;
+}
+if (
+  !/:root\[data-theme="dark"\]\s*\.shell\s*\.top[\s\S]{0,120}background:\s*var\(--bg\)/.test(shieldCss) &&
+  !/:root:not\(\[data-theme="light"\]\)\s*\.shell\s*\.top[\s\S]{0,120}background:\s*var\(--bg\)/.test(
+    shieldCss
+  )
+) {
+  console.error(
+    "app/shield.css dark/default sticky .shell .top must match opaque plate pattern"
+  );
   failed += 1;
 }
 if (!downloadsPanel.includes('data-testid="downloads-desktop-install-steps"')) {
@@ -145,6 +213,22 @@ if (!downloadsPanel.includes('data-testid="downloads-extension-store-only"')) {
 const privacyPanel = readFileSync(path.join(root, "components/PrivacyPanel.tsx"), "utf8");
 if (!privacyPanel.includes('data-testid="privacy-desktop-offline"')) {
   console.error("PrivacyPanel missing privacy-desktop-offline");
+  failed += 1;
+}
+if (
+  !privacyPanel.includes('testId="privacy-honest-limits-min-supported"') &&
+  !privacyPanel.includes('data-testid="privacy-honest-limits-min-supported"')
+) {
+  console.error("PrivacyPanel missing privacy-honest-limits-min-supported floor note");
+  failed += 1;
+}
+if (!privacyPanel.includes("MinSupportedFloorNote")) {
+  console.error("PrivacyPanel must use shared MinSupportedFloorNote helper");
+  failed += 1;
+}
+const riskResult = readFileSync(path.join(root, "components/RiskResult.tsx"), "utf8");
+if (!riskResult.includes("MinSupportedFloorNote")) {
+  console.error("RiskResult must use shared MinSupportedFloorNote helper");
   failed += 1;
 }
 if (!String(downloads.setupGuideUrl || "").includes("DESKTOP_SETUP_GUIDE")) {

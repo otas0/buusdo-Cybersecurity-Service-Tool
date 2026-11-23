@@ -896,7 +896,8 @@ jobs:
             playwright/report/**
             playwright/output/**
             test-results/**
-          if-no-files-found: ignore
+          # Soft-fail suite should always leave report/test-results; empty upload fails the job.
+          if-no-files-found: error
 
       - name: Soft-fail artifact URL in Job Summary
         if: always() && steps.soft_fail_art.outcome == 'success'
@@ -938,6 +939,18 @@ jobs:
           npm run test:playwright:extension-china-stay-clear
           echo "::notice::extension-china-stay-clear passed"
           echo "- \`npm run test:playwright:extension-china-stay-clear\` — **passed**" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload clear-stay Playwright report (on failure)
+        if: failure() && steps.pw_china_stay_clear.outcome == 'failure'
+        uses: actions/upload-artifact@v4
+        with:
+          name: extension-china-stay-clear-playwright
+          path: |
+            playwright/report/**
+            playwright-report/**
+            test-results/**
+          if-no-files-found: ignore
+          retention-days: 14
 
       - name: Halt survey blocks (RiskResult Round-1 UX)
         id: pw_halt_survey

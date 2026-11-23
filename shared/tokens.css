@@ -35,6 +35,16 @@
   --radius: 0px;
   --font: "Helvetica Neue", Helvetica, Arial, sans-serif;
   --mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  /*
+   * Deep-link clearance under sticky / fixed shell chrome.
+   * Website (app/shield.css) overrides on .shell (4.5rem desktop / 3.75rem ≤360px).
+   * New privacy / downloads hash targets (#privacy-honest-limits, #privacy-faq-common,
+   * #downloads-extension) must use scroll-margin-top: var(--shell-top-scroll-margin)
+   * so they inherit without CSS drift — do not hardcode rem values per id.
+   * DownloadsPanel.tsx #downloads-extension must keep style={{ scrollMarginTop: "var(--shell-top-scroll-margin)" }}
+   * (asserted by scripts/assert-desktop-download-messages.mjs) — never a bare rem string.
+   */
+  --shell-top-scroll-margin: 4.5rem;
   color-scheme: dark;
 }
 

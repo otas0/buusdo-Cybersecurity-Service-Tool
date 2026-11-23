@@ -4,6 +4,8 @@
  *
  *   node scripts/smoke-privacy-china.mjs
  *   HEALTH_BASE_URL=https://buusdocst.mtsu.workers.dev node scripts/smoke-privacy-china.mjs
+ *
+ * pt-PT soft-skips on HTTP 404 (staging may not ship that locale HTML yet).
  */
 const base = (
   process.env.HEALTH_BASE_URL ||
@@ -29,26 +31,35 @@ const pages = [
       "privacy-china-notice",
       "Entrada da China continental",
       "otas0.github.io/buusdocst"
-    ]
+    ],
+    softSkipOn404: true
   }
 ];
 
-async function fetchText(url) {
+async function fetchHtml(url) {
   const res = await fetch(url, {
     redirect: "follow",
     signal: AbortSignal.timeout(45_000),
     headers: { Accept: "text/html" }
   });
-  if (!res.ok) throw new Error(`HTTP ${res.status} for ${url}`);
-  return res.text();
+  return { status: res.status, text: res.ok ? await res.text() : "" };
 }
 
 let failed = false;
 for (const row of pages) {
   const url = `${base}${row.path}`;
   try {
-    const html = await fetchText(url);
-    const missing = row.needles.filter((n) => !html.includes(n));
+    const { status, text } = await fetchHtml(url);
+    if (status === 404 && row.softSkipOn404) {
+      console.info(`soft-skip ${url} HTTP 404 (locale HTML not shipped on this origin)`);
+      continue;
+    }
+    if (status !== 200) {
+      console.error(`FAIL ${url}: HTTP ${status}`);
+      failed = true;
+      continue;
+    }
+    const missing = row.needles.filter((n) => !text.includes(n));
     if (missing.length) {
       console.error(`FAIL ${url} missing: ${missing.join(", ")}`);
       failed = true;

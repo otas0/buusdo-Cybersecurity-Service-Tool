@@ -70,8 +70,51 @@ async function closeServer(server: Server) {
   await new Promise<void>((resolve) => server.close(() => resolve()));
 }
 
-test("China health soft-fail when service ≠ buusdocst stays on notice", async ({ page }) => {
-  const { server, port } = await serveNotice();
+for (const locale of [
+  { id: "zh", html: htmlZh, anyway: /仍打开 Workers/ },
+  { id: "en", html: htmlEn, anyway: /Open Workers anyway/ },
+] as const) {
+  test(`China health soft-fail wrong service (${locale.id}) + anyway link`, async ({ page }) => {
+    const { server, port } = await serveNotice({ html: locale.html });
+
+    await page.route("**/api/health", async (route) => {
+      await route.fulfill({
+        status: 200,
+        contentType: "application/json",
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Methods": "GET, OPTIONS",
+        },
+        body: JSON.stringify({
+          ok: true,
+          service: "pcpd",
+          curatedListPresent: true,
+          accountSyncEnabled: false,
+        }),
+      });
+    });
+
+    try {
+      await page.goto(`http://127.0.0.1:${port}/?china_stay=0`, { waitUntil: "domcontentloaded" });
+      await expect(page.getByTestId("china-notice")).toBeVisible();
+      const reachEl = page.locator("#workers-reach");
+      await expect(reachEl).toHaveAttribute("data-state", "soft-fail", { timeout: 10_000 });
+      await expect(reachEl).not.toHaveAttribute("data-state", "checking");
+      await expect(reachEl).toHaveAttribute("aria-busy", "false");
+      await expect(reachEl).toHaveAttribute("aria-live", "polite");
+      const anyway = page.getByTestId("china-workers-anyway");
+      await expect(anyway).toBeVisible();
+      await expect(anyway).toHaveText(locale.anyway);
+      await expect(anyway).toHaveAttribute("href", /buusdocst\.mtsu\.workers\.dev/);
+      expect(page.url()).not.toMatch(/workers\.dev/);
+    } finally {
+      await closeServer(server);
+    }
+  });
+}
+
+test("soft-fail anyway link hides after china_stay=1", async ({ page }) => {
+  const { server, port } = await serveNotice({ html: htmlEn });
 
   await page.route("**/api/health", async (route) => {
     await route.fulfill({
@@ -92,18 +135,46 @@ test("China health soft-fail when service ≠ buusdocst stays on notice", async 
 
   try {
     await page.goto(`http://127.0.0.1:${port}/?china_stay=0`, { waitUntil: "domcontentloaded" });
-    await expect(page.getByTestId("china-notice")).toBeVisible();
+    await expect(page.getByTestId("china-workers-anyway")).toBeVisible({ timeout: 10_000 });
+    await page.goto(`http://127.0.0.1:${port}/?china_stay=1`, { waitUntil: "domcontentloaded" });
+    await expect(page.locator("#workers-reach")).toHaveAttribute("data-state", "stay", {
+      timeout: 5_000,
+    });
+    await expect(page.getByTestId("china-workers-anyway")).toHaveCount(0);
+  } finally {
+    await closeServer(server);
+  }
+});
+
+test("anyway link stays hidden on successful health bounce (ok)", async ({ page }) => {
+  const { server, port } = await serveNotice({ html: htmlEn });
+
+  await page.route("**/api/health", async (route) => {
+    await route.fulfill({
+      status: 200,
+      contentType: "application/json",
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "GET, OPTIONS",
+      },
+      body: JSON.stringify({
+        ok: true,
+        service: "buusdocst",
+        curatedListPresent: true,
+        accountSyncEnabled: false,
+      }),
+    });
+  });
+
+  try {
+    // Block navigation so we can assert reach state before location.replace.
+    await page.route("**/buusdocst.mtsu.workers.dev/**", async (route) => {
+      await route.fulfill({ status: 200, contentType: "text/html", body: "<ok/>" });
+    });
+    await page.goto(`http://127.0.0.1:${port}/?china_stay=0`, { waitUntil: "domcontentloaded" });
     const reachEl = page.locator("#workers-reach");
-    await expect(reachEl).toHaveAttribute("data-state", "soft-fail", { timeout: 10_000 });
-    await expect(reachEl).not.toHaveAttribute("data-state", "checking");
-    await expect(reachEl).toHaveAttribute("aria-busy", "false");
-    await expect(reachEl).toHaveAttribute("aria-live", "polite");
-    await expect(page.getByTestId("china-workers-anyway")).toBeVisible();
-    await expect(page.getByTestId("china-workers-anyway")).toHaveAttribute(
-      "href",
-      /buusdocst\.mtsu\.workers\.dev/,
-    );
-    expect(page.url()).not.toMatch(/workers\.dev/);
+    await expect(reachEl).toHaveAttribute("data-state", "ok", { timeout: 10_000 });
+    await expect(page.getByTestId("china-workers-anyway")).toHaveCount(0);
   } finally {
     await closeServer(server);
   }

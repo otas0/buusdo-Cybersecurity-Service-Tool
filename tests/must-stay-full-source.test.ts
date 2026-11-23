@@ -11,10 +11,14 @@ import { LOCALE_CATALOG } from "../i18n/locales";
 import { MUST_STAY_FULL_LOCALES, isFullLocalePack } from "../i18n/pack-coverage";
 
 test("must-stay-full-locales.json matches pack-coverage export", () => {
-  const fromJson = JSON.parse(
+  const raw = JSON.parse(
     readFileSync(path.join("i18n/must-stay-full-locales.json"), "utf8")
-  ) as string[];
+  ) as { _comment?: string; locales: string[] } | string[];
+  const fromJson = Array.isArray(raw) ? raw : raw.locales;
   assert.deepEqual([...MUST_STAY_FULL_LOCALES], fromJson);
+  if (!Array.isArray(raw)) {
+    assert.match(String(raw._comment || ""), /tip keys|same PR|core-keys/i);
+  }
   assert.ok(fromJson.includes("cs"));
   assert.ok(fromJson.includes("lt"));
   assert.ok(fromJson.includes("bg"));

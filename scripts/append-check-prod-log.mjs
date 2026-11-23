@@ -5,8 +5,20 @@
  *   node scripts/append-check-prod-log.mjs --url https://… --result OK --runner github-actions
  *   node scripts/append-check-prod-log.mjs --url https://… --result FAIL --runner github-actions --notes "…"
  */
-import { readFileSync, writeFileSync } from "node:fs";
+import { appendFileSync, readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
+
+function emitDroppedRows(n) {
+  const line = `DROPPED_ROWS=${n}`;
+  console.info(`[append-check-prod-log] ${line}`);
+  if (process.env.GITHUB_OUTPUT) {
+    try {
+      appendFileSync(process.env.GITHUB_OUTPUT, `dropped_rows=${n}\n`, "utf8");
+    } catch {
+      /* ignore */
+    }
+  }
+}
 
 const args = process.argv.slice(2);
 function flag(name) {
@@ -58,6 +70,7 @@ if (
   nextLine.includes(runner)
 ) {
   console.info("[append-check-prod-log] row already present — skip");
+  emitDroppedRows(0);
   process.exit(0);
 }
 md = `${md.slice(0, insertAt)}${row}\n${md.slice(insertAt)}`;
@@ -80,17 +93,15 @@ for (; restIdx < lines.length; restIdx += 1) {
   }
   break;
 }
+let dropped = 0;
 if (dataRows.length > maxRows) {
   const kept = dataRows.slice(0, maxRows);
-  const trimmed = dataRows.length - maxRows;
+  dropped = dataRows.length - maxRows;
   const remainder = lines.slice(restIdx).join("\n");
-  md =
-    md.slice(0, tableStart) +
-    kept.join("\n") +
-    "\n" +
-    remainder;
-  console.info(`[append-check-prod-log] capped table to ${maxRows} rows (dropped ${trimmed})`);
+  md = md.slice(0, tableStart) + kept.join("\n") + "\n" + remainder;
+  console.info(`[append-check-prod-log] capped table to ${maxRows} rows (dropped ${dropped})`);
 }
 
 writeFileSync(checklistPath, md, "utf8");
 console.info(`[append-check-prod-log] ${row}`);
+emitDroppedRows(dropped);

@@ -41,6 +41,8 @@
    * New privacy / downloads hash targets (#privacy-honest-limits, #privacy-faq-common,
    * #downloads-extension) must use scroll-margin-top: var(--shell-top-scroll-margin)
    * so they inherit without CSS drift — do not hardcode rem values per id.
+   * DownloadsPanel.tsx #downloads-extension must keep style={{ scrollMarginTop: "var(--shell-top-scroll-margin)" }}
+   * (asserted by scripts/assert-desktop-download-messages.mjs) — never a bare rem string.
    */
   --shell-top-scroll-margin: 4.5rem;
   color-scheme: dark;

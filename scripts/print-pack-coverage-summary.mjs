@@ -14,9 +14,14 @@ const packsDir = path.join(root, "i18n/packs");
 const en = JSON.parse(fs.readFileSync(path.join(packsDir, "_en.snapshot.json"), "utf8"));
 const EN_KEYS = Object.keys(en);
 const FULL_PACK_MIN_KEYS = Math.max(400, Math.floor(EN_KEYS.length * 0.9));
-const MUST_STAY_FULL = JSON.parse(
+const mustStayRaw = JSON.parse(
   fs.readFileSync(path.join(root, "i18n/must-stay-full-locales.json"), "utf8")
 );
+const MUST_STAY_FULL = Array.isArray(mustStayRaw)
+  ? mustStayRaw
+  : Array.isArray(mustStayRaw?.locales)
+    ? mustStayRaw.locales
+    : [];
 
 const packFiles = fs
   .readdirSync(packsDir)
