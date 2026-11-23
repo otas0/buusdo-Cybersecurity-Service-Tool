@@ -42,8 +42,10 @@ test("xh/st/nr/nso China notice/clear links differ from EN", () => {
   }
 });
 
-test("popup.html Southern Africa optgroup lists xh and st", () => {
+test("popup.html Southern Africa optgroup lists xh/st/nr/nso", () => {
   const html = readFileSync("extension/popup/popup.html", "utf8");
   assert.match(html, /<option value="xh">/);
   assert.match(html, /<option value="st">/);
+  assert.match(html, /<option value="nr">/);
+  assert.match(html, /<option value="nso">/);
 });

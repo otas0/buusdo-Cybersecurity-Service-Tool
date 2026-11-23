@@ -482,5 +482,6 @@
   "faqExtOfflineTitle": "Μπορώ να εγκαταστήσω την επέκταση προγράμματος περιήγησης ως πλήρες πακέτο εκτός σύνδεσης;",
   "faqExtOfflineBody": "Όχι. Η επέκταση εγκαθίσταται μόνο από το Chrome Web Store ή το Mac App Store. Δεν υπάρχει λήψη ολόκληρου αποθετηρίου ούτε αυτόνομο πακέτο εκτός σύνδεσης — δείτε Downloads.",
   "optionalUpdateShowHint": "Εμφάνιση συμβουλής ενημέρωσης",
+  "optionalUpdateTipAvailable": "Διαθέσιμη συμβουλή ενημέρωσης",
   "honestLimitsMinSupportedNote": "Ελάχιστη έκδοση: {min} · πηγή {source}"
 }

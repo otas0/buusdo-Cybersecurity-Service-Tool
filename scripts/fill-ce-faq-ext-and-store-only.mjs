@@ -9,9 +9,14 @@ import fs from "node:fs";
 import path from "node:path";
 
 const packsDir = path.join("i18n/packs");
-const mustStay = JSON.parse(
+const mustStayRaw = JSON.parse(
   fs.readFileSync("i18n/must-stay-full-locales.json", "utf8")
 );
+const mustStay = Array.isArray(mustStayRaw)
+  ? mustStayRaw
+  : Array.isArray(mustStayRaw?.locales)
+    ? mustStayRaw.locales
+    : [];
 const enStore =
   "The browser extension installs from the Chrome Web Store or Mac App Store only. There is no whole-repo download and no offline self-contained extension package.";
 

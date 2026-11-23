@@ -482,5 +482,6 @@
   "faqExtOfflineTitle": "Telepíthetem a böngésző-bővítményt teljes offline csomagként?",
   "faqExtOfflineBody": "Nem. A bővítmény csak a Chrome Web Store-ból vagy a Mac App Store-ból telepíthető. Nincs teljes repo letöltés, sem önálló offline csomag — lásd Downloads.",
   "optionalUpdateShowHint": "Frissítési tipp megjelenítése",
+  "optionalUpdateTipAvailable": "Frissítési tipp elérhető",
   "honestLimitsMinSupportedNote": "Minimális verzió: {min} · forrás {source}"
 }

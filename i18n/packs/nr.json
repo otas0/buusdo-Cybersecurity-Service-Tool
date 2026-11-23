@@ -482,5 +482,6 @@
   "faqExtOfflineTitle": "Ngingakwazi yini ukufaka isandiso sesiphequluli njengephakheji ephelele ye-offline?",
   "faqExtOfflineBody": "Awa. Isandiso sifakwa kuphela kusuka ku-Chrome Web Store noma i-Mac App Store. Akukho ukulanda i-repo yonke futhi akukho iphakheji yesandiso ezimele ye-offline — bona Downloads.",
   "optionalUpdateShowHint": "Bonisa icebo lokuvuselela",
+  "optionalUpdateTipAvailable": "Ithiphu yesibuyekezo iyatholakala",
   "honestLimitsMinSupportedNote": "Inguqulo encane: {min} · umthombo {source}"
 }

@@ -289,6 +289,10 @@ jobs:
           } >> "$GITHUB_STEP_SUMMARY"
           if [ "$DROPPED" -gt "$HALF" ] 2>/dev/null; then
             echo "::warning::DROPPED_ROWS=${DROPPED} exceeds half of CHECKLIST_LOG_MAX_ROWS=${MAX_ROWS} (threshold ${HALF}) — raise cap or trim LAUNCH_CHECKLIST log"
+            {
+              echo "- **Half-cap warning:** dropped **${DROPPED}** > half of max **${MAX_ROWS}** (threshold ${HALF}) — raise \`CHECKLIST_LOG_MAX_ROWS\` or trim the checklist log"
+              echo ""
+            } >> "$GITHUB_STEP_SUMMARY"
           fi
 
       - name: Append checklist log (FAIL)
@@ -312,6 +316,10 @@ jobs:
           } >> "$GITHUB_STEP_SUMMARY"
           if [ "$DROPPED" -gt "$HALF" ] 2>/dev/null; then
             echo "::warning::DROPPED_ROWS=${DROPPED} exceeds half of CHECKLIST_LOG_MAX_ROWS=${MAX_ROWS} (threshold ${HALF}) — raise cap or trim LAUNCH_CHECKLIST log"
+            {
+              echo "- **Half-cap warning:** dropped **${DROPPED}** > half of max **${MAX_ROWS}** (threshold ${HALF}) — raise \`CHECKLIST_LOG_MAX_ROWS\` or trim the checklist log"
+              echo ""
+            } >> "$GITHUB_STEP_SUMMARY"
           fi
 
       - name: Commit checklist log

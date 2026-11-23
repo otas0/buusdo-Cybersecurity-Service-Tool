@@ -78,6 +78,22 @@ try {
   );
 }
 
+const floorMjs = path.join(sharedRoot, "min-supported-floor.mjs");
+if (!existsSync(floorMjs)) {
+  fail(`staged shared missing min-supported-floor.mjs: ${floorMjs}`);
+}
+{
+  const floorSrc = readFileSync(floorMjs, "utf8");
+  if (
+    !floorSrc.includes("formatMinSupportedFloorNote") ||
+    !floorSrc.includes("formatMinSupportedSourceLabel")
+  ) {
+    fail(
+      "staged min-supported-floor.mjs missing formatMinSupportedFloorNote / formatMinSupportedSourceLabel exports"
+    );
+  }
+}
+
 const child = spawn(nodeBin, [launcher], {
   cwd: appRoot,
   env: {

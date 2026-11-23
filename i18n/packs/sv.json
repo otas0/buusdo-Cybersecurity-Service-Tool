@@ -483,5 +483,6 @@
   "faqExtOfflineTitle": "Kan jag installera webbläsartillägget som ett offline helhets paket?",
   "faqExtOfflineBody": "Nej. Tillägget installeras endast från Chrome Web Store eller Mac App Store. Ingen hel-repo-nedladdning och inget offline fristående tilläggspaket — se Downloads.",
   "optionalUpdateShowHint": "Visa uppdateringstips",
+  "optionalUpdateTipAvailable": "Uppdateringstips tillgängligt",
   "honestLimitsMinSupportedNote": "Lägsta version: {min} · källa {source}"
 }

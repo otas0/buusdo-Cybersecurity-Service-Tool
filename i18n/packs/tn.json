@@ -482,5 +482,6 @@
   "faqExtOfflineTitle": "A nka tlhagisa katoloso ya browser jaaka sephuthelwana se se feletseng sa offline?",
   "faqExtOfflineBody": "Nnyaa. Katoloso e tlhagisiwa fela go tswa go Chrome Web Store kgotsa Mac App Store. Ga go na go laola repo yotlhe mme ga go sephuthelwana sa katoloso se ikemetseng sa offline — bona Downloads.",
   "optionalUpdateShowHint": "Bontsha keletso ya ntšhwafatso",
+  "optionalUpdateTipAvailable": "Keletso ya ntšhwafatso e teng",
   "honestLimitsMinSupportedNote": "Phetolelo e kwa tlase: {min} · motswedi {source}"
 }

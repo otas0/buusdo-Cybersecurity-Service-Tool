@@ -483,5 +483,6 @@
   "faqExtOfflineTitle": "Puis-je installer l’extension navigateur comme paquet hors ligne complet ?",
   "faqExtOfflineBody": "Non. L’extension s’installe uniquement depuis le Chrome Web Store ou le Mac App Store. Pas de téléchargement du dépôt entier ni de paquet autonome hors ligne — voir Downloads.",
   "optionalUpdateShowHint": "Afficher l’avis de mise à jour",
+  "optionalUpdateTipAvailable": "Avis de mise à jour disponible",
   "honestLimitsMinSupportedNote": "Version minimale : {min} · source {source}"
 }

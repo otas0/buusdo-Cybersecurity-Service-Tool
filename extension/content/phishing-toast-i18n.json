@@ -149,6 +149,46 @@
     "nextNoCreds": "Ungafaki amaphasiwedi, izinombolo zamakhadi, amakhodi e-SMS/imeyili, noma enye idatha yomuntu siqu kule sayithi.",
     "nextVerify": "Qinisekisa ngokuzimela: vula isizinda noma uhlelo lwesikhathi esisemthethweni senhlangano osesethemba kakade (ibhukhimakhi, ikhadi lebhanga, isitolo sohlelo olwaziwayo). Ungasebenzisi izingcingo noma ama-imeyili akhona ekhasini elisolisayo."
   },
+  "xh": {
+    "phishing": "Iphethini yokukhwabanisa ithintelwe",
+    "dismiss": "Gxotha icebiso",
+    "dangerLevel": "Inqanaba lengozi: Nqumama",
+    "ignoreRisk": "Unokunikezela amagama okugqithisa, iinkcukacha zentlawulo, okanye enye idatha yobuqu kulowo ulawula le dilesi. Vala ithebhu phambi kokuchwetheza okanye ukuhlawula nantoni na.",
+    "nextStepsTitle": "Into onokuyenza elandelayo — inyathelo ngenyathelo",
+    "nextLeave": "Phuma kweli phepha ngoku — ungakuqhubeki kwidilesi oyikhangelileyo.",
+    "nextNoCreds": "Ungafaki amagama okugqithisa, iinombolo zamakhadi, iikhowudi ze-SMS/imeyile, okanye enye idatha yobuqu kule sayithi.",
+    "nextVerify": "Qinisekisa ngokuzimeleyo: vula idomeyini okanye i-app esemthethweni yombutho osele uwuthembile (ibhukhimakhi, ikhadi lebhanki, ivenkile ye-app eyaziwayo). Ungasebenzisi iifowuni okanye ii-imeyile ezikwiphepha elikrokrisayo."
+  },
+  "st": {
+    "phishing": "Mokhoa oa phishing o thibetsoe",
+    "dismiss": "Lahla keletso",
+    "dangerLevel": "Boemo ba kotsi: Ema",
+    "ignoreRisk": "U ka fana ka liphasewete, lintlha tsa tefo kapa datha e ’ngoe ea motho ho ea laolang aterese ena. Koala thebe pele u ngola kapa u lefa letho.",
+    "nextStepsTitle": "Seo u lokelang ho se etsa hamorao — mohato ka mohato",
+    "nextLeave": "Tloha leqepheng lena hona joale — se ke oa tsoela pele atereseng eo u e hlahlobileng.",
+    "nextNoCreds": "Se ke oa kenya liphasewete, linomoro tsa likarete, likhoutu tsa SMS/imeile kapa datha e ’ngoe ea motho sebakeng sena.",
+    "nextVerify": "Netefatsa ka boikemelo: bula domain kapa app ea semmuso ea mokhatlo oo u seng u o tšepile (bokemaka, karete ea banka, lebenkele la li-app le tsebahalang). Se ke oa sebelisa mehala kapa li-imeile tse bontšitsoeng leqepheng le belaetsang."
+  },
+  "nr": {
+    "phishing": "Iphethini ye-phishing ivinjwe",
+    "dismiss": "Susa iseluleko",
+    "dangerLevel": "Izinga lobungozi: Misa",
+    "ignoreRisk": "Unganikeza amaphasiwedi, imininingwane yokukhokha, nanyana enye idatha yomuntu siqu kulowo olawula leli kheli. Vala ithebhu ngaphambi kokuthayipha nanyana ukukhokha nanyana yini.",
+    "nextStepsTitle": "Okufanele ukwenze ngokulandelako — isinyathelo ngesinyathelo",
+    "nextLeave": "Phuma kuleli khasi nje — ungakuqhubeki ekhelini olihlolileko.",
+    "nextNoCreds": "Ungafaki amaphasiwedi, iinombolo zamakhadi, amakhodi we-SMS/imeyili, nanyana enye idatha yomuntu siqu kule sayithi.",
+    "nextVerify": "Qinisekisa ngokuzimela: vula isizinda nanyana i-app esemthethweni senhlangano osesithembako (ibhukhimakhi, ikhadi lebhanga, isitolo se-app esaziwa). Ungasebenzisi iingcingo nanyana ama-imeyili akhona ekhasini elisolisako."
+  },
+  "nso": {
+    "phishing": "Mokgwa wa phishing o thibetšwe",
+    "dismiss": "Tlogela keletšo",
+    "dangerLevel": "Tekanyo ya kotsi: Ema",
+    "ignoreRisk": "O ka fana ka diphasewete, tshedimošo ya tefo, goba datha ye nngwe ya motho go yo a laolago aterese ye. Tswalela thepe pele o ngwala goba o lefa selo.",
+    "nextStepsTitle": "Seo o swanetšego go se dira ka morago — kgato ka kgato",
+    "nextLeave": "Tloga letlakaleng le gona bjale — o se ke wa tšwela pele atereseng ye o e lekileng.",
+    "nextNoCreds": "O se ke wa tsenya diphasewete, dinomoro tša dikarata, dikhoutu tša SMS/imeile, goba datha ye nngwe ya motho saeteng ye.",
+    "nextVerify": "Netefatša ka go ikemela: bula tomeine goba app ya semmušo ya mokgatlo wo o šetšego o o tshepile (bukemaka, karata ya panka, lebenkele la di-app leo le tsebjago). O se ke wa šomiša megala goba di-imeile tše di bontšhitšwego letlakaleng le le belaelwago."
+  },
   "pt-BR": {
     "phishing": "Padrão de phishing bloqueado",
     "dismiss": "Dispensar aviso",

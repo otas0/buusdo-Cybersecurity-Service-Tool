@@ -485,5 +485,6 @@
   "faqExtOfflineTitle": "浏览器扩展能否作为离线整包安装？",
   "faqExtOfflineBody": "不能。扩展仅通过 Chrome 网上应用店或 Mac App Store 安装。不提供整库下载，也没有离线自包含扩展包 — 见下载页。",
   "optionalUpdateShowHint": "显示更新提示",
+  "optionalUpdateTipAvailable": "更新提示可用",
   "honestLimitsMinSupportedNote": "最低支持版本：{min} · 来源 {source}"
 }

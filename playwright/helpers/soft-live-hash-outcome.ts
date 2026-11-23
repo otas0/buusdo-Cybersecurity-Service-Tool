@@ -11,25 +11,29 @@ export type SoftLiveHashOutcome = {
   oks: { locale: string; id: string }[];
 };
 
-const OUT =
-  process.env.SOFT_LIVE_HASH_OUTCOME_PATH ||
-  path.join(process.cwd(), "ci/soft-live-hash-inview-outcome.json");
+function outcomePath() {
+  return (
+    process.env.SOFT_LIVE_HASH_OUTCOME_PATH ||
+    path.join(process.cwd(), "ci/soft-live-hash-inview-outcome.json")
+  );
+}
 
 function read(): SoftLiveHashOutcome {
   try {
-    return JSON.parse(readFileSync(OUT, "utf8")) as SoftLiveHashOutcome;
+    return JSON.parse(readFileSync(outcomePath(), "utf8")) as SoftLiveHashOutcome;
   } catch {
     return { ok: true, fails: [], oks: [] };
   }
 }
 
 function write(data: SoftLiveHashOutcome) {
-  mkdirSync(path.dirname(OUT), { recursive: true });
-  writeFileSync(OUT, `${JSON.stringify(data, null, 2)}\n`);
+  const out = outcomePath();
+  mkdirSync(path.dirname(out), { recursive: true });
+  writeFileSync(out, `${JSON.stringify(data, null, 2)}\n`);
 }
 
 export function softLiveHashOutcomePath() {
-  return OUT;
+  return outcomePath();
 }
 
 export function softLiveHashOutcomeReset() {

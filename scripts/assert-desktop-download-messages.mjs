@@ -39,7 +39,11 @@ const REQUIRED = [
 ];
 
 /** Desktop tip keys that must stay non-empty in messages + packs + i18n bags. */
-const DESKTOP_TIP_KEYS = ["optionalUpdateShowHint", "honestLimitsMinSupportedNote"];
+const DESKTOP_TIP_KEYS = [
+  "optionalUpdateShowHint",
+  "optionalUpdateTipAvailable",
+  "honestLimitsMinSupportedNote"
+];
 
 const downloads = JSON.parse(
   readFileSync(path.join(root, "shared/desktop-downloads.json"), "utf8")
@@ -168,41 +172,86 @@ for (const id of ["#downloads-extension", "#privacy-faq-common", "#privacy-hones
     failed += 1;
   }
 }
-if (!/:root\[data-theme="light"\]\s*\.shell\s*\.top[\s\S]{0,120}background:\s*var\(--bg\)/.test(shieldCss)) {
-  console.error(
-    'app/shield.css must set :root[data-theme="light"] .shell .top { background: var(--bg) }'
-  );
-  failed += 1;
-}
+// One shared sticky plate rule (light + dark) — opaque --bg, border, box-shadow.
 if (
-  !/:root\[data-theme="light"\]\s*\.shell\s*\.top[\s\S]{0,200}border-bottom:\s*1px solid var\(--line\)/.test(
+  !/\.shell\s*\.top[\s\S]{0,400}background:\s*var\(--bg\)[\s\S]{0,120}box-shadow:\s*0 1px 0 var\(--bg\)/.test(
     shieldCss
   )
 ) {
   console.error(
-    "app/shield.css light sticky .shell .top must keep border-bottom: var(--line) (no content show-through)"
+    "app/shield.css sticky .shell .top must share opaque plate (background + box-shadow var(--bg))"
   );
   failed += 1;
 }
-if (!/\.shell\s*\.top[\s\S]{0,200}box-shadow:\s*0 1px 0 var\(--bg\)/.test(shieldCss)) {
-  console.error(
-    "app/shield.css sticky .shell .top must use opaque plate (box-shadow: 0 1px 0 var(--bg))"
-  );
+if (!shieldCss.includes(':root[data-theme="light"] .shell .top')) {
+  console.error('app/shield.css sticky rule must include :root[data-theme="light"] .shell .top');
   failed += 1;
 }
-if (
-  !/:root\[data-theme="dark"\]\s*\.shell\s*\.top[\s\S]{0,120}background:\s*var\(--bg\)/.test(shieldCss) &&
-  !/:root:not\(\[data-theme="light"\]\)\s*\.shell\s*\.top[\s\S]{0,120}background:\s*var\(--bg\)/.test(
-    shieldCss
-  )
-) {
-  console.error(
-    "app/shield.css dark/default sticky .shell .top must match opaque plate pattern"
+if (!shieldCss.includes(':root[data-theme="dark"] .shell .top')) {
+  console.error('app/shield.css sticky rule must include :root[data-theme="dark"] .shell .top');
+  failed += 1;
+}
+// Narrow MQ under shared sticky plate: only gap/logo (no re-declare plate bg/position/border).
+{
+  const mqIdx = shieldCss.indexOf("@media (max-width: 360px)");
+  const mqBody = mqIdx >= 0 ? shieldCss.slice(mqIdx, mqIdx + 1400) : "";
+  const topInMq = mqBody.match(/\.shell\s*\.top\s*\{([^}]*)\}/);
+  if (!topInMq) {
+    console.error("app/shield.css @media (max-width: 360px) must tweak .shell .top (gap/logo)");
+    failed += 1;
+  } else {
+    const block = topInMq[1];
+    if (!/gap\s*:/.test(block)) {
+      console.error("app/shield.css narrow .shell .top must set gap");
+      failed += 1;
+    }
+    for (const banned of ["background:", "position:", "border-bottom:", "sticky", "box-shadow:"]) {
+      if (block.includes(banned)) {
+        console.error(
+          `app/shield.css narrow .shell .top must not re-declare plate property (${banned.trim()}) — keep under shared sticky plate`
+        );
+        failed += 1;
+      }
+    }
+  }
+  if (mqBody && !/\.shell\s*\.brand-logo\s*\{/.test(mqBody)) {
+    console.error("app/shield.css narrow MQ must still tweak .shell .brand-logo");
+    failed += 1;
+  }
+  if (mqBody && !/--shell-top-scroll-margin\s*:\s*[\d.]+rem/.test(mqBody)) {
+    console.error(
+      "app/shield.css narrow MQ must set --shell-top-scroll-margin token (deep-link clearance)"
+    );
+    failed += 1;
+  }
+}
+try {
+  const streak = JSON.parse(
+    readFileSync(path.join(root, "ci/soft-live-hash-streak.json"), "utf8")
   );
+  if (Number(streak.streak) !== 0) {
+    console.error(
+      "ci/soft-live-hash-streak.json baseline must stay streak=0 (reset: node scripts/bump-soft-live-hash-streak.mjs --reset)"
+    );
+    failed += 1;
+  }
+} catch {
+  console.error("ci/soft-live-hash-streak.json missing or invalid baseline");
   failed += 1;
 }
 if (!downloadsPanel.includes('data-testid="downloads-desktop-install-steps"')) {
   console.error("DownloadsPanel missing downloads-desktop-install-steps (3-step install copy)");
+  failed += 1;
+}
+if (
+  !downloadsPanel.includes('testId="downloads-honest-limits-min-supported"') &&
+  !downloadsPanel.includes('data-testid="downloads-honest-limits-min-supported"')
+) {
+  console.error("DownloadsPanel missing downloads-honest-limits-min-supported floor note");
+  failed += 1;
+}
+if (!downloadsPanel.includes("resolveFromStatus")) {
+  console.error("DownloadsPanel MinSupportedFloorNote must use resolveFromStatus (status API source)");
   failed += 1;
 }
 if (!downloadsPanel.includes('data-testid="downloads-extension-store-only"')) {

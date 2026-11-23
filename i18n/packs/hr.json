@@ -482,5 +482,6 @@
   "faqExtOfflineTitle": "Mogu li instalirati proširenje preglednika kao cjeloviti offline paket?",
   "faqExtOfflineBody": "Ne. Proširenje se instalira samo iz Chrome Web Storea ili Mac App Storea. Nema preuzimanja cijelog repozitorija ni samostalnog offline paketa — vidi Downloads.",
   "optionalUpdateShowHint": "Prikaži savjet o ažuriranju",
+  "optionalUpdateTipAvailable": "Dostupan savjet za ažuriranje",
   "honestLimitsMinSupportedNote": "Minimalna verzija: {min} · izvor {source}"
 }

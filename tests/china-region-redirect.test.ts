@@ -404,6 +404,35 @@ test("vm: soft-fail then stay clear removes anyway in one harness", async () => 
   assert.equal(anywayCount(reach), 0);
 });
 
+test("vm: soft-fail then ok bounce removes anyway in one harness", async () => {
+  const reach = makeReachEl();
+  const soft = runRedirect({
+    pathname: "/buusdocst/en.html",
+    languages: ["en"],
+    lang: "en",
+    health: { ok: true, service: "pcpd" },
+    withReach: true,
+    reach
+  });
+  await soft.flush();
+  assert.equal(soft.reach?.dataset.state, "soft-fail");
+  assert.equal(anywayCount(reach), 1);
+
+  // Same reach: healthy buusdocst → setReach("ok") then bounce; anyway must be gone.
+  const ok = runRedirect({
+    pathname: "/buusdocst/en.html",
+    languages: ["en"],
+    lang: "en",
+    health: { ok: true, service: "buusdocst" },
+    withReach: true,
+    reach
+  });
+  await ok.flush();
+  assert.equal(ok.reach?.dataset.state, "ok");
+  assert.equal(anywayCount(reach), 0);
+  assert.match(ok.replaced, /workers\.dev/);
+});
+
 test("vm: hard fail uses assertive aria-live", async () => {
   const run = runRedirect({
     pathname: "/buusdocst/index.html",

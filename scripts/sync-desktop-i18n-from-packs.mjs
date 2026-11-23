@@ -7,6 +7,7 @@
  *
  *   node scripts/sync-desktop-i18n-from-packs.mjs
  *   node scripts/sync-desktop-i18n-from-packs.mjs --check
+ *   node scripts/sync-desktop-i18n-from-packs.mjs --dry-run-missing-fixture
  */
 import fs from "node:fs";
 import path from "node:path";
@@ -15,8 +16,39 @@ import { execSync } from "node:child_process";
 
 const root = path.join(path.dirname(fileURLToPath(import.meta.url)), "..");
 const checkOnly = process.argv.includes("--check");
+/** Dry-run: emit a fake missing-key matrix + summary markdown (exit 0) for fixture tests. */
+const dryRunMissingFixture = process.argv.includes("--dry-run-missing-fixture");
 const i18nPath = path.join(root, "desktop-app/public/js/i18n.js");
 const packsDir = path.join(root, "i18n/packs");
+
+/**
+ * @param {{ locale: string, key: string }[]} matrix
+ * @param {object} payload
+ */
+function formatMissingMatrixSummaryMarkdown(matrix, payload) {
+  const rows = matrix.map((r) => `| ${r.locale} | ${r.key} |`).join("\n");
+  return `\n### sync-desktop-i18n missing (locale×key)\n\n| locale | key |\n| --- | --- |\n${rows}\n\n\`\`\`json\n${JSON.stringify(payload, null, 2)}\n\`\`\`\n`;
+}
+
+if (dryRunMissingFixture) {
+  const matrix = [
+    { locale: "ja", key: "optionalUpdateShowHint" },
+    { locale: "de", key: "honestLimitsMinSupportedNote" }
+  ];
+  const payload = {
+    syncDesktopI18nMissing: matrix,
+    forceLocales: ["ja", "de"],
+    forceKeys: ["optionalUpdateShowHint", "honestLimitsMinSupportedNote"]
+  };
+  const md = formatMissingMatrixSummaryMarkdown(matrix, payload);
+  const outPath = process.env.SHIELD_SYNC_MISSING_SUMMARY_OUT;
+  if (outPath) {
+    fs.writeFileSync(outPath, md);
+  } else {
+    process.stdout.write(md);
+  }
+  process.exit(0);
+}
 
 const MAP = {
   appTitle: "prototype",
@@ -78,7 +110,8 @@ const MAP = {
   proxyGuideAfterBlock: "proxyGuideAfterBlock",
   proxyBody: "proxyGuideLead",
   // Desktop update tip reset — packs keep overlay locales from drifting to EN.
-  optionalUpdateShowHint: "optionalUpdateShowHint"
+  optionalUpdateShowHint: "optionalUpdateShowHint",
+  honestLimitsMinSupportedNote: "honestLimitsMinSupportedNote"
 };
 
 // Desktop-only ja strings (website / lists UI without pack twins). Applied after MAP.
@@ -239,6 +272,8 @@ const FORCE_UPDATE_KEYS = [
   "optionalUpdateBanner",
   "optionalUpdateDismiss",
   "optionalUpdateShowHint",
+  "optionalUpdateTipAvailable",
+  "honestLimitsMinSupportedNote",
   "updateCheckOffline",
   "honestLimitsItemOffline"
 ];
@@ -255,17 +290,42 @@ if (checkOnly) {
     console.error("[sync-desktop-i18n] drift — run: node scripts/sync-desktop-i18n-from-packs.mjs");
     process.exit(1);
   }
-  const forceLocales = [PT_BR, "ja", "zh-Hant", ...OVERLAY_LOCALES];
+  const forceLocales = [PT_BR, "ja", "zh-Hans", "zh-Hant", ...OVERLAY_LOCALES];
+  /** @type {string[]} */
+  const missing = [];
+  /** @type {{ locale: string, key: string }[]} */
+  const matrix = [];
   for (const locale of forceLocales) {
     for (const key of FORCE_UPDATE_KEYS) {
       if (!bags[locale][key]?.trim()) {
-        console.error(`[sync-desktop-i18n] ${locale} missing force/update key ${key}`);
-        process.exit(1);
+        missing.push(`${locale}×${key}`);
+        matrix.push({ locale, key });
       }
     }
   }
+  if (missing.length) {
+    console.error("[sync-desktop-i18n] missing force/update keys (locale×key):");
+    for (const row of missing) console.error(`  ${row}`);
+    const payload = {
+      syncDesktopI18nMissing: matrix,
+      forceLocales,
+      forceKeys: FORCE_UPDATE_KEYS
+    };
+    // Machine-readable matrix for CI annotations / job summaries.
+    console.error(JSON.stringify(payload, null, 2));
+    const summaryPath = process.env.GITHUB_STEP_SUMMARY;
+    if (summaryPath && process.env.GITHUB_ACTIONS === "true") {
+      try {
+        fs.appendFileSync(summaryPath, formatMissingMatrixSummaryMarkdown(matrix, payload));
+      } catch (e) {
+        const msg = e && typeof e === "object" && "message" in e ? e.message : e;
+        console.warn("[sync-desktop-i18n] GITHUB_STEP_SUMMARY append soft-fail:", msg);
+      }
+    }
+    process.exit(1);
+  }
   console.info(
-    `[sync-desktop-i18n] OK (force keys: ${forceLocales.join(",")})`
+    `[sync-desktop-i18n] OK (force keys: ${forceLocales.join(",")}; locales=${forceLocales.length})`
   );
   process.exit(0);
 }

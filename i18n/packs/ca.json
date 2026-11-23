@@ -482,5 +482,6 @@
   "faqExtOfflineTitle": "Puc instal·lar l’extensió del navegador com a paquet fora de línia complet?",
   "faqExtOfflineBody": "No. L’extensió només s’instal·la des de Chrome Web Store o Mac App Store. No hi ha baixada del repositori sencer ni paquet autònom fora de línia — vegeu Downloads.",
   "optionalUpdateShowHint": "Mostra l’avís d’actualització",
+  "optionalUpdateTipAvailable": "Consell d’actualització disponible",
   "honestLimitsMinSupportedNote": "Versió mínima: {min} · origen {source}"
 }

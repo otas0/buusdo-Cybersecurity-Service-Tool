@@ -482,5 +482,6 @@
   "faqExtOfflineTitle": "Ngingakwazi yini kufaka lesandiso selibhrawuza njengephakethe leliphelele le-offline?",
   "faqExtOfflineBody": "Cha. Lesandiso lifakwa kuphela kusuka ku-Chrome Web Store noma i-Mac App Store. Akukho kulanda i-repo yonke futhi akukho liphakethe lesandiso lelizimele le-offline — bona Downloads.",
   "optionalUpdateShowHint": "Khomba licebo lekuvuselela",
+  "optionalUpdateTipAvailable": "Litiphu yetfutfuko liyatholakala",
   "honestLimitsMinSupportedNote": "Inguqulo lencane: {min} · umtfombo {source}"
 }

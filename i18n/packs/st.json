@@ -482,5 +482,6 @@
   "faqExtOfflineTitle": "Na nka kenya katoloso ya sebatli e le sephuthelwana se feletseng sa offline?",
   "faqExtOfflineBody": "Che. Katoloso e kenngoa feela ho tsoa Chrome Web Store kapa Mac App Store. Ha ho na ho jarolla repo eohle 'me ha ho sephuthelwana sa katoloso se ikemetseng sa offline — bona Downloads.",
   "optionalUpdateShowHint": "Bontša keletso ea ntlafatso",
+  "optionalUpdateTipAvailable": "Keletso ya ntlafatso e fumaneha",
   "honestLimitsMinSupportedNote": "Mofuta o tlase: {min} · mohloli {source}"
 }

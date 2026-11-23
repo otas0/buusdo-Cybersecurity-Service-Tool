@@ -10,6 +10,7 @@ import {
   macMirrorUrl,
   resolveDesktopDownloads
 } from "../shared/desktop-downloads-resolve";
+import { MinSupportedFloorNote } from "./MinSupportedFloorNote";
 
 const CHROME_STORE_URL = String(extensionStores.chromeWebStoreUrl || "").trim();
 const SAFARI_STORE_URL = String(extensionStores.safariAppStoreUrl || "").trim();
@@ -188,6 +189,11 @@ export function DownloadsPanel({
             {t.desktopDownloadReleaseTag.replace("{tag}", DESKTOP_RELEASE_TAG)}
           </p>
         ) : null}
+        <MinSupportedFloorNote
+          template={t.honestLimitsMinSupportedNote}
+          testId="downloads-honest-limits-min-supported"
+          resolveFromStatus
+        />
         {showMacSource ? (
           <p
             className="scope-note"

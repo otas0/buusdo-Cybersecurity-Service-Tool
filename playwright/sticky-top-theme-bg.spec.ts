@@ -48,9 +48,24 @@ async function topBorderBottom(page: import("@playwright/test").Page) {
   return page.locator(".shell .top").first().evaluate((el) => getComputedStyle(el).borderBottomColor);
 }
 
+async function topBoxShadow(page: import("@playwright/test").Page) {
+  return page.locator(".shell .top").first().evaluate((el) => getComputedStyle(el).boxShadow);
+}
+
 async function assertStickyThemeChrome(page: import("@playwright/test").Page) {
   expect(await topBackground(page)).toBe(await resolvedBg(page));
   expect(await topBorderBottom(page)).toBe(await resolvedLine(page));
+}
+
+/** Opaque plate: box-shadow uses resolved --bg (0 1px 0 var(--bg)). */
+async function assertStickyBoxShadowPlate(page: import("@playwright/test").Page) {
+  const bg = await resolvedBg(page);
+  const shadow = await topBoxShadow(page);
+  expect(shadow).not.toBe("none");
+  // rgb/rgba from --bg must appear in the plate shadow under light + dark.
+  const rgb = bg.match(/rgba?\([^)]+\)/);
+  expect(rgb, `expected resolvable --bg, got ${bg}`).toBeTruthy();
+  expect(shadow).toContain(rgb![0]);
 }
 
 async function downloadsExtensionScrollMargin(page: import("@playwright/test").Page) {
@@ -72,21 +87,25 @@ test("sticky top background equals --bg and border uses --line in dark and light
     document.documentElement.style.colorScheme = "dark";
   });
   await assertStickyThemeChrome(page);
+  await assertStickyBoxShadowPlate(page);
 
   const toggle = page.getByTestId("theme-switch");
   if ((await toggle.count()) > 0) {
     await toggle.click();
     await expect(page.locator("html")).toHaveAttribute("data-theme", "light");
     await assertStickyThemeChrome(page);
+    await assertStickyBoxShadowPlate(page);
     await toggle.click();
     await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
     await assertStickyThemeChrome(page);
+    await assertStickyBoxShadowPlate(page);
   } else {
     await page.evaluate(() => {
       document.documentElement.dataset.theme = "light";
       document.documentElement.style.colorScheme = "light";
     });
     await assertStickyThemeChrome(page);
+    await assertStickyBoxShadowPlate(page);
   }
 });
 
@@ -112,6 +131,35 @@ for (const theme of ["light", "dark"] as const) {
     }
     await expect(section).toBeVisible({ timeout: 15_000 });
     const margin = await downloadsExtensionScrollMargin(page);
+    expect(margin).not.toBe("0px");
+    expect(margin).not.toBe("");
+    await assertStickyThemeChrome(page);
+  });
+
+  test(`#privacy-faq-common scroll-margin under ${theme}`, async ({ page }) => {
+    await page.addInitScript((t) => {
+      try {
+        localStorage.setItem("shield-theme", t);
+      } catch {
+        /* ignore */
+      }
+      document.documentElement.setAttribute("data-theme", t);
+    }, theme);
+
+    await page.goto(`${base}/en/privacy#privacy-faq-common`, {
+      waitUntil: "domcontentloaded",
+      timeout: 45_000
+    });
+    const section = page.locator("#privacy-faq-common");
+    if ((await section.count()) === 0) {
+      test.skip(true, "#privacy-faq-common missing on this origin");
+      return;
+    }
+    await expect(section).toBeVisible({ timeout: 15_000 });
+    const margin = await page.evaluate(() => {
+      const el = document.querySelector("#privacy-faq-common") as HTMLElement | null;
+      return el ? getComputedStyle(el).scrollMarginTop : "";
+    });
     expect(margin).not.toBe("0px");
     expect(margin).not.toBe("");
     await assertStickyThemeChrome(page);

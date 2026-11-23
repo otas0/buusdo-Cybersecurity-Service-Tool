@@ -7,6 +7,8 @@ import type { SensitiveRequest } from "./types";
 import { parseUrl } from "./url";
 import { getConfiguredProbeTimeoutMs } from "./probe-budget";
 import { shouldSkipHead } from "./probe-head-skip";
+import desktopDownloads from "../shared/desktop-downloads.json" with { type: "json" };
+
 export type AnalyseOptions = {
   organisationId?: string;
   sensitive?: SensitiveRequest;
@@ -107,6 +109,14 @@ export async function analyseWebsite(url: string, options: AnalyseOptions = {}) 
     ambiguousProbeStatus
   };
 
+  // Live probe path consults the same floor as /api/desktop-downloads/status
+  // so RiskResult resolveFromStatus lights up with minSupported* metadata.
+  const floorMin =
+    options.live === true || (options.live && typeof options.live === "object")
+      ? String(desktopDownloads.minSupportedVersion || "").trim()
+      : "";
+  const floorSource = floorMin ? "desktop-downloads.json" : "";
+
   return {
     parsed,
     threat,
@@ -117,7 +127,13 @@ export async function analyseWebsite(url: string, options: AnalyseOptions = {}) 
     live,
     timing,
     /** Echo of read-only personal-list hint (never persisted by the website). */
-    personalListBlocked: Boolean(options.personalListBlocked)
+    personalListBlocked: Boolean(options.personalListBlocked),
+    ...(floorMin
+      ? {
+          minSupportedVersion: floorMin,
+          minSupportedSource: floorSource
+        }
+      : {})
   };
 }
 

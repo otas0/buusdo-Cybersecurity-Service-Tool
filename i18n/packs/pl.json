@@ -483,5 +483,6 @@
   "faqExtOfflineTitle": "Czy mogę zainstalować rozszerzenie przeglądarki jako kompletny pakiet offline?",
   "faqExtOfflineBody": "Nie. Rozszerzenie instaluje się tylko z Chrome Web Store lub Mac App Store. Nie ma pobierania całego repozytorium ani samodzielnego pakietu offline — zobacz Downloads.",
   "optionalUpdateShowHint": "Pokaż wskazówkę aktualizacji",
+  "optionalUpdateTipAvailable": "Dostępna wskazówka aktualizacji",
   "honestLimitsMinSupportedNote": "Minimalna wersja: {min} · źródło {source}"
 }

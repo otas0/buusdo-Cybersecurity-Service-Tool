@@ -482,5 +482,6 @@
   "faqExtOfflineTitle": "Ndi nga kona u dzhenisa extension ya browser sa phakethe yo fhelelaho ya offline?",
   "faqExtOfflineBody": "Hai. Extension i dzheniswa fhedzi u bva kha Chrome Web Store kana Mac App Store. A hu na u dzhenisa repo yo ḓalaho nahone a hu na phakethe ya extension yo ḓiimisaho ya offline — vhona Downloads.",
   "optionalUpdateShowHint": "Sumbedza themendelo ya update",
+  "optionalUpdateTipAvailable": "Themendelo ya update i wanala",
   "honestLimitsMinSupportedNote": "Siaṱari ḽihulwane: {min} · mutevhe {source}"
 }

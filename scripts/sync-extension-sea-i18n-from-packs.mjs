@@ -65,6 +65,8 @@ const MAP = {
   langRegionPacific: "langRegionPacific",
   langRegionSoutheastAsia: "langRegionSoutheastAsia",
   langRegionSouthernAfrica: "langRegionSouthernAfrica",
+  // Tip toast (desktop CORE) — reserved if popup ever reuses optionalUpdateTipAvailable.
+  optionalUpdateTipAvailable: "optionalUpdateTipAvailable"
 };
 
 const markerStart = "/* __EXTENSION_SEA_PACK_OVERLAY_START__ */";

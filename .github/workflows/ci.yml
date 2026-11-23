@@ -70,11 +70,18 @@ jobs:
           npx tsx --test tests/pack-coverage-threshold.test.ts
           # Core tip keys on every must-stay-full pack (same PR rule as docs/I18N.md).
           npx tsx --test tests/optional-update-show-hint-must-stay-full.test.ts
+          node scripts/assert-min-supported-floor-linked.mjs
 
-      - name: Pack CAPTIONS China FRAME (listing-draft PRs only)
-        if: github.event_name == 'pull_request'
+      - name: Pack CAPTIONS China FRAME (listing-draft PRs + workflow_dispatch)
+        if: github.event_name == 'pull_request' || github.event_name == 'workflow_dispatch'
         run: |
-          # Only when listing draft / China FRAME / pack script changes in the PR.
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "::notice::pack-chrome-captions-china forced (workflow_dispatch — store screenshot rebuild)"
+            npx tsx --test tests/pack-chrome-captions-china.test.ts
+            echo "::notice::pack-chrome-captions-china OK"
+            exit 0
+          fi
+          # PRs: only when listing draft / China FRAME / pack script changes.
           BASE="origin/${{ github.base_ref || 'main' }}"
           git fetch --depth=1 origin "${{ github.base_ref || 'main' }}" 2>/dev/null || true
           CHANGED=$(git diff --name-only "$BASE...HEAD" 2>/dev/null || true)
@@ -1095,6 +1102,14 @@ jobs:
           git fetch --depth=1 origin "${{ github.base_ref }}" 2>/dev/null || true
           if [ "${EXT_UI_UNPARK_HARD}" = "1" ]; then
             EXT_UI_STRICT=1 node scripts/assert-extension-ui-unpark.mjs --diff-base "$BASE"
+            {
+              echo "### Extension UI unpark (hard)"
+              echo ""
+              echo "- Repo var \`EXT_UI_UNPARK_HARD=1\` — gate enforced"
+              echo "- Soft-live streak artifact (90-day retention when hard): [soft-live-hash-streak](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})"
+              echo "- See [docs/CI.md](${{ github.server_url }}/${{ github.repository }}/blob/${{ github.sha }}/docs/CI.md)"
+            } >> "$GITHUB_STEP_SUMMARY"
+            echo "::notice::EXT_UI_UNPARK_HARD=1 — streak artifact retention 90d; run artifacts: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
           else
             node scripts/assert-extension-ui-unpark.mjs --diff-base "$BASE" || true
             echo "::notice::assert-extension-ui-unpark soft — set vars.EXT_UI_UNPARK_HARD=1 after Privacy prod streak≥3"

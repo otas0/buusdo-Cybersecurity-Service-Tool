@@ -77,6 +77,8 @@ export const CORE_MESSAGE_KEYS = [
   "faqExtOfflineTitle",
   "faqExtOfflineBody",
   "optionalUpdateShowHint",
+  // Tip toast after force→hint — same CORE gate; toast copy ≠ show-hint button label.
+  "optionalUpdateTipAvailable",
   // Honest-limits floor tip — {min} + {source}; same CORE gate as optionalUpdateShowHint.
   // Next tip key: land EN + pt-PT in messages.ts AND every must-stay-full pack in the same PR
   // before adding here (docs/I18N.md — Core tip keys).

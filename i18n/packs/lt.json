@@ -482,5 +482,6 @@
   "faqExtOfflineTitle": "Ar galiu įdiegti naršyklės plėtinį kaip visą neprisijungusį paketą?",
   "faqExtOfflineBody": "Ne. Plėtinys diegiamas tik iš Chrome Web Store arba Mac App Store. Nėra viso saugyklos atsisiuntimo ir nėra savarankiško neprisijungusio paketo — žr. Downloads.",
   "optionalUpdateShowHint": "Rodyti naujinimo patarimą",
+  "optionalUpdateTipAvailable": "Yra atnaujinimo patarimas",
   "honestLimitsMinSupportedNote": "Minimali versija: {min} · šaltinis {source}"
 }

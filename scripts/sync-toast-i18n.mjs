@@ -46,7 +46,8 @@ function localesFromLangSelect() {
 }
 
 // Overlay Halt chips beyond the popup #langSelect set (af/zu + BR/ja extras).
-const EXTRA_PACKS = ["pt-BR"];
+// Southern Africa nr/nso join EXTRA until they also land in #langSelect (popup optgroup).
+const EXTRA_PACKS = ["pt-BR", "nr", "nso"];
 const langSelectOrder = localesFromLangSelect();
 const locales = [...new Set([...langSelectOrder, ...EXTRA_PACKS])];
 

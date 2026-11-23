@@ -1025,6 +1025,14 @@ function showMessageToast(message, kind = "caution", opts = {}) {
   el.className = `toast ${kind === "danger" ? "toast-danger" : "toast-caution"}`;
   el.textContent = message;
   if (opts.testId) el.dataset.testid = opts.testId;
+  // Tip toast: polite status live region (force→hint); danger stays assertive alert.
+  if (opts.live === "assertive" || kind === "danger") {
+    el.setAttribute("role", "alert");
+    el.setAttribute("aria-live", "assertive");
+  } else if (opts.live === "polite" || opts.testId === "optional-update-tip-available") {
+    el.setAttribute("role", "status");
+    el.setAttribute("aria-live", "polite");
+  }
   els.toastHost.appendChild(el);
   requestAnimationFrame(() => el.classList.add("is-visible"));
   setTimeout(() => {
@@ -1629,7 +1637,8 @@ function focusAfterUpdateChromeHide() {
   // Polite live announce when force-close lands on show-hint (tip available).
   if (forceCloseLandedOnShowHint) {
     showMessageToast(t(lang, "optionalUpdateTipAvailable"), "caution", {
-      testId: "optional-update-tip-available"
+      testId: "optional-update-tip-available",
+      live: "polite"
     });
   }
 }

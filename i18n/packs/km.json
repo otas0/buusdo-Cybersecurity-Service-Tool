@@ -482,5 +482,6 @@
   "faqExtOfflineTitle": "តើខ្ញុំអាចដំឡើងផ្នែកបន្ថែមកម្មវិធីរុករកជាកញ្ចប់អូហ្វឡាញពេញលេញបានទេ?",
   "faqExtOfflineBody": "ទេ។ ផ្នែកបន្ថែមត្រូវបានដំឡើងតែពី Chrome Web Store ឬ Mac App Store ប៉ុណ្ណោះ។ មិនមានការទាញយក repo ទាំងមូល និងមិនមានកញ្ចប់ផ្នែកបន្ថែមអូហ្វឡាញឯករាជ្យទេ — មើល Downloads។",
   "optionalUpdateShowHint": "បង្ហាញគន្លឹះធ្វើបច្ចុប្បន្នភាព",
+  "optionalUpdateTipAvailable": "មានគន្លឹះធ្វើបច្ចុប្បន្នភាព",
   "honestLimitsMinSupportedNote": "កំណែអប្បបរមា៖ {min} · ប្រភព {source}"
 }

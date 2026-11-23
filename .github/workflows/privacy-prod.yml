@@ -139,6 +139,14 @@ jobs:
           if-no-files-found: ignore
           # 90 days once EXT_UI_UNPARK_HARD=1 (docs/CI.md); 30 while soft.
           retention-days: ${{ vars.EXT_UI_UNPARK_HARD == '1' && 90 || 30 }}
+      - name: Upload soft-live hash in-view outcome (schedule debug)
+        if: always() && steps.pw_privacy.outcome != 'cancelled'
+        uses: actions/upload-artifact@v4
+        with:
+          name: soft-live-hash-inview-outcome
+          path: ci/soft-live-hash-inview-outcome.json
+          if-no-files-found: ignore
+          retention-days: 14
       - name: Soft unpark probe (deferred hard until streak≥3)
         if: always() && steps.soft_live_streak.outcome == 'success'
         continue-on-error: true

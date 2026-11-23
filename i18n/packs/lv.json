@@ -482,5 +482,6 @@
   "faqExtOfflineTitle": "Vai es varu instalēt pārlūkprogrammas paplašinājumu kā pilnu bezsaistes pakotni?",
   "faqExtOfflineBody": "Nē. Paplašinājums tiek instalēts tikai no Chrome Web Store vai Mac App Store. Nav visas krātuves lejupielādes un nav autonomas bezsaistes pakotnes — skat. Downloads.",
   "optionalUpdateShowHint": "Rādīt atjauninājuma padomu",
+  "optionalUpdateTipAvailable": "Pieejams atjauninājuma padoms",
   "honestLimitsMinSupportedNote": "Minimālā versija: {min} · avots {source}"
 }

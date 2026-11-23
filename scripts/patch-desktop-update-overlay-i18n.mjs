@@ -28,7 +28,8 @@ const PATCH = {
     forceUpdateSetupGuide: "安裝指南",
     optionalUpdateBanner: "有較新的桌面套件可用（{tag}）。目前為 {version}。",
     optionalUpdateDismiss: "關閉",
-    optionalUpdateShowHint: "顯示更新提示"
+    optionalUpdateShowHint: "顯示更新提示",
+    honestLimitsMinSupportedNote: "最低支援版本：{min} · 來源 {source}"
   },
   ja: {
     honestLimitsItemOffline:
@@ -45,7 +46,8 @@ const PATCH = {
     forceUpdateSetupGuide: "セットアップガイド",
     optionalUpdateBanner: "新しいデスクトップパッケージがあります（{tag}）。現在は {version}。",
     optionalUpdateDismiss: "閉じる",
-    optionalUpdateShowHint: "更新のヒントを表示"
+    optionalUpdateShowHint: "更新のヒントを表示",
+    honestLimitsMinSupportedNote: "サポート下限：{min} · 出典 {source}"
   },
   de: {
     honestLimitsItemOffline:
@@ -62,7 +64,8 @@ const PATCH = {
     forceUpdateSetupGuide: "Einrichtungsanleitung",
     optionalUpdateBanner: "Ein neueres Desktop-Paket ist bereit ({tag}). Sie haben {version}.",
     optionalUpdateDismiss: "Schließen",
-    optionalUpdateShowHint: "Update-Hinweis anzeigen"
+    optionalUpdateShowHint: "Update-Hinweis anzeigen",
+    honestLimitsMinSupportedNote: "Mindestversion: {min} · Quelle {source}"
   },
   fr: {
     honestLimitsItemOffline:
@@ -79,7 +82,8 @@ const PATCH = {
     forceUpdateSetupGuide: "Guide d’installation",
     optionalUpdateBanner: "Un paquet bureau plus récent est prêt ({tag}). Vous êtes en {version}.",
     optionalUpdateDismiss: "Ignorer",
-    optionalUpdateShowHint: "Afficher l’avis de mise à jour"
+    optionalUpdateShowHint: "Afficher l’avis de mise à jour",
+    honestLimitsMinSupportedNote: "Version minimale : {min} · source {source}"
   },
   es: {
     honestLimitsItemOffline:
@@ -96,7 +100,8 @@ const PATCH = {
     forceUpdateSetupGuide: "Guía de instalación",
     optionalUpdateBanner: "Hay un paquete de escritorio más reciente ({tag}). Tiene la {version}.",
     optionalUpdateDismiss: "Descartar",
-    optionalUpdateShowHint: "Mostrar aviso de actualización"
+    optionalUpdateShowHint: "Mostrar aviso de actualización",
+    honestLimitsMinSupportedNote: "Versión mínima: {min} · origen {source}"
   },
   it: {
     honestLimitsItemOffline:
@@ -113,7 +118,8 @@ const PATCH = {
     forceUpdateSetupGuide: "Guida di installazione",
     optionalUpdateBanner: "È pronto un pacchetto desktop più recente ({tag}). Hai la {version}.",
     optionalUpdateDismiss: "Ignora",
-    optionalUpdateShowHint: "Mostra suggerimento aggiornamento"
+    optionalUpdateShowHint: "Mostra suggerimento aggiornamento",
+    honestLimitsMinSupportedNote: "Versione minima: {min} · origine {source}"
   },
   nl: {
     honestLimitsItemOffline:
@@ -130,7 +136,8 @@ const PATCH = {
     forceUpdateSetupGuide: "Installatiegids",
     optionalUpdateBanner: "Er is een nieuwer desktoppakket klaar ({tag}). U heeft {version}.",
     optionalUpdateDismiss: "Sluiten",
-    optionalUpdateShowHint: "Updatehint tonen"
+    optionalUpdateShowHint: "Updatehint tonen",
+    honestLimitsMinSupportedNote: "Minimumversie: {min} · bron {source}"
   },
   sv: {
     honestLimitsItemOffline:
@@ -147,7 +154,8 @@ const PATCH = {
     forceUpdateSetupGuide: "Installationsguide",
     optionalUpdateBanner: "Ett nyare skrivbordspaket är klart ({tag}). Du har {version}.",
     optionalUpdateDismiss: "Stäng",
-    optionalUpdateShowHint: "Visa uppdateringstips"
+    optionalUpdateShowHint: "Visa uppdateringstips",
+    honestLimitsMinSupportedNote: "Lägsta version: {min} · källa {source}"
   },
   da: {
     honestLimitsItemOffline:
@@ -164,7 +172,8 @@ const PATCH = {
     forceUpdateSetupGuide: "Installationsvejledning",
     optionalUpdateBanner: "En nyere skrivebordspakke er klar ({tag}). Du har {version}.",
     optionalUpdateDismiss: "Luk",
-    optionalUpdateShowHint: "Vis opdateringstip"
+    optionalUpdateShowHint: "Vis opdateringstip",
+    honestLimitsMinSupportedNote: "Minimumversion: {min} · kilde {source}"
   },
   fi: {
     honestLimitsItemOffline:
@@ -181,7 +190,8 @@ const PATCH = {
     forceUpdateSetupGuide: "Asennusopas",
     optionalUpdateBanner: "Uudempi työpöytäpaketti on valmis ({tag}). Sinulla on {version}.",
     optionalUpdateDismiss: "Sulje",
-    optionalUpdateShowHint: "Näytä päivitysvinkki"
+    optionalUpdateShowHint: "Näytä päivitysvinkki",
+    honestLimitsMinSupportedNote: "Vähimmäisversio: {min} · lähde {source}"
   },
   nb: {
     honestLimitsItemOffline:
@@ -198,7 +208,8 @@ const PATCH = {
     forceUpdateSetupGuide: "Installasjonsveiledning",
     optionalUpdateBanner: "En nyere skrivebordspakke er klar ({tag}). Du har {version}.",
     optionalUpdateDismiss: "Lukk",
-    optionalUpdateShowHint: "Vis oppdateringstips"
+    optionalUpdateShowHint: "Vis oppdateringstips",
+    honestLimitsMinSupportedNote: "Minimumsversjon: {min} · kilde {source}"
   }
 };
 

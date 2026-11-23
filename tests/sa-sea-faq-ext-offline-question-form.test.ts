@@ -43,6 +43,15 @@ const FAQ_TITLE_KEYS = [
   "faqExtOfflineTitle"
 ] as const;
 
+const FAQ_BODY_KEYS = [
+  "faqNoWipeBody",
+  "faqNoAvBody",
+  "faqNoCrowdBody",
+  "faqExtOfflineBody"
+] as const;
+
+const FAQ_INTRO_KEYS = ["faqCommonIntro"] as const;
+
 /** Latin ? / CJK ？ / Greek ; / Thai ไหม|หรือไม่ */
 function isQuestionForm(val: string): boolean {
   return /[?？;]|ไหม|หรือไม่/.test(val);
@@ -62,13 +71,27 @@ for (const id of LOCALES) {
     });
   }
 
-  test(`${id} faqExtOfflineBody is native (not EN stub)`, () => {
-    const pack = JSON.parse(readFileSync(path.join("i18n/packs", `${id}.json`), "utf8")) as Record<
-      string,
-      string
-    >;
-    const val = pack.faqExtOfflineBody?.trim() || "";
-    assert.ok(val, `${id}.faqExtOfflineBody empty`);
-    assert.notEqual(val, en.faqExtOfflineBody, `${id}.faqExtOfflineBody still EN`);
-  });
+  for (const key of FAQ_BODY_KEYS) {
+    test(`${id} ${key} is native (not EN stub)`, () => {
+      const pack = JSON.parse(readFileSync(path.join("i18n/packs", `${id}.json`), "utf8")) as Record<
+        string,
+        string
+      >;
+      const val = pack[key]?.trim() || "";
+      assert.ok(val, `${id}.${key} empty`);
+      assert.notEqual(val, en[key], `${id}.${key} still EN`);
+    });
+  }
+
+  for (const key of FAQ_INTRO_KEYS) {
+    test(`${id} ${key} is native (not EN stub)`, () => {
+      const pack = JSON.parse(readFileSync(path.join("i18n/packs", `${id}.json`), "utf8")) as Record<
+        string,
+        string
+      >;
+      const val = pack[key]?.trim() || "";
+      assert.ok(val, `${id}.${key} empty`);
+      assert.notEqual(val, en[key], `${id}.${key} still EN`);
+    });
+  }
 }

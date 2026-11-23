@@ -482,5 +482,6 @@
   "faqExtOfflineTitle": "Bisakah saya memasang ekstensi peramban sebagai paket lengkap offline?",
   "faqExtOfflineBody": "Tidak. Ekstensi hanya dipasang dari Chrome Web Store atau Mac App Store. Tidak ada unduhan seluruh repositori dan tidak ada paket ekstensi mandiri offline — lihat Downloads.",
   "optionalUpdateShowHint": "Tampilkan tips pembaruan",
+  "optionalUpdateTipAvailable": "Tip pembaruan tersedia",
   "honestLimitsMinSupportedNote": "Versi minimum: {min} · sumber {source}"
 }

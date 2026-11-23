@@ -130,6 +130,28 @@ test.describe("production privacy pages", () => {
     console.info(`[soft-live] zh-Hans China section ok (${text.slice(0, 72)}…)`);
   });
 
+  test("/af/privacy soft-live China section when Workers ships the key", async ({ page }) => {
+    await page.goto(`${base}/af/privacy#privacy-china-notice`, {
+      waitUntil: "domcontentloaded",
+      timeout: 45_000
+    });
+    const section = page.getByTestId("privacy-china-notice");
+    if ((await section.count()) === 0) {
+      console.warn("[soft-live] af privacy-china-notice missing (locale may not ship key yet)");
+      return;
+    }
+    await expect(section).toBeVisible();
+    const text = ((await section.textContent()) || "").replace(/\s+/g, " ").trim();
+    // Soft when key present: accept AF / EN / shared China mainland copy.
+    if (
+      !/China-vasteland|China mainland|中国大陆入口|otas0\.github\.io\/buusdocst/i.test(text)
+    ) {
+      console.warn(`[soft-live] af China section soft mismatch: ${text.slice(0, 80)}`);
+    } else {
+      console.info(`[soft-live] af China section ok (${text.slice(0, 72)}…)`);
+    }
+  });
+
   test("/pt-PT/privacy China mainland entry section", async ({ page }) => {
     await page.goto(`${base}/pt-PT/privacy#privacy-china-notice`, {
       waitUntil: "domcontentloaded"

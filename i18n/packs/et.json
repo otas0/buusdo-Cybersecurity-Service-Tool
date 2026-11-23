@@ -482,5 +482,6 @@
   "faqExtOfflineTitle": "Kas saan brauserilaiendust paigaldada täieliku võrguühenduseta paketina?",
   "faqExtOfflineBody": "Ei. Laiendus paigaldatakse ainult Chrome Web Store’ist või Mac App Store’ist. Terve repo allalaadimist ega iseseisvat võrguühenduseta paketti pole — vt Downloads.",
   "optionalUpdateShowHint": "Kuva värskenduse vihje",
+  "optionalUpdateTipAvailable": "Värskenduse näpunäide on saadaval",
   "honestLimitsMinSupportedNote": "Miinimumversioon: {min} · allikas {source}"
 }

@@ -20,6 +20,8 @@ const FORCE_KEYS = [
   "optionalUpdateBanner",
   "optionalUpdateDismiss",
   "optionalUpdateShowHint",
+  "optionalUpdateTipAvailable",
+  "honestLimitsMinSupportedNote",
   "updateCheckOffline",
   "honestLimitsItemOffline"
 ] as const;
@@ -37,7 +39,7 @@ function extractBag(src: string, id: string): Record<string, string> | null {
 
 const NORDIC_EUROPE = ["sv", "da", "fi", "nb", "de", "fr", "es", "it", "nl"] as const;
 
-test("sync-desktop --check passes and pt-BR/ja/zh-Hant + Nordic/Europe retain force keys", () => {
+test("sync-desktop --check passes and pt-BR/ja/zh-Hans/zh-Hant + Nordic/Europe retain force keys", () => {
   execFileSync(process.execPath, ["scripts/sync-desktop-i18n-from-packs.mjs", "--check"], {
     cwd: root,
     encoding: "utf8",
@@ -45,7 +47,7 @@ test("sync-desktop --check passes and pt-BR/ja/zh-Hant + Nordic/Europe retain fo
   });
 
   const src = readFileSync(path.join(root, "desktop-app/public/js/i18n.js"), "utf8");
-  for (const locale of ["pt-BR", "ja", "zh-Hant", ...NORDIC_EUROPE] as const) {
+  for (const locale of ["pt-BR", "ja", "zh-Hans", "zh-Hant", ...NORDIC_EUROPE] as const) {
     const bag = extractBag(src, locale);
     assert.ok(bag, `missing STRINGS[${locale}]`);
     for (const key of FORCE_KEYS) {

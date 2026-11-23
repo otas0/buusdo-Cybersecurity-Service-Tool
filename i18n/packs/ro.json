@@ -482,5 +482,6 @@
   "faqExtOfflineTitle": "Pot instala extensia de browser ca pachet offline complet?",
   "faqExtOfflineBody": "Nu. Extensia se instalează doar din Chrome Web Store sau Mac App Store. Nu există descărcarea întregului depozit și nici un pachet offline autonom — vezi Downloads.",
   "optionalUpdateShowHint": "Afișează sfatul de actualizare",
+  "optionalUpdateTipAvailable": "Sfat de actualizare disponibil",
   "honestLimitsMinSupportedNote": "Versiune minimă: {min} · sursă {source}"
 }

@@ -24,7 +24,11 @@ const line =
   "check:desktop tsx: tests/focus-gate-bare-focus.test.ts tests/spa-replace-state-hashchange.test.ts tests/home-continue-stamp-tag-only.test.ts";
 
 /** Known CORE tip keys (keep in lockstep with i18n/core-keys.ts + DESKTOP_TIP_KEYS). */
-const CORE_TIP_KEYS = ["optionalUpdateShowHint", "honestLimitsMinSupportedNote"];
+const CORE_TIP_KEYS = [
+  "optionalUpdateShowHint",
+  "optionalUpdateTipAvailable",
+  "honestLimitsMinSupportedNote"
+];
 
 const SOFT_LIVE_UNPARK_NEED = 3;
 const streakPath =

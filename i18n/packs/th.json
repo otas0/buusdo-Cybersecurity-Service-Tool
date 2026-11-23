@@ -483,5 +483,6 @@
   "faqExtOfflineTitle": "ฉันสามารถติดตั้งส่วนขยายเบราว์เซอร์เป็นแพ็กเกจออฟไลน์ครบชุดได้หรือไม่?",
   "faqExtOfflineBody": "ไม่ได้ ส่วนขยายติดตั้งได้เฉพาะจาก Chrome Web Store หรือ Mac App Store เท่านั้น ไม่มีการดาวน์โหลดทั้งคลังและไม่มีแพ็กเกจส่วนขยายออฟไลน์แบบครบชุด — ดู Downloads",
   "optionalUpdateShowHint": "แสดงคำแนะนำการอัปเดต",
+  "optionalUpdateTipAvailable": "มีเคล็ดลับการอัปเดต",
   "honestLimitsMinSupportedNote": "เวอร์ชันขั้นต่ำ: {min} · แหล่งที่มา {source}"
 }

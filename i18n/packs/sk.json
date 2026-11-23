@@ -482,5 +482,6 @@
   "faqExtOfflineTitle": "Môžem nainštalovať rozšírenie prehliadača ako kompletný offline balík?",
   "faqExtOfflineBody": "Nie. Rozšírenie sa inštaluje len z Chrome Web Store alebo Mac App Store. Neexistuje stiahnutie celého repozitára ani samostatný offline balík — pozrite Downloads.",
   "optionalUpdateShowHint": "Zobraziť tip aktualizácie",
+  "optionalUpdateTipAvailable": "Tip na aktualizáciu je k dispozícii",
   "honestLimitsMinSupportedNote": "Minimálna verzia: {min} · zdroj {source}"
 }

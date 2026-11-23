@@ -483,5 +483,6 @@
   "faqExtOfflineTitle": "Kan jeg installere browserudvidelsen som en offline hel pakke?",
   "faqExtOfflineBody": "Nej. Udvidelsen installeres kun fra Chrome Web Store eller Mac App Store. Ingen hele-repo-download og ingen offline selvstændig udvidelsespakke — se Downloads.",
   "optionalUpdateShowHint": "Vis opdateringstip",
+  "optionalUpdateTipAvailable": "Opdateringstip tilgængeligt",
   "honestLimitsMinSupportedNote": "Minimumversion: {min} · kilde {source}"
 }

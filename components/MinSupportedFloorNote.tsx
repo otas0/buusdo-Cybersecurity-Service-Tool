@@ -14,8 +14,8 @@ export function MinSupportedFloorNote({
   /** Override min semver (e.g. from desktop API). Default: shared/desktop-downloads.json. */
   min,
   /**
-   * When true, soft-fetch `/api/desktop-downloads/status` for future
-   * `minSupportedSource` / `minSupportedVersion` fields (passthrough when present).
+   * When true, soft-fetch `/api/desktop-downloads/status` for
+   * `minSupportedSource` / `minSupportedVersion` (passthrough when present).
    */
   resolveFromStatus = false
 }: {

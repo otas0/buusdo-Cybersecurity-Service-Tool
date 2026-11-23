@@ -482,5 +482,6 @@
   "faqExtOfflineTitle": "ຂ້ອຍສາມາດຕິດຕັ້ງສ່ວນຂະຫຍາຍບຣາວເຊີເປັນແພັກເກັດອອບລາຍຄົບຊຸດໄດ້ບໍ?",
   "faqExtOfflineBody": "ບໍ່. ສ່ວນຂະຫຍາຍຕິດຕັ້ງໄດ້ຈາກ Chrome Web Store ຫຼື Mac App Store ເທົ່ານັ້ນ. ບໍ່ມີການດາວໂຫຼດ repo ທັງໝົດ ແລະບໍ່ມີແພັກເກັດສ່ວນຂະຫຍາຍອອບລາຍແບບຄົບຊຸດ — ເບິ່ງ Downloads.",
   "optionalUpdateShowHint": "ສະແດງຄຳແນະນຳອັບເດດ",
+  "optionalUpdateTipAvailable": "ມີເຄັດລັບອັບເດດ",
   "honestLimitsMinSupportedNote": "ເວີຊັນຂັ້ນຕ່ຳ: {min} · ແຫຼ່ງ {source}"
 }

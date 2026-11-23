@@ -483,5 +483,6 @@
   "faqExtOfflineTitle": "Tôi có thể cài tiện ích trình duyệt dưới dạng gói ngoại tuyến đầy đủ không?",
   "faqExtOfflineBody": "Không. Tiện ích chỉ cài từ Chrome Web Store hoặc Mac App Store. Không có tải toàn bộ kho mã và không có gói tiện ích ngoại tuyến độc lập — xem Downloads.",
   "optionalUpdateShowHint": "Hiện gợi ý cập nhật",
+  "optionalUpdateTipAvailable": "Có mẹo cập nhật",
   "honestLimitsMinSupportedNote": "Phiên bản tối thiểu: {min} · nguồn {source}"
 }

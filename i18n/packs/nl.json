@@ -483,5 +483,6 @@
   "faqExtOfflineTitle": "Kan ik de browserextensie als offline volledig pakket installeren?",
   "faqExtOfflineBody": "Nee. De extensie installeert u alleen via de Chrome Web Store of Mac App Store. Geen volledige-repo-download en geen offline zelfstandig extensiepakket — zie Downloads.",
   "optionalUpdateShowHint": "Updatehint tonen",
+  "optionalUpdateTipAvailable": "Updatehint beschikbaar",
   "honestLimitsMinSupportedNote": "Minimumversie: {min} · bron {source}"
 }

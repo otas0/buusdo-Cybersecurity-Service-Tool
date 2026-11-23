@@ -482,5 +482,6 @@
   "faqExtOfflineTitle": "Ndingakwazi na ukufaka isongezelelo sesikhangeli njengepakethi epheleleyo engaxhunywanga?",
   "faqExtOfflineBody": "Hayi. Isongezelelo sifakwa kuphela kwi-Chrome Web Store okanye i-Mac App Store. Akukho ukhuphelo lwe-repo yonke kwaye akukho ipakethi yesongezelelo ezimeleyo engaxhunywanga — bona Downloads.",
   "optionalUpdateShowHint": "Bonisa icebiso lohlaziyo",
+  "optionalUpdateTipAvailable": "Icebiso lohlaziyo liyafumaneka",
   "honestLimitsMinSupportedNote": "Inguqulelo encinci: {min} · umthombo {source}"
 }

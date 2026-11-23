@@ -30,7 +30,7 @@ const full = fs
 
 // Stable _comment string — regenerations must not rewrite wording (CI --check drift).
 const COMMENT =
-  "CI checklist: tip keys (optionalUpdateShowHint, honestLimitsMinSupportedNote, …) land EN + pt-PT + every must-stay-full pack in the same PR before adding to i18n/core-keys.ts (docs/I18N.md — Core tip keys).";
+  "CI checklist: tip keys (optionalUpdateShowHint, optionalUpdateTipAvailable, honestLimitsMinSupportedNote, …) land EN + pt-PT + every must-stay-full pack in the same PR before adding to i18n/core-keys.ts (docs/I18N.md — Core tip keys).";
 const next = `${JSON.stringify({ _comment: COMMENT, locales: full }, null, 2)}\n`;
 
 if (checkOnly) {

@@ -483,5 +483,6 @@
   "faqExtOfflineTitle": "ブラウザー拡張をオフラインの一式パッケージとして入れられますか？",
   "faqExtOfflineBody": "いいえ。拡張は Chrome ウェブストアまたは Mac App Store からのみインストールします。リポジトリ一式のダウンロードやオフライン完結の拡張パッケージはありません — Downloads を参照。",
   "optionalUpdateShowHint": "更新のヒントを表示",
+  "optionalUpdateTipAvailable": "更新のヒントがあります",
   "honestLimitsMinSupportedNote": "サポート下限：{min} · 出典 {source}"
 }

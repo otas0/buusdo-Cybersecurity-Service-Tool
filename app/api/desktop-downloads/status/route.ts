@@ -19,6 +19,7 @@ async function softHead(url: string) {
 /**
  * Settings soft status for macOS downloads (no secrets).
  * Shipping channel is unsigned GitHub Release; notarized promote is optional/out of scope.
+ * Also exposes min-supported floor fields for MinSupportedFloorNote resolveFromStatus.
  */
 export async function GET() {
   const primary = String(desktopDownloads.macosAppZipUrl || "").trim();
@@ -36,6 +37,7 @@ export async function GET() {
     // Unsigned ship: always surface Gatekeeper / SmartScreen guidance.
     macNote = "unsigned-until-promote";
   }
+  const minSupportedVersion = String(desktopDownloads.minSupportedVersion || "").trim() || null;
   return Response.json({
     ok: true,
     primaryIsNotarized,
@@ -43,6 +45,9 @@ export async function GET() {
     notarizedHeadOk: head.ok,
     notarizedHeadStatus: head.status,
     macNote,
-    releaseTag: desktopDownloads.releaseTag || null
+    releaseTag: desktopDownloads.releaseTag || null,
+    minSupportedVersion,
+    /** Basename-friendly source for floor notes (shared/desktop-downloads.json). */
+    minSupportedSource: "desktop-downloads.json"
   });
 }

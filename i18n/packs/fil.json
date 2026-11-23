@@ -482,5 +482,6 @@
   "faqExtOfflineTitle": "Maaari ko bang i-install ang browser extension bilang buong offline package?",
   "faqExtOfflineBody": "Hindi. Ang extension ay ini-install lang mula sa Chrome Web Store o Mac App Store. Walang whole-repo download at walang offline self-contained extension package — tingnan ang Downloads.",
   "optionalUpdateShowHint": "Ipakita ang update tip",
+  "optionalUpdateTipAvailable": "May tip sa update",
   "honestLimitsMinSupportedNote": "Minimum na bersyon: {min} · pinagmulan {source}"
 }

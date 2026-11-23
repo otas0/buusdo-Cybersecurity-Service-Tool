@@ -35,6 +35,15 @@ export function RiskResult({
 }) {
   const bag = t as MessageBag;
   const { parsed, risk, identity, threat, sensitive, live } = analysis;
+  /** Optional probe/status floor metadata — when present, soft-fetch status API source. */
+  const floorFromProbe = analysis as Analysis & {
+    minSupportedVersion?: string;
+    minSupportedSource?: string;
+  };
+  const probeHasFloorMeta = Boolean(
+    String(floorFromProbe.minSupportedVersion || "").trim() ||
+      String(floorFromProbe.minSupportedSource || "").trim()
+  );
   const [feedbackNote, setFeedbackNote] = useState("");
   const [showDetails, setShowDetails] = useState(false);
   const [draftMarks, setDraftMarks] = useState<FeedbackMark[]>([]);
@@ -424,6 +433,9 @@ export function RiskResult({
           <MinSupportedFloorNote
             template={bag.honestLimitsMinSupportedNote}
             testId="result-honest-limits-min-supported"
+            min={floorFromProbe.minSupportedVersion}
+            source={floorFromProbe.minSupportedSource}
+            resolveFromStatus={probeHasFloorMeta}
           />
         </section>
       </section>

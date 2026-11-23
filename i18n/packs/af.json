@@ -483,5 +483,6 @@
   "faqExtOfflineTitle": "Kan ek die blaaier-uitbreiding as 'n vanlyn heelpakket installeer?",
   "faqExtOfflineBody": "Nee. Die uitbreiding installeer slegs vanaf die Chrome Web Store of Mac App Store. Daar is geen heel-repo-aflaai en geen vanlyn selfstandige uitbreidingspakket nie — sien Downloads.",
   "optionalUpdateShowHint": "Wys opdateringwenk",
+  "optionalUpdateTipAvailable": "Opdateringwenk beskikbaar",
   "honestLimitsMinSupportedNote": "Minimum weergawe: {min} · bron {source}"
 }

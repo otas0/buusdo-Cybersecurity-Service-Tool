@@ -36,16 +36,38 @@ test("must-stay-full locales: optionalUpdateShowHint differs from EN", () => {
   assert.equal(bad.length, 0, bad.join("\n"));
 });
 
-test("core-keys lists optionalUpdateShowHint and honestLimitsMinSupportedNote", () => {
+test("core-keys lists optionalUpdateShowHint, optionalUpdateTipAvailable, honestLimitsMinSupportedNote", () => {
   const core = readFileSync(path.join("i18n/core-keys.ts"), "utf8");
   assert.match(core, /optionalUpdateShowHint/);
+  assert.match(core, /optionalUpdateTipAvailable/);
   assert.match(core, /honestLimitsMinSupportedNote/);
 });
 
-test("_en.snapshot and messages.ts EN both carry optionalUpdateShowHint", () => {
+test("_en.snapshot and messages.ts EN both carry optionalUpdateShowHint + tip toast", () => {
   assert.ok(en.optionalUpdateShowHint?.trim());
+  assert.ok(en.optionalUpdateTipAvailable?.trim());
   const messages = readFileSync(path.join("i18n/messages.ts"), "utf8");
   assert.match(messages, /optionalUpdateShowHint:\s*"Show update tip"/);
+  assert.match(messages, /optionalUpdateTipAvailable:\s*"Update tip available"/);
+});
+
+test("must-stay-full locales: optionalUpdateTipAvailable differs from EN", () => {
+  const enVal = en.optionalUpdateTipAvailable?.trim() || "";
+  assert.ok(enVal, "EN optionalUpdateTipAvailable in _en.snapshot");
+  const bad: string[] = [];
+  for (const id of mustStayFull) {
+    const pack = JSON.parse(readFileSync(path.join("i18n/packs", `${id}.json`), "utf8")) as Record<
+      string,
+      string
+    >;
+    const val = pack.optionalUpdateTipAvailable?.trim() || "";
+    if (!val) {
+      bad.push(`${id}:missing`);
+      continue;
+    }
+    if (val === enVal) bad.push(`${id}:still-EN`);
+  }
+  assert.equal(bad.length, 0, bad.join("\n"));
 });
 
 test("must-stay-full locales: honestLimitsMinSupportedNote differs from EN", () => {

@@ -482,5 +482,6 @@
   "faqExtOfflineTitle": "Nista’ ninstalla l-estensjoni tal-browser bħala pakkett offline sħiħ?",
   "faqExtOfflineBody": "Le. L-estensjoni tiġi installata biss mill-Chrome Web Store jew Mac App Store. M’hemmx download tar-repo kollu u lanqas pakkett offline awtonomu — ara Downloads.",
   "optionalUpdateShowHint": "Uri parir ta’ aġġornament",
+  "optionalUpdateTipAvailable": "Parir ta’ aġġornament disponibbli",
   "honestLimitsMinSupportedNote": "Verżjoni minima: {min} · sors {source}"
 }

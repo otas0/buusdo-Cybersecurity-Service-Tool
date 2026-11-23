@@ -426,6 +426,8 @@ test("force→hint: tip toast then show-hint focused", async ({ page }) => {
     expect(tipText.length).toBeGreaterThan(0);
     expect(tipText).not.toBe(hintLabel);
     expect(tipText).toMatch(/Update tip available|Aviso de atualização disponível/i);
+    await expect(tipToast).toHaveAttribute("role", "status");
+    await expect(tipToast).toHaveAttribute("aria-live", "polite");
     await expect(page.getByTestId("optional-update-show-hint")).toBeVisible();
     await expect(page.getByTestId("optional-update-show-hint")).toBeFocused();
   } finally {
