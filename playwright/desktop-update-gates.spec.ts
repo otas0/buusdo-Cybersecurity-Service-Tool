@@ -430,6 +430,10 @@ test("force→hint: tip toast then show-hint focused", async ({ page }) => {
     await expect(tipToast).toHaveAttribute("aria-live", "polite");
     await expect(page.getByTestId("optional-update-show-hint")).toBeVisible();
     await expect(page.getByTestId("optional-update-show-hint")).toBeFocused();
+    // Toast auto-removes (~3.2s + fade); show-hint must stay focused.
+    await expect(tipToast).toBeHidden({ timeout: 6_000 });
+    await expect(page.getByTestId("optional-update-show-hint")).toBeVisible();
+    await expect(page.getByTestId("optional-update-show-hint")).toBeFocused();
   } finally {
     child?.kill("SIGTERM");
     await delay(400);

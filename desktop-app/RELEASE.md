@@ -27,6 +27,15 @@
 - **No AV / signature engine** and no credential or browsing-history capture.
 - Privacy default: never store the checked address.
 
+## Tip toast AT (force→hint)
+
+Desktop overlay `FORCE_UPDATE_KEYS` in `scripts/sync-desktop-i18n-from-packs.mjs` includes `optionalUpdateTipAvailable` (CORE + packs). After the force gate closes onto show-hint:
+
+- Toast copy is **`optionalUpdateTipAvailable`** — not the show-hint button label (`optionalUpdateShowHint`).
+- Toast element: `data-testid="optional-update-tip-available"`, `role="status"`, `aria-live="polite"`.
+- Show-hint stays focused while the toast is visible and **after** the toast auto-removes (~3.2s).
+- Playwright: `playwright/desktop-update-gates.spec.ts` (`force→hint: tip toast…`).
+
 ## Install / first open
 
 - **Unsigned ship:** Gatekeeper / SmartScreen steps → [`docs/DESKTOP_SETUP_GUIDE.md`](../docs/DESKTOP_SETUP_GUIDE.md) (also linked from website Downloads → Setup guide).

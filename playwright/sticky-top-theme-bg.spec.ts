@@ -109,6 +109,42 @@ test("sticky top background equals --bg and border uses --line in dark and light
   }
 });
 
+test("sticky plate under 360px: gap/logo only + scroll-margin token", async ({ page }) => {
+  await page.setViewportSize({ width: 360, height: 720 });
+  await page.goto(`${base}/en`, { waitUntil: "domcontentloaded", timeout: 45_000 });
+  const top = page.locator(".shell .top").first();
+  await expect(top).toBeVisible({ timeout: 15_000 });
+
+  await page.evaluate(() => {
+    document.documentElement.dataset.theme = "light";
+    document.documentElement.style.colorScheme = "light";
+  });
+  await assertStickyThemeChrome(page);
+  await assertStickyBoxShadowPlate(page);
+
+  const geometry = await page.evaluate(() => {
+    const shell = document.querySelector(".shell") as HTMLElement | null;
+    const topEl = document.querySelector(".shell .top") as HTMLElement | null;
+    const logo = document.querySelector(".shell .brand-logo") as HTMLElement | null;
+    if (!shell || !topEl) return null;
+    const shellCs = getComputedStyle(shell);
+    const topCs = getComputedStyle(topEl);
+    return {
+      scrollMarginToken: shellCs.getPropertyValue("--shell-top-scroll-margin").trim(),
+      topGap: topCs.gap,
+      topPosition: topCs.position,
+      topBg: topCs.backgroundColor,
+      logoHeight: logo ? getComputedStyle(logo).height : ""
+    };
+  });
+  expect(geometry).toBeTruthy();
+  expect(geometry!.scrollMarginToken).toMatch(/[\d.]+rem/);
+  expect(geometry!.topPosition).toBe("sticky");
+  // Narrow MQ only shrinks gap/logo — plate stays shared sticky (bg + position).
+  expect(parseFloat(geometry!.topGap)).toBeLessThanOrEqual(12);
+  expect(parseFloat(geometry!.logoHeight)).toBeLessThanOrEqual(36);
+});
+
 for (const theme of ["light", "dark"] as const) {
   test(`#downloads-extension scroll-margin under ${theme}`, async ({ page }) => {
     await page.addInitScript((t) => {

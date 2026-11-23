@@ -359,6 +359,38 @@ test.describe("production privacy pages", () => {
     });
   }
 
+  test("/en/downloads soft-live floor after status stub", async ({ page }) => {
+    const stubMin = minSupportedVersion || "0.2.0";
+    await page.route("**/api/desktop-downloads/status", async (route) => {
+      await route.fulfill({
+        status: 200,
+        contentType: "application/json",
+        body: JSON.stringify({
+          ok: true,
+          macNote: "none",
+          minSupportedVersion: stubMin,
+          minSupportedSource: "desktop-downloads.json"
+        })
+      });
+    });
+    await page.goto(`${base}/en/downloads`, { waitUntil: "domcontentloaded", timeout: 45_000 });
+    const panel = page.getByTestId("settings-desktop-downloads");
+    if ((await panel.count()) === 0) {
+      console.warn("[soft-live] settings-desktop-downloads missing (soft)");
+      return;
+    }
+    await waitForReactHydration(page, '[data-testid="settings-desktop-downloads"]');
+    const floor = page.getByTestId("downloads-honest-limits-min-supported");
+    if ((await floor.count()) === 0) {
+      console.warn("[soft-live] downloads-honest-limits-min-supported missing (soft)");
+      return;
+    }
+    await expect(floor).toBeVisible({ timeout: 10_000 });
+    await expect(floor).toContainText(stubMin);
+    await expect(floor).toContainText(/desktop-downloads\.json/i);
+    console.info(`[soft-live] en downloads floor ok (min ${stubMin} · status stub)`);
+  });
+
   test("/en/settings shows desktop download slots", async ({ page }) => {
     await page.goto(`${base}/en/downloads`, { waitUntil: "domcontentloaded" });
     await expect(page.locator("#settings-desktop")).toBeVisible();

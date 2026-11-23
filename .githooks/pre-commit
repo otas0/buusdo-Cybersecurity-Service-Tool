@@ -25,9 +25,14 @@ node scripts/assert-soft-live-hash-streak-baseline.mjs --index || {
   echo "hint: reset baseline — node scripts/bump-soft-live-hash-streak.mjs --reset && git add ci/soft-live-hash-streak.json" >&2
   exit 1
 }
-# In-view outcome is runtime-only (gitignored) — refuse if staged accidentally.
+# In-view outcome is runtime-only (gitignored) — refuse if staged or untracked accidentally.
 if git diff --cached --name-only -- ci/soft-live-hash-inview-outcome.json | grep -q .; then
   echo "refuse: do not commit ci/soft-live-hash-inview-outcome.json (CI runtime; see .gitignore)" >&2
   echo "hint: git reset HEAD -- ci/soft-live-hash-inview-outcome.json" >&2
+  exit 1
+fi
+if git status --porcelain -- ci/soft-live-hash-inview-outcome.json 2>/dev/null | grep -E '^\?\?|^A |^M ' | grep -q .; then
+  echo "refuse: ci/soft-live-hash-inview-outcome.json must stay untracked (CI runtime; see .gitignore)" >&2
+  echo "hint: rm -f ci/soft-live-hash-inview-outcome.json" >&2
   exit 1
 fi

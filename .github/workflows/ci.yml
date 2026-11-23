@@ -1063,6 +1063,7 @@ jobs:
           PLAYWRIGHT_BASE_URL: ${{ vars.PRODUCTION_HEALTH_URL || 'https://buusdocst.mtsu.workers.dev' }}
           PRODUCTION_HEALTH_URL: ${{ vars.PRODUCTION_HEALTH_URL || 'https://buusdocst.mtsu.workers.dev' }}
           CHINA_PAGES_BASE_URL: ${{ vars.CHINA_PAGES_BASE_URL || 'https://otas0.github.io/buusdocst' }}
+          SOFT_LIVE_HASH_OUTCOME_PATH: ${{ github.workspace }}/ci/soft-live-hash-inview-outcome.json
         run: npm run test:playwright:privacy
 
       - name: Soft-live hash streak from privacy outcome
@@ -1072,6 +1073,9 @@ jobs:
           INVIEW_OK=true
           if [ -f ci/soft-live-hash-inview-outcome.json ]; then
             INVIEW_OK=$(node -e 'const j=JSON.parse(require("fs").readFileSync("ci/soft-live-hash-inview-outcome.json","utf8")); console.log(j.ok===true?"true":"false")')
+            INVIEW_LINE=$(node -e 'const j=JSON.parse(require("fs").readFileSync("ci/soft-live-hash-inview-outcome.json","utf8")); console.log(`inview: ok=${j.ok===true} oks=${(j.oks||[]).length} fails=${(j.fails||[]).length}`)')
+            echo "$INVIEW_LINE"
+            echo "$INVIEW_LINE" >> "$GITHUB_STEP_SUMMARY"
           fi
           if [ "${{ steps.soft_privacy.outcome }}" = "success" ] && [ "$INVIEW_OK" = "true" ]; then
             node scripts/bump-soft-live-hash-streak.mjs --green
@@ -1079,6 +1083,7 @@ jobs:
             echo "Resetting soft-live streak (soft_privacy=${{ steps.soft_privacy.outcome }} inview_ok=$INVIEW_OK)"
             node scripts/bump-soft-live-hash-streak.mjs --reset
           fi
+          node scripts/append-soft-live-streak-chart.mjs || true
 
       - name: Upload soft-live hash streak artifact
         if: always() && steps.soft_privacy.outcome != 'skipped'

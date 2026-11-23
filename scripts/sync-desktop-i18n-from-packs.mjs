@@ -111,6 +111,7 @@ const MAP = {
   proxyBody: "proxyGuideLead",
   // Desktop update tip reset — packs keep overlay locales from drifting to EN.
   optionalUpdateShowHint: "optionalUpdateShowHint",
+  optionalUpdateTipAvailable: "optionalUpdateTipAvailable",
   honestLimitsMinSupportedNote: "honestLimitsMinSupportedNote"
 };
 
@@ -303,13 +304,45 @@ if (checkOnly) {
       }
     }
   }
-  if (missing.length) {
-    console.error("[sync-desktop-i18n] missing force/update keys (locale×key):");
-    for (const row of missing) console.error(`  ${row}`);
+  // Tip keys must not stay as EN in overlay packs (same gate as must-stay-full).
+  const TIP_NO_EN_KEYS = [
+    "optionalUpdateShowHint",
+    "optionalUpdateTipAvailable",
+    "honestLimitsMinSupportedNote"
+  ];
+  let enTipBag = {};
+  try {
+    enTipBag = parseEnBag(src);
+  } catch {
+    enTipBag = {};
+  }
+  /** @type {string[]} */
+  const stillEn = [];
+  for (const locale of forceLocales) {
+    if (locale === "en") continue;
+    for (const key of TIP_NO_EN_KEYS) {
+      const val = String(bags[locale]?.[key] || "").trim();
+      const enVal = String(enTipBag[key] || "").trim();
+      if (val && enVal && val === enVal) {
+        stillEn.push(`${locale}×${key}`);
+        matrix.push({ locale, key: `${key}:still-EN` });
+      }
+    }
+  }
+  if (missing.length || stillEn.length) {
+    if (missing.length) {
+      console.error("[sync-desktop-i18n] missing force/update keys (locale×key):");
+      for (const row of missing) console.error(`  ${row}`);
+    }
+    if (stillEn.length) {
+      console.error("[sync-desktop-i18n] tip keys still EN (locale×key) — refuse packing EN copy:");
+      for (const row of stillEn) console.error(`  ${row}`);
+    }
     const payload = {
       syncDesktopI18nMissing: matrix,
       forceLocales,
-      forceKeys: FORCE_UPDATE_KEYS
+      forceKeys: FORCE_UPDATE_KEYS,
+      tipStillEn: stillEn
     };
     // Machine-readable matrix for CI annotations / job summaries.
     console.error(JSON.stringify(payload, null, 2));

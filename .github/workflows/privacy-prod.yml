@@ -85,6 +85,7 @@ jobs:
         env:
           PLAYWRIGHT_SKIP_WEBSERVER: "1"
           PLAYWRIGHT_BASE_URL: ${{ steps.origin.outputs.url }}
+          SOFT_LIVE_HASH_OUTCOME_PATH: ${{ github.workspace }}/ci/soft-live-hash-inview-outcome.json
         run: npm run test:playwright:privacy
       - name: Playwright /zh → /zh-Hans alias (soft skip if unreachable)
         id: pw_zh_alias
@@ -120,16 +121,23 @@ jobs:
           fi
           STREAK=$(node -e 'const j=require("./ci/soft-live-hash-streak.json"); console.log(j.streak)')
           echo "streak=$STREAK" >> "$GITHUB_OUTPUT"
+          INVIEW_LINE="inview: (no outcome file)"
+          if [ -f ci/soft-live-hash-inview-outcome.json ]; then
+            INVIEW_LINE=$(node -e 'const j=JSON.parse(require("fs").readFileSync("ci/soft-live-hash-inview-outcome.json","utf8")); const oks=(j.oks||[]).length; const fails=(j.fails||[]).length; console.log(`inview: ok=${j.ok===true} oks=${oks} fails=${fails}`)')
+          fi
+          echo "inview_line=$INVIEW_LINE" >> "$GITHUB_OUTPUT"
           {
             echo "### soft-live hash (extension unpark)"
             echo ""
             echo '```'
             node scripts/bump-soft-live-hash-streak.mjs --print
+            echo "$INVIEW_LINE"
             echo '```'
             echo ""
             echo "- Hard PR gate (\`assert-extension-ui-unpark\`) stays soft until schedule proves streak≥3 (then set \`EXT_UI_UNPARK_HARD=1\`)."
             echo "- Hash in-view soft-fail resets streak even when the suite exits soft-green."
           } >> "$GITHUB_STEP_SUMMARY"
+          node scripts/append-soft-live-streak-chart.mjs || true
       - name: Upload soft-live hash streak artifact
         if: always() && steps.soft_live_streak.outcome == 'success'
         uses: actions/upload-artifact@v4
