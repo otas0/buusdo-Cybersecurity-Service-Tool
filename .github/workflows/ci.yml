@@ -68,6 +68,8 @@ jobs:
           echo "::notice::$summary"
           # Hard-fail when a previously-full locale drops below FULL_PACK_MIN_KEYS.
           npx tsx --test tests/pack-coverage-threshold.test.ts
+          # Core tip keys on every must-stay-full pack (same PR rule as docs/I18N.md).
+          npx tsx --test tests/optional-update-show-hint-must-stay-full.test.ts
 
       - name: i18n gate — no dead language-panel keys
         run: |
@@ -1032,6 +1034,7 @@ jobs:
       # Soft: live Workers privacy (skip inside spec if unreachable).
       # Covers /en|/pt-PT|/zh-Hans/privacy zero /survey/ links (local fixture: tests/privacy-fixture-no-survey.test.ts).
       - name: Soft privacy-prod (Workers + China Pages no /survey/)
+        id: soft_privacy
         if: steps.pw_install.outcome == 'success'
         continue-on-error: true
         env:
@@ -1040,6 +1043,43 @@ jobs:
           PRODUCTION_HEALTH_URL: ${{ vars.PRODUCTION_HEALTH_URL || 'https://buusdocst.mtsu.workers.dev' }}
           CHINA_PAGES_BASE_URL: ${{ vars.CHINA_PAGES_BASE_URL || 'https://otas0.github.io/buusdocst' }}
         run: npm run test:playwright:privacy
+
+      - name: Soft-live hash streak from privacy outcome
+        if: always() && steps.soft_privacy.outcome != 'skipped' && steps.soft_privacy.outcome != 'cancelled'
+        continue-on-error: true
+        run: |
+          if [ "${{ steps.soft_privacy.outcome }}" = "success" ]; then
+            node scripts/bump-soft-live-hash-streak.mjs --green
+          else
+            node scripts/bump-soft-live-hash-streak.mjs --reset
+          fi
+
+      - name: Upload soft-live hash streak artifact
+        if: always() && steps.soft_privacy.outcome != 'skipped'
+        continue-on-error: true
+        uses: actions/upload-artifact@v4
+        with:
+          name: soft-live-hash-streak
+          path: ci/soft-live-hash-streak.json
+          if-no-files-found: ignore
+          retention-days: 14
+
+      - name: Extension UI unpark gate (soft until schedule streak≥3 / EXT_UI_UNPARK_HARD)
+        id: ext_ui_unpark
+        if: steps.pw_install.outcome == 'success' && github.event_name == 'pull_request'
+        continue-on-error: ${{ vars.EXT_UI_UNPARK_HARD != '1' }}
+        env:
+          # Flip repo var EXT_UI_UNPARK_HARD=1 after Privacy prod schedule shows streak≥3.
+          EXT_UI_UNPARK_HARD: ${{ vars.EXT_UI_UNPARK_HARD || '0' }}
+        run: |
+          BASE="origin/${{ github.base_ref }}"
+          git fetch --depth=1 origin "${{ github.base_ref }}" 2>/dev/null || true
+          if [ "${EXT_UI_UNPARK_HARD}" = "1" ]; then
+            EXT_UI_STRICT=1 node scripts/assert-extension-ui-unpark.mjs --diff-base "$BASE"
+          else
+            node scripts/assert-extension-ui-unpark.mjs --diff-base "$BASE" || true
+            echo "::notice::assert-extension-ui-unpark soft — set vars.EXT_UI_UNPARK_HARD=1 after Privacy prod streak≥3"
+          fi
 
       - name: Extension phishing toast fixture
         if: steps.pw_install.outcome == 'success'

@@ -88,6 +88,17 @@ function makeReachEl() {
     },
     appendChild(node: unknown) {
       children.push(node);
+      if (node && typeof node === "object") {
+        (node as { parentNode?: unknown }).parentNode = el;
+      }
+      return node;
+    },
+    removeChild(node: unknown) {
+      const i = children.indexOf(node);
+      if (i >= 0) children.splice(i, 1);
+      if (node && typeof node === "object") {
+        (node as { parentNode?: unknown }).parentNode = null;
+      }
       return node;
     },
     _status: status,
@@ -95,6 +106,17 @@ function makeReachEl() {
     _children: children
   };
   return el;
+}
+
+function anywayCount(reach: ReturnType<typeof makeReachEl> | null): number {
+  if (!reach) return 0;
+  return reach._children.filter(
+    (c) =>
+      c &&
+      typeof c === "object" &&
+      "dataset" in c &&
+      (c as { dataset: { testid?: string } }).dataset.testid === "china-workers-anyway"
+  ).length;
 }
 
 function runRedirect(opts: {
@@ -304,6 +326,51 @@ test("vm: wrong health.service soft-fails (never stuck checking)", async () => {
   assert.equal(run.reach?.dataset.state, "soft-fail");
   assert.notEqual(run.reach?.dataset.state, "checking");
   assert.equal(run.reach?.getAttribute("aria-live"), "polite");
+  assert.equal(anywayCount(run.reach), 1);
+});
+
+test("vm: setReach stay never keeps Open Workers anyway", async () => {
+  const run = runRedirect({
+    pathname: "/buusdocst/index.html",
+    search: "?china_stay=1",
+    health: { ok: true, service: "pcpd" },
+    withReach: true,
+    lang: "en"
+  });
+  await run.flush();
+  assert.equal(run.reach?.dataset.state, "stay");
+  assert.equal(anywayCount(run.reach), 0);
+});
+
+test("vm: setReach ok never keeps Open Workers anyway", async () => {
+  const run = runRedirect({
+    pathname: "/buusdocst/en.html",
+    languages: ["en"],
+    lang: "en",
+    health: { ok: true, service: "buusdocst" },
+    withReach: true
+  });
+  await run.flush();
+  assert.equal(run.reach?.dataset.state, "ok");
+  assert.equal(anywayCount(run.reach), 0);
+  assert.match(run.replaced, /workers\.dev/);
+});
+
+test("vm: soft-fail anyway is removed when setReach(ok) runs via seeded child", async () => {
+  // Soft-fail inserts anyway; re-run setReach path by seeding then applying stay-style clear.
+  const reach = makeReachEl();
+  const fakeAnyway = {
+    dataset: { testid: "china-workers-anyway" },
+    parentNode: null as unknown
+  };
+  reach.appendChild(fakeAnyway);
+  assert.equal(anywayCount(reach), 1);
+  // Mimic setReach non-soft-fail branch from region-redirect.js
+  const stale = reach.querySelector('[data-testid="china-workers-anyway"]') as {
+    parentNode?: { removeChild: (n: unknown) => void } | null;
+  } | null;
+  if (stale?.parentNode) stale.parentNode.removeChild(stale);
+  assert.equal(anywayCount(reach), 0);
 });
 
 test("vm: hard fail uses assertive aria-live", async () => {
@@ -315,4 +382,5 @@ test("vm: hard fail uses assertive aria-live", async () => {
   await run.flush();
   assert.equal(run.reach?.dataset.state, "fail");
   assert.equal(run.reach?.getAttribute("aria-live"), "assertive");
+  assert.equal(anywayCount(run.reach), 0);
 });

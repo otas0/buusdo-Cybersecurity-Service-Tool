@@ -1,0 +1,6 @@
+{
+  "streak": 0,
+  "need": 3,
+  "updatedAt": null,
+  "note": "Committed baseline only (streak=0). CI bumps are artifacts — do not commit runtime streak>0. See docs/I18N.md SOFT_LIVE_* table."
+}

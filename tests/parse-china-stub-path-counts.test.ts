@@ -27,6 +27,21 @@ test("parse-china-stub-path-counts GATE=keep on hot-stubs fixture", () => {
   assert.match(r.stdout, /count \/install\.html=42/);
 });
 
+test("parse-china-stub-path-counts GATE=review on Cloudflare Logpush-shaped fixture", () => {
+  const dump = join(
+    process.cwd(),
+    "tests/fixtures/china-stub-path-counts/cloudflare-logpush.jsonl"
+  );
+  const r = spawnSync(process.execPath, [script, "--dump", dump, "--near-zero", "5"], {
+    encoding: "utf8"
+  });
+  assert.equal(r.status, 0, r.stderr);
+  assert.match(r.stdout, /parser=jsonl/);
+  assert.match(r.stdout, /count \/install\.html=1/);
+  assert.match(r.stdout, /count \/privacy-en\.html=1/);
+  assert.match(r.stdout, /GATE=review/);
+});
+
 test("parse-china-stub-path-counts still accepts ad-hoc dump", () => {
   const dir = mkdtempSync(join(tmpdir(), "stub-counts-"));
   const dump = join(dir, "hits.csv");

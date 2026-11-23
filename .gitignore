@@ -64,3 +64,5 @@ next-env.d.ts
 .dev.vars
 /outputs/
 /work/
+# Soft-live hash streak: commit baseline streak=0 only; CI runtime bumps are artifacts (do not commit streak>0).
+# Local persist: SOFT_LIVE_HASH_PERSIST=1 writes here — reset with: node scripts/bump-soft-live-hash-streak.mjs --reset

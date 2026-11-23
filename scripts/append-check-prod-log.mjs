@@ -11,6 +11,8 @@ import { join } from "node:path";
 function emitDroppedRows(n) {
   const line = `DROPPED_ROWS=${n}`;
   console.info(`[append-check-prod-log] ${line}`);
+  // Actions search / annotations — always emit notice (even when 0).
+  console.log(`::notice::${line}`);
   if (process.env.GITHUB_OUTPUT) {
     try {
       appendFileSync(process.env.GITHUB_OUTPUT, `dropped_rows=${n}\n`, "utf8");

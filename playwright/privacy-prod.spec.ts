@@ -161,6 +161,25 @@ test.describe("production privacy pages", () => {
     }
   });
 
+  test("/zh-Hant/privacy soft-live China section when locale ships the key", async ({ page }) => {
+    await page.goto(`${base}/zh-Hant/privacy#privacy-china-notice`, {
+      waitUntil: "domcontentloaded",
+      timeout: 45_000
+    });
+    const section = page.getByTestId("privacy-china-notice");
+    if ((await section.count()) === 0) {
+      console.warn("[soft-live] zh-Hant privacy-china-notice missing (locale may not ship key yet)");
+      return;
+    }
+    await expect(section).toBeVisible();
+    const text = ((await section.textContent()) || "").replace(/\s+/g, " ").trim();
+    if (!/中國大陸入口|中国大陆入口|China mainland|otas0\.github\.io\/buusdocst/i.test(text)) {
+      console.warn(`[soft-live] zh-Hant China section soft mismatch: ${text.slice(0, 80)}`);
+    } else {
+      console.info(`[soft-live] zh-Hant China section ok (${text.slice(0, 72)}…)`);
+    }
+  });
+
   test("/en/privacy#privacy-faq-common deep-link", async ({ page }) => {
     await page.goto(`${base}/en/privacy#privacy-faq-common`, { waitUntil: "domcontentloaded" });
     await expect(page.locator("#privacy-faq-common")).toBeVisible();
@@ -276,14 +295,9 @@ test.describe("production privacy pages", () => {
           console.warn(`[soft-live] ${locale} privacy-honest-limits-min-supported missing (soft)`);
         } else {
           await expect(floor).toBeVisible();
-          const floorText = ((await floor.textContent()) || "").trim();
-          if (minSupportedVersion && !floorText.includes(minSupportedVersion)) {
-            console.warn(
-              `[soft-live] ${locale} floor missing min ${minSupportedVersion}: ${floorText.slice(0, 80)}`
-            );
-          } else {
-            console.info(`[soft-live] ${locale} floor testid ok (${floorText.slice(0, 64)}…)`);
-          }
+          // When the floor testid is present, require the current min semver (soft skip only if missing).
+          await expect(floor).toContainText(minSupportedVersion);
+          console.info(`[soft-live] ${locale} floor testid ok (min ${minSupportedVersion})`);
         }
       } catch (limitsErr) {
         const msg = limitsErr instanceof Error ? limitsErr.message : String(limitsErr);

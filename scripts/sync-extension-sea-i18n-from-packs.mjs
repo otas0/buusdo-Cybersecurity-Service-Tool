@@ -32,7 +32,9 @@ const LOCALES = [
   "zh-Hant",
   "pt-BR",
   "af",
-  "zu"
+  "zu",
+  "xh",
+  "st"
 ];
 
 /** extension key → website pack key */
