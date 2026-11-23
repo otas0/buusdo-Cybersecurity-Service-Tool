@@ -1062,9 +1062,14 @@ jobs:
         if: always() && steps.soft_privacy.outcome != 'skipped' && steps.soft_privacy.outcome != 'cancelled'
         continue-on-error: true
         run: |
-          if [ "${{ steps.soft_privacy.outcome }}" = "success" ]; then
+          INVIEW_OK=true
+          if [ -f ci/soft-live-hash-inview-outcome.json ]; then
+            INVIEW_OK=$(node -e 'const j=JSON.parse(require("fs").readFileSync("ci/soft-live-hash-inview-outcome.json","utf8")); console.log(j.ok===true?"true":"false")')
+          fi
+          if [ "${{ steps.soft_privacy.outcome }}" = "success" ] && [ "$INVIEW_OK" = "true" ]; then
             node scripts/bump-soft-live-hash-streak.mjs --green
           else
+            echo "Resetting soft-live streak (soft_privacy=${{ steps.soft_privacy.outcome }} inview_ok=$INVIEW_OK)"
             node scripts/bump-soft-live-hash-streak.mjs --reset
           fi
 
