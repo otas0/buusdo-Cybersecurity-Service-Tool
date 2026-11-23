@@ -2,6 +2,10 @@
  * Mainland China (CF-IPCountry=CN) → force redirect to GitHub Pages notice.
  * Opt out for ops/tests: ?china_workers_stay=1 (cookie, 8h) · clear with =0.
  * API and static assets are never redirected.
+ *
+ * Note: vinext’s Cloudflare Worker bundle may omit this file. Production
+ * enforcement also lives in `components/ChinaMainlandForceRedirect.tsx`
+ * (App Router pages). Keep both in sync via shared/china-workers-redirect.ts.
  */
 import { NextResponse, type NextRequest } from "next/server";
 import {

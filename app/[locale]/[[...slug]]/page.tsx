@@ -1,4 +1,5 @@
 import { AppShell } from "../../../components/AppShell";
+import { enforceChinaMainlandForceRedirect } from "../../../components/ChinaMainlandForceRedirect";
 import type { Locale } from "../../../i18n/messages";
 import { getMessages } from "../../../i18n/messages";
 import {
@@ -37,14 +38,21 @@ export async function generateMetadata({
 }
 
 export default async function LocalisedPage({
-  params
+  params,
+  searchParams
 }: {
   params: Promise<{ locale: string; slug?: string[] }>;
+  searchParams?: Promise<Record<string, string | string[] | undefined>>;
 }) {
   const { locale: raw, slug = [] } = await params;
+  const sp = searchParams ? await searchParams : undefined;
+  const rest = slug.length ? `/${slug.join("/")}` : "";
+  await enforceChinaMainlandForceRedirect({
+    pathname: `/${raw}${rest}`,
+    searchParams: sp
+  });
   const alias = localeAliasTarget(raw);
   if (alias) {
-    const rest = slug.length ? `/${slug.join("/")}` : "";
     redirect(`/${alias}${rest}`);
   }
   if (!isLocale(raw)) notFound();

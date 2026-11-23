@@ -3,6 +3,7 @@ import '../shared/tokens.css';
 import './globals.css';
 import './shield.css';
 
+import { ChinaWorkersStayBoot } from '../components/ChinaMainlandForceRedirect';
 import productionSite from '../shared/production-site.json';
 
 const explicitSiteUrl = process.env.NEXT_PUBLIC_SITE_URL?.trim();
@@ -52,6 +53,7 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: THEME_BOOT }} />
+        <ChinaWorkersStayBoot />
       </head>
       <body className="antialiased">
         {children}

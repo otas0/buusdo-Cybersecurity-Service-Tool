@@ -46,3 +46,14 @@ test("middleware.ts wires CF-IPCountry + stay param", () => {
   assert.match(src, /chinaPagesDestForWorkersPath/);
   assert.match(src, /NextResponse\.redirect/);
 });
+
+test("App Router enforces CN redirect (vinext may omit middleware)", () => {
+  const page = readFileSync("app/[locale]/[[...slug]]/page.tsx", "utf8");
+  const root = readFileSync("app/page.tsx", "utf8");
+  const boot = readFileSync("components/ChinaMainlandForceRedirect.tsx", "utf8");
+  assert.match(page, /enforceChinaMainlandForceRedirect/);
+  assert.match(root, /enforceChinaMainlandForceRedirect/);
+  assert.match(boot, /cf-ipcountry/i);
+  assert.match(boot, /ChinaWorkersStayBoot/);
+  assert.match(readFileSync("app/layout.tsx", "utf8"), /ChinaWorkersStayBoot/);
+});

@@ -34,10 +34,13 @@ Actions **Pages China** 将 `china-pages/` 发布到 `otas0/buusdocst`（secret 
 
 ## Workers → China Pages（强制）
 
-产品站 `middleware.ts`（逻辑：`shared/china-workers-redirect.ts`）：
+逻辑：`shared/china-workers-redirect.ts`。
 
-1. 请求头 `CF-IPCountry=CN`（或 `CF-IPCountry` / `x-vercel-ip-country`）且路径非 `/api/*` / 静态资源 → **302** 至 `https://otas0.github.io/buusdocst/`（`/en…` → `en.html`）。
-2. 运维自测留在 Workers：`?china_workers_stay=1`（cookie 8h）；清除：`?china_workers_stay=0`。
+- **生产路径（vinext）：** `components/ChinaMainlandForceRedirect.tsx` 在 `app/page.tsx` 与 `app/[locale]/[[...slug]]/page.tsx` 内读 `CF-IPCountry` 并 `redirect`（`/api/*` 不走 App Router 页，故不跳转）。
+- **可选边缘：** 根目录 `middleware.ts` 同源逻辑（vinext Worker 包可能不收录；以 App Router 为准）。
+
+1. 请求头 `CF-IPCountry=CN`（或 `x-vercel-ip-country`）→ **redirect** 至 `https://otas0.github.io/buusdocst/`（`/en…` → `en.html`）。
+2. 运维自测留在 Workers：`?china_workers_stay=1`（`ChinaWorkersStayBoot` 写 cookie 8h）；清除：`?china_workers_stay=0`。
 3. `/api/health`、`/api/check` 等 **永不** 跳转（扩展与机器调用不受影响）。
 
 ## Region soft probe（本站）
