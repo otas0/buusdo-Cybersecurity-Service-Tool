@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta
       name="description"
-      content="Notice on suspending the China mainland entry pages and region auto-guide — buusdo Cybersecurity Service Tool"
+      content="Notice on the China mainland entry and Workers force-redirect — buusdo Cybersecurity Service Tool"
     />
     <title>Notice · buusdo Cybersecurity Service Tool</title>
     <link rel="icon" href="./assets/favicon.svg" type="image/svg+xml" />
@@ -40,17 +40,16 @@
       <article class="stage notice">
         <p class="kicker"><span class="mark" aria-hidden="true"></span>Notice</p>
         <h2 data-testid="china-notice-title">
-          Notice on suspending the China mainland entry pages and region auto-guide
+          Notice on the China mainland entry and Workers force-redirect
         </h2>
 
         <p class="lede">Dear users,</p>
         <p>
           Thank you for your interest in buusdo Cybersecurity Service Tool (the “Project”). This
-          notice explains the suspension of the China mainland entry pages and the automatic
-          guide to the product site.
+          notice explains how mainland China networks are guided between Workers and this page.
         </p>
 
-        <h3>1. Reason and scope of suspension</h3>
+        <h3>1. Reason and scope</h3>
         <p>
           Full checking runs on Cloudflare Workers (
           <code>https://buusdocst.mtsu.workers.dev</code>
@@ -58,29 +57,34 @@
           checks may fail.
         </p>
         <p>
-          To avoid confusion when full checking is unstable, from
+          From
           <strong>22 November 2026</strong>
-          the Project
-          <strong>suspends regular service of the China mainland entry pages</strong>
-          (GitHub Pages:
+          the China mainland GitHub Pages entry (
           <code>https://otas0.github.io/buusdocst/</code>
-          ). Product explainers, privacy summaries, and install guides formerly on this site are
-          removed; only this notice remains.
-          <strong>The full product UI lives on the Workers site.</strong>
+          ) keeps only this notice (explainers / privacy summaries / install guides are offline).
+          From
+          <strong>23 November 2026</strong>,
+          when Cloudflare marks a visitor as mainland China (
+          <code>CF-IPCountry=CN</code>
+          ) on the Workers product site, the Project
+          <strong>force-redirects them to this notice</strong>
+          so an unstable network is not mistaken for a working full checker.
+          <strong>The full product UI still lives on Workers; <code>/api/*</code> is never
+          redirected (extensions and machine clients keep working).</strong>
         </p>
         <p>
-          Scope is limited to these entry pages; it does
+          Scope targets mainland China network conditions; it does
           <strong>not</strong>
-          mean the Workers product site is unavailable on every network worldwide.
+          mean Workers is unavailable on every network worldwide.
         </p>
 
-        <h3>2. Region / network auto-guide (switch to the other site)</h3>
+        <h3>2. How the two entries work together</h3>
         <p>There are two related entry points:</p>
         <ul>
           <li>
             China mainland entry —
             <code>https://otas0.github.io/buusdocst/</code>
-            (this notice; shown when Workers is unreachable)
+            (this notice; mainland visitors are force-sent here from Workers)
           </li>
           <li>
             Workers full checker —
@@ -89,39 +93,38 @@
             <code>/zh-Hans</code>, <code>/zh-Hant</code>, <code>/en</code>)
           </li>
         </ul>
-        <p>
-          On
-          <strong>any</strong>
-          China entry page, the site probes whether Workers is reachable (read-only health check;
-          see §3):
-        </p>
         <ol>
           <li>
-            <strong>Workers reachable</strong>
-            : auto-guide to the matching Workers locale path (e.g.
-            <code>/zh-Hans</code>, <code>/zh-Hant</code>, <code>/en</code>).
+            <strong>Open Workers from mainland China</strong>
+            : force-redirect to this notice (ops opt-out:
+            <code>?china_workers_stay=1</code>).
+          </li>
+          <li>
+            <strong>Stay on this notice</strong>
+            : read-only health probe shows reachability only —
+            <strong>no auto-bounce back to Workers</strong>
+            (avoids a redirect loop). Open Workers manually when you need the full checker.
           </li>
           <li>
             <strong>Workers unreachable</strong>
             : stay on this notice; no availability promise for mainland access.
           </li>
         </ol>
-        <p>
-          “Auto-guide” means China entry → Workers checker for your language — not a set of
-          country-specific product mirrors.
-        </p>
 
-        <h3>3. Network probe and privacy</h3>
+        <h3>3. Network detection and privacy</h3>
         <ul>
           <li>
-            <strong>Probe</strong>
-            : browser
-            <code>GET /api/health</code>
-            to Workers (short timeout, no cookies) to decide reachability and guide.
+            <strong>On Workers</strong>
+            : Cloudflare
+            <code>CF-IPCountry</code>
+            (only to decide the force-redirect — not for profiling or ads).
           </li>
           <li>
-            <strong>Not used for</strong>
-            : profiling, ads, marketing, or other purposes.
+            <strong>On this page</strong>
+            : browser
+            <code>GET /api/health</code>
+            to Workers (short timeout, no cookies) to show reachability —
+            <strong>no auto-redirect</strong>.
           </li>
           <li>
             <strong>Does not call</strong>
@@ -140,6 +143,7 @@
           <a href="https://buusdocst.mtsu.workers.dev/en/privacy" rel="noreferrer"
             >https://buusdocst.mtsu.workers.dev/en/privacy</a
           >
+          (mainland visitors may be guided back here when opening that link).
         </p>
 
         <h3>4. Restoration</h3>
@@ -162,7 +166,7 @@
         </p>
         <p class="notice-sign">
           buusdo Cybersecurity Service Tool developers<br />
-          Published: 22 November 2026
+          Published: 22 November 2026 · Revised: 23 November 2026 (Workers→notice force-redirect)
         </p>
 
         <div
@@ -202,10 +206,11 @@
           >
         </div>
         <p class="hint" data-testid="china-region-redirect-hint">
-          Reachable networks are force-redirected to the full checker (use Stay for this tab only).
-          <a href="./en.html?china_stay=1" data-testid="china-stay-link">Stay on this page</a>
+          This page only shows Workers reachability — it no longer auto-redirects. Open the
+          checker with the buttons above when you need it.
+          <a href="./en.html?china_stay=1" data-testid="china-stay-link">Pause probe</a>
           ·
-          <a href="./en.html?china_stay=0" data-testid="china-stay-clear">Clear stay</a>.
+          <a href="./en.html?china_stay=0" data-testid="china-stay-clear">Resume probe</a>.
         </p>
       </article>
 

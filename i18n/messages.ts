@@ -45,8 +45,8 @@ export const messages = {
       "Desktop app: computer scan and personal block lists work offline. Live website address checks need the internet when you use that path.",
     privacyPolicyChinaTitle: "China mainland entry (GitHub Pages)",
     privacyPolicyChinaBody:
-      "From 22 November 2026 the China mainland GitHub Pages site (https://otas0.github.io/buusdocst/) suspends regular product explain/install/privacy pages and keeps only a bilingual notice. When your network can reach this Workers product site, that Pages notice auto-guides here; when it cannot, you may still open the notice. Formal privacy is this page — not a separate China privacy summary.",
-    privacyPolicyUpdated: "Last reviewed: 2026-11-22 · China entry notice",
+      "From 22 November 2026 the China mainland GitHub Pages site (https://otas0.github.io/buusdocst/) keeps only a bilingual notice (explain/install/privacy pages offline). From 23 November 2026, when Cloudflare marks a visitor as mainland China (CF-IPCountry=CN) on this Workers site, the product force-redirects them to that notice (API paths are not redirected). The notice probes Workers reachability and offers a manual open link — it no longer auto-bounces here. Formal privacy is this page — not a separate China privacy summary.",
+    privacyPolicyUpdated: "Last reviewed: 2026-11-23 · China entry force-redirect",
     desktopDownloadsTitle: "Desktop app downloads",
     desktopDownloadsIntro:
       "Get the desktop app for this computer in three steps. Builds are unsigned — the first open may need Gatekeeper / SmartScreen approval. Open-at-login stays off until you enable it.",
@@ -565,8 +565,8 @@ export const messages = {
       "App desktop: a análise deste computador e as listas pessoais de bloqueio funcionam offline. As verificações de endereço no site precisam de internet quando usar esse caminho.",
     privacyPolicyChinaTitle: "Entrada da China continental (GitHub Pages)",
     privacyPolicyChinaBody:
-      "Desde 22 de novembro de 2026 o site GitHub Pages da China continental (https://otas0.github.io/buusdocst/) suspende as páginas habituais de explicação/instalação/privacidade e mantém só um aviso bilingue. Quando a rede alcança este site Workers, esse aviso encaminha automaticamente para aqui; quando não alcança, o aviso pode ainda abrir. A privacidade formal é esta página — não um resumo separado na China.",
-    privacyPolicyUpdated: "Última revisão: 2026-11-22 · aviso da entrada China",
+      "Desde 22 de novembro de 2026 o site GitHub Pages da China continental (https://otas0.github.io/buusdocst/) mantém só um aviso bilingue (páginas de explicação/instalação/privacidade offline). Desde 23 de novembro de 2026, quando a Cloudflare marca o visitante como China continental (CF-IPCountry=CN) neste site Workers, o produto força o redirecionamento para esse aviso (caminhos /api/* não são redirecionados). O aviso sonda a acessibilidade do Workers e oferece um link manual — já não encaminha automaticamente para aqui. A privacidade formal é esta página — não um resumo separado na China.",
+    privacyPolicyUpdated: "Última revisão: 2026-11-23 · redirecionamento forçado da entrada China",
     desktopDownloadsTitle: "Transferências da app de ambiente de trabalho",
     desktopDownloadsIntro:
       "Obtenha a app neste computador em três passos. As builds não estão assinadas — a primeira abertura pode pedir aprovação do Gatekeeper / SmartScreen. Abrir ao iniciar sessão fica desligado até o ativar.",

@@ -166,7 +166,7 @@ for (const page of ["china-pages/index.html", "china-pages/en.html"]) {
     !redirect.includes('setReach("stay"') &&
     !/"stay"/.test(redirect)
   ) {
-    console.error('FAIL: region-redirect must set data-state="stay" when china_stay pauses auto-guide');
+    console.error('FAIL: region-redirect must set data-state="stay" when china_stay pauses the probe');
     process.exit(1);
   }
   if (!redirect.includes("soft-fail") || !redirect.includes("markSoftFail")) {

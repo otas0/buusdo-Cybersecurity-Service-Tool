@@ -19,10 +19,12 @@ Actions **Pages China** 将 `china-pages/` 发布到 `otas0/buusdocst`（secret 
 
 自 **2026-11-22** 起，中国入口**只保留**中英告知书与 Workers 产品站入口；说明 / 隐私摘要 / 安装指引已下线。
 
+自 **2026-11-23** 起：Workers 对 `CF-IPCountry=CN` 的 HTML 导航**强制跳转**至本告知书（见下节）；本站**不再**自动 `location.replace` 回 Workers（避免循环）。
+
 | 路径 | 用途 |
 |------|------|
-| `/` (`index.html`) | 中文告知书 + Workers 入口 |
-| `/en.html` | English notice + Workers entry |
+| `/` (`index.html`) | 中文告知书 + Workers 入口（手动） |
+| `/en.html` | English notice + Workers entry (manual) |
 | `/install.html` · `/privacy.html` | 薄跳转 → `index.html`（旧链兼容） |
 | `/install-en.html` · `/privacy-en.html` | 薄跳转 → `en.html` |
 
@@ -30,16 +32,24 @@ Actions **Pages China** 将 `china-pages/` 发布到 `otas0/buusdocst`（secret 
 
 语言偏好：`lang-persist.js`（`<head>` 同步）→ `localStorage` `buusdocst-china-lang`。
 
-## Region auto-guide（全站）
+## Workers → China Pages（强制）
 
-`china-pages/region-redirect.js`（defer on **every** notice HTML; stubs jump to notice first）：
+产品站 `middleware.ts`（逻辑：`shared/china-workers-redirect.ts`）：
 
-1. **强制跳转（默认）**：`GET /api/health` 成功且 `service === buusdocst` → 立即 `location.replace` Workers 语言路径。脚本在 `<head>` 同步加载；旧 `localStorage buusdocst-china-stay` 会被清除，不再长期拦截。
-2. 本标签临时阅读：`?china_stay=1` → 仅 `sessionStorage`（`data-testid="china-stay-link"`）。清除：`?china_stay=0`（`china-stay-clear`）。
-3. Locale：`zh-TW`/`zh-HK` → `/zh-Hant`；`zh`/`zh-CN` → `/zh-Hans`；`en*` → `/en`；否则按页面默认。
+1. 请求头 `CF-IPCountry=CN`（或 `CF-IPCountry` / `x-vercel-ip-country`）且路径非 `/api/*` / 静态资源 → **302** 至 `https://otas0.github.io/buusdocst/`（`/en…` → `en.html`）。
+2. 运维自测留在 Workers：`?china_workers_stay=1`（cookie 8h）；清除：`?china_workers_stay=0`。
+3. `/api/health`、`/api/check` 等 **永不** 跳转（扩展与机器调用不受影响）。
+
+## Region soft probe（本站）
+
+`china-pages/region-redirect.js`（defer 关闭；`<head>` 同步）：
+
+1. **不再强制跳转**：`GET /api/health` 成功且 `service === buusdocst` → 显示可达 +「打开 Workers」链接（手动）。
+2. 本标签暂停探测：`?china_stay=1` → 仅 `sessionStorage`（`data-testid="china-stay-link"`）。清除：`?china_stay=0`。
+3. Locale：手动打开 Workers 时按浏览器语言拼 `/zh-Hans` / `/zh-Hant` / `/en`。
 4. Health 失败 → 留在告知书；`#workers-reach` 显示不可达。
 
-UI：`data-testid="china-notice"` / `china-notice-title` / `china-workers-entry` / `china-region-redirect-hint` / `china-stay-link` / `china-stay-clear`。
+UI：`data-testid="china-notice"` / `china-notice-title` / `china-workers-entry` / `china-region-redirect-hint` / `china-stay-link` / `china-stay-clear` / `china-workers-anyway`。
 
 ### Legacy install / privacy paths — keep thin redirects
 
@@ -66,9 +76,9 @@ node scripts/parse-china-stub-path-counts.mjs --dump /path/to/logpush.jsonl --da
 | 表面 | 宿主 |
 |------|------|
 | 完整检查 / API / 隐私 / 安装 | Cloudflare Workers `buusdocst.mtsu.workers.dev` |
-| 暂停服务告知书（大陆友好静态页） | GitHub Pages `otas0.github.io/buusdocst` |
+| 中国大陆告知书（静态；CN 强制落地） | GitHub Pages `otas0.github.io/buusdocst` |
 
-Pages **不能**替代 `POST /api/check`。正式隐私以 Workers `/zh-Hans/privacy` · `/en/privacy` 为准。
+Pages **不能**替代 `POST /api/check`。正式隐私以 Workers `/zh-Hans/privacy` · `/en/privacy` 为准（大陆访客打开时可能再次被引导回本告知书）。
 
 - **Do not** revive `china-pages/site-config.js` or A4 / `/promo/poster.html` CTAs.
 - Poster print handoff stays on Workers `/promo/` only.
@@ -77,3 +87,4 @@ Pages **不能**替代 `POST /api/check`。正式隐私以 Workers `/zh-Hans/pri
 
 - 改 `china-pages/` 后推产品仓 `main` → Actions 同步到 `buusdocst`
 - 手动：Actions → **Pages China** → Run workflow
+- Workers 改 `middleware.ts` 后：`npm run deploy:cloudflare`

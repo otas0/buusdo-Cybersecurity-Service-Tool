@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta
       name="description"
-      content="关于暂停中国大陆入口页服务及地区入口自动引导的告知书 — buusdo Cybersecurity Service Tool"
+      content="关于中国大陆入口与 Workers 强制引导的告知书 — buusdo Cybersecurity Service Tool"
     />
     <title>告知书 · buusdo Cybersecurity Service Tool</title>
     <link rel="icon" href="./assets/favicon.svg" type="image/svg+xml" />
@@ -39,42 +39,48 @@
 
       <article class="stage notice">
         <p class="kicker"><span class="mark" aria-hidden="true"></span>告知书</p>
-        <h2 data-testid="china-notice-title">关于暂停中国大陆入口页服务及地区入口自动引导的告知书</h2>
+        <h2 data-testid="china-notice-title">关于中国大陆入口与 Workers 强制引导的告知书</h2>
 
         <p class="lede">尊敬的用户：</p>
         <p>
-          感谢您对 buusdo Cybersecurity Service Tool（以下简称「本项目」）的关注与支持。现就中国大陆入口页服务调整、以及访问入口的自动引导安排，告知如下：
+          感谢您对 buusdo Cybersecurity Service Tool（以下简称「本项目」）的关注与支持。现就中国大陆网络环境下的入口安排，告知如下：
         </p>
 
-        <h3>一、暂停服务的原因及范围</h3>
+        <h3>一、原因及范围</h3>
         <p>
           本项目的完整检查能力运行在 Cloudflare Workers（
           <code>https://buusdocst.mtsu.workers.dev</code>
-          ）。经技术评估，在部分中国大陆网络环境下，该域名可能出现延迟、超时或不可达，用户难以正常完成检查。
+          ）。在部分中国大陆网络环境下，该域名可能出现延迟、超时或不可达，用户难以正常完成检查。
         </p>
         <p>
-          为避免在无法稳定使用完整检查时产生误解与异常体验，本项目自
+          自
           <strong>2026 年 11 月 22 日</strong>
-          起，
-          <strong>暂停中国大陆入口页</strong>
-          （GitHub Pages：
+          起，中国大陆 GitHub Pages 入口（
           <code>https://otas0.github.io/buusdocst/</code>
-          ）的常规对外服务。该入口此前提供的产品说明、隐私摘要与安装指引已下线；本站仅保留本告知书。
-          <strong>完整检查界面位于 Workers 产品站。</strong>
+          ）仅保留本告知书（产品说明 / 隐私摘要 / 安装指引已下线）。自
+          <strong>2026 年 11 月 23 日</strong>
+          起，当访客经 Cloudflare 判定来自中国大陆（
+          <code>CF-IPCountry=CN</code>
+          ）并打开 Workers 产品站时，
+          <strong>将强制跳转至本告知书</strong>
+          ，以免在不稳定网络下误以为完整检查可用。
+          <strong>完整检查界面仍位于 Workers；API（</strong>
+          <code>/api/*</code>
+          <strong>）不跳转，扩展与机器调用不受影响。</strong>
         </p>
         <p>
-          说明：暂停范围限于上述中国大陆入口页；
+          说明：上述安排针对中国大陆网络环境；
           <strong>不表示</strong>
-          Workers 产品站在全球其他可访问网络中一律不可用。
+          Workers 在全球其他可访问网络中一律不可用。
         </p>
 
-        <h3>二、地区入口自动引导（按网络环境切换到另一套站点）</h3>
+        <h3>二、两套入口如何配合</h3>
         <p>本项目存在两套相关站点入口：</p>
         <ul>
           <li>
-            中国大陆入口页 —
+            中国大陆入口（本站）—
             <code>https://otas0.github.io/buusdocst/</code>
-            （本告知书；网络不可达 Workers 时可见）
+            （告知书；大陆访客从 Workers 被强制引导至此）
           </li>
           <li>
             Workers 完整检查站 —
@@ -83,39 +89,39 @@
             <code>/zh-Hans</code>、<code>/zh-Hant</code>、<code>/en</code>）
           </li>
         </ul>
-        <p>
-          当用户访问中国大陆入口页的
-          <strong>任意页面</strong>
-          时，系统将根据当前网络是否可达 Workers（只读健康探测，见第三节）进行引导：
-        </p>
         <ol>
           <li>
-            <strong>网络经检测可到达 Workers</strong>
-            ：自动引导至与语言相对应的 Workers 完整检查入口（例如简体中文
-            <code>/zh-Hans</code>、繁体中文
-            <code>/zh-Hant</code>、英文
-            <code>/en</code>），无需自行查找主站地址。
+            <strong>访问 Workers 且检测为中国大陆</strong>
+            ：强制跳转至本告知书（可用
+            <code>?china_workers_stay=1</code>
+            临时留在 Workers，供运维自测）。
+          </li>
+          <li>
+            <strong>停留在本告知书</strong>
+            ：本页仅做只读健康探测并显示可达性；
+            <strong>不再自动跳回 Workers</strong>
+            （避免与上一条形成循环）。需要完整检查时请手动打开下方链接。
           </li>
           <li>
             <strong>当前网络无法到达 Workers</strong>
-            ：停留在本告知书；本项目不对中国大陆地区访问可用性作出承诺。
+            ：继续阅读本告知书；本项目不对中国大陆地区访问可用性作出承诺。
           </li>
         </ol>
-        <p>
-          「自动引导」指：中国入口页 → 对应语言的 Workers 完整检查站；并非全球多套国家镜像产品站。
-        </p>
 
         <h3>三、关于网络环境检测与隐私</h3>
         <ul>
           <li>
-            <strong>检测内容</strong>
-            ：浏览器向 Workers 发起只读
-            <code>GET /api/health</code>
-            （短超时、不携带 Cookie），用于判断当前网络是否可达完整检查站并完成引导。
+            <strong>Workers 侧</strong>
+            ：Cloudflare 请求头
+            <code>CF-IPCountry</code>
+            （仅用于是否强制引导至本告知书；不用于画像或广告）。
           </li>
           <li>
-            <strong>不用于</strong>
-            ：用户画像、广告、营销，或与引导无关的其他目的。
+            <strong>本页探测</strong>
+            ：浏览器向 Workers 发起只读
+            <code>GET /api/health</code>
+            （短超时、不携带 Cookie），用于显示可达性；
+            <strong>不触发自动跳转</strong>。
           </li>
           <li>
             <strong>不调用</strong>
@@ -135,6 +141,7 @@
           <a href="https://buusdocst.mtsu.workers.dev/zh-Hans/privacy" rel="noreferrer"
             >https://buusdocst.mtsu.workers.dev/zh-Hans/privacy</a
           >
+          （若您位于大陆网络，打开该链接时可能再次被引导回本告知书）。
         </p>
 
         <h3>四、服务恢复</h3>
@@ -156,7 +163,7 @@
         <p>特此告知。</p>
         <p class="notice-sign">
           buusdo Cybersecurity Service Tool 项目开发者<br />
-          发布日期：2026 年 11 月 22 日
+          发布日期：2026 年 11 月 22 日 · 修订：2026 年 11 月 23 日（Workers→本站强制引导）
         </p>
 
         <div
@@ -199,10 +206,10 @@
           >
         </div>
         <p class="hint" data-testid="china-region-redirect-hint">
-          网络可达时会强制跳转到完整检查站（本标签页内可用「留在本页」临时阅读）。
-          <a href="./index.html?china_stay=1" data-testid="china-stay-link">留在本页</a>
+          本页只显示 Workers 可达性，不再自动跳转。需要完整检查请手动打开上方按钮。
+          <a href="./index.html?china_stay=1" data-testid="china-stay-link">暂停探测</a>
           ·
-          <a href="./index.html?china_stay=0" data-testid="china-stay-clear">清除留在本页</a>。
+          <a href="./index.html?china_stay=0" data-testid="china-stay-clear">恢复探测</a>。
         </p>
       </article>
 

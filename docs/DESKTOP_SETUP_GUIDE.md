@@ -10,9 +10,7 @@
 
 Website / extension stay online install paths — only the **desktop** app is this self-contained package + update flow.
 
-China mainland GitHub Pages is **notice-only** (告知书 + auto-guide to Workers when reachable): https://otas0.github.io/buusdocst/ — not a separate install/privacy site.
-
-China mainland GitHub Pages is **notice-only** (告知书 + auto-guide to Workers when reachable): https://otas0.github.io/buusdocst/ — not a separate install/privacy site.
+China mainland GitHub Pages is **notice-only** (告知书; Workers CF-IPCountry=CN force-redirects HTML here; manual Workers open): https://otas0.github.io/buusdocst/ — not a separate install/privacy site.
 
 **Notarization / Developer ID / Authenticode are not part of this ship path.** Builds are **unsigned**. That is intentional for the current public channel — not a temporary “until promote” step. Downloads on the website says the same.
 

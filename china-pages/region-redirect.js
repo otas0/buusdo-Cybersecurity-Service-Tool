@@ -1,11 +1,12 @@
 /**
- * Force auto-guide: China Pages → Workers when /api/health is reachable.
+ * Soft reach probe: China Pages stays on the notice; Workers open is manual.
  *
- * Default: always location.replace matching Workers locale (no sticky localStorage stay).
- * Opt out for this tab only: ?china_stay=1 → sessionStorage (read the notice).
- * Clear: ?china_stay=0. Legacy buusdocst-china-stay in localStorage is ignored and cleared.
+ * Workers (CF-IPCountry=CN) force-redirects mainland visitors here — do not
+ * bounce back to Workers (that would loop). Health ok → show status +
+ * "Open Workers" link. Opt out of probe UI: ?china_stay=1 → sessionStorage.
+ * Clear: ?china_stay=0. Legacy buusdocst-china-stay in localStorage is cleared.
  *
- * Load sync in <head> (no defer) so reachable networks bounce before paint.
+ * Load sync in <head> (no defer).
  */
 (function () {
   var WORKERS_ORIGIN = "https://buusdocst.mtsu.workers.dev";
@@ -44,7 +45,6 @@
         return false;
       }
     } catch (_) {}
-    /* Drop legacy sticky stay so reachable networks always force-bounce. */
     try {
       localStorage.removeItem(STAY_KEY);
     } catch (_) {}
@@ -76,7 +76,6 @@
     el.dataset.state = state;
     try {
       el.setAttribute("aria-busy", state === "checking" ? "true" : "false");
-      // Assertive only for hard fail; stay/ok/soft-fail stay polite.
       el.setAttribute("aria-live", state === "fail" ? "assertive" : "polite");
       if (state === "fail") {
         el.setAttribute("role", "alert");
@@ -84,7 +83,8 @@
         el.setAttribute("role", "status");
       }
     } catch (_) {}
-    if (state !== "soft-fail") {
+    // Soft + stay: never keep an Open Workers link. Ok / soft-fail show the link.
+    if (state !== "soft-fail" && state !== "ok") {
       var stale = el.querySelector('[data-testid="china-workers-anyway"]');
       if (stale && stale.parentNode) stale.parentNode.removeChild(stale);
     }
@@ -100,7 +100,7 @@
     a.rel = "noopener noreferrer";
     a.dataset.testid = "china-workers-anyway";
     a.className = "reach-anyway";
-    a.textContent = isEn ? "Open Workers anyway" : "仍打开 Workers";
+    a.textContent = isEn ? "Open Workers" : "打开 Workers";
     el.appendChild(a);
   }
 
@@ -110,8 +110,8 @@
       "stay",
       isEn ? "Staying on notice" : "留在本告知书",
       isEn
-        ? "Auto-guide paused for this tab (?china_stay=1)."
-        : "本标签已暂停自动引导（?china_stay=1）。"
+        ? "Reach probe paused for this tab (?china_stay=1)."
+        : "本标签已暂停可达性探测（?china_stay=1）。"
     );
   }
 
@@ -158,24 +158,16 @@
     return pageIsEn ? "/en" : "/zh-Hans";
   }
 
-  function bounce(dest) {
-    try {
-      sessionStorage.setItem(STAY_SESSION, "0");
-    } catch (_) {}
-    try {
-      location.replace(dest);
-    } catch (_) {
-      location.href = dest;
-    }
-  }
-
-  function announce(msg) {
+  function markOk() {
     var isEn = document.documentElement.lang === "en";
     setReach(
       "ok",
-      msg,
-      isEn ? "Redirecting to the full product site…" : "正在切换到完整检查站…"
+      isEn ? "Workers reachable" : "Workers 可达",
+      isEn
+        ? "Mainland visitors on Workers are force-sent here. Open Workers manually when you need the full checker (no auto-bounce)."
+        : "大陆访客访问 Workers 时会被强制引导至本告知书。需要完整检查时请手动打开 Workers（不再自动跳转，以免循环）。"
     );
+    ensureWorkersAnywayLink();
   }
 
   function markSoftFail() {
@@ -184,8 +176,8 @@
       "soft-fail",
       isEn ? "Workers health unexpected" : "Workers 健康响应异常",
       isEn
-        ? "Health ok but service ≠ buusdocst. Staying on this notice — no auto-guide."
-        : "健康探测成功但 service ≠ buusdocst。留在本告知书 — 不自动引导。"
+        ? "Health ok but service ≠ buusdocst. Staying on this notice — open Workers only if you intend to."
+        : "健康探测成功但 service ≠ buusdocst。留在本告知书 — 仅在需要时手动打开 Workers。"
     );
     ensureWorkersAnywayLink();
   }
@@ -243,15 +235,7 @@
         whenReachReady(markSoftFail);
         return;
       }
-      var dest = WORKERS_ORIGIN + workersPath();
-      whenReachReady(function () {
-        announce(
-          document.documentElement.lang === "en"
-            ? "Workers reachable — opening full site"
-            : "Workers 可达 — 正在打开完整站点"
-        );
-        bounce(dest);
-      });
+      whenReachReady(markOk);
     })
     .catch(function (err) {
       clearTimeout(timer);

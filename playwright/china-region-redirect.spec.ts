@@ -1,5 +1,5 @@
 /**
- * China notice auto-switches to Workers when health is OK; stay opt-out skips bounce.
+ * China notice soft-probes Workers; health OK → stay + Open Workers (no auto-bounce).
  *
  *   PLAYWRIGHT_SKIP_WEBSERVER=1 npx playwright test playwright/china-region-redirect.spec.ts
  */
@@ -48,7 +48,7 @@ function serveChinaNotice() {
   });
 }
 
-test("notice redirects to Workers when health ok", async ({ page }) => {
+test("notice stays put and offers Open Workers when health ok", async ({ page }) => {
   const server = serveChinaNotice();
   await new Promise<void>((resolve) => server.listen(0, "127.0.0.1", resolve));
   const { port } = server.address() as { port: number };
@@ -69,27 +69,16 @@ test("notice redirects to Workers when health ok", async ({ page }) => {
       }),
     });
   });
-  // Stub Workers HTML so force-redirect completes when CF is unreachable from the runner.
-  await page.route("https://buusdocst.mtsu.workers.dev/**", async (route) => {
-    if (route.request().url().includes("/api/health")) {
-      await route.fallback();
-      return;
-    }
-    await route.fulfill({
-      status: 200,
-      contentType: "text/html; charset=utf-8",
-      body: "<!doctype html><title>workers</title><body>ok</body>",
-    });
-  });
 
   try {
-    const redirected = page.waitForURL(/buusdocst\.mtsu\.workers\.dev\/(zh-Hans|zh-Hant|en)/, {
-      timeout: 10_000,
-      waitUntil: "commit",
+    await page.goto(`http://127.0.0.1:${port}/`, { waitUntil: "domcontentloaded" });
+    await expect(page.getByTestId("china-notice")).toBeVisible();
+    await expect(page.locator("#workers-reach")).toHaveAttribute("data-state", "ok", {
+      timeout: 8_000,
     });
-    await page.goto(`http://127.0.0.1:${port}/`, { waitUntil: "commit" });
-    await redirected;
-    expect(page.url()).toMatch(/buusdocst\.mtsu\.workers\.dev\/(zh-Hans|zh-Hant|en)/);
+    await expect(page.getByTestId("china-workers-anyway")).toBeVisible();
+    expect(page.url()).toContain(`127.0.0.1:${port}`);
+    expect(page.url()).not.toMatch(/workers\.dev/);
   } finally {
     try {
       const anyServer = server as typeof server & { closeAllConnections?: () => void };

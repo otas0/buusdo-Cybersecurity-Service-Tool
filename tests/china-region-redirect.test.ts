@@ -1,5 +1,5 @@
 /**
- * China notice auto-guides to Workers when health succeeds (all notice pages).
+ * China notice soft-probes Workers; health ok → stay + Open Workers link (no auto-bounce).
  *
  *   npx tsx --test tests/china-region-redirect.test.ts
  */
@@ -16,7 +16,8 @@ test("region-redirect.js ships opt-out, health probe, and Workers locale paths",
   assert.match(src, /buusdocst-china-stay/);
   assert.match(src, /china_stay/);
   assert.match(src, /\/api\/health/);
-  assert.match(src, /location\.replace/);
+  assert.doesNotMatch(src, /location\.replace\s*\(/);
+  assert.match(src, /Open Workers|打开 Workers/);
   assert.match(src, /\/zh-Hans/);
   assert.match(src, /\/zh-Hant/);
   assert.match(src, /\/en/);
@@ -215,24 +216,39 @@ function runRedirect(opts: {
   };
 }
 
-test("vm: health ok redirects index to Workers zh-Hans", async () => {
+test("vm: health ok stays on notice and offers Open Workers (zh-Hans href)", async () => {
   const run = runRedirect({
     pathname: "/buusdocst/index.html",
     languages: ["zh-CN"],
-    health: { ok: true, service: "buusdocst" }
+    health: { ok: true, service: "buusdocst" },
+    withReach: true
   });
   await run.flush();
-  assert.match(run.replaced, /^https:\/\/buusdocst\.mtsu\.workers\.dev\/zh-Hans$/);
+  assert.equal(run.replaced, "");
+  assert.equal(run.reach?.dataset.state, "ok");
+  assert.equal(anywayCount(run.reach), 1);
+  const a = run.reach?.querySelector('[data-testid="china-workers-anyway"]') as
+    | { href?: string }
+    | null
+    | undefined;
+  assert.match(String(a?.href || ""), /\/zh-Hans$/);
 });
 
-test("vm: zh-TW browser language opens /zh-Hant", async () => {
+test("vm: zh-TW Open Workers href uses /zh-Hant", async () => {
   const run = runRedirect({
     pathname: "/buusdocst/index.html",
     languages: ["zh-TW"],
-    health: { ok: true, service: "buusdocst" }
+    health: { ok: true, service: "buusdocst" },
+    withReach: true
   });
   await run.flush();
-  assert.match(run.replaced, /\/zh-Hant$/);
+  assert.equal(run.replaced, "");
+  assert.equal(run.reach?.dataset.state, "ok");
+  const a = run.reach?.querySelector('[data-testid="china-workers-anyway"]') as
+    | { href?: string }
+    | null
+    | undefined;
+  assert.match(String(a?.href || ""), /\/zh-Hant$/);
 });
 
 test("vm: china_stay=1 skips redirect (session only; clears sticky localStorage)", async () => {
@@ -250,11 +266,12 @@ test("vm: china_stay=1 skips redirect (session only; clears sticky localStorage)
   assert.match(run.reach?._status.textContent || "", /留在本告知书|Staying on notice/);
 });
 
-test("vm: legacy localStorage stay is cleared and force-redirects", async () => {
+test("vm: legacy localStorage stay is cleared and does not bounce", async () => {
   const js = readFileSync(scriptPath, "utf8");
   const storage: Record<string, string> = { "buusdocst-china-stay": "1" };
   const session: Record<string, string> = {};
   const state = { replaced: "" };
+  const reach = makeReachEl();
   const context: Record<string, unknown> = {
     location: {
       pathname: "/buusdocst/index.html",
@@ -284,7 +301,19 @@ test("vm: legacy localStorage stay is cleared and force-redirects", async () => 
     navigator: { languages: ["zh-CN"], language: "zh-CN" },
     document: {
       documentElement: { lang: "zh-CN" },
-      getElementById: () => null
+      readyState: "complete",
+      getElementById: (id: string) => (id === "workers-reach" ? reach : null),
+      createElement(tag: string) {
+        return {
+          tagName: tag.toUpperCase(),
+          href: "",
+          rel: "",
+          className: "",
+          textContent: "",
+          dataset: {} as Record<string, string>
+        };
+      },
+      addEventListener() {}
     },
     AbortController,
     Promise,
@@ -302,7 +331,8 @@ test("vm: legacy localStorage stay is cleared and force-redirects", async () => 
   vm.runInContext(js, context);
   await new Promise<void>((r) => setImmediate(() => setImmediate(() => r())));
   assert.equal(storage["buusdocst-china-stay"], undefined);
-  assert.match(state.replaced, /\/zh-Hans$/);
+  assert.equal(state.replaced, "");
+  assert.equal(reach.dataset.state, "ok");
 });
 
 test("vm: health fail leaves notice in place", async () => {
@@ -344,7 +374,7 @@ test("vm: setReach stay never keeps Open Workers anyway", async () => {
   assert.equal(anywayCount(run.reach), 0);
 });
 
-test("vm: setReach ok never keeps Open Workers anyway", async () => {
+test("vm: setReach ok keeps Open Workers link (soft, no bounce)", async () => {
   const run = runRedirect({
     pathname: "/buusdocst/en.html",
     languages: ["en"],
@@ -354,8 +384,8 @@ test("vm: setReach ok never keeps Open Workers anyway", async () => {
   });
   await run.flush();
   assert.equal(run.reach?.dataset.state, "ok");
-  assert.equal(anywayCount(run.reach), 0);
-  assert.match(run.replaced, /workers\.dev/);
+  assert.equal(anywayCount(run.reach), 1);
+  assert.equal(run.replaced, "");
 });
 
 test("vm: soft-fail anyway is removed when setReach(ok) runs via seeded child", async () => {
@@ -404,7 +434,7 @@ test("vm: soft-fail then stay clear removes anyway in one harness", async () => 
   assert.equal(anywayCount(reach), 0);
 });
 
-test("vm: soft-fail then ok bounce removes anyway in one harness", async () => {
+test("vm: soft-fail then ok keeps Open Workers in one harness", async () => {
   const reach = makeReachEl();
   const soft = runRedirect({
     pathname: "/buusdocst/en.html",
@@ -418,7 +448,7 @@ test("vm: soft-fail then ok bounce removes anyway in one harness", async () => {
   assert.equal(soft.reach?.dataset.state, "soft-fail");
   assert.equal(anywayCount(reach), 1);
 
-  // Same reach: healthy buusdocst → setReach("ok") then bounce; anyway must be gone.
+  // Same reach: healthy buusdocst → setReach("ok") keeps Open Workers (soft; no bounce).
   const ok = runRedirect({
     pathname: "/buusdocst/en.html",
     languages: ["en"],
@@ -429,8 +459,8 @@ test("vm: soft-fail then ok bounce removes anyway in one harness", async () => {
   });
   await ok.flush();
   assert.equal(ok.reach?.dataset.state, "ok");
-  assert.equal(anywayCount(reach), 0);
-  assert.match(ok.replaced, /workers\.dev/);
+  assert.equal(anywayCount(reach), 1);
+  assert.equal(ok.replaced, "");
 });
 
 test("vm: hard fail uses assertive aria-live", async () => {

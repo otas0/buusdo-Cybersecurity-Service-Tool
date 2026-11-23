@@ -1,6 +1,6 @@
 # buusdo Cybersecurity Service Tool
 
-**Product (Workers):** https://buusdocst.mtsu.workers.dev/ · **China notice (告知书 + auto-guide):** https://otas0.github.io/buusdocst/
+**Product (Workers):** https://buusdocst.mtsu.workers.dev/ · **China notice (告知书; CN force-redirect from Workers):** https://otas0.github.io/buusdocst/
 
 Official product name: **buusdo Cybersecurity Service Tool**. Part of the **Buusdo** product **line**, but a **separate** product (own content and name — not “Buusdo” itself, not other Buusdo-line apps). Helps non-expert users check a website before they trust it.
 
