@@ -34,6 +34,7 @@ Recorded via `npm run production:origin` → README + `shared/production-site.js
 
 | When (UTC) | Runner | Result | Notes |
 |------------|--------|--------|-------|
+| 2026-11-23 | github-actions/45155767864 | **OK** | `https://buusdocst.mtsu.workers.dev` — health+check · softDownloadWarn=0 · notarized=missing · smoke:privacy-china=2026-11-23T10:24Z · https://github.com/otas0/buusdo-Cybersecurity-Service-Tool/actions/runs/45155767864 |
 | 2026-11-23 | github-actions/45097543003 | **OK** | `https://buusdocst.mtsu.workers.dev` — health+check · softDownloadWarn=0 · notarized=missing · smoke:privacy-china=2026-11-23T01:58Z · https://github.com/otas0/buusdo-Cybersecurity-Service-Tool/actions/runs/45097543003 |
 | 2026-11-22 | github-actions/45073717268 | **OK** | `https://buusdocst.mtsu.workers.dev` — health+check · softDownloadWarn=0 · notarized=missing · smoke:privacy-china=2026-11-22T21:43Z · https://github.com/otas0/buusdo-Cybersecurity-Service-Tool/actions/runs/45073717268 |
 | 2026-11-22 | github-actions/45041539248 | **OK** | `https://buusdocst.mtsu.workers.dev` — health+check · softDownloadWarn=0 · notarized=missing · smoke:privacy-china=2026-11-22T16:02Z · https://github.com/otas0/buusdo-Cybersecurity-Service-Tool/actions/runs/45041539248 |
@@ -73,7 +74,6 @@ Recorded via `npm run production:origin` → README + `shared/production-site.js
 | 2026-11-13 | github-actions/43364016421 | **OK** | `https://buusdocst.mtsu.workers.dev` — health+check · softDownloadWarn=0 · notarized=missing · https://github.com/otas0/buusdo-Cybersecurity-Service-Tool/actions/runs/43364016421 |
 | 2026-11-12 | github-actions/43331666731 | **OK** | `https://buusdocst.mtsu.workers.dev` — health+check · softDownloadWarn=0 · notarized=missing · https://github.com/otas0/buusdo-Cybersecurity-Service-Tool/actions/runs/43331666731 |
 | 2026-11-12 | github-actions/43280268951 | **OK** | `https://buusdocst.mtsu.workers.dev` — health+check · softDownloadWarn=0 · notarized=missing · https://github.com/otas0/buusdo-Cybersecurity-Service-Tool/actions/runs/43280268951 |
-| 2026-11-12 | github-actions/43199068441 | **OK** | `https://buusdocst.mtsu.workers.dev` — health+check · softDownloadWarn=0 · notarized=missing · https://github.com/otas0/buusdo-Cybersecurity-Service-Tool/actions/runs/43199068441 |
 
 
 ## C. Monitoring
