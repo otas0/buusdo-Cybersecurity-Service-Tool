@@ -359,37 +359,42 @@ test.describe("production privacy pages", () => {
     });
   }
 
-  test("/en/downloads soft-live floor after status stub", async ({ page }) => {
-    const stubMin = minSupportedVersion || "0.2.0";
-    await page.route("**/api/desktop-downloads/status", async (route) => {
-      await route.fulfill({
-        status: 200,
-        contentType: "application/json",
-        body: JSON.stringify({
-          ok: true,
-          macNote: "none",
-          minSupportedVersion: stubMin,
-          minSupportedSource: "desktop-downloads.json"
-        })
+  for (const locale of ["en", "pt-PT", "zh-Hans"] as const) {
+    test(`/${locale}/downloads soft-live floor after status stub`, async ({ page }) => {
+      const stubMin = minSupportedVersion || "0.2.0";
+      await page.route("**/api/desktop-downloads/status", async (route) => {
+        await route.fulfill({
+          status: 200,
+          contentType: "application/json",
+          body: JSON.stringify({
+            ok: true,
+            macNote: "none",
+            minSupportedVersion: stubMin,
+            minSupportedSource: "desktop-downloads.json"
+          })
+        });
       });
+      await page.goto(`${base}/${locale}/downloads`, {
+        waitUntil: "domcontentloaded",
+        timeout: 45_000
+      });
+      const panel = page.getByTestId("settings-desktop-downloads");
+      if ((await panel.count()) === 0) {
+        console.warn(`[soft-live] ${locale} settings-desktop-downloads missing (soft)`);
+        return;
+      }
+      await waitForReactHydration(page, '[data-testid="settings-desktop-downloads"]');
+      const floor = page.getByTestId("downloads-honest-limits-min-supported");
+      if ((await floor.count()) === 0) {
+        console.warn(`[soft-live] ${locale} downloads-honest-limits-min-supported missing (soft)`);
+        return;
+      }
+      await expect(floor).toBeVisible({ timeout: 10_000 });
+      await expect(floor).toContainText(stubMin);
+      await expect(floor).toContainText(/desktop-downloads\.json/i);
+      console.info(`[soft-live] ${locale} downloads floor ok (min ${stubMin} · status stub)`);
     });
-    await page.goto(`${base}/en/downloads`, { waitUntil: "domcontentloaded", timeout: 45_000 });
-    const panel = page.getByTestId("settings-desktop-downloads");
-    if ((await panel.count()) === 0) {
-      console.warn("[soft-live] settings-desktop-downloads missing (soft)");
-      return;
-    }
-    await waitForReactHydration(page, '[data-testid="settings-desktop-downloads"]');
-    const floor = page.getByTestId("downloads-honest-limits-min-supported");
-    if ((await floor.count()) === 0) {
-      console.warn("[soft-live] downloads-honest-limits-min-supported missing (soft)");
-      return;
-    }
-    await expect(floor).toBeVisible({ timeout: 10_000 });
-    await expect(floor).toContainText(stubMin);
-    await expect(floor).toContainText(/desktop-downloads\.json/i);
-    console.info(`[soft-live] en downloads floor ok (min ${stubMin} · status stub)`);
-  });
+  }
 
   test("/en/settings shows desktop download slots", async ({ page }) => {
     await page.goto(`${base}/en/downloads`, { waitUntil: "domcontentloaded" });
@@ -469,6 +474,54 @@ test.describe("China Pages notice (soft)", () => {
     }
   });
 
+  test("soft-live downloads floor parity (Workers deep-link)", async ({ page }) => {
+    // China Pages is a notice surface — soft-live floor lives on Workers Downloads.
+    // Parity: notice must deep-link (or mention) Workers downloads / honest limits.
+    await page.goto(`${chinaBase}/en.html?china_stay=1`, {
+      waitUntil: "domcontentloaded",
+      timeout: 45_000
+    });
+    const body = ((await page.locator("body").textContent()) || "").toLowerCase();
+    const workersLink = page.locator(
+      'a[href*="buusdocst.mtsu.workers.dev"][href*="download"], a[href*="/downloads"], a[href*="privacy"]'
+    );
+    if ((await workersLink.count()) === 0 && !/download|honest|workers\.dev/i.test(body)) {
+      console.warn(
+        "[soft-live] China Pages en.html missing Workers downloads/privacy deep-link (soft)"
+      );
+      return;
+    }
+    console.info("[soft-live] China Pages → Workers downloads/privacy parity ok");
+    // When Workers origin is the same schedule suite base, soft-assert floor via Workers.
+    if (base) {
+      const stubMin = minSupportedVersion || "0.2.0";
+      await page.route("**/api/desktop-downloads/status", async (route) => {
+        await route.fulfill({
+          status: 200,
+          contentType: "application/json",
+          body: JSON.stringify({
+            ok: true,
+            macNote: "none",
+            minSupportedVersion: stubMin,
+            minSupportedSource: "desktop-downloads.json"
+          })
+        });
+      });
+      await page.goto(`${base}/zh-Hans/downloads`, {
+        waitUntil: "domcontentloaded",
+        timeout: 45_000
+      });
+      const floor = page.getByTestId("downloads-honest-limits-min-supported");
+      if ((await floor.count()) === 0) {
+        console.warn("[soft-live] China-parity zh-Hans downloads floor missing (soft)");
+        return;
+      }
+      await expect(floor).toBeVisible({ timeout: 10_000 });
+      await expect(floor).toContainText(stubMin);
+      console.info(`[soft-live] China-parity Workers zh-Hans downloads floor ok (min ${stubMin})`);
+    }
+  });
+
   for (const pagePath of ["/", "/en.html"] as const) {
     test(`${pagePath} has zero /survey/ links`, async ({ page }) => {
       await page.goto(`${chinaBase}${pagePath}?china_stay=1`, {
@@ -479,5 +532,16 @@ test.describe("China Pages notice (soft)", () => {
       await expect(page.locator("body")).not.toContainText(/survey-round2/i);
     });
   }
+
+  test("China Pages notice title (mainland force-redirect copy)", async ({ page }) => {
+    await page.goto(`${chinaBase}/?china_stay=1`, {
+      waitUntil: "domcontentloaded",
+      timeout: 45_000
+    });
+    const title = page.getByTestId("china-notice-title");
+    await expect(title).toBeVisible({ timeout: 10_000 });
+    await expect(title).toContainText(/强制引导|Workers 强制|force-redirect|China mainland entry/i);
+    console.info("[soft-live] China Pages notice title ok");
+  });
 });
 

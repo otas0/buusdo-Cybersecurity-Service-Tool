@@ -71,7 +71,7 @@ export const STRINGS = {
     websiteApiUserBlock: "Personal block list matched this host (read-only hint).",
     websiteApiFail: "API check failed: {error}",
     websiteApiCfUnreachable:
-      "This computer cannot reach the Cloudflare workers.dev API (timeout). The Worker may still be healthy — try another network, open the API base in a browser, or open the China notice (notice + auto-guide). Temporary stay uses ?china_stay=1; clear with ?china_stay=0.",
+      "This computer cannot reach the Cloudflare workers.dev API (timeout). The Worker may still be healthy — try another network, or open the China notice https://otas0.github.io/buusdocst/ (mainland entry). When Workers is reachable, CF country CN force-redirects HTML to that notice (/api/* does not). Temporary stay on the notice: ?china_stay=1; clear: ?china_stay=0.",
     websiteApiChinaNoticeLink: "Open notice",
     websiteApiChinaStayClearLink: "Clear stay",
     websiteApiSchemaFail: "Timing schema failed: {errors}",
@@ -187,7 +187,7 @@ export const STRINGS = {
     websiteApiUserBlock: "A lista pessoal bloqueou este anfitrião (dica só de leitura).",
     websiteApiFail: "Falha na API: {error}",
     websiteApiCfUnreachable:
-      "Este computador não alcança a API Cloudflare workers.dev (timeout). O Worker pode estar saudável — tente outra rede, abra a base da API no browser, ou abra o aviso China (aviso + encaminhamento automático). Permanência temporária: ?china_stay=1; limpar: ?china_stay=0.",
+      "Este computador não alcança a API Cloudflare workers.dev (timeout). O Worker pode estar saudável — tente outra rede, ou abra o aviso China https://otas0.github.io/buusdocst/ (entrada continental). Quando o Workers é alcançável, CF country CN força HTML para esse aviso (/api/* não). Permanência no aviso: ?china_stay=1; limpar: ?china_stay=0.",
     websiteApiChinaNoticeLink: "Abrir aviso",
     websiteApiChinaStayClearLink: "Limpar permanência",
     websiteApiSchemaFail: "Schema de timing falhou: {errors}",
@@ -300,7 +300,7 @@ export const STRINGS = {
     "websiteApiOk": "API 正常 · {level} · {total}ms · 计时结构有效",
     "websiteApiUserBlock": "个人拦截列表匹配了此主机（只读提示）。",
     "websiteApiFail": "API 检查失败：{error}",
-    "websiteApiCfUnreachable": "本机无法到达 Cloudflare workers.dev API（超时）。Worker 仍可能健康 — 换网络、在浏览器打开 API，或打开中国告知书（告知书 + 自动引导）。临时留在告知书用 ?china_stay=1；清除用 ?china_stay=0。",
+    "websiteApiCfUnreachable": "本机无法到达 Cloudflare workers.dev API（超时）。Worker 仍可能健康 — 请换网络，或直接打开中国告知书 https://otas0.github.io/buusdocst/（大陆入口）。当 Workers 可达时，Cloudflare 判定 CN 会强制把 HTML 跳转到该告知书（/api/* 不跳转）。临时留在告知书：?china_stay=1；清除：?china_stay=0。",
     "websiteApiChinaNoticeLink": "打开告知书",
     "websiteApiChinaStayClearLink": "清除留在本页",
     "websiteApiSchemaFail": "计时结构失败：{errors}",

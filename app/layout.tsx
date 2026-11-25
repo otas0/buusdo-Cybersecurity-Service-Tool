@@ -4,6 +4,7 @@ import './globals.css';
 import './shield.css';
 
 import { ChinaWorkersStayBoot } from '../components/ChinaMainlandForceRedirect';
+import { ChinaMainlandSoftTip } from '../components/ChinaMainlandSoftTip';
 import productionSite from '../shared/production-site.json';
 
 const explicitSiteUrl = process.env.NEXT_PUBLIC_SITE_URL?.trim();
@@ -54,6 +55,7 @@ export default function RootLayout({
       <head>
         <script dangerouslySetInnerHTML={{ __html: THEME_BOOT }} />
         <ChinaWorkersStayBoot />
+        <ChinaMainlandSoftTip />
       </head>
       <body className="antialiased">
         {children}

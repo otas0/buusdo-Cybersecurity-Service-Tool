@@ -16,4 +16,11 @@ if (name !== "buusdocst") {
   console.error(`FAIL: production build Worker name is "${name}" (want buusdocst)`);
   process.exit(1);
 }
-console.log("assert-prod-wrangler-name ok — buusdocst");
+const main = String(cfg.main || "");
+if (main !== "china-cf-entry.js") {
+  console.error(
+    `FAIL: production wrangler main is "${main}" (want china-cf-entry.js — run wrap-worker-china-cf-redirect.mjs)`
+  );
+  process.exit(1);
+}
+console.log("assert-prod-wrangler-name ok — buusdocst (main=china-cf-entry.js)");

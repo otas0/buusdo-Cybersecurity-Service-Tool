@@ -49,7 +49,25 @@ Actions **Pages China** 将 `china-pages/` 发布到 `otas0/buusdocst`（secret 
 
 1. 自测留在 Workers：`?china_workers_stay=1`（cookie 8h）；清除：`?china_workers_stay=0`
 2. `/api/health`、`/api/check`、`/api/geo` **永不** 跳转（扩展与机器调用不受影响）
-3. 调试国家码：`GET /api/geo` → `{ country, cfCountry, headerCfIpCountry }`
+3. 调试：`GET /api/geo` → `{ country, cfCountry, headerCfIpCountry, forceRedirectCountries, rateNote }`；响应头应有 `x-buusdocst-china-wrap: 1`
+4. **先 staging 再 prod：** `npm run deploy:cloudflare:staging` → health → 再 `npm run deploy:cloudflare`
+5. Deploy 含 wrap + `--check`（`main=china-cf-entry.js`）
+
+### 产品决策：仅 CN（不含 HK/MO）
+
+强制引导 **仅 `CN`**。`HK` / `MO` **不**强制跳转。若要纳入，须同步改 wrap 的 `FORCE_COUNTRIES` 与 `shared/china-workers-redirect.ts` 的 `CHINA_FORCE_REDIRECT_COUNTRIES`。
+
+### Dashboard 双保险（可选）
+
+Rules → Managed Transforms → **Add visitor location headers**，使 `CF-IPCountry` 与 `request.cf.country` 对齐（wrap 仍以 `cf.country` 为准）。
+
+### Logpush（有自定义域后）
+
+按 `EdgeResponseStatus=302` + `ClientCountry=CN` 与 Location→`otas0.github.io` 对齐统计（可与 stub path dump 同一工具链扩展）。
+
+### TCP 超时 ≠ 跳转失败
+
+大陆若 **连不上** `*.workers.dev`，请求到不了 Worker，**不会 302**。请直接打开本告知书。见 [LOCAL_CF_CONNECTIVITY.md](LOCAL_CF_CONNECTIVITY.md)。
 
 ## Region soft probe（本站）
 

@@ -1,6 +1,18 @@
 <!-- latest-deploy-run: 42482596754 2026-11-08T12:56:55Z -->
 # Local Cloudflare connectivity (do not misread timeouts)
 
+## China mainland: no load and no redirect (2026-11-25)
+
+If `https://buusdocst.mtsu.workers.dev` **does not load** (spinner / TCP timeout) **and** you never land on `https://otas0.github.io/buusdocst/`:
+
+| Fact | Why |
+|------|-----|
+| Force-redirect runs **on the Worker** after Cloudflare accepts the request | Uses `request.cf.country === CN` via `dist/server/china-cf-entry.js` wrap |
+| TCP timeout to `*.workers.dev` means the request **never reaches** the Worker | Redirect code cannot run — open **https://otas0.github.io/buusdocst/** directly |
+| Remote `/api/health` OK (Actions / another network) + local timeout | **Connectivity**, not a dead Worker — same table below |
+
+Debug when CF **is** reachable: `GET /api/geo` → `{ cfCountry, headerCfIpCountry, forceRedirectCountries:["CN"] }`. Live wrap sets response header `x-buusdocst-china-wrap: 1`. Product: **CN only** (HK/MO not force-redirected). Optional Dashboard: enable Managed Transform **Add visitor location headers** so `CF-IPCountry` matches `request.cf.country`. Details: [CHINA_GITHUB_PAGES.md](CHINA_GITHUB_PAGES.md).
+
 ## What happened (2026-11-08) — repeat timeout
 
 From the same Asia laptop path, HTTPS to `https://buusdocst.mtsu.workers.dev` again **TCP timed out** (`curl` exit 28; `/api/health`, `/en`, `/sl`, `/ca` all `http_code=000`).

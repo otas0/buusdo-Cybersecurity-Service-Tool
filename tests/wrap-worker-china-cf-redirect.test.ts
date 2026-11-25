@@ -24,14 +24,17 @@ test("wrap-worker-china-cf-redirect writes entry + sets wrangler main", () => {
   // So run against real dist if present; else invoke after writing into repo dist — prefer unit on source.
   const src = readFileSync("scripts/wrap-worker-china-cf-redirect.mjs", "utf8");
   assert.match(src, /request\.cf/);
-  assert.match(src, /country === "CN"/);
+  assert.match(src, /FORCE_COUNTRIES/);
   assert.match(src, /china-cf-entry\.js/);
   assert.match(src, /cf-ipcountry/);
   assert.match(src, /Response\.redirect/);
   assert.match(src, /PAGES_ORIGIN/);
+  assert.match(src, /x-buusdocst-china-wrap/);
+  assert.match(src, /--check/);
 
   const pkg = JSON.parse(readFileSync("package.json", "utf8"));
   assert.match(pkg.scripts["deploy:cloudflare"], /wrap-worker-china-cf-redirect/);
+  assert.match(pkg.scripts["deploy:cloudflare"], /--check/);
   assert.match(pkg.scripts["deploy:cloudflare:staging"], /wrap-worker-china-cf-redirect/);
 
   rmSync(dir, { recursive: true, force: true });

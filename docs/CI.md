@@ -9,8 +9,15 @@
 - **SOFT_LIVE_* env / artifact table:** see [docs/I18N.md — SOFT_LIVE hash (extension unpark)](I18N.md#soft_live-hash-extension-unpark). Extension unpark gate points there from [`extension/README.md`](../extension/README.md).
 - **Fork streak restore:** when `gh api …/artifacts` lacks permission on forks, privacy-prod falls back to `gh run download -n soft-live-hash-streak` (documented dry-run: `scripts/assert-soft-live-fork-fallback.mjs`).
 - Extension UI unpark (`scripts/assert-extension-ui-unpark.mjs`) is **soft** on PRs until repo var `EXT_UI_UNPARK_HARD=1`.
-  - **Flip rule:** set `EXT_UI_UNPARK_HARD=1` only after **three consecutive** Privacy prod schedule greens that show `streak=3/3 extension-ui=unpark` in the Job Summary (artifact retention becomes **90 days** when hard). Hard unpark also writes a PR check `::notice::` linking the run’s `soft-live-hash-streak` artifact + Job Summary bullet.
-  - **Flip date:** _not yet_ — awaiting three consecutive greens after soft-live streak wiring (`621c606`, 2026-11-23). Record the UTC date here when the var is set (example: `EXT_UI_UNPARK_HARD flipped YYYY-MM-DD`).
+  - **Flip rule:** set `EXT_UI_UNPARK_HARD=1` **only** after Privacy prod **schedule** Job Summary shows `streak=3/3 extension-ui=unpark` (three consecutive greens; inview soft-fail resets). Do **not** flip from a single PR run or from committed baseline `streak=0`. Artifact retention becomes **90 days** when hard. Hard unpark also writes a PR check `::notice::` linking the run’s `soft-live-hash-streak` artifact + Job Summary bullet.
+  - **Flip checklist:** (1) open latest schedule Privacy prod Summary → confirm `streak=3/3`; (2) `gh variable set EXT_UI_UNPARK_HARD --body 1`; (3) record UTC date below; (4) dry-run refuse: `node scripts/assert-ext-ui-unpark-hard-ready.mjs` (exits 0 only when env/artifact streak≥3).
+  - **Flip date:** _not yet_ — awaiting three consecutive greens after soft-live streak wiring (`621c606`, 2026-11-23). Record here when set: `EXT_UI_UNPARK_HARD flipped YYYY-MM-DD` (leave blank until then).
+- Soft-live chart history CSV: privacy-prod appends `ci/soft-live-chart-history.csv` (artifact `soft-live-chart-history`) across schedule runs — see `scripts/append-soft-live-chart-history.mjs`.
+- Soft CI step **`Soft /api/geo country field`**: ubuntu `GET /api/geo` asserts `cfCountry` exists (does **not** assert CN redirect). Also notes whether `x-buusdocst-china-wrap` is present.
+- Deploy must run `wrap-worker-china-cf-redirect.mjs` then `--check` (`main=china-cf-entry.js`) before `wrangler deploy`. Prefer **staging** (`deploy:cloudflare:staging`) before production when changing the wrap.
+- **Workers version scrapbook (rollback):**
+  - `65e336c7-39dd-4545-b165-e3e2cd9b219d` — 2026-11-25T03:56Z — first china-cf-entry wrap on prod (CN via `request.cf.country`)
+  - Record newer IDs here after each China-redirect-related prod deploy.
 
 - Optional Playwright job also runs on **schedule** (nightly) and includes `test:playwright:extension-china-stay-clear`.
 - Nightly: `smoke:privacy-china` (zh-Hans · EN · pt-PT) via **Production health smoke** (05:20 UTC; Step Summary prints `smoke:privacy-china=<UTC>`) and **Health monitor** (checklist notes + `CHECKLIST_LOG_MAX_ROWS` cap, default 40 — see [CHECKLIST_CI_WRITE.md](CHECKLIST_CI_WRITE.md)); privacy-prod Playwright via **Privacy prod smoke** (05:45 UTC; failure uploads `privacy-prod-playwright-report`).
