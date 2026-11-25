@@ -9,6 +9,8 @@ If `https://buusdocst.mtsu.workers.dev` **does not load** (spinner / TCP timeout
 |------|-----|
 | Force-redirect runs **on the Worker** after Cloudflare accepts the request | Uses `request.cf.country === CN` via `dist/server/china-cf-entry.js` wrap |
 | TCP timeout to `*.workers.dev` means the request **never reaches** the Worker | Redirect code cannot run — open **https://otas0.github.io/buusdocst/** directly |
+| Worker deployed with Assets `run_worker_first=false` (CF default) | Matching static assets can skip the CN wrap — deploy must set `run_worker_first=true` via wrap script |
+| Page loads but `x-buusdocst-cf-country` ≠ `CN` | CF did not mark CN (VPN/proxy/edge); client fallback may still `location.replace` for zh-CN + Asia/Shanghai |
 | Remote `/api/health` OK (Actions / another network) + local timeout | **Connectivity**, not a dead Worker — same table below |
 
 Debug when CF **is** reachable: `GET /api/geo` → `{ cfCountry, headerCfIpCountry, forceRedirectCountries:["CN"] }`. Live wrap sets response header `x-buusdocst-china-wrap: 1`. Product: **CN only** (HK/MO not force-redirected). Optional Dashboard: enable Managed Transform **Add visitor location headers** so `CF-IPCountry` matches `request.cf.country`. Details: [CHINA_GITHUB_PAGES.md](CHINA_GITHUB_PAGES.md).

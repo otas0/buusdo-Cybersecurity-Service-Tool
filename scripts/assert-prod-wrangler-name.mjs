@@ -23,4 +23,13 @@ if (main !== "china-cf-entry.js") {
   );
   process.exit(1);
 }
-console.log("assert-prod-wrangler-name ok — buusdocst (main=china-cf-entry.js)");
+const assets = cfg.assets && typeof cfg.assets === "object" ? cfg.assets : {};
+if (assets.run_worker_first !== true) {
+  console.error(
+    `FAIL: assets.run_worker_first is ${JSON.stringify(assets.run_worker_first)} (want true — Assets must not skip CN wrap)`
+  );
+  process.exit(1);
+}
+console.log(
+  "assert-prod-wrangler-name ok — buusdocst (main=china-cf-entry.js, run_worker_first=true)"
+);

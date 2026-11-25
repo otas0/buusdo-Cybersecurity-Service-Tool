@@ -4,6 +4,9 @@
  * CF-IPCountry is often missing as a header on workers.dev unless Managed Transforms
  * add visitor location headers. request.cf.country is always set on Workers.
  *
+ * Also sets assets.run_worker_first=true so static Assets cannot skip this wrap
+ * (CF default serve_directly / asset-first would bypass CN 302).
+ *
  *   node scripts/wrap-worker-china-cf-redirect.mjs
  *   node scripts/wrap-worker-china-cf-redirect.mjs --check
  *
@@ -46,6 +49,7 @@ const STAY_COOKIE = "buusdocst-china-workers-stay";
 const STAY_PARAM = "china_workers_stay";
 const FORCE_COUNTRIES = new Set(${FORCE_COUNTRIES_JSON});
 const WRAP_HEADER = "x-buusdocst-china-wrap";
+const COUNTRY_HEADER = "x-buusdocst-cf-country";
 
 function pagesDest(pathname) {
   const p = String(pathname || "/").split("?")[0] || "/";
@@ -87,18 +91,19 @@ function withCountryHeader(request, country) {
   return new Request(request, { headers });
 }
 
-function markWrap(response) {
+function markWrap(response, country) {
   try {
     const res = new Response(response.body, response);
     res.headers.set(WRAP_HEADER, "1");
+    if (country) res.headers.set(COUNTRY_HEADER, country);
     return res;
   } catch {
     return response;
   }
 }
 
-function setStayCookie(response, value) {
-  const res = markWrap(response instanceof Response ? response : new Response(String(response)));
+function setStayCookie(response, value, country) {
+  const res = markWrap(response instanceof Response ? response : new Response(String(response)), country);
   if (value === "1") {
     res.headers.append(
       "Set-Cookie",
@@ -124,11 +129,11 @@ export default {
 
     if (stayParam === "1") {
       const res = await inner.fetch(req, env, ctx);
-      return setStayCookie(res instanceof Response ? res : new Response(res), "1");
+      return setStayCookie(res instanceof Response ? res : new Response(res), "1", country);
     }
     if (stayParam === "0") {
       const res = await inner.fetch(req, env, ctx);
-      return setStayCookie(res instanceof Response ? res : new Response(res), "0");
+      return setStayCookie(res instanceof Response ? res : new Response(res), "0", country);
     }
 
     if (
@@ -138,14 +143,27 @@ export default {
     ) {
       const redirect = Response.redirect(pagesDest(url.pathname), 302);
       redirect.headers.set(WRAP_HEADER, "1");
+      redirect.headers.set(COUNTRY_HEADER, country);
+      redirect.headers.set("Cache-Control", "private, no-store");
       return redirect;
     }
 
     const out = await inner.fetch(req, env, ctx);
-    return markWrap(out instanceof Response ? out : new Response(out));
+    return markWrap(out instanceof Response ? out : new Response(out), country);
   }
 };
 `;
+}
+
+function ensureRunWorkerFirst(w) {
+  const prev = w.assets;
+  if (prev && typeof prev === "object" && !Array.isArray(prev)) {
+    w.assets = { ...prev, run_worker_first: true };
+  } else if (typeof prev === "string") {
+    w.assets = { directory: prev, run_worker_first: true };
+  } else {
+    w.assets = { directory: "../client", run_worker_first: true };
+  }
 }
 
 if (checkOnly) {
@@ -164,12 +182,23 @@ if (checkOnly) {
     );
     process.exit(1);
   }
+  const assets = w.assets && typeof w.assets === "object" ? w.assets : {};
+  if (assets.run_worker_first !== true) {
+    console.error(
+      `[wrap-china-cf] --check FAIL: assets.run_worker_first=${JSON.stringify(assets.run_worker_first)} (want true — otherwise Assets can skip CN redirect)`
+    );
+    process.exit(1);
+  }
   const cur = readFileSync(entryPath, "utf8");
-  if (!cur.includes("request.cf") || !cur.includes('FORCE_COUNTRIES') || !cur.includes(pagesOrigin)) {
+  if (!cur.includes("request.cf") || !cur.includes("FORCE_COUNTRIES") || !cur.includes(pagesOrigin)) {
     console.error("[wrap-china-cf] --check FAIL: china-cf-entry.js missing expected markers");
     process.exit(1);
   }
-  console.log("[wrap-china-cf] --check OK (main=china-cf-entry.js)");
+  if (!cur.includes("x-buusdocst-cf-country")) {
+    console.error("[wrap-china-cf] --check FAIL: china-cf-entry.js missing country debug header");
+    process.exit(1);
+  }
+  console.log("[wrap-china-cf] --check OK (main=china-cf-entry.js, run_worker_first=true)");
   process.exit(0);
 }
 
@@ -184,8 +213,9 @@ console.log("[wrap-china-cf] wrote", path.relative(root, entryPath));
 if (existsSync(wranglerPath)) {
   const w = JSON.parse(readFileSync(wranglerPath, "utf8"));
   w.main = "china-cf-entry.js";
+  ensureRunWorkerFirst(w);
   writeFileSync(wranglerPath, `${JSON.stringify(w)}\n`);
-  console.log("[wrap-china-cf] wrangler.json main → china-cf-entry.js");
+  console.log("[wrap-china-cf] wrangler.json main → china-cf-entry.js; assets.run_worker_first=true");
 } else {
   console.warn("[wrap-china-cf] dist/server/wrangler.json missing — deploy may still use index.js");
 }
