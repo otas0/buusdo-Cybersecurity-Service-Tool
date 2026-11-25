@@ -44,6 +44,7 @@ export async function enforceChinaMainlandForceRedirect(opts: {
     return;
   }
 
+  // Worker entry wrap injects cf-ipcountry from request.cf.country when missing.
   const country =
     h.get("cf-ipcountry") ||
     h.get("CF-IPCountry") ||

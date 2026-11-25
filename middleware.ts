@@ -12,6 +12,7 @@ import {
   CHINA_WORKERS_STAY_COOKIE,
   CHINA_WORKERS_STAY_PARAM,
   chinaPagesDestForWorkersPath,
+  countryFromWorkersRequest,
   isChinaForceCountry,
   shouldSkipChinaWorkersRedirect
 } from "./shared/china-workers-redirect";
@@ -45,11 +46,10 @@ export function middleware(req: NextRequest) {
     return NextResponse.next();
   }
 
-  const country =
-    req.headers.get("cf-ipcountry") ||
-    req.headers.get("CF-IPCountry") ||
-    req.headers.get("x-vercel-ip-country") ||
-    "";
+  // Prefer request.cf.country (Workers) — CF-IPCountry header is often absent on workers.dev.
+  const country = countryFromWorkersRequest(
+    req as NextRequest & { cf?: { country?: string }; geo?: { country?: string } }
+  );
 
   if (!isChinaForceCountry(country)) {
     return NextResponse.next();

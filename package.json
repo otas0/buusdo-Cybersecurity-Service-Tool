@@ -31,8 +31,8 @@
     "sample:desktop-linux-autostart": "node scripts/desktop-linux-autostart-sample.mjs",
     "build": "vinext build",
     "build:vercel": "next build",
-    "deploy:cloudflare": "vinext build && node scripts/assert-prod-wrangler-name.mjs && wrangler deploy",
-    "deploy:cloudflare:staging": "CLOUDFLARE_ENV=staging vinext build && node scripts/assert-staging-wrangler-name.mjs && wrangler deploy",
+    "deploy:cloudflare": "vinext build && node scripts/wrap-worker-china-cf-redirect.mjs && node scripts/assert-prod-wrangler-name.mjs && wrangler deploy",
+    "deploy:cloudflare:staging": "CLOUDFLARE_ENV=staging vinext build && node scripts/wrap-worker-china-cf-redirect.mjs && node scripts/assert-staging-wrangler-name.mjs && wrangler deploy",
     "deploy:cloudflare:dry": "vinext build",
     "assert:staging-health": "node scripts/assert-staging-health.mjs",
     "assert:staging-wrangler-name": "node scripts/assert-staging-wrangler-name.mjs",
@@ -161,7 +161,8 @@
     "test:playwright:sticky-top-theme": "PLAYWRIGHT_SKIP_WEBSERVER=1 playwright test playwright/sticky-top-theme-bg.spec.ts",
     "sync:desktop-dist-downloads": "node scripts/sync-desktop-dist-downloads.mjs",
     "test:playwright:extension-popup-xh-st-china": "PLAYWRIGHT_SKIP_WEBSERVER=1 playwright test playwright/extension-popup-xh-st-china-links.spec.ts",
-    "test:playwright:desktop-min-supported-floor": "PLAYWRIGHT_SKIP_WEBSERVER=1 playwright test playwright/desktop-min-supported-floor-smoke.spec.ts"
+    "test:playwright:desktop-min-supported-floor": "PLAYWRIGHT_SKIP_WEBSERVER=1 playwright test playwright/desktop-min-supported-floor-smoke.spec.ts",
+    "wrap:worker-china-cf": "node scripts/wrap-worker-china-cf-redirect.mjs"
   },
   "dependencies": {
     "next": "16.3.4",

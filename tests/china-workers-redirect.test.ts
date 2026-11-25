@@ -39,9 +39,9 @@ test("API and static paths skip redirect", () => {
   assert.equal(shouldSkipChinaWorkersRedirect("/"), false);
 });
 
-test("middleware.ts wires CF-IPCountry + stay param", () => {
+test("middleware.ts wires CF country + stay param", () => {
   const src = readFileSync("middleware.ts", "utf8");
-  assert.match(src, /cf-ipcountry/i);
+  assert.match(src, /countryFromWorkersRequest/);
   assert.match(src, /china_workers_stay/);
   assert.match(src, /chinaPagesDestForWorkersPath/);
   assert.match(src, /NextResponse\.redirect/);

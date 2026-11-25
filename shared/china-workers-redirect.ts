@@ -22,6 +22,31 @@ export function isChinaForceCountry(country: string | null | undefined): boolean
 }
 
 /**
+ * Prefer Workers `request.cf.country` (always set on CF) over CF-IPCountry header
+ * (header often missing on workers.dev unless Managed Transforms add it).
+ */
+export function countryFromWorkersRequest(request: {
+  cf?: { country?: string | null } | null;
+  headers?: { get(name: string): string | null };
+  geo?: { country?: string | null } | null;
+}): string {
+  const fromCf =
+    request.cf && typeof request.cf.country === "string" ? request.cf.country : "";
+  const fromGeo =
+    request.geo && typeof request.geo.country === "string" ? request.geo.country : "";
+  const h = request.headers;
+  const fromHeader = h
+    ? h.get("cf-ipcountry") ||
+      h.get("CF-IPCountry") ||
+      h.get("x-vercel-ip-country") ||
+      ""
+    : "";
+  return String(fromCf || fromGeo || fromHeader || "")
+    .trim()
+    .toUpperCase();
+}
+
+/**
  * Map a Workers pathname to the matching China Pages notice file.
  * Pages only ships zh (index.html) + en (en.html).
  */

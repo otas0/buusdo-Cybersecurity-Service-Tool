@@ -34,14 +34,22 @@ Actions **Pages China** 将 `china-pages/` 发布到 `otas0/buusdocst`（secret 
 
 ## Workers → China Pages（强制）
 
-逻辑：`shared/china-workers-redirect.ts`。
+逻辑：`shared/china-workers-redirect.ts` + 部署后入口包装。
 
-- **生产路径（vinext）：** `components/ChinaMainlandForceRedirect.tsx` 在 `app/page.tsx` 与 `app/[locale]/[[...slug]]/page.tsx` 内读 `CF-IPCountry` 并 `redirect`（`/api/*` 不走 App Router 页，故不跳转）。
-- **可选边缘：** 根目录 `middleware.ts` 同源逻辑（vinext Worker 包可能不收录；以 App Router 为准）。
+**为何必须读 `request.cf.country`：** 在 `*.workers.dev` 上，`CF-IPCountry` **请求头**常不存在（除非在 Dashboard 打开 Managed Transform「Add visitor location headers」）。Cloudflare 官方国家码在 Workers 上可靠来源是 [`request.cf.country`](https://developers.cloudflare.com/workers/runtime-apis/request/#incomingrequestcfproperties)。仅读 `headers().get('cf-ipcountry')` 会导致大陆访客不跳转。
 
-1. 请求头 `CF-IPCountry=CN`（或 `x-vercel-ip-country`）→ **redirect** 至 `https://otas0.github.io/buusdocst/`（`/en…` → `en.html`）。
-2. 运维自测留在 Workers：`?china_workers_stay=1`（`ChinaWorkersStayBoot` 写 cookie 8h）；清除：`?china_workers_stay=0`。
-3. `/api/health`、`/api/check` 等 **永不** 跳转（扩展与机器调用不受影响）。
+- **生产入口（必须）：** `npm run deploy:cloudflare` 在 `vinext build` 后运行 `scripts/wrap-worker-china-cf-redirect.mjs`，生成 `dist/server/china-cf-entry.js` 并设为 wrangler `main`。该包装在调用 vinext 前：
+  1. 读 `request.cf.country`（缺省再读 header）
+  2. `CN` 且非 `/api/*` → **302** → `https://otas0.github.io/buusdocst/`（`/en…` → `en.html`）
+  3. 若 header 缺失则注入 `cf-ipcountry`，供 App Router / middleware 二次把关
+- **App Router 备份：** `components/ChinaMainlandForceRedirect.tsx`（依赖注入后的 header）
+- **middleware 备份：** 根目录 `middleware.ts`（`countryFromWorkersRequest`）
+
+运维：
+
+1. 自测留在 Workers：`?china_workers_stay=1`（cookie 8h）；清除：`?china_workers_stay=0`
+2. `/api/health`、`/api/check`、`/api/geo` **永不** 跳转（扩展与机器调用不受影响）
+3. 调试国家码：`GET /api/geo` → `{ country, cfCountry, headerCfIpCountry }`
 
 ## Region soft probe（本站）
 
