@@ -19,6 +19,8 @@
   - `65e336c7-39dd-4545-b165-e3e2cd9b219d` — 2026-11-25T03:56Z — first china-cf-entry wrap on prod (CN via `request.cf.country`)
   - `9afb5e10-3ba7-4cc5-902a-c8e2018f6cc0` — 2026-11-25T04:08Z — staging wrap harden (`x-buusdocst-china-wrap`, CN-only, `/api/geo` rateNote)
   - `9dc3ff3c-6338-49d3-9ba4-5a16f2503ccf` — 2026-11-25T04:10Z — prod promote of same wrap harden (`6236fcb`)
+  - `0ed5b2b8-ff77-40bd-9adb-e59834f73f4d` — 2026-11-25T09:16Z — staging `run_worker_first=true` (`a2faadb`)
+  - `39c96aca-aa53-46b5-806b-789b0868f14a` — 2026-11-25T09:17Z — prod `run_worker_first=true` + client hard fallback (`a2faadb`)
   - Record newer IDs here after each China-redirect-related prod deploy.
 
 - Optional Playwright job also runs on **schedule** (nightly) and includes `test:playwright:extension-china-stay-clear`.
