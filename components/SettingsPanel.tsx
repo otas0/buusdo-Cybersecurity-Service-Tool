@@ -118,6 +118,11 @@ export function SettingsPanel({
     Array<{ domain: string; fails?: number; until?: string }>
   >([]);
   const [isDevServer, setIsDevServer] = useState(false);
+  const [extPresent, setExtPresent] = useState(false);
+  const [extLists, setExtLists] = useState<{
+    blocked: Array<{ domain: string }>;
+    trusted: Array<{ domain: string }>;
+  } | null>(null);
   const [historyTimeoutsOnly, setHistoryTimeoutsOnly] = useState(false);
   const [historyHeadSkippedOnly, setHistoryHeadSkippedOnly] = useState(false);
   const [historyProbeBlockedOnly, setHistoryProbeBlockedOnly] = useState(false);
@@ -256,6 +261,53 @@ export function SettingsPanel({
     }, 0);
     return () => window.clearTimeout(timer);
   }, [drafts]);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const requestId = `lists-${Date.now().toString(36)}`;
+    let extensionId: string | null = null;
+
+    function applyLists(lists: { blocked?: Array<{ domain: string }>; trusted?: Array<{ domain: string }> } | null) {
+      setExtPresent(true);
+      if (!lists) return;
+      setExtLists({
+        blocked: Array.isArray(lists.blocked) ? lists.blocked : [],
+        trusted: Array.isArray(lists.trusted) ? lists.trusted : []
+      });
+    }
+
+    function tryExternalLists() {
+      const chromeApi = (window as unknown as { chrome?: { runtime?: { sendMessage?: Function } } }).chrome;
+      if (!extensionId || typeof chromeApi?.runtime?.sendMessage !== "function") return false;
+      try {
+        chromeApi.runtime.sendMessage(extensionId, { type: "SHIELD_LISTS_GET" }, (res: { ok?: boolean; lists?: unknown }) => {
+          if (res?.ok && res.lists) applyLists(res.lists as { blocked?: Array<{ domain: string }>; trusted?: Array<{ domain: string }> });
+          else setExtPresent(true);
+        });
+        return true;
+      } catch {
+        return false;
+      }
+    }
+
+    function onMsg(ev: MessageEvent) {
+      const data = ev.data;
+      if (!data || data.source !== "buusdo-ext") return;
+      if (data.type === "BUUSDO_EXT_PRESENT") {
+        setExtPresent(true);
+        if (typeof data.extensionId === "string" && data.extensionId) {
+          extensionId = data.extensionId;
+          tryExternalLists();
+        }
+        return;
+      }
+      if (data.type !== "BUUSDO_EXT_LISTS_RESULT" || data.requestId !== requestId) return;
+      applyLists(data.ok ? data.lists : null);
+    }
+    window.addEventListener("message", onMsg);
+    window.postMessage({ type: "BUUSDO_EXT_LISTS_GET", requestId }, window.location.origin);
+    return () => window.removeEventListener("message", onMsg);
+  }, []);
 
   useEffect(() => {
     function focusPrivacySelect() {
@@ -605,6 +657,55 @@ export function SettingsPanel({
           </a>
         </p>
         <p className="scope-note">{t.blockListsWebsiteNote}</p>
+        <div className="settings-block" data-testid="settings-extension-lists-readonly">
+          <h3 className="settings-subhead">{t.extensionListsReadonlyTitle}</h3>
+          {!extPresent ? (
+            <p className="hint">{t.extensionListsUnavailable}</p>
+          ) : (
+            <div className="list-cols">
+              <div>
+                <p className="kicker">{t.blocked}</p>
+                {(extLists?.blocked?.length ?? 0) === 0 ? (
+                  <p className="hint">{t.extensionListsBlockedEmpty}</p>
+                ) : (
+                  <ul className="mini-log" data-testid="settings-ext-blocked">
+                    {(extLists?.blocked || []).slice(0, 40).map((entry) => (
+                      <li key={`b-${entry.domain}`}>
+                        <a
+                          className="text-button"
+                          href={`/${locale}/lists-offline?blocked=${encodeURIComponent(entry.domain)}`}
+                          data-testid={`settings-ext-blocked-${entry.domain}`}
+                        >
+                          {entry.domain}
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </div>
+              <div>
+                <p className="kicker">{t.trusted}</p>
+                {(extLists?.trusted?.length ?? 0) === 0 ? (
+                  <p className="hint">{t.extensionListsTrustedEmpty}</p>
+                ) : (
+                  <ul className="mini-log" data-testid="settings-ext-trusted">
+                    {(extLists?.trusted || []).slice(0, 40).map((entry) => (
+                      <li key={`t-${entry.domain}`}>
+                        <a
+                          className="text-button"
+                          href={`/${locale}/lists-offline?blocked=${encodeURIComponent(entry.domain)}`}
+                          data-testid={`settings-ext-trusted-${entry.domain}`}
+                        >
+                          {entry.domain}
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </div>
+            </div>
+          )}
+        </div>
         <p className="hint" data-testid="settings-lists-offline-path">
           {t.blockListsOfflinePath}{" "}
           <a className="text-button" href={`/${locale}/lists-offline`} data-testid="settings-lists-offline-link">

@@ -9,6 +9,8 @@ import { DEFAULT_API_BASE } from "../shared/api-base-migrate.mjs";
 import { API_BASE_FALLBACK_NOTICE_KEY } from "../shared/api-base-fallback.mjs";
 void API_BASE_FALLBACK_NOTICE_KEY;
 
+const BRAND_ALT = "buusdo Cybersecurity Service Tool";
+
 const els = {
   readout: document.getElementById("readout"),
   statusWord: document.getElementById("statusWord"),
@@ -18,7 +20,9 @@ const els = {
   phishingLabel: document.getElementById("phishingLabel"),
   phishingValue: document.getElementById("phishingValue"),
   manageListsLink: document.getElementById("manageListsLink"),
-  manageListsHint: document.getElementById("manageListsHint")
+  manageListsHint: document.getElementById("manageListsHint"),
+  wordmarkDark: document.querySelector(".brand-logo-on-dark"),
+  wordmarkLight: document.querySelector(".brand-logo-on-light")
 };
 
 function resolveSystemLang() {
@@ -32,10 +36,25 @@ function resolveSystemLang() {
   return normalizeUiLang(navigator.language || navigator.languages?.[0] || "en");
 }
 
+/** Apply OS color-scheme and expose only the visible wordmark to assistive tech. */
 function applyThemeFromSystem() {
   const light = window.matchMedia("(prefers-color-scheme: light)").matches;
   document.documentElement.dataset.theme = light ? "light" : "dark";
   document.documentElement.style.colorScheme = light ? "light" : "dark";
+  const dark = els.wordmarkDark;
+  const lightImg = els.wordmarkLight;
+  if (!dark || !lightImg) return;
+  if (light) {
+    dark.setAttribute("alt", "");
+    dark.setAttribute("aria-hidden", "true");
+    lightImg.setAttribute("alt", BRAND_ALT);
+    lightImg.removeAttribute("aria-hidden");
+  } else {
+    lightImg.setAttribute("alt", "");
+    lightImg.setAttribute("aria-hidden", "true");
+    dark.setAttribute("alt", BRAND_ALT);
+    dark.removeAttribute("aria-hidden");
+  }
 }
 
 function levelWord(lang, level) {
@@ -72,7 +91,9 @@ function paint(lang, state) {
   }
   if (els.manageListsLink) {
     const base = String(DEFAULT_API_BASE || "https://buusdocst.mtsu.workers.dev").replace(/\/$/, "");
-    els.manageListsLink.href = `${base}/${lang}/settings#settings-block-lists`;
+    const blocked = String(state?.lastBlockedDomain || "").trim();
+    const q = blocked ? `?blocked=${encodeURIComponent(blocked)}` : "";
+    els.manageListsLink.href = `${base}/${lang}/lists-offline${q}`;
     els.manageListsLink.textContent =
       lang === "pt-PT"
         ? "Gerir listas de bloqueio e confiança"
@@ -83,14 +104,26 @@ function paint(lang, state) {
             : "Manage block & trust lists";
   }
   if (els.manageListsHint) {
-    els.manageListsHint.textContent =
-      lang === "pt-PT"
-        ? "Listas abrem no site — não neste popup."
-        : lang === "zh-Hans"
-          ? "名单在网站查看，不在此弹窗。"
-          : lang === "zh-Hant"
-            ? "清單在網站查看，不在此彈窗。"
-            : "Lists open on the website — not in this popup.";
+    const blocked = String(state?.lastBlockedDomain || "").trim();
+    if (blocked) {
+      els.manageListsHint.textContent =
+        lang === "pt-PT"
+          ? `Último bloqueio: ${blocked} — listas no site.`
+          : lang === "zh-Hans"
+            ? `刚拦截：${blocked} — 名单在网站查看。`
+            : lang === "zh-Hant"
+              ? `剛攔截：${blocked} — 清單在網站查看。`
+              : `Just blocked: ${blocked} — lists open on the website.`;
+    } else {
+      els.manageListsHint.textContent =
+        lang === "pt-PT"
+          ? "Listas abrem no site — não neste popup."
+          : lang === "zh-Hans"
+            ? "名单在网站查看，不在此弹窗。"
+            : lang === "zh-Hant"
+              ? "清單在網站查看，不在此彈窗。"
+              : "Lists open on the website — not in this popup.";
+    }
   }
 }
 
@@ -122,5 +155,16 @@ const mq = window.matchMedia("(prefers-color-scheme: light)");
 mq.addEventListener?.("change", () => {
   applyThemeFromSystem();
 });
+
+try {
+  api.storage?.onChanged?.addListener((changes, area) => {
+    if (area !== "local") return;
+    if (!changes?.shieldState) return;
+    const lang = resolveSystemLang();
+    paint(lang, changes.shieldState.newValue || null);
+  });
+} catch {
+  /* ignore */
+}
 
 void refresh();

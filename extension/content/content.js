@@ -30,97 +30,113 @@
       tracker: "Blocked {n} Tracker",
       trackers: "Blocked {n} Trackers",
       dismiss: "Dismiss",
-      block: "Block"
+      block: "Block",
+      blockOk: "Added to local block list"
     },
     "pt-PT": {
       tracker: "Bloqueado {n} Rastreador",
       trackers: "Bloqueados {n} Rastreadores",
       dismiss: "Fechar",
-      block: "Bloquear"
+      block: "Bloquear",
+      blockOk: "Adicionado à lista local"
     },
     "zh-Hans": {
       tracker: "已拦截 {n} 个跟踪器",
       trackers: "已拦截 {n} 个跟踪器",
       dismiss: "关闭",
-      block: "拦截"
+      block: "拦截",
+      blockOk: "已加入本机名单"
     },
     "zh-Hant": {
       tracker: "已攔截 {n} 個追蹤器",
       trackers: "已攔截 {n} 個追蹤器",
       dismiss: "關閉",
-      block: "攔截"
+      block: "攔截",
+      blockOk: "已加入本機清單"
     },
     ja: {
       tracker: "トラッカーを {n} 件ブロック",
       trackers: "トラッカーを {n} 件ブロック",
       dismiss: "閉じる",
-      block: "ブロック"
+      block: "ブロック",
+      blockOk: "端末のブロックリストに追加しました"
     },
     mi: {
       tracker: "Kua ārai {n} kaitutei",
       trackers: "Kua ārai {n} kaitutei",
       dismiss: "Whakakore",
-      block: "Ārai"
+      block: "Ārai",
+      blockOk: "Kua tāpiri ki te rārangi ārai"
     },
     th: {
       tracker: "บล็อกตัวติดตาม {n} รายการ",
       trackers: "บล็อกตัวติดตาม {n} รายการ",
       dismiss: "ปิด",
-      block: "บล็อก"
+      block: "บล็อก",
+      blockOk: "เพิ่มในรายการบล็อกบนเครื่องแล้ว"
     },
     vi: {
       tracker: "Đã chặn {n} trình theo dõi",
       trackers: "Đã chặn {n} trình theo dõi",
       dismiss: "Đóng",
-      block: "Chặn"
+      block: "Chặn",
+      blockOk: "Đã thêm vào danh sách chặn cục bộ"
     },
     "pt-BR": {
       tracker: "Bloqueado {n} Rastreador",
       trackers: "Bloqueados {n} Rastreadores",
       dismiss: "Fechar",
-      block: "Bloquear"
+      block: "Bloquear",
+      blockOk: "Adicionado à lista local"
     },
     de: {
       tracker: "{n} Tracker blockiert",
       trackers: "{n} Tracker blockiert",
       dismiss: "Schließen",
-      block: "Blockieren"
+      block: "Blockieren",
+      blockOk: "Zur lokalen Sperrliste hinzugefügt"
     },
     fr: {
       tracker: "{n} traqueur bloqué",
       trackers: "{n} traqueurs bloqués",
       dismiss: "Fermer",
-      block: "Bloquer"
+      block: "Bloquer",
+      blockOk: "Ajouté à la liste locale"
     },
     es: {
       tracker: "{n} rastreador bloqueado",
       trackers: "{n} rastreadores bloqueados",
       dismiss: "Cerrar",
-      block: "Bloquear"
+      block: "Bloquear",
+      blockOk: "Añadido a la lista local"
     },
     it: {
       tracker: "Bloccato {n} tracker",
       trackers: "Bloccati {n} tracker",
       dismiss: "Chiudi",
-      block: "Blocca"
+      block: "Blocca",
+      blockOk: "Aggiunto all’elenco locale"
     },
     nl: {
       tracker: "{n} tracker geblokkeerd",
       trackers: "{n} trackers geblokkeerd",
       dismiss: "Sluiten",
-      block: "Blokkeren"
+      block: "Blokkeren",
+      blockOk: "Toegevoegd aan lokale blokkeerlijst"
     },
     af: {
       tracker: "{n} naspoor geblokkeer",
       trackers: "{n} naspoors geblokkeer",
       dismiss: "Maak toe",
-      block: "Blokkeer"
+      block: "Blokkeer",
+      blockOk: "By plaaslike bloklys gevoeg"
     },
     zu: {
       tracker: "Kuvinjwe {n} umlandeli",
       trackers: "Kuvinjwe {n} abalandeli",
       dismiss: "Vala",
-      block: "Vimba"
+      block: "Vimba",
+      blockOk: "Kufakiwe ohlwini lwendawo"
     }
   };
 
@@ -230,7 +246,8 @@
 
     // Block host from the page toast (works even when the extension popup is closed).
     if (payload.showBlock && payload.blockHost) {
-      const blockText = (TRACKER_COPY[lang] || TRACKER_COPY.en).block || "Block";
+      const table = TRACKER_COPY[lang] || TRACKER_COPY.en;
+      const blockText = table.block || "Block";
       const blockBtn = document.createElement("button");
       blockBtn.type = "button";
       blockBtn.textContent = blockText;
@@ -239,16 +256,37 @@
       blockBtn.addEventListener("click", (ev) => {
         ev.preventDefault();
         ev.stopPropagation();
+        const domain = String(payload.blockHost);
+        const finishOk = () => {
+          removeToast();
+          const ok = document.createElement("div");
+          ok.className = "portugal-cp-shield-toast portugal-cp-shield-toast--ok is-visible";
+          ok.setAttribute("data-testid", "toast-block-ok");
+          ok.setAttribute("role", "status");
+          const label = document.createElement("span");
+          label.className = "portugal-cp-shield-toast__label";
+          label.textContent = table.blockOk || "Added to local block list";
+          ok.appendChild(label);
+          ensureHost().appendChild(ok);
+          window.setTimeout(() => {
+            ok.classList.remove("is-visible");
+            window.setTimeout(() => ok.remove(), 320);
+          }, 2400);
+        };
         try {
-          api.runtime.sendMessage({
-            type: "SHIELD_LISTS_ADD_BLOCK",
-            domain: String(payload.blockHost),
-            reason: "toast"
-          });
+          api.runtime.sendMessage(
+            { type: "SHIELD_LISTS_ADD_BLOCK", domain, reason: "toast" },
+            (res) => {
+              if (api.runtime.lastError || !res?.ok) {
+                removeToast();
+                return;
+              }
+              finishOk();
+            }
+          );
         } catch {
-          /* ignore */
+          removeToast();
         }
-        removeToast();
       });
       appendToastAction(el, blockBtn);
     }
@@ -268,5 +306,50 @@
       return true;
     }
     return false;
+  });
+
+  /**
+   * Website bridge — Settings / lists-offline can read local lists when the extension
+   * is installed (content script on this origin). Never writes lists from the page.
+   */
+  try {
+    window.postMessage(
+      {
+        source: "buusdo-ext",
+        type: "BUUSDO_EXT_PRESENT",
+        extensionId: api.runtime?.id || null
+      },
+      window.location.origin
+    );
+  } catch {
+    /* ignore */
+  }
+  window.addEventListener("message", (ev) => {
+    if (ev.source !== window) return;
+    const data = ev.data;
+    if (!data || data.source === "buusdo-ext") return;
+    if (data.type !== "BUUSDO_EXT_LISTS_GET") return;
+    const requestId = data.requestId;
+    const reply = (payload) => {
+      try {
+        window.postMessage(
+          { source: "buusdo-ext", type: "BUUSDO_EXT_LISTS_RESULT", requestId, ...payload },
+          window.location.origin
+        );
+      } catch {
+        /* ignore */
+      }
+    };
+    try {
+      api.runtime.sendMessage({ type: "SHIELD_LISTS_GET" }, (res) => {
+        if (api.runtime.lastError) {
+          reply({ ok: false, error: String(api.runtime.lastError.message || "runtime") });
+          return;
+        }
+        reply({ ok: Boolean(res?.ok), lists: res?.lists || null });
+      });
+    } catch (err) {
+      reply({ ok: false, error: String(err?.message || err) });
+    }
   });
 })();

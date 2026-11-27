@@ -199,6 +199,11 @@ button:disabled.log-filter-reset {
   border: 0;
 }
 
+/* Cream mark on dark; on-light plate for OS / data-theme light (dashboard.js swaps alt). */
+.brand-logo-on-light { display: none; }
+:root[data-theme="light"] .brand-logo-on-dark { display: none; }
+:root[data-theme="light"] .brand-logo-on-light { display: block; }
+
 .about-mark {
   margin: 0 0 14px;
 }

@@ -82,6 +82,7 @@
     "contract:sync": "cp docs/API_CHECK_CONTRACT.md extension/shared/API_CHECK_CONTRACT.md",
     "qr:bundle": "browserify node_modules/qrcode/lib/browser.js -s QrLib -o shared/qrcode-browser.js",
     "test:playwright:settings": "playwright test playwright/settings-narrow.spec.ts",
+    "test:playwright:settings-extension-lists-bridge": "playwright test playwright/settings-extension-lists-bridge.spec.ts",
     "test:playwright:honest-limits": "playwright test playwright/settings-honest-limits.spec.ts",
     "test:playwright:quarantine-focus": "PLAYWRIGHT_SKIP_WEBSERVER=1 playwright test playwright/quarantine-focus-visible.spec.ts",
     "test:playwright:diagnostics-focus": "PLAYWRIGHT_SKIP_WEBSERVER=1 playwright test playwright/diagnostics-export-focus-visible.spec.ts",

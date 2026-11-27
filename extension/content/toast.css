@@ -1,3 +1,7 @@
+/**
+ * Page toasts — brand ink via tokens.css variables (injected before this file).
+ * Host may lack data-theme; prefer prefers-color-scheme for caution plate.
+ */
 #portugal-cp-shield-toast-host {
   position: fixed;
   z-index: 2147483646;
@@ -7,19 +11,33 @@
   flex-direction: column;
   gap: 8px;
   pointer-events: none;
-  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-family: var(--font, "Helvetica Neue", Helvetica, Arial, sans-serif);
+  /* Light OS default = cream plate / charcoal type (tokens light). */
+  --toast-caution-bg: var(--bg, #f3f1ea);
+  --toast-caution-fg: var(--text, #1a1916);
+  --toast-caution-line: var(--line, rgba(26, 25, 22, 0.16));
+  --toast-danger-bg: var(--halt, #ff4d00);
+  --toast-danger-fg: #0e0e0e;
+}
+
+@media (prefers-color-scheme: dark) {
+  #portugal-cp-shield-toast-host {
+    /* Dark OS = black field / cream type (tokens dark). */
+    --toast-caution-bg: #0e0e0e;
+    --toast-caution-fg: #f3f1ea;
+    --toast-caution-line: rgba(243, 241, 234, 0.16);
+  }
 }
 
 .portugal-cp-shield-toast {
-  /* Allow future dismiss/Leave clicks; host stays pointer-events: none. */
   pointer-events: auto;
   min-width: 140px;
   max-width: 280px;
   padding: 10px 12px;
-  border-radius: 0;
-  color: #0e0e0e;
-  background: #f3f1ea;
-  border: 0;
+  border-radius: var(--radius, 0);
+  color: var(--toast-caution-fg);
+  background: var(--toast-caution-bg);
+  border: 1px solid var(--toast-caution-line);
   box-shadow: none;
   font-size: 12px;
   font-weight: 500;
@@ -32,20 +50,24 @@
 
 .portugal-cp-shield-toast.is-visible { opacity: 1; }
 
-.portugal-cp-shield-toast--caution { background: #f3f1ea; color: #0e0e0e; }
-
-@media (prefers-color-scheme: dark) {
-  .portugal-cp-shield-toast--caution {
-    background: #1c1c1c;
-    color: #f3f1ea;
-    border: 1px solid rgba(243, 241, 234, 0.16);
-  }
+.portugal-cp-shield-toast--caution {
+  background: var(--toast-caution-bg);
+  color: var(--toast-caution-fg);
+  border-color: var(--toast-caution-line);
 }
 
-/* Halt / phishing: solid #ff4d00 field, dark type — no translucent Halt mixes. */
 .portugal-cp-shield-toast--danger {
-  background: #ff4d00;
-  color: #0e0e0e;
+  background: var(--toast-danger-bg);
+  color: var(--toast-danger-fg);
+  border-color: var(--toast-danger-fg);
+}
+
+.portugal-cp-shield-toast--ok {
+  background: var(--toast-caution-bg);
+  color: var(--toast-caution-fg);
+  border-color: var(--toast-caution-line);
+  letter-spacing: 0.04em;
+  text-transform: none;
 }
 
 .portugal-cp-shield-toast__label {
@@ -80,7 +102,6 @@
   margin: 0 0 4px;
 }
 
-/* Dismiss/Leave via appendToastAction — inherit toast ink (dark on Halt). */
 .portugal-cp-shield-toast__action {
   display: inline-block;
   margin-top: 8px;
@@ -99,8 +120,8 @@
 }
 
 .portugal-cp-shield-toast--danger .portugal-cp-shield-toast__action {
-  color: #0e0e0e;
-  border-color: #0e0e0e;
+  color: var(--toast-danger-fg);
+  border-color: var(--toast-danger-fg);
   background: transparent;
 }
 

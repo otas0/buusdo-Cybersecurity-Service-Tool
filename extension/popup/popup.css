@@ -54,7 +54,8 @@ a { color: inherit; }
   border: 0;
 }
 
-/* Cream mark on dark field; charcoal-on-cream plate for light OS theme. */
+/* Cream mark on dark field; charcoal-on-cream plate for light OS theme.
+ * popup.js swaps alt / aria-hidden so only the visible mark is announced. */
 .brand-logo-on-light { display: none; }
 html[data-theme="light"] .brand-logo-on-dark { display: none; }
 html[data-theme="light"] .brand-logo-on-light { display: block; }

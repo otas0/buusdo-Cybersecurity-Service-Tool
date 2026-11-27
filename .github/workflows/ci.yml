@@ -42,6 +42,8 @@ jobs:
         run: |
           npm run test
           echo "::notice::shield-lists classic fixture covered in tests/shield-lists.test.ts (mjs + shield-lists.classic.js parity)"
+          npx tsx --test tests/extension-dnr-fallback-toast.test.ts
+          echo "::notice::extension-dnr-fallback-toast OK (page-tracker toast when DNR feedback offline)"
 
       - name: Sync latest Deploy run URL (soft)
         continue-on-error: true
@@ -350,6 +352,17 @@ jobs:
           fi
           grep -q 'API_BASE_FALLBACK_NOTICE_KEY' extension/popup/popup.js
           grep -q 'from "../shared/api-base-fallback.mjs"' extension/popup/popup.js
+
+      - name: Slim popup has no langSelect or scanBtn
+        run: |
+          if grep -nE 'id="langSelect"|id="scanBtn"' extension/popup/popup.html; then
+            echo "::error::extension/popup/popup.html must not ship #langSelect or #scanBtn (OS lang + auto-scan)"
+            exit 1
+          fi
+          if grep -nE 'getElementById\("langSelect"\)|getElementById\("scanBtn"\)' extension/popup/popup.js; then
+            echo "::error::extension/popup/popup.js must not reference #langSelect or #scanBtn"
+            exit 1
+          fi
 
       - name: Build
         run: npm run build
@@ -917,6 +930,7 @@ jobs:
           export PLAYWRIGHT_BASE_URL="$BASE"
           export STRICT_LEAVE_AND_BLOCK=1
           npm run test:playwright:settings
+          npm run test:playwright:settings-extension-lists-bridge
         env:
           PLAYWRIGHT_BASE_URL: ${{ vars.PLAYWRIGHT_BASE_URL || 'http://localhost:3000' }}
           STRICT_LEAVE_AND_BLOCK: "1"

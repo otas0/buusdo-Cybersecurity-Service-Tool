@@ -79,9 +79,27 @@ const DEFAULT_STATE = {
     phishingHits: 0,
     url: null
   },
+  /** Last domain the user Blocked from a page toast (website deep-link hint). */
+  lastBlockedDomain: null,
   /** tabId -> { trackers, phishing, lastToastAt } */
   tabs: {}
 };
+
+/** Soft website check — same production origin as extension/shared/api-base-migrate.mjs. */
+const SOFT_API_BASE = "https://buusdocst.mtsu.workers.dev";
+/** True when Chromium exposes DNR matched-rule debug (unpacked / feedback permission). */
+const DNR_FEEDBACK_LIVE = Boolean(api.declarativeNetRequest?.onRuleMatchedDebug);
+/** Soft /api/check: one POST per registrable host within this window (SW memory; resets on worker restart). */
+const SOFT_CHECK_TTL_MS = 15 * 60 * 1000;
+/** @type {Map<string, number>} */
+const softCheckAtByHost = new Map();
+
+/**
+ * Safari Web Extension notes (MV3):
+ * - chrome.storage.onChanged is supported; popup refresh relies on it (popup.js).
+ * - Soft fetch needs host_permissions for SOFT_API_BASE (already listed in manifest).
+ * - Prefer AbortController timeouts; Safari may reject long hung fetches without abort.
+ */
 
 // ---------------------------------------------------------------------------
 // Storage helpers
@@ -451,10 +469,10 @@ api.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
   }
 
   // Auto-scan when the page finishes loading (popup can stay closed).
-  // Phishing/tracker page toasts already fire above / via DNR — do not re-toast here.
   if (changeInfo.status === "complete" && /^https?:/i.test(url)) {
     const lastScan = await runScan(tabId, url, { fromAuto: true });
-    // Page-resource trackers (no DNR hit yet) still need a caution toast + Block.
+    // Page-resource trackers: always toast when DNR feedback is unavailable;
+    // otherwise only if no recent DNR/phishing toast (avoid double fire).
     if (
       lastScan.level === "caution" &&
       (lastScan.trackersBlocked || 0) > 0 &&
@@ -462,7 +480,8 @@ api.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
     ) {
       const entry = (await getState()).tabs?.[String(tabId)] || {};
       const now = Date.now();
-      if (now - (entry.lastToastAt || 0) > 2500) {
+      const gap = DNR_FEEDBACK_LIVE ? 2500 : 0;
+      if (!DNR_FEEDBACK_LIVE || now - (entry.lastToastAt || 0) > gap) {
         await showToast(tabId, {
           kind: "tracker",
           count: lastScan.trackersBlocked,
@@ -474,6 +493,45 @@ api.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
         const next = { ...(tabs[String(tabId)] || {}), lastToastAt: now };
         tabs[String(tabId)] = next;
         await setState({ tabs });
+      }
+    }
+
+    // Soft website /api/check — toast only on caution/danger.
+    // Failures return null and must not rewrite lastScan (popup must not flash Halt).
+    if (!result.matched) {
+      const apiRisk = await softWebsiteCheck(url);
+      if (apiRisk === "danger" || apiRisk === "caution") {
+        const entry = (await getState()).tabs?.[String(tabId)] || {};
+        const now = Date.now();
+        if (now - (entry.lastToastAt || 0) > 4000) {
+          await showToast(tabId, {
+            kind: apiRisk === "danger" ? "phishing" : "tracker",
+            count: 1,
+            lang: systemLang,
+            url,
+            showBlock: true
+          });
+          const st = await getState();
+          const privacyMode = normalizePrivacyMode(st.privacyMode);
+          const tabs = { ...(st.tabs || {}) };
+          tabs[String(tabId)] = { ...(tabs[String(tabId)] || {}), lastToastAt: now };
+          const domainOnly = hostFromUrl(url) || null;
+          await setState({
+            tabs,
+            lastScan: {
+              level: apiRisk,
+              trackersBlocked: lastScan?.trackersBlocked || 0,
+              phishingHits:
+                apiRisk === "danger"
+                  ? Math.max(1, lastScan?.phishingHits || 0)
+                  : lastScan?.phishingHits || 0,
+              url: privacyMode === "off" ? null : domainOnly,
+              reasons: privacyMode === "off" ? [] : [`api:${apiRisk}`],
+              source: "website-api"
+            },
+            lastScanAt: new Date().toISOString()
+          });
+        }
       }
     }
   }
@@ -502,6 +560,53 @@ function levelFromCounts(trackers, phishing) {
   if (phishing > 0) return "danger";
   if (trackers > 0) return "caution";
   return "safe";
+}
+
+/**
+ * Soft POST /api/check — never throws; returns traffic level or null.
+ * Network / parse failures → null (caller must not set lastScan.level to danger).
+ * Throttled to one POST per host per SOFT_CHECK_TTL_MS.
+ * @param {string} url
+ * @returns {Promise<'danger'|'caution'|null>}
+ */
+async function softWebsiteCheck(url) {
+  if (!url || !/^https?:/i.test(url)) return null;
+  let hostKey = "";
+  try {
+    const host = new URL(url).hostname.toLowerCase();
+    const apiHost = new URL(SOFT_API_BASE).hostname.toLowerCase();
+    if (host === apiHost || host === "localhost" || host === "127.0.0.1") return null;
+    hostKey = registrableHint(url) || host;
+  } catch {
+    return null;
+  }
+  const now = Date.now();
+  const prev = softCheckAtByHost.get(hostKey) || 0;
+  if (now - prev < SOFT_CHECK_TTL_MS) return null;
+  softCheckAtByHost.set(hostKey, now);
+
+  const controller = typeof AbortController !== "undefined" ? new AbortController() : null;
+  const timer = controller ? setTimeout(() => controller.abort(), 4500) : 0;
+  try {
+    const res = await fetch(`${SOFT_API_BASE}/api/check`, {
+      method: "POST",
+      headers: { "content-type": "application/json", accept: "application/json" },
+      body: JSON.stringify({ url }),
+      signal: controller?.signal
+    });
+    if (!res.ok) return null;
+    const data = await res.json();
+    const riskLevel = String(data?.analysis?.risk?.level || data?.risk?.level || "").toUpperCase();
+    if (riskLevel === "CRITICAL" || riskLevel === "HIGH") return "danger";
+    if (riskLevel === "CAUTION" || riskLevel === "UNKNOWN") return "caution";
+    // Clear / LOW_EVIDENCE — no toast, no lastScan rewrite.
+    return null;
+  } catch {
+    // Soft fail: leave throttle stamp so we do not hammer; never escalate UI.
+    return null;
+  } finally {
+    if (timer) clearTimeout(timer);
+  }
 }
 
 /**
@@ -667,11 +772,18 @@ api.runtime.onMessage.addListener((message, sender, sendResponse) => {
       if (st.privacyMode === "off") {
         await setState({ privacyMode: "local" });
       }
+      let domain = message.domain;
+      try {
+        domain = ShieldLists.normalizeListHost(message.domain || "");
+      } catch {
+        /* keep raw */
+      }
       const cur = await getPersonalLists();
       const { lists, dnr } = await setPersonalLists(
-        ShieldLists.addBlocked(cur, message.domain, message.reason || "user")
+        ShieldLists.addBlocked(cur, domain, message.reason || "user")
       );
-      sendResponse({ ok: true, lists, dnr });
+      await setState({ lastBlockedDomain: domain || null });
+      sendResponse({ ok: true, lists, dnr, domain });
       return;
     }
 
@@ -792,5 +904,27 @@ api.runtime.onMessage.addListener((message, sender, sendResponse) => {
   // Keep the message channel open for async sendResponse.
   return true;
 });
+
+/**
+ * Website backup bridge when content script is not injected (externally_connectable).
+ * Read-only: PING + LISTS_GET only.
+ */
+if (api.runtime.onMessageExternal) {
+  api.runtime.onMessageExternal.addListener((message, _sender, sendResponse) => {
+    (async () => {
+      if (message?.type === "SHIELD_EXT_PING" || message?.type === "BUUSDO_EXT_PING") {
+        sendResponse({ ok: true, present: true, extensionId: api.runtime.id || null });
+        return;
+      }
+      if (message?.type === "SHIELD_LISTS_GET" || message?.type === "BUUSDO_EXT_LISTS_GET") {
+        const lists = await getPersonalLists();
+        sendResponse({ ok: true, lists });
+        return;
+      }
+      sendResponse({ ok: false, error: "unknown-external-message" });
+    })();
+    return true;
+  });
+}
 
 console.info("[shield] service worker ready");
