@@ -29,82 +29,98 @@
     en: {
       tracker: "Blocked {n} Tracker",
       trackers: "Blocked {n} Trackers",
-      dismiss: "Dismiss"
+      dismiss: "Dismiss",
+      block: "Block"
     },
     "pt-PT": {
       tracker: "Bloqueado {n} Rastreador",
       trackers: "Bloqueados {n} Rastreadores",
-      dismiss: "Fechar"
+      dismiss: "Fechar",
+      block: "Bloquear"
     },
     "zh-Hans": {
       tracker: "已拦截 {n} 个跟踪器",
       trackers: "已拦截 {n} 个跟踪器",
-      dismiss: "关闭"
+      dismiss: "关闭",
+      block: "拦截"
     },
     "zh-Hant": {
       tracker: "已攔截 {n} 個追蹤器",
       trackers: "已攔截 {n} 個追蹤器",
-      dismiss: "關閉"
+      dismiss: "關閉",
+      block: "攔截"
     },
     ja: {
       tracker: "トラッカーを {n} 件ブロック",
       trackers: "トラッカーを {n} 件ブロック",
-      dismiss: "閉じる"
+      dismiss: "閉じる",
+      block: "ブロック"
     },
     mi: {
       tracker: "Kua ārai {n} kaitutei",
       trackers: "Kua ārai {n} kaitutei",
-      dismiss: "Whakakore"
+      dismiss: "Whakakore",
+      block: "Ārai"
     },
     th: {
       tracker: "บล็อกตัวติดตาม {n} รายการ",
       trackers: "บล็อกตัวติดตาม {n} รายการ",
-      dismiss: "ปิด"
+      dismiss: "ปิด",
+      block: "บล็อก"
     },
     vi: {
       tracker: "Đã chặn {n} trình theo dõi",
       trackers: "Đã chặn {n} trình theo dõi",
-      dismiss: "Đóng"
+      dismiss: "Đóng",
+      block: "Chặn"
     },
     "pt-BR": {
       tracker: "Bloqueado {n} Rastreador",
       trackers: "Bloqueados {n} Rastreadores",
-      dismiss: "Fechar"
+      dismiss: "Fechar",
+      block: "Bloquear"
     },
     de: {
       tracker: "{n} Tracker blockiert",
       trackers: "{n} Tracker blockiert",
-      dismiss: "Schließen"
+      dismiss: "Schließen",
+      block: "Blockieren"
     },
     fr: {
       tracker: "{n} traqueur bloqué",
       trackers: "{n} traqueurs bloqués",
-      dismiss: "Fermer"
+      dismiss: "Fermer",
+      block: "Bloquer"
     },
     es: {
       tracker: "{n} rastreador bloqueado",
       trackers: "{n} rastreadores bloqueados",
-      dismiss: "Cerrar"
+      dismiss: "Cerrar",
+      block: "Bloquear"
     },
     it: {
       tracker: "Bloccato {n} tracker",
       trackers: "Bloccati {n} tracker",
-      dismiss: "Chiudi"
+      dismiss: "Chiudi",
+      block: "Blocca"
     },
     nl: {
       tracker: "{n} tracker geblokkeerd",
       trackers: "{n} trackers geblokkeerd",
-      dismiss: "Sluiten"
+      dismiss: "Sluiten",
+      block: "Blokkeren"
     },
     af: {
       tracker: "{n} naspoor geblokkeer",
       trackers: "{n} naspoors geblokkeer",
-      dismiss: "Maak toe"
+      dismiss: "Maak toe",
+      block: "Blokkeer"
     },
     zu: {
       tracker: "Kuvinjwe {n} umlandeli",
       trackers: "Kuvinjwe {n} abalandeli",
-      dismiss: "Vala"
+      dismiss: "Vala",
+      block: "Vimba"
     }
   };
 
@@ -212,9 +228,36 @@
       appendToastAction(el, btn);
     }
 
+    // Block host from the page toast (works even when the extension popup is closed).
+    if (payload.showBlock && payload.blockHost) {
+      const blockText = (TRACKER_COPY[lang] || TRACKER_COPY.en).block || "Block";
+      const blockBtn = document.createElement("button");
+      blockBtn.type = "button";
+      blockBtn.textContent = blockText;
+      blockBtn.setAttribute("aria-label", blockText);
+      blockBtn.setAttribute("data-testid", "toast-block");
+      blockBtn.addEventListener("click", (ev) => {
+        ev.preventDefault();
+        ev.stopPropagation();
+        try {
+          api.runtime.sendMessage({
+            type: "SHIELD_LISTS_ADD_BLOCK",
+            domain: String(payload.blockHost),
+            reason: "toast"
+          });
+        } catch {
+          /* ignore */
+        }
+        removeToast();
+      });
+      appendToastAction(el, blockBtn);
+    }
+
     host.appendChild(el);
     requestAnimationFrame(() => el.classList.add("is-visible"));
-    hideTimer = window.setTimeout(removeToast, payload.kind === "phishing" ? 7200 : 3200);
+    // Threat toasts stay longer so the user can hit Block without opening the popup.
+    const linger = payload.kind === "phishing" ? 10000 : payload.showBlock ? 7200 : 3200;
+    hideTimer = window.setTimeout(removeToast, linger);
   }
 
   api.runtime.onMessage.addListener((message, _sender, sendResponse) => {

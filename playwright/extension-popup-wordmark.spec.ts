@@ -92,7 +92,9 @@ test("extension popup.html mounts real header wordmark", async ({ page }) => {
     await expect(wordmark).toBeVisible();
     await expect(wordmark).toHaveAttribute("alt", /buusdo Cybersecurity Service Tool/i);
     await expect(page.locator("header.top")).toBeVisible();
-    await expect(page.locator("#scanBtn")).toBeVisible();
+    await expect(page.locator("#manageListsLink")).toBeVisible();
+    await expect(page.locator("#scanBtn")).toHaveCount(0);
+    await expect(page.locator("#langSelect")).toHaveCount(0);
 
     // Rendered pixels (not only on-disk asset) — muted u on dark, never Halt orange u-card.
     const png = await wordmark.screenshot({ type: "png" });

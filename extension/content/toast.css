@@ -34,6 +34,14 @@
 
 .portugal-cp-shield-toast--caution { background: #f3f1ea; color: #0e0e0e; }
 
+@media (prefers-color-scheme: dark) {
+  .portugal-cp-shield-toast--caution {
+    background: #1c1c1c;
+    color: #f3f1ea;
+    border: 1px solid rgba(243, 241, 234, 0.16);
+  }
+}
+
 /* Halt / phishing: solid #ff4d00 field, dark type — no translucent Halt mixes. */
 .portugal-cp-shield-toast--danger {
   background: #ff4d00;

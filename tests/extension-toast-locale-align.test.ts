@@ -16,7 +16,7 @@ test("content TRACKER_COPY covers toast 12-locale set", () => {
   const toast = Object.keys(
     JSON.parse(readFileSync(join(root, "extension/content/phishing-toast-i18n.json"), "utf8"))
   );
-  // Popup #langSelect (15 with ja + af/zu) + EXTRA_PACKS (pt-BR).
+  // extension-ui-locales order + extraToastPacks (pt-BR) — see extension-ui-locales.json.
   assert.ok(toast.length >= 16, `expected ≥16 toast locales, got ${toast.length}`);
   for (const id of [
     "en",
