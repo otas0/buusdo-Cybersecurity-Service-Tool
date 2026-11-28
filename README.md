@@ -13,7 +13,7 @@ Official product name: **buusdo Cybersecurity Service Tool**. Part of the **Buus
 - **唯一官方说明入口：** https://otas0.github.io/buusdocst/
 - 面向大陆请只发上述链接或海报中国 QR，不要先发 Workers URL
 
-若网络可稳定访问 Cloudflare，且 `CF-IPCountry=CN`，打开 Workers HTML 会被强制引导至告知书（`/api/*` 不跳转）。
+Workers **不再**按 Cloudflare 国家码强制跳转告知书（2026-11-28）。大陆说明只走上方 Pages 链接 / QR / 商店文案。
 
 **Detect → Explain → Prevent / Block → Act → Verify**
 

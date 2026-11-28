@@ -49,7 +49,7 @@ await writeFrame({
   file: "FRAME-privacy-china-notice.png",
   eyebrow: "PRIVACY · CHINA ENTRY",
   title: "中国大陆入口（GitHub Pages）",
-  subtitle: "China mainland entry — notice + Workers CN force-redirect",
+  subtitle: "China mainland entry — Pages notice (no Worker country redirect)",
   footer: "FRAME-privacy-china-notice · instrument reference"
 });
 
@@ -57,6 +57,6 @@ await writeFrame({
   file: "FRAME-privacy-china-notice-en.png",
   eyebrow: "PRIVACY · CHINA ENTRY · EN",
   title: "China mainland entry (GitHub Pages)",
-  subtitle: "/en/privacy#privacy-china-notice — notice + CN force-redirect",
+  subtitle: "/en/privacy#privacy-china-notice — Pages notice (no Worker CN redirect)",
   footer: "FRAME-privacy-china-notice-en · instrument reference"
 });

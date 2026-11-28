@@ -10,6 +10,8 @@
 https://otas0.github.io/buusdocst/
 ```
 
+**Do not** promise that Workers “会跳转 / force-redirect” to this notice — product no longer does (2026-11-28). The paste only says not to wait for a redirect.
+
 Source of truth: [CHROME_STORE_LISTING_DRAFT.md](../CHROME_STORE_LISTING_DRAFT.md) · [PUBLIC_PROMOTION.md](../PUBLIC_PROMOTION.md) 「面向大陆用户」.
 
 ## Operator steps
@@ -30,4 +32,5 @@ Source of truth: [CHROME_STORE_LISTING_DRAFT.md](../CHROME_STORE_LISTING_DRAFT.m
 ## Do not
 
 - Put Workers product URL as the only homepage for mainland-facing fields.
+- Claim Workers HTML “会跳转 / force-redirects” mainland visitors here.
 - Treat listing impressions as mainland notice reach without the paste above.

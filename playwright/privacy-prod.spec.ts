@@ -103,6 +103,9 @@ test.describe("production privacy pages", () => {
     await expect(page.getByTestId("privacy-china-notice")).toBeVisible();
     await expect(page.getByTestId("privacy-china-notice")).toContainText(/China mainland entry/i);
     await expect(page.getByTestId("privacy-china-notice")).toContainText(/otas0\.github\.io\/buusdocst/);
+    await expect(page.getByTestId("privacy-china-notice")).toContainText(
+      /no longer force-redirects by Cloudflare country/i
+    );
   });
 
   test("/zh-Hans/privacy China mainland entry section", async ({ page }) => {
@@ -112,6 +115,7 @@ test.describe("production privacy pages", () => {
     await expect(page.getByTestId("privacy-china-notice")).toBeVisible();
     await expect(page.getByTestId("privacy-china-notice")).toContainText(/中国大陆入口/);
     await expect(page.getByTestId("privacy-china-notice")).toContainText(/otas0\.github\.io\/buusdocst/);
+    await expect(page.getByTestId("privacy-china-notice")).toContainText(/不再按 Cloudflare 国家码强制跳转/);
   });
 
   test("/zh-Hans/privacy soft-live China section (hard 中国大陆入口 when Workers up)", async ({
@@ -127,6 +131,7 @@ test.describe("production privacy pages", () => {
     const text = ((await section.textContent()) || "").replace(/\s+/g, " ").trim();
     expect(text).toMatch(/中国大陆入口/);
     expect(text).toMatch(/otas0\.github\.io\/buusdocst/);
+    expect(text).toMatch(/不再按 Cloudflare 国家码强制跳转|不再强制/);
     console.info(`[soft-live] zh-Hans China section ok (${text.slice(0, 72)}…)`);
   });
 

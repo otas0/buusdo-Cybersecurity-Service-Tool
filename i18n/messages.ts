@@ -45,8 +45,8 @@ export const messages = {
       "Desktop app: computer scan and personal block lists work offline. Live website address checks need the internet when you use that path.",
     privacyPolicyChinaTitle: "China mainland entry (GitHub Pages)",
     privacyPolicyChinaBody:
-      "From 22 November 2026 the China mainland GitHub Pages site (https://otas0.github.io/buusdocst/) keeps only a bilingual notice (explain/install/privacy pages offline). From 23 November 2026, when Cloudflare marks a visitor as mainland China (CF-IPCountry=CN) on this Workers site, the product force-redirects them to that notice (API paths are not redirected). The notice probes Workers reachability and offers a manual open link — it no longer auto-bounces here. Formal privacy is this page — not a separate China privacy summary.",
-    privacyPolicyUpdated: "Last reviewed: 2026-11-23 · China entry force-redirect",
+      "From 22 November 2026 the China mainland GitHub Pages site (https://otas0.github.io/buusdocst/) keeps only a bilingual notice (explain/install/privacy pages offline). From 28 November 2026 this Workers product no longer force-redirects by Cloudflare country — mainland networks often cannot open Workers at all, so country redirects only mis-route reachable users. The notice is reached via store / QR / promo / extension copy; it probes Workers reachability and offers a manual open link. Formal privacy is this page — not a separate China privacy summary.",
+    privacyPolicyUpdated: "Last reviewed: 2026-11-28 · No Workers CN force-redirect",
     desktopDownloadsTitle: "Desktop app downloads",
     desktopDownloadsIntro:
       "Get the desktop app for this computer in three steps. Builds are unsigned — the first open may need Gatekeeper / SmartScreen approval. Open-at-login stays off until you enable it.",
@@ -97,6 +97,9 @@ export const messages = {
     ignoreRiskTitle: "If you ignore this warning",
     ignoreRiskBody:
       "You may hand over passwords, payment details, or other personal data to whoever controls this address. Close the tab before typing or paying anything.",
+    brandBaitLeaveTitle: "Leave — this is not the real brand site",
+    brandBaitLeaveBody:
+      "The address looks built to imitate a company you trust. Close this tab and open that organisation through an app or bookmark you already use — not through this link.",
     nextStepsTitle: "What to do next — step by step",
     nextStepLeave: "Leave this page now — do not continue on the address you checked.",
     nextStepNoCredentials:
@@ -439,6 +442,12 @@ export const messages = {
     evidenceMisleadingSubdomainDetail: "A name that looks like an organisation appears before the controlling domain {domain}.",
     evidenceLookalikeTitle: "Domain lookalike signal",
     evidenceLookalikeDetail: "This domain looks similar to a known domain. Similarity is a signal, not proof of phishing.",
+    evidenceConfusableLookalikeTitle: "Confusable lookalike domain",
+    evidenceConfusableLookalikeDetail:
+      "This hostname uses look-alike characters (e.g. digits for letters) so it folds to a known brand label. That is a strong impersonation signal — not proof by itself.",
+    evidenceBrandBaitHostTitle: "Brand name with login-style wording in the host",
+    evidenceBrandBaitHostDetail:
+      "The hostname mixes a known brand token with words such as secure, login, or verify, but the controlling domain is not the official site.",
     evidencePunycodeTitle: "Encoded internationalised domain",
     evidencePunycodeDetail: "The address contains punycode. It may be legitimate, but look-alike characters need care.",
     evidenceHttpTitle: "Unencrypted connection",
@@ -571,8 +580,8 @@ export const messages = {
       "App desktop: a análise deste computador e as listas pessoais de bloqueio funcionam offline. As verificações de endereço no site precisam de internet quando usar esse caminho.",
     privacyPolicyChinaTitle: "Entrada da China continental (GitHub Pages)",
     privacyPolicyChinaBody:
-      "Desde 22 de novembro de 2026 o site GitHub Pages da China continental (https://otas0.github.io/buusdocst/) mantém só um aviso bilingue (páginas de explicação/instalação/privacidade offline). Desde 23 de novembro de 2026, quando a Cloudflare marca o visitante como China continental (CF-IPCountry=CN) neste site Workers, o produto força o redirecionamento para esse aviso (caminhos /api/* não são redirecionados). O aviso sonda a acessibilidade do Workers e oferece um link manual — já não encaminha automaticamente para aqui. A privacidade formal é esta página — não um resumo separado na China.",
-    privacyPolicyUpdated: "Última revisão: 2026-11-23 · redirecionamento forçado da entrada China",
+      "Desde 22 de novembro de 2026 o site GitHub Pages da China continental (https://otas0.github.io/buusdocst/) mantém só um aviso bilingue (páginas de explicação/instalação/privacidade offline). Desde 28 de novembro de 2026 este produto Workers já não força redirecionamento por país Cloudflare — redes da China continental muitas vezes não alcançam o Workers, e o redirecionamento por país só prejudica quem consegue abrir o site. O aviso chega via loja / QR / promo / extensão; sonda a acessibilidade do Workers e oferece um link manual. A privacidade formal é esta página — não um resumo separado na China.",
+    privacyPolicyUpdated: "Última revisão: 2026-11-28 · sem redirecionamento forçado CN no Workers",
     desktopDownloadsTitle: "Transferências da app de ambiente de trabalho",
     desktopDownloadsIntro:
       "Obtenha a app neste computador em três passos. As builds não estão assinadas — a primeira abertura pode pedir aprovação do Gatekeeper / SmartScreen. Abrir ao iniciar sessão fica desligado até o ativar.",
@@ -623,6 +632,9 @@ export const messages = {
     ignoreRiskTitle: "Se ignorar este aviso",
     ignoreRiskBody:
       "Pode entregar palavras-passe, dados de pagamento ou outra informação pessoal a quem controla este endereço. Feche o separador antes de escrever ou pagar o que quer que seja.",
+    brandBaitLeaveTitle: "Saia — não é o site real da marca",
+    brandBaitLeaveBody:
+      "O endereço parece feito para imitar uma empresa em que confia. Feche este separador e abra essa organização numa app ou marcador que já use — não por este link.",
     nextStepsTitle: "O que fazer a seguir — passo a passo",
     nextStepLeave: "Saia já desta página — não continue no endereço que verificou.",
     nextStepNoCredentials:
@@ -961,6 +973,12 @@ export const messages = {
     evidenceMisleadingSubdomainDetail: "Um nome parecido com uma organização aparece antes do domínio de controlo {domain}.",
     evidenceLookalikeTitle: "Sinal de semelhança do domínio",
     evidenceLookalikeDetail: "Este domínio parece-se com um domínio conhecido. A semelhança é um sinal, não prova de phishing.",
+    evidenceConfusableLookalikeTitle: "Domínio lookalike confusível",
+    evidenceConfusableLookalikeDetail:
+      "Este anfitrião usa caracteres enganadores (ex.: dígitos por letras) e, ao normalizar, coincide com uma marca conhecida. É um sinal forte de imitação — não é prova por si só.",
+    evidenceBrandBaitHostTitle: "Marca com palavras de início de sessão no anfitrião",
+    evidenceBrandBaitHostDetail:
+      "O nome de anfitrião mistura uma marca conhecida com palavras como secure, login ou verify, mas o domínio de controlo não é o site oficial.",
     evidencePunycodeTitle: "Domínio internacionalizado codificado",
     evidencePunycodeDetail: "O endereço contém punycode. Pode ser legítimo, mas caracteres visualmente confusos exigem cuidado.",
     evidenceHttpTitle: "Ligação não encriptada",

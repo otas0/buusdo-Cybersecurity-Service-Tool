@@ -19,7 +19,16 @@ Actions **Pages China** 将 `china-pages/` 发布到 `otas0/buusdocst`（secret 
 
 自 **2026-11-22** 起，中国入口**只保留**中英告知书与 Workers 产品站入口；说明 / 隐私摘要 / 安装指引已下线。
 
-自 **2026-11-23** 起：Workers 对 `CF-IPCountry=CN` 的 HTML 导航**强制跳转**至本告知书（见下节）；本站**不再**自动 `location.replace` 回 Workers（避免循环）。
+### 产品决策（2026-11-28）：Workers **不再**按国家强制跳转
+
+大陆访客经常 **TCP 打不开** `*.workers.dev`，Worker 上的 CN→Pages 302 **帮不到他们**，反而会误伤能打开 Workers 的用户（日本 IP、海外中文、语言/时区启发式等）。
+
+| 做什么 | 不做什么 |
+|--------|----------|
+| 告知书只走 **Pages**（本 URL）+ 商店 / QR / 海报 / 扩展「不可达」文案 | Workers / SoftTip / middleware **按 CF=CN 或语言** `302` / `location.replace` |
+| wrap 仍负责 `run_worker_first` + 调试头 `x-buusdocst-china-wrap` / `cf-country` | 把 Logpush「CN 302」当大陆触达率 |
+
+`CHINA_FORCE_REDIRECT_COUNTRIES` 与 wrap `FORCE_COUNTRIES` 均为 **空集**。客户端 SoftTip 为 **no-op**。
 
 | 路径 | 用途 |
 |------|------|
@@ -32,68 +41,27 @@ Actions **Pages China** 将 `china-pages/` 发布到 `otas0/buusdocst`（secret 
 
 语言偏好：`lang-persist.js`（`<head>` 同步）→ `localStorage` `buusdocst-china-lang`。
 
-## Workers → China Pages（强制）
+## Workers wrap（无国家 302）
 
-逻辑：`shared/china-workers-redirect.ts` + 部署后入口包装。
+部署仍跑 `scripts/wrap-worker-china-cf-redirect.mjs` → `china-cf-entry.js`：
 
-**为何必须读 `request.cf.country`：** 在 `*.workers.dev` 上，`CF-IPCountry` **请求头**常不存在（除非在 Dashboard 打开 Managed Transform「Add visitor location headers」）。Cloudflare 官方国家码在 Workers 上可靠来源是 [`request.cf.country`](https://developers.cloudflare.com/workers/runtime-apis/request/#incomingrequestcfproperties)。仅读 `headers().get('cf-ipcountry')` 会导致大陆访客不跳转。
-
-- **生产入口（必须）：** `npm run deploy:cloudflare` 在 `vinext build` 后运行 `scripts/wrap-worker-china-cf-redirect.mjs`，生成 `dist/server/china-cf-entry.js` 并设为 wrangler `main`。该包装在调用 vinext 前：
-  1. 读 `request.cf.country`（缺省再读 header）
-  2. `CN` 且非 `/api/*` → **302** → `https://otas0.github.io/buusdocst/`（`/en…` → `en.html`）
-  3. 若 header 缺失则注入 `cf-ipcountry`，供 App Router / middleware 二次把关
-- **App Router 备份：** `components/ChinaMainlandForceRedirect.tsx`（依赖注入后的 header）
-- **middleware 备份：** 根目录 `middleware.ts`（`countryFromWorkersRequest`）
+1. `assets.run_worker_first` vinext 排除列表（**禁止** boolean `true`，否则 CSS 404）
+2. 调试头 + 可选注入 `cf-ipcountry` 供 `/api/geo`
+3. **不**对任何 `request.cf.country` 做 HTML 302
 
 运维：
 
-1. 自测留在 Workers：`?china_workers_stay=1`（cookie 8h）；清除：`?china_workers_stay=0`
-2. `/api/health`、`/api/check`、`/api/geo` **永不** 跳转（扩展与机器调用不受影响）
-3. 调试：`GET /api/geo` → `{ country, cfCountry, headerCfIpCountry, forceRedirectCountries, rateNote }`；响应头应有 `x-buusdocst-china-wrap: 1`
-4. **先 staging 再 prod：** `npm run deploy:cloudflare:staging` → health → 再 `npm run deploy:cloudflare`
-5. Deploy 含 wrap + `--check`（`main=china-cf-entry.js`，`assets.run_worker_first=["/*","!/_next/static/*","!/*/_next/static/*"]` — **不要**用 boolean `true`，否则 CSS/JS 404）
-6. 线上若仍见产品页：看响应头 `x-buusdocst-china-wrap` / `x-buusdocst-cf-country`。`run_worker_first` 未开时 Assets 可能绕过 wrap（历史故障）。裸页 / 蓝 Run / 双 logo → 先查 `/_next/static/css/*.css` 是否 200（`npm run assert:prod-css-asset`）。
-7. TCP 超时到不了 Worker → **不会 302**；请直接打开本告知书。客户端兜底（zh-CN + Asia/Shanghai）仅在 Workers HTML 已加载时 `location.replace` 到本站。
+1. `/api/health`、`/api/check`、`/api/geo` **永不** 跳转
+2. 调试：`GET /api/geo` → `forceRedirectCountries: []`；响应头可有 `x-buusdocst-china-wrap: 1`
+3. **先 staging 再 prod** 部署 wrap 变更
+4. TCP 超时 → 直接打开本告知书（[LOCAL_CF_CONNECTIVITY.md](LOCAL_CF_CONNECTIVITY.md)）
+5. 软探测 `scripts/soft-china-redirect-probe.mjs`：断言 wrap 头；**不**期望 CN 302
 
-### 产品决策：仅 CN（不含 HK/MO）
+### 自定义域 / 非 workers.dev
 
-强制引导 **仅 `CN`**。`HK` / `MO` **不**强制跳转。若要纳入，须同步改 wrap 的 `FORCE_COUNTRIES` 与 `shared/china-workers-redirect.ts` 的 `CHINA_FORCE_REDIRECT_COUNTRIES`。
+自定义域（橙云 CNAME）**可能**改善连通，但不能保证；告知书入口始终保留。评估：[CUSTOM_DOMAIN_REDEPLOY.md](CUSTOM_DOMAIN_REDEPLOY.md)、[PUBLIC_PROMOTION.md](PUBLIC_PROMOTION.md)。
 
-### Dashboard 双保险（可选）
-
-Rules → Managed Transforms → **Add visitor location headers**，使 `CF-IPCountry` 与 `request.cf.country` 对齐（wrap 仍以 `cf.country` 为准）。
-
-### Logpush（有自定义域后）
-
-对齐过滤（与 stub path dump 同一工具链扩展）——**仅描述「能连上 Workers 时」的 CN 302**：
-
-- `EdgeResponseStatus=302`（或 `301`）
-- `ClientCountry=CN`
-- `EdgeResponseHeaders` / Location 含 `otas0.github.io`
-
-**不要**把该计数当作「大陆用户触达率」：连不上 Workers 的访客根本不会进 Logpush。大陆触达请用告知书渠道（Pages 打开、QR、商店/社媒）另行估算。
-
-**仪表盘注释（必加）：** 在任何 Cloudflare / Logpush 图表标题或说明中写明 **「非触达率 / not mainland reach rate」** — 仅表示「已连上 Workers 且 CF=CN 时的 302 样本」。
-
-ubuntu CI **不能**伪造 `request.cf.country`；软探测见 `scripts/soft-china-redirect-probe.mjs`（断言 wrap 头 + 记录非 CN 样本）。真实 CN 302 样本出现后贴进 [CI.md](CI.md) scrapbook。
-
-### 自定义域上线后复测
-
-按 [CUSTOM_DOMAIN_REDEPLOY.md](CUSTOM_DOMAIN_REDEPLOY.md) 切域后：
-
-1. `wrangler versions view <id> --json` → `raw_run_worker_first` 仍为 vinext 排除列表（**不是** boolean `false` 且无整表 Assets-first）
-2. `GET /api/health` → `x-buusdocst-china-wrap: 1`
-3. 大陆可达网络：HTML 对 CN 仍 302 → 本告知书
-
-### 非 workers.dev 入口（评估）
-
-`*.workers.dev` 在部分大陆网络 TCP 超时。自定义域（橙云 CNAME 到同一 Worker）**可能**改善连通，但不能保证；告知书入口始终保留。评估顺序：DNS 自定义域 → 大陆抽测 `/api/health` → 再决定是否把推广链切到自定义域（[PUBLIC_PROMOTION.md](PUBLIC_PROMOTION.md)）。
-
-### TCP 超时 ≠ 跳转失败
-
-大陆若 **连不上** `*.workers.dev`，请求到不了 Worker，**不会 302**，`/api/geo` 也打不开。请直接打开本告知书。见 [LOCAL_CF_CONNECTIVITY.md](LOCAL_CF_CONNECTIVITY.md)。
-
-服务端仅在 `request.cf.country=CN` 时 302（伪造 `CF-IPCountry` 无效）。浏览器为 zh-CN / zh-Hans 时，客户端脚本会 `location.replace` 到本站作为兜底——**同样要求 Workers HTML 已加载**。
+扩展 popup **不读 IP/国家**：只探测 `/api/health`。超时 ≠ 判定大陆。
 
 ### 如何让大陆用户「知道服务未开放」（不依赖 Workers）
 

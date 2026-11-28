@@ -55,9 +55,10 @@ Once per week (or before any China-facing post):
 1. Confirm public mainland copy uses **only** https://otas0.github.io/buusdocst/ ([PUBLIC_PROMOTION.md](PUBLIC_PROMOTION.md) 「面向大陆用户」— **no** Workers URL mixed in). `npm run assert:public-promotion` must stay green.
 2. Spot-check poster China QR label still reads「服务未开放 · 告知书」(`public/promo/poster.html`).
 3. Chrome listing Chinese field (if used) still pastes the mainland block; archive screenshot per [store-screenshots/ARCHIVE-china-listing-paste.md](store-screenshots/ARCHIVE-china-listing-paste.md).
-4. Do **not** treat Logpush CN→302 counts as mainland reach rate ([CHINA_GITHUB_PAGES.md](CHINA_GITHUB_PAGES.md) — dashboard annotation: **非触达率**).
-5. **github.io 抽测：** from one mainland-like path, `GET https://otas0.github.io/buusdocst/` (or browser). Log in the weekly note: `ok` / `slow` / `fail` + UTC date. If mostly `fail`, re-open the Gitee/CDN eval table in CHINA_GITHUB_PAGES. Optional automation: open issue from [`.github/ISSUE_TEMPLATE/weekly-ops-check.md`](../.github/ISSUE_TEMPLATE/weekly-ops-check.md) and tick the github.io box.
-6. After Chrome Web Store publish: `node scripts/set-chrome-webstore-url.mjs --url '<listing URL>'` (do not invent URLs).
+4. Logpush: **remove** any dashboard annotation that framed CN→Pages 302 as reach / **非触达率** — product no longer emits that 302 (2026-11-28). Do not revive CN-302 “reach” charts.
+5. **github.io 抽测：** from one mainland-like path, `GET https://otas0.github.io/buusdocst/` (or browser). Log: `ok` / `slow` / `fail` + UTC date. If mostly `fail`, re-open Gitee/CDN eval in CHINA_GITHUB_PAGES.
+6. **JP Workers 抽测：** open `https://buusdocst.mtsu.workers.dev/` from a Japan / non-CN path — must **not** land on github.io. Optional: [`.github/ISSUE_TEMPLATE/weekly-ops-check.md`](../.github/ISSUE_TEMPLATE/weekly-ops-check.md).
+7. After Chrome Web Store publish: `node scripts/set-chrome-webstore-url.mjs --url '<listing URL>'` (do not invent URLs).
 
 ### Weekly log (append)
 

@@ -26,10 +26,11 @@ Support only: a successful paste writes ISO timestamp `shieldListsLastPasteAt` t
 
 ## What it does
 
+- **Continuous watch** on every `http(s)` tab: navigation complete + tab focus run local signals and a soft `/api/check` (throttled per host). You do **not** press a Check button — the toolbar badge and page toasts update while you browse.
 - **Tracker blocking** via `declarativeNetRequest` and known tracker hosts (`rules/tracker_blocklist.json`).
-- **Phishing signals** in the background worker: lookalike organisation names, punycode sign-in paths, numeric hosts, and secrets placed in the link.
+- **Phishing signals** in the background worker: lookalike organisation names, brand-bait hosts, confusable lookalikes, punycode sign-in paths, numeric hosts, and secrets placed in the link.
 - **Page toasts** when a tracker or phishing pattern is blocked. Optional **Dismiss**: popup toggle **Toast dismiss button** (default off) writes `chrome.storage.local.shieldToastDismiss` and announces via `role="status"`. The service worker reads that flag and passes `dismiss: true|false` on every `SHIELD_TOAST`; the content script trusts that boolean only (no storage read). Button via `appendToastAction` under `data-testid="result-action-row"`.
-- **Popup** with one status word (Standby / Clear / Hold / Halt) and **Run**.
+- **Popup** is a **status readout** only (Standby / Clear / Hold / Halt, current host, counters). Opening it does not start a separate “check product” — it mirrors what the worker already watched.
 - **Website API mute announce** — when the popup level comes from `/api/check`, Trackers is muted and `aria-live` announces once; clear delay is `TRACKERS_ANNOUNCE_CLEAR_MS` in `shared/trackers-announce.mjs` (so a later API scan can re-announce).
 - Local UI strings for the supported locales.
 - **Privacy modes** — default never store; optional this-device log or diagnostics for support.
@@ -51,10 +52,10 @@ npm run safari:archive       # Release archive (needs Apple team signing)
 ## Chrome (developers — Load unpacked)
 
 1. Open `chrome://extensions` → Developer mode → **Load unpacked** → this `extension/` folder.
-2. Confirm Website API base is `https://buusdocst.mtsu.workers.dev` → **Run** on an https tab.
+2. Browse any `https` site — the worker scans on load/focus (toolbar badge + page toast). Open the popup only to read status.
 3. Do **not** tell end users to Load unpacked — ship via **`npm run pack:chrome-store`**.
 
-Local CF timeouts: [LOCAL_CF_CONNECTIVITY.md](../docs/LOCAL_CF_CONNECTIVITY.md).
+Local CF timeouts: [LOCAL_CF_CONNECTIVITY.md](../docs/LOCAL_CF_CONNECTIVITY.md). Mainland notice is Pages-only (`otas0.github.io/buusdocst`) — Workers no longer force-redirects by country; popup unreachable = connectivity, not a CN verdict ([CHINA_GITHUB_PAGES.md](../docs/CHINA_GITHUB_PAGES.md)).
 
 ## Safari (developers — Xcode)
 
@@ -81,6 +82,8 @@ xcrun safari-web-extension-converter "$(pwd)" \
 | API object | `chrome` (via `shared/browser-api.js`) | `browser` (same shim) |
 | Background | service worker + `importScripts` | same (no `background.type: module`) |
 | DNR match debug | optional `onRuleMatchedDebug` when available | not used; scan still counts trackers from page resources |
+
+Manual bait smoke (5 bait + 2 benign URLs): [../docs/CHECK_BAIT_SMOKE.md](../docs/CHECK_BAIT_SMOKE.md).
 
 ## Key files
 

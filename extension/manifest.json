@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "buusdo Cybersecurity Service Tool",
   "short_name": "buusdo",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "buusdo Cybersecurity Service Tool. Block known trackers and flag phishing-like URLs. EN / pt-PT. Storage defaults to off.",
   "homepage_url": "https://buusdocst.mtsu.workers.dev",
   "permissions": [

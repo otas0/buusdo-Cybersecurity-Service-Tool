@@ -1,20 +1,24 @@
 <!-- latest-deploy-run: 42482596754 2026-11-08T12:56:55Z -->
 # Local Cloudflare connectivity (do not misread timeouts)
 
-## China mainland: no load and no redirect (2026-11-25)
+## Japan / overseas Chinese: extension timeout ≠ mainland (2026-11-28)
 
-If `https://buusdocst.mtsu.workers.dev` **does not load** (spinner / TCP timeout) **and** you never land on `https://otas0.github.io/buusdocst/`:
+The extension **does not** read IP or CF country. It only probes `/api/health`. A timeout on a Japan (or other) network is **connectivity**, not a mainland verdict. Prefer “Open website” / retry; China Pages notice is for channels that cannot reach Workers.
+
+Workers **no longer** force-redirect by CF=CN (same date). Language SoftTip redirect is disabled. See [CHINA_GITHUB_PAGES.md](CHINA_GITHUB_PAGES.md).
+
+## China mainland: no load (and no Worker redirect) (2026-11-28)
+
+If `https://buusdocst.mtsu.workers.dev` **does not load** (spinner / TCP timeout):
 
 | Fact | Why |
 |------|-----|
-| Force-redirect runs **on the Worker** after Cloudflare accepts the request | Uses `request.cf.country === CN` via `dist/server/china-cf-entry.js` wrap |
-| TCP timeout to `*.workers.dev` means the request **never reaches** the Worker | Redirect code cannot run — open **https://otas0.github.io/buusdocst/** directly |
-| Worker deployed with Assets `run_worker_first=false` (CF default) | Matching static assets can skip the CN wrap — deploy must set vinext pattern `["/*","!/_next/static/*","!/*/_next/static/*"]` via wrap script |
-| Worker deployed with `run_worker_first: true` (boolean) | `/_next/static` CSS/JS 404 — vinext serves hashed build output only from Assets; never use boolean `true` |
-| Page loads but `x-buusdocst-cf-country` ≠ `CN` | CF did not mark CN (VPN/proxy/edge); client fallback may still `location.replace` for zh-CN + Asia/Shanghai |
-| Remote `/api/health` OK (Actions / another network) + local timeout | **Connectivity**, not a dead Worker — same table below |
+| Product **does not** 302 CN→Pages on Workers | Mainland often never reaches the Worker; country redirects only polluted reachable users |
+| TCP timeout means the request **never reaches** the Worker | Open **https://otas0.github.io/buusdocst/** directly (store / QR / promo) |
+| Wrap still sets `run_worker_first` + debug headers | `china-cf-entry.js` — empty `FORCE_COUNTRIES`; boolean `true` still 404s `/_next/static` |
+| Remote `/api/health` OK (Actions) + local timeout | **Connectivity**, not a dead Worker — same table below |
 
-Debug when CF **is** reachable: `GET /api/geo` → `{ cfCountry, headerCfIpCountry, forceRedirectCountries:["CN"] }`. Live wrap sets response header `x-buusdocst-china-wrap: 1`. Product: **CN only** (HK/MO not force-redirected). Optional Dashboard: enable Managed Transform **Add visitor location headers** so `CF-IPCountry` matches `request.cf.country`. Details: [CHINA_GITHUB_PAGES.md](CHINA_GITHUB_PAGES.md).
+Debug when CF **is** reachable: `GET /api/geo` → `{ cfCountry, forceRedirectCountries: [] }`. Wrap may still set `x-buusdocst-china-wrap: 1`. Details: [CHINA_GITHUB_PAGES.md](CHINA_GITHUB_PAGES.md).
 
 ## What happened (2026-11-08) — repeat timeout
 

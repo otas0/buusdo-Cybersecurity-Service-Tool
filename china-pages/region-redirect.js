@@ -1,10 +1,10 @@
 /**
  * Soft reach probe: China Pages stays on the notice; Workers open is manual.
  *
- * Workers (CF-IPCountry=CN) force-redirects mainland visitors here — do not
- * bounce back to Workers (that would loop). Health ok → show status +
- * "Open Workers" link. Opt out of probe UI: ?china_stay=1 → sessionStorage.
- * Clear: ?china_stay=0. Legacy buusdocst-china-stay in localStorage is cleared.
+ * Workers no longer force-redirect by CF country (2026-11-28). Health ok →
+ * show status + "Open Workers" link. Opt out of probe UI: ?china_stay=1 →
+ * sessionStorage. Clear: ?china_stay=0. Legacy buusdocst-china-stay in
+ * localStorage is cleared.
  *
  * Load sync in <head> (no defer).
  */
@@ -164,8 +164,8 @@
       "ok",
       isEn ? "Workers reachable" : "Workers 可达",
       isEn
-        ? "Mainland visitors on Workers are force-sent here. Open Workers manually when you need the full checker (no auto-bounce)."
-        : "大陆访客访问 Workers 时会被强制引导至本告知书。需要完整检查时请手动打开 Workers（不再自动跳转，以免循环）。"
+        ? "Workers reachable. Open the full checker manually when you need it (this notice is not a country redirect)."
+        : "Workers 可达。需要完整检查时请手动打开（本告知书不是按国家强制跳转落地）。"
     );
     ensureWorkersAnywayLink();
   }

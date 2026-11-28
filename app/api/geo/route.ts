@@ -24,20 +24,20 @@ export async function GET(request: Request) {
       /** Soft rate note — public debug; do not poll from hot paths. */
       rateNote:
         "Public debug: call sparingly (manual / CI soft job). Not for client hot loops.",
-      /** Product: only CN HTML is force-redirected (HK/MO stay on Workers). */
-      forceRedirectCountries: ["CN"],
+      /** Empty — Workers no longer force-redirect by CF country (2026-11-28). */
+      forceRedirectCountries: [] as string[],
       /**
-       * Docs-facing: deploy wrap sets assets.run_worker_first to this pattern
-       * (not boolean true). Live edge flag is on the Worker version; CI soft
-       * job also checks response header x-buusdocst-china-wrap.
+       * Docs-facing: wrap still stamps debug headers + run_worker_first.
+       * China notice is Pages-only (no Worker 302).
        */
       wrapHints: {
         runWorkerFirst: RUN_WORKER_FIRST,
         note:
-          "HTML CN→Pages needs china-cf-entry + run_worker_first pattern. If TCP to workers.dev fails, open https://otas0.github.io/buusdocst/ — no 302 can run. Spoofing CF-IPCountry does not override request.cf.country.",
+          "No HTML CN→Pages 302. If TCP to workers.dev fails, open https://otas0.github.io/buusdocst/ directly (store/QR/promo). Wrap keeps run_worker_first + debug headers only.",
         pagesOrigin: "https://otas0.github.io/buusdocst/",
         wrapHeader: "x-buusdocst-china-wrap",
-        countryHeader: "x-buusdocst-cf-country"
+        countryHeader: "x-buusdocst-cf-country",
+        forceRedirect: false
       }
     },
     {

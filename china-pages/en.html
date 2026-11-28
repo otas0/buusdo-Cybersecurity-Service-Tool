@@ -98,20 +98,17 @@
           </li>
           <li>
             From
-            <strong>23 November 2026</strong>:
-            if a visitor
-            <em>can</em>
-            reach Workers and Cloudflare marks them as mainland China (
-            <code>CF-IPCountry=CN</code>
-            ), HTML is force-redirected here so an unstable network is not mistaken for a working
-            checker.
-            <strong><code>/api/*</code> is never redirected.</strong>
+            <strong>28 November 2026</strong>:
+            Workers
+            <strong>no longer</strong>
+            force-redirects to this notice by Cloudflare country (mainland networks often cannot open Workers; country redirects only mis-route reachable users).
           </li>
           <li>
             If mainland TCP
             <em>cannot</em>
-            reach Workers: no redirect runs — that is why you must bookmark or scan
-            <strong>this page’s URL</strong>.
+            reach Workers: bookmark or scan
+            <strong>this page’s URL</strong>
+            (store / QR / promo / extension also point here) — do not wait for a redirect.
           </li>
         </ul>
         <p>
@@ -126,7 +123,7 @@
           <li>
             China mainland entry —
             <code>https://otas0.github.io/buusdocst/</code>
-            (this notice; mainland visitors are force-sent here from Workers)
+            (this notice; reached via store / QR / promo / extension — not a Worker country redirect)
           </li>
           <li>
             Workers full checker —
@@ -145,9 +142,8 @@
             to redirect.
           </li>
           <li>
-            <strong>If Workers is reachable and Cloudflare marks CN</strong>
-            : HTML is force-sent back here (ops opt-out:
-            <code>?china_workers_stay=1</code>).
+            <strong>If Workers is reachable</strong>
+            : use the product site normally; this notice remains the mainland explanation entry and is not forced by country code.
           </li>
           <li>
             <strong>Only on non-mainland, Cloudflare-reachable networks</strong>
@@ -161,7 +157,7 @@
             <strong>On Workers</strong>
             : Cloudflare
             <code>CF-IPCountry</code>
-            (only to decide the force-redirect — not for profiling or ads).
+            (debug country code only — not for force-redirect, profiling, or ads).
           </li>
           <li>
             <strong>On this page</strong>

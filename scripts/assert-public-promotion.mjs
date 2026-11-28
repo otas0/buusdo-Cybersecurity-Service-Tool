@@ -36,6 +36,15 @@ const banned = [
   /\bwww\./i
 ];
 
+/** Whole-doc ban: obsolete Worker CN force-redirect promises in paste-ready copy. */
+const bannedDocPhrases = [
+  /强制引导至此/,
+  /强制引导至该告知书/,
+  /force-redirect(?:s|ed)? them to that notice/i,
+  /CN force-redirect when Workers is reachable/i,
+  /CF=CN 时强制引导/i
+];
+
 let failed = false;
 let mainlandCount = 0;
 
@@ -95,6 +104,15 @@ if (mainlandCount < 1) {
     "[assert-public-promotion] expected ≥1 mainland-only paste block (heading 面向大陆)"
   );
   failed = true;
+}
+
+for (const re of bannedDocPhrases) {
+  if (re.test(text)) {
+    console.error(
+      `[assert-public-promotion] PUBLIC_PROMOTION.md still contains obsolete phrase ${re}`
+    );
+    failed = true;
+  }
 }
 
 if (failed) process.exit(1);

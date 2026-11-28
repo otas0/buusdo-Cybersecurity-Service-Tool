@@ -13,8 +13,8 @@
   - **Flip checklist:** (1) open latest schedule Privacy prod Summary → confirm `streak=3/3`; (2) `gh variable set EXT_UI_UNPARK_HARD --body 1`; (3) record UTC date below; (4) dry-run refuse: `node scripts/assert-ext-ui-unpark-hard-ready.mjs` (exits 0 only when env/artifact streak≥3).
   - **Flip date:** _not yet_ — awaiting three consecutive greens after soft-live streak wiring (`621c606`, 2026-11-23). Record here when set: `EXT_UI_UNPARK_HARD flipped YYYY-MM-DD` (leave blank until then).
 - Soft-live chart history CSV: privacy-prod appends `ci/soft-live-chart-history.csv` (artifact `soft-live-chart-history`) across schedule runs — see `scripts/append-soft-live-chart-history.mjs`.
-- Soft CI step **`Soft China wrap + /api/geo`**: runs `scripts/soft-china-redirect-probe.mjs` (**staging then prod** via `STAGING_HEALTH_URL` / `PRODUCTION_HEALTH_URL`). Asserts wrap header + `cfCountry` + `wrapHints.runWorkerFirst`. Does **not** assert CN→Pages 302 (ubuntu is rarely `CF=CN`). Real CN sample / Logpush: `302` + `ClientCountry=CN` + Location→`otas0.github.io`.
-- Deploy must run `wrap-worker-china-cf-redirect.mjs` then `--check` (`main=china-cf-entry.js`, `assets.binding=ASSETS`, vinext `run_worker_first` pattern) before `wrangler deploy`. Prefer **staging** before production when changing the wrap.
+- Soft CI step **`Soft China wrap + /api/geo`**: runs `scripts/soft-china-redirect-probe.mjs` (**staging then prod**). Asserts wrap header + `cfCountry` + `wrapHints.runWorkerFirst`. Product **does not** CN→Pages 302 (2026-11-28); `unexpectedCn302` should stay false after redeploy.
+- Deploy must run `wrap-worker-china-cf-redirect.mjs` then `--check` (`main=china-cf-entry.js`, empty `FORCE_COUNTRIES`, vinext `run_worker_first` pattern) before `wrangler deploy`. Prefer **staging** before production when changing the wrap.
 - **Workers version scrapbook (rollback):**
   - `65e336c7-39dd-4545-b165-e3e2cd9b219d` — 2026-11-25T03:56Z — first china-cf-entry wrap on prod (CN via `request.cf.country`)
   - `9afb5e10-3ba7-4cc5-902a-c8e2018f6cc0` — 2026-11-25T04:08Z — staging wrap harden (`x-buusdocst-china-wrap`, CN-only, `/api/geo` rateNote)
@@ -25,7 +25,7 @@
   - `f95a3438-3269-4b16-b0ce-a32423b91ca5` — 2026-11-28T07:25Z — staging ASSETS binding + zh-CN client harden (`e255f7e`)
   - `8f9221c9-10b1-41dc-a59d-2be320551daf` — 2026-11-28T07:26Z — prod ASSETS binding + zh-CN/`/api/geo` client fallback (`e255f7e`)
   - _2026-11-28 notice/popup/promo + stores/ARCHIVE soft batch — **no new Worker Version** (Pages + extension pack only; keep `8f9221c9…` until next wrap deploy)_
-  - **Next wrap deploy:** after `wrap-worker-china-cf-redirect.mjs` + `wrangler deploy`, paste the new staging/prod **Version ID** here (replace the “no new Worker Version” note). Do not leave scrapbook stale past the deploy PR.
+  - **Next wrap deploy (required):** empty `FORCE_COUNTRIES` (no CN→Pages 302) — after staging then prod `wrangler deploy`, paste new Version IDs here. Until then live edge may still 302 CN.
   - Record newer IDs here after each China-redirect-related prod / staging deploy.
 - Soft CI: when `shared/china-pages.json` `mirrorUrl` is non-empty, `scripts/soft-china-mirror-probe.mjs` compares notice markers to canonical Pages (empty → skip). Privacy-prod Job Summary on soft-live failure links [`ARCHIVE-china-listing-paste.md`](store-screenshots/ARCHIVE-china-listing-paste.md).
 

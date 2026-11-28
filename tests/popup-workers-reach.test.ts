@@ -7,12 +7,34 @@ import assert from "node:assert/strict";
 import { test } from "node:test";
 import {
   applyUnreachableUi,
+  prefersChinaNoticePrimary,
+  resolveChinaNoticePrimary,
   probeWorkersHealth,
-  CHINA_NOTICE_URL
+  formatUnreachableWithProbeMs,
+  CHINA_NOTICE_URL,
+  HEALTH_PROBE_MS
 } from "../extension/popup/workers-reach.mjs";
 
-test("probeWorkersHealth returns false when health ok", async () => {
-  const unreachable = await probeWorkersHealth({
+test("HEALTH_PROBE_MS is ≥8s to reduce JP false unreachable", () => {
+  assert.ok(HEALTH_PROBE_MS >= 8000);
+});
+
+test("prefersChinaNoticePrimary only for zh UI", () => {
+  assert.equal(prefersChinaNoticePrimary("zh-Hans"), true);
+  assert.equal(prefersChinaNoticePrimary("zh-Hant"), true);
+  assert.equal(prefersChinaNoticePrimary("ja"), false);
+  assert.equal(prefersChinaNoticePrimary("en"), false);
+});
+
+test("resolveChinaNoticePrimary: non-zh never primary; zh needs failStreak≥2", () => {
+  assert.equal(resolveChinaNoticePrimary({ lang: "ja", failStreak: 99 }), false);
+  assert.equal(resolveChinaNoticePrimary({ lang: "en", failStreak: 5 }), false);
+  assert.equal(resolveChinaNoticePrimary({ lang: "zh-Hans", failStreak: 1 }), false);
+  assert.equal(resolveChinaNoticePrimary({ lang: "zh-Hans", failStreak: 2 }), true);
+});
+
+test("probeWorkersHealth returns unreachable false when health ok", async () => {
+  const probe = await probeWorkersHealth({
     base: "https://example.test",
     fetchImpl: async () =>
       ({
@@ -20,11 +42,12 @@ test("probeWorkersHealth returns false when health ok", async () => {
         json: async () => ({ ok: true, service: "buusdocst" })
       }) as Response
   });
-  assert.equal(unreachable, false);
+  assert.equal(probe.unreachable, false);
+  assert.equal(probe.timedOut, false);
 });
 
-test("probeWorkersHealth returns true on timeout/abort", async () => {
-  const unreachable = await probeWorkersHealth({
+test("probeWorkersHealth returns unreachable true on timeout/abort", async () => {
+  const probe = await probeWorkersHealth({
     base: "https://example.test",
     timeoutMs: 20,
     fetchImpl: async (_url, init) =>
@@ -34,21 +57,30 @@ test("probeWorkersHealth returns true on timeout/abort", async () => {
         });
       })
   });
-  assert.equal(unreachable, true);
+  assert.equal(probe.unreachable, true);
+  assert.equal(probe.timedOut, true);
+  assert.ok(probe.ms >= 15);
 });
 
-test("probeWorkersHealth returns true when service mismatch", async () => {
-  const unreachable = await probeWorkersHealth({
+test("probeWorkersHealth returns unreachable true when service mismatch", async () => {
+  const probe = await probeWorkersHealth({
     fetchImpl: async () =>
       ({
         ok: true,
         json: async () => ({ ok: true, service: "other" })
       }) as Response
   });
-  assert.equal(unreachable, true);
+  assert.equal(probe.unreachable, true);
 });
 
-test("applyUnreachableUi hides manage when down and restores when up", () => {
+test("formatUnreachableWithProbeMs appends timing", () => {
+  assert.match(
+    formatUnreachableWithProbeMs("down", { ms: 8001, timedOut: true }),
+    /\[8001ms \(hit timeout\)\]/
+  );
+});
+
+test("applyUnreachableUi: non-zh puts Workers primary, China ghost", () => {
   const manage = {
     hidden: false,
     href: "https://buusdocst.mtsu.workers.dev/en/lists-offline",
@@ -58,24 +90,70 @@ test("applyUnreachableUi hides manage when down and restores when up", () => {
   } as HTMLAnchorElement & { href: string };
   const manageWrap = { hidden: false } as HTMLElement;
   const box = { hidden: true } as HTMLElement;
-  const cta = { href: "", textContent: "" } as HTMLAnchorElement;
+  const makeCta = () =>
+    ({
+      href: "",
+      textContent: "",
+      hidden: false,
+      classList: {
+        _s: new Set<string>(),
+        add(c: string) {
+          this._s.add(c);
+        },
+        remove(...cs: string[]) {
+          for (const c of cs) this._s.delete(c);
+        }
+      }
+    }) as unknown as HTMLAnchorElement;
+  const chinaCta = makeCta();
+  const workersCta = makeCta();
   const manageHint = { hidden: false, textContent: "" } as HTMLElement;
 
   const down = applyUnreachableUi(
-    { box, manage, manageWrap, manageHint, cta },
+    { box, manage, manageWrap, manageHint, chinaCta, workersCta },
     true,
-    { hintWhenDown: "down", ctaLabel: "Open notice" }
+    {
+      chinaPrimary: false,
+      chinaLabel: "Mainland notice",
+      workersLabel: "Open website",
+      hintWhenDown: "down"
+    }
   );
   assert.equal(down.manageHidden, true);
-  assert.equal(manage.hidden, true);
-  assert.equal(manageWrap.hidden, true);
-  assert.equal(box.hidden, false);
-  assert.equal(cta.href, CHINA_NOTICE_URL);
-  assert.match(CHINA_NOTICE_URL, /utm_source=extension/);
+  assert.equal(down.chinaPrimary, false);
+  assert.equal(chinaCta.href, CHINA_NOTICE_URL);
+  assert.ok((chinaCta.classList as unknown as { _s: Set<string> })._s.has("ghost-button"));
+  assert.ok((workersCta.classList as unknown as { _s: Set<string> })._s.has("primary-button"));
+});
 
-  const up = applyUnreachableUi({ box, manage, manageWrap, manageHint, cta }, false);
-  assert.equal(up.manageHidden, false);
-  assert.equal(manage.hidden, false);
-  assert.equal(manageWrap.hidden, false);
-  assert.equal(box.hidden, true);
+test("applyUnreachableUi: zh-Hans puts China notice primary", () => {
+  const makeCta = () =>
+    ({
+      href: "",
+      textContent: "",
+      hidden: false,
+      classList: {
+        _s: new Set<string>(),
+        add(c: string) {
+          this._s.add(c);
+        },
+        remove(...cs: string[]) {
+          for (const c of cs) this._s.delete(c);
+        }
+      }
+    }) as unknown as HTMLAnchorElement;
+  const chinaCta = makeCta();
+  const workersCta = makeCta();
+  const r = applyUnreachableUi(
+    {
+      box: { hidden: true } as HTMLElement,
+      chinaCta,
+      workersCta
+    },
+    true,
+    { chinaPrimary: true }
+  );
+  assert.equal(r.chinaPrimary, true);
+  assert.ok((chinaCta.classList as unknown as { _s: Set<string> })._s.has("primary-button"));
+  assert.ok((workersCta.classList as unknown as { _s: Set<string> })._s.has("ghost-button"));
 });

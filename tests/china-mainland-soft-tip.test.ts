@@ -1,5 +1,5 @@
 /**
- * Client mainland fallback must location.replace to Pages (not tip-only).
+ * SoftTip client redirect stays disabled / unused in layout (2026-11-28).
  *
  *   npx tsx --test tests/china-mainland-soft-tip.test.ts
  */
@@ -7,18 +7,20 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { test } from "node:test";
 
-test("ChinaMainlandSoftTip boots location.replace + data-testid", () => {
+test("ChinaMainlandSoftTip is no-op (no client redirect)", () => {
   const src = readFileSync("components/ChinaMainlandSoftTip.tsx", "utf8");
-  assert.match(src, /location\.replace/);
-  assert.match(src, /otas0\.github\.io\/buusdocst/);
-  assert.match(src, /data-testid=\"china-mainland-client-redirect-boot\"/);
-  assert.match(src, /china-mainland-client-redirect/);
-  assert.match(src, /\/api\/geo/);
-  assert.match(src, /zh-cn/);
-  assert.match(src, /zh-hans/);
-  assert.match(src, /Asia\\\\\/\(Shanghai/);
-  assert.doesNotMatch(src, /soft tip only/i);
+  assert.doesNotMatch(src, /location\.replace\s*\(/);
+  assert.doesNotMatch(src, /\/api\/geo/);
+  assert.match(src, /return null/);
+});
 
+test("layout does not mount SoftTip", () => {
   const layout = readFileSync("app/layout.tsx", "utf8");
-  assert.match(layout, /ChinaMainlandSoftTip/);
+  assert.doesNotMatch(layout, /ChinaMainlandSoftTip/);
+});
+
+test("geo API advertises empty forceRedirectCountries", () => {
+  const src = readFileSync("app/api/geo/route.ts", "utf8");
+  assert.match(src, /forceRedirectCountries:\s*\[\]/);
+  assert.match(src, /forceRedirect:\s*false/);
 });

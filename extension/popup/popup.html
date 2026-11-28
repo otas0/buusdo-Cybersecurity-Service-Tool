@@ -10,7 +10,7 @@
   <body>
     <header class="top">
       <h1 id="appTitle" class="brand-lockup" aria-label="buusdo Cybersecurity Service Tool">
-        <!-- popup.js swaps src only when theme path changes (avoids alt-text flash). -->
+        <!-- True path wordmark SVG — same assets as website AppShell. -->
         <img
           class="brand-logo"
           data-brand-wordmark="1"
@@ -29,9 +29,10 @@
     <main>
       <p class="readout" id="readout" data-level="idle" role="status" data-testid="extension-status">
         <span class="mark" aria-hidden="true"></span>
-        <span id="statusWord">Standby</span>
+        <span id="statusWord">Watching</span>
       </p>
-      <p id="statusDetail" class="detail">Watching this tab — alerts appear on the page.</p>
+      <p id="tabHost" class="tab-host" data-testid="extension-tab-host" hidden></p>
+      <p id="statusDetail" class="detail">Watching every tab — alerts appear on the page.</p>
 
       <dl class="counts" aria-label="This tab">
         <div>
@@ -64,14 +65,30 @@
         role="status"
       >
         <p id="apiUnreachableText" class="api-unreachable-text"></p>
-        <a
-          id="chinaNoticeCta"
-          class="primary-button china-notice-cta"
-          href="https://otas0.github.io/buusdocst/?utm_source=extension"
-          target="_blank"
-          rel="noreferrer"
-          data-testid="extension-china-notice-cta"
-        >Open China notice</a>
+        <div class="unreachable-actions">
+          <button
+            type="button"
+            id="workersRetryBtn"
+            class="ghost-button workers-retry-btn"
+            data-testid="extension-workers-retry"
+          >Retry probe</button>
+          <a
+            id="workersOpenCta"
+            class="primary-button workers-open-cta"
+            href="https://buusdocst.mtsu.workers.dev/?utm_source=extension"
+            target="_blank"
+            rel="noreferrer"
+            data-testid="extension-workers-open-cta"
+          >Open website</a>
+          <a
+            id="chinaNoticeCta"
+            class="ghost-button china-notice-cta"
+            href="https://otas0.github.io/buusdocst/?utm_source=extension"
+            target="_blank"
+            rel="noreferrer"
+            data-testid="extension-china-notice-cta"
+          >Mainland notice</a>
+        </div>
       </div>
     </main>
 

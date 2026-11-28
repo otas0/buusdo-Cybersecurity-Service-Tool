@@ -44,15 +44,25 @@ a { color: inherit; }
 
 .brand-logo {
   display: block;
-  height: 32px;
+  height: 40px;
   width: auto;
-  max-width: 200px;
+  max-width: min(220px, 72vw);
   aspect-ratio: 405 / 138;
   object-fit: contain;
   object-position: left center;
   background: transparent;
   border: 0;
+  flex-shrink: 1;
   image-rendering: auto;
+  min-width: 72px;
+  min-height: 32px;
+}
+
+.tab-host-hint {
+  margin: 0 0 6px;
+  font-size: 10px;
+  line-height: 1.3;
+  color: var(--muted);
 }
 
 /* Single wordmark SVG — popup.js swaps src by OS theme. */
@@ -80,12 +90,27 @@ a { color: inherit; }
 .readout[data-level="danger"] .mark { background: var(--halt); }
 .readout[data-level="idle"] .mark { background: var(--idle); }
 
+.tab-host {
+  margin: 0 0 6px;
+  font-family: var(--mono, ui-monospace, Menlo, monospace);
+  font-size: 11px;
+  letter-spacing: 0.02em;
+  color: var(--text);
+  word-break: break-all;
+  line-height: 1.3;
+}
+
+.tab-host[hidden] {
+  display: none;
+}
+
 .detail {
   margin: 0 0 10px;
   font-size: 12px;
   color: var(--muted);
   line-height: 1.35;
 }
+
 
 .counts {
   display: grid;
@@ -162,16 +187,20 @@ a { color: inherit; }
   color: var(--text);
 }
 
-.china-notice-cta.primary-button {
+.unreachable-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.unreachable-actions .primary-button,
+.unreachable-actions .ghost-button {
   display: flex;
   align-items: center;
   justify-content: center;
   width: 100%;
   min-height: 2.5rem;
   padding: 0 12px;
-  background: var(--halt);
-  color: var(--bg);
-  border: 0;
   border-radius: 0;
   font-family: var(--mono, ui-monospace, Menlo, monospace);
   font-size: 11px;
@@ -179,9 +208,28 @@ a { color: inherit; }
   text-transform: uppercase;
   text-decoration: none;
   cursor: pointer;
+  box-sizing: border-box;
 }
 
-.china-notice-cta.primary-button:focus-visible {
+.unreachable-actions button.ghost-button:disabled {
+  opacity: 0.55;
+  cursor: wait;
+}
+
+.unreachable-actions .primary-button {
+  background: var(--halt);
+  color: var(--bg);
+  border: 0;
+}
+
+.unreachable-actions .ghost-button {
+  background: transparent;
+  color: var(--text);
+  border: 1px solid var(--muted, #666);
+}
+
+.unreachable-actions .primary-button:focus-visible,
+.unreachable-actions .ghost-button:focus-visible {
   outline: 2px solid var(--text);
   outline-offset: 2px;
 }

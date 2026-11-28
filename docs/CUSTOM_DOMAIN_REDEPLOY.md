@@ -82,6 +82,15 @@ node scripts/soft-china-redirect-probe.mjs   # PRODUCTION_HEALTH_URL=https://YOU
 
 Record the Version ID in [CI.md](CI.md) scrapbook. Mainland TCP to a custom domain may improve vs `*.workers.dev` — still keep [China Pages](https://otas0.github.io/buusdocst/) as the **sole mainland explanation entry** ([CHINA_GITHUB_PAGES.md](CHINA_GITHUB_PAGES.md)). Do **not** replace the notice URL with the custom domain in mainland-facing posts; the custom domain is for CF-reachable product traffic.
 
+### Eval: Japan / intermittent `workers.dev` timeouts (not country)
+
+Custom domain on the **same** Worker can sometimes reduce Asia-path timeouts to `*.workers.dev` (ISP / filter quirks), independent of CF country. Eval when picking a host:
+
+1. From a Japan laptop (or JP VPS): time `GET /api/health` on `workers.dev` vs candidate custom host (same day, same network).
+2. If custom host is clearly faster / fewer exit-28, prefer it for **product** links (Settings, extension default base) after cutover.
+3. Keep China Pages URL for mainland **explanation** only — custom domain does not replace the notice.
+4. Record result here or in OPS weekly notes (`workers.dev` vs custom: ok/slow/fail). Hold cutover until DNS + `NEXT_PUBLIC_SITE_URL` checklist above is ready.
+
 ## 8. Checklist
 
 Mark the custom-domain rows in [LAUNCH_CHECKLIST.md](LAUNCH_CHECKLIST.md) § B.  
