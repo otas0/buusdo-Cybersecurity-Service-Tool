@@ -22,6 +22,8 @@
   - `0ed5b2b8-ff77-40bd-9adb-e59834f73f4d` — 2026-11-25T09:16Z — staging `run_worker_first=true` (`a2faadb`)
   - `39c96aca-aa53-46b5-806b-789b0868f14a` — 2026-11-25T09:17Z — prod `run_worker_first=true` + client hard fallback (`a2faadb`)
   - `b43e4a94-d04c-402a-96f0-b8ac3b23713b` — 2026-11-28T07:20Z — prod (pre client zh-CN harden; wrap live, JP sample)
+  - `f95a3438-3269-4b16-b0ce-a32423b91ca5` — 2026-11-28T07:25Z — staging ASSETS binding + zh-CN client harden (`e255f7e`)
+  - `8f9221c9-10b1-41dc-a59d-2be320551daf` — 2026-11-28T07:26Z — prod ASSETS binding + zh-CN/`/api/geo` client fallback (`e255f7e`)
   - Record newer IDs here after each China-redirect-related prod / staging deploy.
 
 - Optional Playwright job also runs on **schedule** (nightly) and includes `test:playwright:extension-china-stay-clear`.
