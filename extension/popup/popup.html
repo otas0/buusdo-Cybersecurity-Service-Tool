@@ -9,8 +9,8 @@
   </head>
   <body>
     <header class="top">
-      <h1 id="appTitle" class="brand-lockup">
-        <!-- popup.js swaps src with OS theme (one SVG). -->
+      <h1 id="appTitle" class="brand-lockup" aria-label="buusdo Cybersecurity Service Tool">
+        <!-- popup.js swaps src only when theme path changes (avoids alt-text flash). -->
         <img
           class="brand-logo"
           data-brand-wordmark="1"
@@ -19,8 +19,9 @@
           src="../icons/buusdo-wordmark.svg"
           width="117"
           height="40"
-          decoding="async"
-          alt="buusdo Cybersecurity Service Tool"
+          decoding="sync"
+          alt=""
+          aria-hidden="true"
         />
       </h1>
     </header>
@@ -66,7 +67,7 @@
         <a
           id="chinaNoticeCta"
           class="primary-button china-notice-cta"
-          href="https://otas0.github.io/buusdocst/"
+          href="https://otas0.github.io/buusdocst/?utm_source=extension"
           target="_blank"
           rel="noreferrer"
           data-testid="extension-china-notice-cta"

@@ -1,6 +1,7 @@
 {
   "url": "https://otas0.github.io/buusdocst/",
+  "mirrorUrl": "",
   "repo": "otas0/buusdo-Cybersecurity-Service-Tool",
-  "notes": "Notice-only China Pages (host repo otas0/buusdocst). Workers CF-IPCountry=CN force-redirects HTML to this notice; Pages probes Workers reachability and offers a manual open link (no auto-bounce). Source of truth: product repo china-pages/.",
+  "notes": "Notice-only China Pages (host repo otas0/buusdocst). Workers CF-IPCountry=CN force-redirects HTML to this notice; Pages probes Workers reachability and offers a manual open link (no auto-bounce). Source of truth: product repo china-pages/. Optional mirrorUrl: Gitee/CDN notice-only mirror when github.io is broadly unreachable (keep empty until decided — docs/CHINA_GITHUB_PAGES.md).",
   "pagesHostRepo": "otas0/buusdocst"
 }

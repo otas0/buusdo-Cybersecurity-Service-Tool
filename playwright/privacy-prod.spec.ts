@@ -533,7 +533,7 @@ test.describe("China Pages notice (soft)", () => {
     });
   }
 
-  test("China Pages notice title + service-closed status", async ({ page }) => {
+  test("China Pages notice title + service-closed status (zh)", async ({ page }) => {
     await page.goto(`${chinaBase}/?china_stay=1`, {
       waitUntil: "domcontentloaded",
       timeout: 45_000
@@ -544,7 +544,21 @@ test.describe("China Pages notice (soft)", () => {
     const closed = page.getByTestId("china-notice-service-closed");
     await expect(closed).toBeVisible({ timeout: 10_000 });
     await expect(closed).toContainText(/不提供|不承诺|does not offer|no promise|未开放/i);
-    console.info("[soft-live] China Pages notice title + service-closed ok");
+    console.info("[soft-live] China Pages notice title + service-closed ok (zh)");
+  });
+
+  test("China Pages en.html service-closed status", async ({ page }) => {
+    await page.goto(`${chinaBase}/en.html?china_stay=1`, {
+      waitUntil: "domcontentloaded",
+      timeout: 45_000
+    });
+    const title = page.getByTestId("china-notice-title");
+    await expect(title).toBeVisible({ timeout: 10_000 });
+    await expect(title).toContainText(/not offered on mainland|检查服务未开放/i);
+    const closed = page.getByTestId("china-notice-service-closed");
+    await expect(closed).toBeVisible({ timeout: 10_000 });
+    await expect(closed).toContainText(/does not offer|no promise|不提供|未开放/i);
+    console.info("[soft-live] China Pages en.html service-closed ok");
   });
 });
 

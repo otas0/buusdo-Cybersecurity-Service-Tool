@@ -73,6 +73,8 @@ Rules → Managed Transforms → **Add visitor location headers**，使 `CF-IPCo
 
 **不要**把该计数当作「大陆用户触达率」：连不上 Workers 的访客根本不会进 Logpush。大陆触达请用告知书渠道（Pages 打开、QR、商店/社媒）另行估算。
 
+**仪表盘注释（必加）：** 在任何 Cloudflare / Logpush 图表标题或说明中写明 **「非触达率 / not mainland reach rate」** — 仅表示「已连上 Workers 且 CF=CN 时的 302 样本」。
+
 ubuntu CI **不能**伪造 `request.cf.country`；软探测见 `scripts/soft-china-redirect-probe.mjs`（断言 wrap 头 + 记录非 CN 样本）。真实 CN 302 样本出现后贴进 [CI.md](CI.md) scrapbook。
 
 ### 自定义域上线后复测
@@ -116,7 +118,11 @@ Workers 不可达时，产品站无法展示任何文案。只能走 **Workers �
 2. 镜像 URL 写入 `shared/china-pages.json` 的可选 `mirrorUrl`，推广大陆块可并列，仍以 GitHub Pages 为 canonical。
 3. CI：镜像部署失败不得阻塞 Workers 发布；文档写明「双入口、同文案」。
 
-**当前决策（2026-11-28）：** 暂不建 Gitee/CDN 镜像；先保证告知书文案清晰 + 大陆渠道只推 Pages。每季用大陆抽测复评本表。
+**当前决策（2026-11-28）：** 暂不建 Gitee/CDN 镜像；先保证告知书文案清晰 + 大陆渠道只推 Pages。每季用大陆抽测复评本表。`shared/china-pages.json` 已预留 `"mirrorUrl": ""`（空 = 未启用）。
+
+### popup CTA `utm_source=extension`
+
+扩展不可达大按钮打开 `https://otas0.github.io/buusdocst/?utm_source=extension`（仍只开 Pages，不经 Workers）。用于日后若启用 Pages 分析时区分扩展来源；可去掉参数，不影响产品行为。
 
 ## Region soft probe（本站）
 

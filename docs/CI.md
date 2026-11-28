@@ -24,6 +24,7 @@
   - `b43e4a94-d04c-402a-96f0-b8ac3b23713b` — 2026-11-28T07:20Z — prod (pre client zh-CN harden; wrap live, JP sample)
   - `f95a3438-3269-4b16-b0ce-a32423b91ca5` — 2026-11-28T07:25Z — staging ASSETS binding + zh-CN client harden (`e255f7e`)
   - `8f9221c9-10b1-41dc-a59d-2be320551daf` — 2026-11-28T07:26Z — prod ASSETS binding + zh-CN/`/api/geo` client fallback (`e255f7e`)
+  - _2026-11-28 notice/popup/promo batch — **no new Worker Version** (Pages + extension pack only; keep `8f9221c9…` until next wrap deploy)_
   - Record newer IDs here after each China-redirect-related prod / staging deploy.
 
 - Optional Playwright job also runs on **schedule** (nightly) and includes `test:playwright:extension-china-stay-clear`.

@@ -96,3 +96,5 @@ https://otas0.github.io/buusdocst/
 ```
 
 Do **not** put `buusdocst.mtsu.workers.dev` as the only homepage for mainland-facing copy. Global EN short description may still use the Workers product URL; keep the China notice URL in the listing’s additional notes / China FRAME when the listing mentions mainland.
+
+After pasting: archive screenshot per [store-screenshots/ARCHIVE-china-listing-paste.md](store-screenshots/ARCHIVE-china-listing-paste.md).

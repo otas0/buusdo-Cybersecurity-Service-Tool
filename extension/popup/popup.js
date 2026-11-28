@@ -11,7 +11,8 @@ void API_BASE_FALLBACK_NOTICE_KEY;
 
 const BRAND_ALT = "buusdo Cybersecurity Service Tool";
 
-const CHINA_NOTICE_URL = "https://otas0.github.io/buusdocst/";
+/** Pages-only CTA; utm marks extension opens (not a Workers hop). */
+const CHINA_NOTICE_URL = "https://otas0.github.io/buusdocst/?utm_source=extension";
 const HEALTH_PROBE_MS = 4500;
 
 const els = {
@@ -41,7 +42,19 @@ function resolveSystemLang() {
   return normalizeUiLang(navigator.language || navigator.languages?.[0] || "en");
 }
 
-/** Apply OS color-scheme and swap the single wordmark SVG src. */
+function sameWordmarkSrc(img, next) {
+  const cur = img.getAttribute("src") || "";
+  if (cur === next) return true;
+  try {
+    return (
+      new URL(cur, location.href).pathname === new URL(next, location.href).pathname
+    );
+  } catch {
+    return cur.endsWith(next) || next.endsWith(cur);
+  }
+}
+
+/** Apply OS color-scheme and swap the single wordmark SVG src (only when path changes). */
 function applyThemeFromSystem() {
   const light = window.matchMedia("(prefers-color-scheme: light)").matches;
   document.documentElement.dataset.theme = light ? "light" : "dark";
@@ -50,9 +63,12 @@ function applyThemeFromSystem() {
   if (!img) return;
   const darkSrc = img.getAttribute("data-src-dark") || "../icons/buusdo-wordmark.svg";
   const lightSrc = img.getAttribute("data-src-light") || "../icons/buusdo-wordmark-on-light.svg";
-  img.setAttribute("src", light ? lightSrc : darkSrc);
-  img.setAttribute("alt", BRAND_ALT);
-  img.removeAttribute("aria-hidden");
+  const next = light ? lightSrc : darkSrc;
+  if (!sameWordmarkSrc(img, next)) img.setAttribute("src", next);
+  img.setAttribute("alt", "");
+  img.setAttribute("aria-hidden", "true");
+  const lockup = img.closest(".brand-lockup");
+  if (lockup) lockup.setAttribute("aria-label", BRAND_ALT);
 }
 
 function levelWord(lang, level) {
@@ -135,12 +151,33 @@ async function syncPrefsFromSystem(lang) {
 
 function paintUnreachable(lang, unreachable) {
   const box = els.apiUnreachable;
-  if (!box) return;
+  const manage = els.manageListsLink;
+  const manageWrap = manage?.closest?.("p.manage") || manage?.parentElement;
   if (!unreachable) {
-    box.hidden = true;
+    if (box) box.hidden = true;
+    if (manageWrap) manageWrap.hidden = false;
+    if (manage) manage.hidden = false;
+    if (els.manageListsHint) els.manageListsHint.hidden = false;
     return;
   }
-  box.hidden = false;
+  if (box) box.hidden = false;
+  // Workers lists URL is useless when health probe failed — hide / degrade.
+  if (manageWrap) manageWrap.hidden = true;
+  if (manage) {
+    manage.hidden = true;
+    manage.removeAttribute("href");
+  }
+  if (els.manageListsHint) {
+    els.manageListsHint.hidden = false;
+    els.manageListsHint.textContent =
+      lang === "zh-Hans"
+        ? "网站名单需 Workers；当前不可达 — 请先打开告知书。"
+        : lang === "zh-Hant"
+          ? "網站名單需 Workers；目前不可達 — 請先開啟告知書。"
+          : lang === "pt-PT"
+            ? "Listas no site precisam do Workers; inacessível — abra o aviso China."
+            : "Website lists need Workers; unreachable — open the China notice first.";
+  }
   if (els.apiUnreachableText) {
     els.apiUnreachableText.textContent =
       t(lang, "websiteApiCfUnreachable") ||
