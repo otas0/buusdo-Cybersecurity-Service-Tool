@@ -1,18 +1,15 @@
 #!/usr/bin/env node
 /**
- * Soft CN redirect probe for CF-reachable runners (ubuntu Actions).
+ * Soft China wrap probe for CF-reachable runners (ubuntu Actions).
  *
- * Cannot spoof request.cf.country from outside. This script:
+ * Product (2026-11-28): no CN→Pages 302. This script:
  * 1) Asserts wrap live (x-buusdocst-china-wrap) on /api/health
- * 2) Records non-CN sample (expected on ubuntu) + documents that a real CN
- *    302 must show Location → otas0.github.io when x-buusdocst-cf-country: CN
+ * 2) Records cf-country + notes HTML must NOT 302 to github.io by country
  * 3) Optionally checks staging first when STAGING_HEALTH_URL is set
  *
  *   node scripts/soft-china-redirect-probe.mjs
- *   PRODUCTION_HEALTH_URL=https://… STAGING_HEALTH_URL=https://… node scripts/soft-china-redirect-probe.mjs
  *
- * Exit 0 always for soft CI (prints ::notice:: / summary lines). Exit 1 only
- * when --strict and wrap header missing on prod.
+ * Exit 0 always for soft CI. Exit 1 only when --strict and wrap header missing.
  */
 import { writeFileSync } from "node:fs";
 
@@ -50,9 +47,8 @@ async function probe(base, label) {
     out.location = html.headers.get("location");
     out.htmlWrap = html.headers.get("x-buusdocst-china-wrap");
     out.htmlCountry = html.headers.get("x-buusdocst-cf-country");
-    // Real CN sample shape (for docs / Logpush alignment):
-    // status 302, country CN, Location hosts otas0.github.io
-    out.wouldBeCn302Shape =
+    // Legacy shape (should stay false after force-redirect disabled):
+    out.unexpectedCn302 =
       out.htmlCountry === "CN" &&
       (html.status === 302 || html.status === 301) &&
       String(out.location || "").includes("otas0.github.io");
@@ -71,7 +67,7 @@ results.push(await probe(prod, "prod"));
 const summary = {
   checkedAt: new Date().toISOString(),
   note:
-    "Ubuntu is rarely CF country CN — do not fail on missing 302. Fail soft/strict only when wrap header absent. Real CN 302: EdgeResponseStatus=302 + ClientCountry=CN + Location→otas0.github.io (Logpush).",
+    "No product CN→Pages 302 (2026-11-28). Soft/strict fail only when wrap header absent. unexpectedCn302 should stay false after redeploy.",
   results
 };
 
@@ -84,7 +80,7 @@ const lines = [
 ];
 for (const r of results) {
   lines.push(
-    `- **${r.label}** \`${r.base}\`: wrap=${r.wrap ? "yes" : "NO"} country=${r.country || r.htmlCountry || "?"} geo=${r.geoOk ? "ok" : "fail"} html=${r.htmlStatus} loc=${r.location || "—"} cn302sample=${r.wouldBeCn302Shape ? "yes" : "no"}`
+    `- **${r.label}** \`${r.base}\`: wrap=${r.wrap ? "yes" : "NO"} country=${r.country || r.htmlCountry || "?"} geo=${r.geoOk ? "ok" : "fail"} html=${r.htmlStatus} loc=${r.location || "—"} unexpectedCn302=${r.unexpectedCn302 ? "YES" : "no"}`
   );
   console.log(
     `::notice::soft-china-probe ${r.label} wrap=${r.wrap} country=${r.country || r.htmlCountry} html=${r.htmlStatus}`

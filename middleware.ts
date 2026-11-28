@@ -1,19 +1,15 @@
 /**
- * Mainland China (CF-IPCountry=CN) → force redirect to GitHub Pages notice.
- * Opt out for ops/tests: ?china_workers_stay=1 (cookie, 8h) · clear with =0.
- * API and static assets are never redirected.
+ * Product decision (2026-11-28): no CF-country force redirect to China Pages.
+ * Mainland users typically cannot reach *.workers.dev; country 302 only pollutes
+ * reachable traffic. Stay cookie still honored for legacy ?china_workers_stay=* bookmarks.
  *
- * Note: vinext’s Cloudflare Worker bundle may omit this file. Production
- * enforcement also lives in `components/ChinaMainlandForceRedirect.tsx`
- * (App Router pages). Keep both in sync via shared/china-workers-redirect.ts.
+ * Wrap `china-cf-entry.js` remains for run_worker_first + debug headers only
+ * (FORCE_COUNTRIES empty). Notice: https://otas0.github.io/buusdocst/
  */
 import { NextResponse, type NextRequest } from "next/server";
 import {
   CHINA_WORKERS_STAY_COOKIE,
   CHINA_WORKERS_STAY_PARAM,
-  chinaPagesDestForWorkersPath,
-  countryFromWorkersRequest,
-  isChinaForceCountry,
   shouldSkipChinaWorkersRedirect
 } from "./shared/china-workers-redirect";
 
@@ -41,30 +37,14 @@ export function middleware(req: NextRequest) {
       maxAge: 0,
       sameSite: "lax"
     });
-    // Fall through — may still redirect if country is CN.
-  } else if (req.cookies.get(CHINA_WORKERS_STAY_COOKIE)?.value === "1") {
-    return NextResponse.next();
+    return res;
   }
 
-  // Prefer request.cf.country (Workers) — CF-IPCountry header is often absent on workers.dev.
-  const country = countryFromWorkersRequest(
-    req as NextRequest & { cf?: { country?: string }; geo?: { country?: string } }
-  );
-
-  if (!isChinaForceCountry(country)) {
-    return NextResponse.next();
-  }
-
-  const dest = chinaPagesDestForWorkersPath(pathname);
-  return NextResponse.redirect(dest, 302);
+  return NextResponse.next();
 }
 
 export const config = {
   matcher: [
-    /*
-     * Match all paths except Next internals / common static prefixes.
-     * Fine-grained skips also live in shouldSkipChinaWorkersRedirect.
-     */
     "/((?!_next/static|_next/image|api/|favicon.ico|favicon.svg|favicon.png|robots.txt|sitemap.xml).*)"
   ]
 };

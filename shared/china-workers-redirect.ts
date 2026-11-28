@@ -1,6 +1,10 @@
 /**
- * Workers → China Pages force redirect when Cloudflare marks the visitor as CN.
- * Used by middleware.ts (edge) and unit tests.
+ * China Pages helpers + (legacy) Workers redirect hooks.
+ *
+ * Product decision (2026-11-28): **do not** force-redirect by CF country on Workers.
+ * Mainland users often cannot TCP to *.workers.dev — a CN 302 never helps them and
+ * mis-classifies reachable users (VPN / language / SoftTip). Notice is Pages-only
+ * via store / QR / promo — see docs/CHINA_GITHUB_PAGES.md.
  */
 import chinaPages from "./china-pages.json";
 
@@ -11,8 +15,8 @@ export const CHINA_PAGES_ORIGIN = String(
 export const CHINA_WORKERS_STAY_COOKIE = "buusdocst-china-workers-stay";
 export const CHINA_WORKERS_STAY_PARAM = "china_workers_stay";
 
-/** Cloudflare request country codes that force-bounce to the China notice. */
-export const CHINA_FORCE_REDIRECT_COUNTRIES = new Set(["CN"]);
+/** Empty = no Worker/middleware force-bounce by country (intentional). */
+export const CHINA_FORCE_REDIRECT_COUNTRIES = new Set<string>([]);
 
 export function isChinaForceCountry(country: string | null | undefined): boolean {
   const c = String(country || "")

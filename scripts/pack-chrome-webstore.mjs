@@ -80,8 +80,16 @@ writeFileSync(manifestPath, `${JSON.stringify(manifest, null, 2)}\n`, "utf8");
     console.error("[pack:chrome-store] popup.html missing extension-china-notice-cta");
     process.exit(1);
   }
+  if (!/extension-workers-open-cta/.test(popupHtml)) {
+    console.error("[pack:chrome-store] popup.html missing extension-workers-open-cta");
+    process.exit(1);
+  }
   if (!/utm_source=extension/.test(popupJs) || !/otas0\.github\.io\/buusdocst/.test(popupJs)) {
     console.error("[pack:chrome-store] popup.js missing China notice CTA + utm_source=extension");
+    process.exit(1);
+  }
+  if (!/resolveChinaNoticePrimary/.test(popupJs)) {
+    console.error("[pack:chrome-store] popup.js missing resolveChinaNoticePrimary (non-zh Workers-primary)");
     process.exit(1);
   }
   if (!existsSync(join(stage, "popup", "workers-reach.mjs"))) {

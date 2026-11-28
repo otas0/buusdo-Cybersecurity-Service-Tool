@@ -1,17 +1,15 @@
 /**
- * Post-build Worker wrap uses request.cf.country for CN→Pages.
+ * Post-build Worker wrap: debug headers + run_worker_first; no CN 302.
  *
  *   npx tsx --test tests/wrap-worker-china-cf-redirect.test.ts
  */
 import assert from "node:assert/strict";
-import { execFileSync, mkdtempSync, mkdirSync, writeFileSync, readFileSync, rmSync } from "node:fs";
+import { mkdtempSync, mkdirSync, writeFileSync, readFileSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { test } from "node:test";
 
-const root = path.resolve(".");
-
-test("wrap-worker-china-cf-redirect writes entry + sets wrangler main", () => {
+test("wrap-worker-china-cf-redirect keeps wrap headers; FORCE_COUNTRIES empty", () => {
   const dir = mkdtempSync(path.join(tmpdir(), "shield-wrap-cn-"));
   const server = path.join(dir, "dist/server");
   mkdirSync(server, { recursive: true });
@@ -20,14 +18,12 @@ test("wrap-worker-china-cf-redirect writes entry + sets wrangler main", () => {
     path.join(server, "wrangler.json"),
     JSON.stringify({ name: "buusdocst", main: "index.js" })
   );
-  // Script resolves china-pages from repo root — run from repo with DIST override? Script uses fixed paths.
-  // So run against real dist if present; else invoke after writing into repo dist — prefer unit on source.
   const src = readFileSync("scripts/wrap-worker-china-cf-redirect.mjs", "utf8");
   assert.match(src, /request\.cf/);
   assert.match(src, /FORCE_COUNTRIES/);
+  assert.match(src, /JSON\.stringify\(\[\]\)/);
   assert.match(src, /china-cf-entry\.js/);
   assert.match(src, /cf-ipcountry/);
-  assert.match(src, /Response\.redirect/);
   assert.match(src, /PAGES_ORIGIN/);
   assert.match(src, /x-buusdocst-china-wrap/);
   assert.match(src, /x-buusdocst-cf-country/);
@@ -37,6 +33,7 @@ test("wrap-worker-china-cf-redirect writes entry + sets wrangler main", () => {
   assert.match(src, /ASSETS/);
   assert.match(src, /--check/);
   assert.doesNotMatch(src, /run_worker_first:\s*true/);
+  assert.match(src, /FORCE_COUNTRIES is empty|never 302/i);
 
   const rwf = readFileSync("scripts/run-worker-first.mjs", "utf8");
   assert.match(rwf, /!\/_next\/static\/\*/);
@@ -59,7 +56,7 @@ test("run_worker_first pattern excludes /_next/static (boolean true 404s CSS)", 
   assert.ok(isValidRunWorkerFirst(RUN_WORKER_FIRST));
 });
 
-test("countryFromWorkersRequest prefers cf.country over header", async () => {
+test("countryFromWorkersRequest prefers cf.country; force list empty", async () => {
   const { countryFromWorkersRequest, isChinaForceCountry } = await import(
     "../shared/china-workers-redirect.ts"
   );
@@ -77,6 +74,6 @@ test("countryFromWorkersRequest prefers cf.country over header", async () => {
     }),
     "US"
   );
-  assert.ok(isChinaForceCountry("CN"));
+  assert.equal(isChinaForceCountry("CN"), false);
   assert.equal(isChinaForceCountry("US"), false);
 });

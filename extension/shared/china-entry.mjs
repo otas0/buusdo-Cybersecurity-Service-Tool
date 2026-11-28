@@ -1,5 +1,5 @@
 /**
- * China-facing GitHub Pages notice (告知书; Workers CN force-redirect target).
+ * China-facing GitHub Pages notice (告知书; Pages-only — Workers no longer force-redirects by country).
  * URL host: otas0/buusdocst → https://otas0.github.io/buusdocst/
  * Source of truth: otas0/buusdo-Cybersecurity-Service-Tool/china-pages/
  */

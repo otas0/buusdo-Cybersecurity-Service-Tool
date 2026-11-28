@@ -91,22 +91,17 @@
           </li>
           <li>
             自
-            <strong>2026 年 11 月 23 日</strong>
-            起：若访客
-            <em>能够</em>
-            连上 Workers，且 Cloudflare 判定为大陆（
-            <code>CF-IPCountry=CN</code>
-            ），HTML 会被强制引导至本告知书，以免误以为完整检查可用。
-            <strong>API（</strong>
-            <code>/api/*</code>
-            <strong>）不跳转。</strong>
+            <strong>2026 年 11 月 28 日</strong>
+            起：Workers
+            <strong>不再</strong>
+            按 Cloudflare 国家码强制跳转本告知书（大陆网络常打不开 Workers，强制跳转只会误伤能打开站点的用户）。
           </li>
           <li>
             若大陆网络
             <em>连不上</em>
-            Workers：不会发生任何跳转——这正是您需要收藏 / 扫码打开
+            Workers：请直接收藏 / 扫码打开
             <strong>本页 URL</strong>
-            的原因。
+            （商店 / 海报 / 扩展文案亦指向此处），勿等待跳转。
           </li>
         </ul>
         <p>
@@ -121,7 +116,7 @@
           <li>
             中国大陆入口（本站）—
             <code>https://otas0.github.io/buusdocst/</code>
-            （告知书；大陆访客从 Workers 被强制引导至此）
+            （告知书；经商店 / QR / 海报 / 扩展触达，非 Workers 强制跳转）
           </li>
           <li>
             Workers 完整检查站 —
@@ -140,10 +135,8 @@
             跳转。
           </li>
           <li>
-            <strong>若偶然连上 Workers 且 Cloudflare 判定为 CN</strong>
-            ：HTML 会被强制引导回本告知书（运维自测可用
-            <code>?china_workers_stay=1</code>
-            ）。
+            <strong>若偶然连上 Workers</strong>
+            ：可正常使用产品站；本告知书仍为大陆说明入口，不会因国家码被踢回。
           </li>
           <li>
             <strong>仅在非大陆、可稳定访问 Cloudflare 的网络</strong>
@@ -157,7 +150,7 @@
             <strong>Workers 侧</strong>
             ：Cloudflare 请求头
             <code>CF-IPCountry</code>
-            （仅用于是否强制引导至本告知书；不用于画像或广告）。
+            （调试用国家码，不用于强制跳转、画像或广告）。
           </li>
           <li>
             <strong>本页探测</strong>
@@ -189,7 +182,7 @@
             data-testid="china-notice-privacy-link"
             >https://buusdocst.mtsu.workers.dev/zh-Hans/privacy</a
           >
-          。大陆打开该链接常超时或被引导回本页。
+          。大陆打开该链接常超时；请以本告知书为准。
         </p>
 
         <h3>四、服务恢复</h3>

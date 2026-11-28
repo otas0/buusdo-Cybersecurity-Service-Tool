@@ -25,7 +25,7 @@ Do **not** use this block for mainland-only WeChat / store China fields (use 中
 buusdo Cybersecurity Service Tool (Buusdo product line).
 Check a website before you trust it.
 Product (Workers): https://buusdocst.mtsu.workers.dev
-China notice (mainland service not offered; CN force-redirect when Workers is reachable): https://otas0.github.io/buusdocst/
+China notice (mainland service not offered; Pages-only — Workers does not force-redirect by country): https://otas0.github.io/buusdocst/
 A4 poster: https://buusdocst.mtsu.workers.dev/promo/poster.html
 Privacy: https://buusdocst.mtsu.workers.dev/en/privacy
 ```
@@ -62,7 +62,7 @@ Only when the audience can reach Cloudflare (not mainland-only channels):
 buusdo Cybersecurity Service Tool（Buusdo 产品线）。
 访问网站前先核查地址。
 产品（Workers）：https://buusdocst.mtsu.workers.dev
-中国告知书（大陆服务未开放说明；可达 Workers 且 CF=CN 时强制引导至此）：https://otas0.github.io/buusdocst/
+中国告知书（大陆服务未开放说明；仅 Pages / 商店 / QR，Workers 不再按国家强制跳转）：https://otas0.github.io/buusdocst/
 A4 海报：https://buusdocst.mtsu.workers.dev/promo/poster.html
 隐私：https://buusdocst.mtsu.workers.dev/en/privacy
 ```
@@ -70,7 +70,7 @@ A4 海报：https://buusdocst.mtsu.workers.dev/promo/poster.html
 ## Do
 
 - Name the **product** (`buusdo Cybersecurity Service Tool`) and, when useful, the **line** (`Buusdo`) — never imply they are the same product.
-- Always show **Workers product** and **China Pages notice** as two distinct surfaces (API vs 告知书; CN HTML force-redirect when reachable).
+- Always show **Workers product** and **China Pages notice** as two distinct surfaces (API vs 告知书; Pages-only for mainland — no Worker country 302).
 - **Mainland-facing posts / WeChat / store / QR:** lead with「大陆检查服务未开放」+ **only** `https://otas0.github.io/buusdocst/` — never tell users to open Workers first.
 - Link **only** the canonical origin + privacy page(s) + the single China notice URL above (no install/privacy subpaths) when addressing CF-reachable audiences.
 - Always include privacy before asking people to use the product.

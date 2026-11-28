@@ -4,7 +4,6 @@ import './globals.css';
 import './shield.css';
 
 import { ChinaWorkersStayBoot } from '../components/ChinaMainlandForceRedirect';
-import { ChinaMainlandSoftTip } from '../components/ChinaMainlandSoftTip';
 import productionSite from '../shared/production-site.json';
 
 const explicitSiteUrl = process.env.NEXT_PUBLIC_SITE_URL?.trim();
@@ -42,25 +41,23 @@ export const metadata: Metadata = {
   },
 };
 
-/** Valid light|dark only; corrupt keys are removed and dark is forced. */
+/**
+ * Theme + wordmark boot. Never re-assign img.src to the same asset — that aborts the
+ * in-flight SVG and briefly paints alt text ("文字版 logo") on every refresh.
+ */
 const THEME_BOOT =
-  "(function(){try{var k='buusdocst-ui-theme';var t=localStorage.getItem(k);if(t==='light'||t==='dark'){document.documentElement.dataset.theme=t;document.documentElement.style.colorScheme=t;}else{if(t!=null){try{localStorage.removeItem(k);}catch(_){}}document.documentElement.dataset.theme='dark';document.documentElement.style.colorScheme='dark';}}catch(e){document.documentElement.dataset.theme='dark';document.documentElement.style.colorScheme='dark';}})();";
+  "(function(){function sameSrc(img,next){var cur=img.getAttribute('src')||'';if(cur===next)return true;try{return new URL(cur,location.href).pathname===new URL(next,location.href).pathname;}catch(_){return cur.endsWith(next)||next.endsWith(cur);}}function apply(t){document.documentElement.dataset.theme=t;document.documentElement.style.colorScheme=t;var img=document.querySelector('[data-brand-wordmark]');if(!img)return;var d=img.getAttribute('data-src-dark')||'/brand/buusdo-wordmark.svg';var l=img.getAttribute('data-src-light')||'/brand/buusdo-wordmark-on-light.svg';var next=t==='light'?l:d;if(!sameSrc(img,next))img.setAttribute('src',next);}try{var k='buusdocst-ui-theme';var t=localStorage.getItem(k);if(t!=='light'&&t!=='dark'){if(t!=null){try{localStorage.removeItem(k);}catch(_){}}t='dark';}apply(t);document.addEventListener('DOMContentLoaded',function(){apply(t);});}catch(e){apply('dark');document.addEventListener('DOMContentLoaded',function(){apply('dark');});}})();";
 
 /**
  * Critical instrument CSS inlined so a missing /_next/static/*.css (404) cannot
- * leave dual wordmarks + UA-blue Run. Full styles still come from shield.css.
+ * leave UA-blue Run. One wordmark img — theme swaps src (no dual-hide pair).
  */
 const CRITICAL_CSS = `
 .visually-hidden{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
 .shell{max-width:920px;margin:0 auto;padding:28px 28px 48px;color:var(--text,#f3f1ea)}
 .shell .top{display:flex;align-items:center;justify-content:space-between;gap:28px;padding:0 0 26px;border-bottom:1px solid rgba(243,241,234,.16);background:var(--bg,#0e0e0e)}
 .shell .brand-lockup{display:flex;align-items:center;margin:0}
-.shell .brand-logo{display:block;height:40px;width:auto;max-width:min(220px,55vw);object-fit:contain;background:transparent;border:0}
-.shell .brand-lockup img.brand-logo.brand-logo-on-light{display:none!important}
-html[data-theme="light"] .shell .brand-lockup img.brand-logo.brand-logo-on-dark,
-:root[data-theme="light"] .shell .brand-lockup img.brand-logo.brand-logo-on-dark{display:none!important}
-html[data-theme="light"] .shell .brand-lockup img.brand-logo.brand-logo-on-light,
-:root[data-theme="light"] .shell .brand-lockup img.brand-logo.brand-logo-on-light{display:block!important}
+.shell .brand-logo{display:block;height:40px;width:auto;min-width:72px;min-height:32px;max-width:min(220px,55vw);aspect-ratio:405/138;object-fit:contain;background:transparent;border:0}
 .shell .primary-button{background:#ff4d00;color:#0e0e0e;border:0;border-radius:0;padding:0 18px;min-height:2.5rem;font-family:ui-monospace,Menlo,monospace;font-size:12px;letter-spacing:.12em;text-transform:uppercase;cursor:pointer}
 .shell a,.shell .text-button{color:inherit;text-decoration:none}
 .shell .top-nav{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
@@ -78,7 +75,6 @@ export default function RootLayout({
         <style dangerouslySetInnerHTML={{ __html: CRITICAL_CSS }} />
         <script dangerouslySetInnerHTML={{ __html: THEME_BOOT }} />
         <ChinaWorkersStayBoot />
-        <ChinaMainlandSoftTip />
       </head>
       <body className="antialiased">
         {children}

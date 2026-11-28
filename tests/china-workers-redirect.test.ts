@@ -1,5 +1,5 @@
 /**
- * Workers → China Pages force-redirect helpers.
+ * China Pages helpers — force-redirect by CF country is disabled (2026-11-28).
  *
  *   npx tsx --test tests/china-workers-redirect.test.ts
  */
@@ -7,21 +7,23 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { test } from "node:test";
 import {
+  CHINA_FORCE_REDIRECT_COUNTRIES,
   CHINA_PAGES_ORIGIN,
   chinaPagesDestForWorkersPath,
   isChinaForceCountry,
   shouldSkipChinaWorkersRedirect
 } from "../shared/china-workers-redirect";
 
-test("CN country forces redirect; others do not", () => {
-  assert.equal(isChinaForceCountry("CN"), true);
-  assert.equal(isChinaForceCountry("cn"), true);
+test("no country forces Worker redirect (empty set)", () => {
+  assert.equal(CHINA_FORCE_REDIRECT_COUNTRIES.size, 0);
+  assert.equal(isChinaForceCountry("CN"), false);
+  assert.equal(isChinaForceCountry("cn"), false);
   assert.equal(isChinaForceCountry("US"), false);
   assert.equal(isChinaForceCountry(""), false);
   assert.equal(isChinaForceCountry(null), false);
 });
 
-test("pathname maps to zh index or en.html", () => {
+test("pathname still maps to zh index or en.html (Pages helpers)", () => {
   assert.equal(chinaPagesDestForWorkersPath("/"), `${CHINA_PAGES_ORIGIN}/`);
   assert.equal(chinaPagesDestForWorkersPath("/zh-Hans"), `${CHINA_PAGES_ORIGIN}/`);
   assert.equal(chinaPagesDestForWorkersPath("/zh-Hans/privacy"), `${CHINA_PAGES_ORIGIN}/`);
@@ -29,7 +31,7 @@ test("pathname maps to zh index or en.html", () => {
   assert.equal(chinaPagesDestForWorkersPath("/en/privacy"), `${CHINA_PAGES_ORIGIN}/en.html`);
 });
 
-test("API and static paths skip redirect", () => {
+test("API and static paths skip helpers", () => {
   assert.equal(shouldSkipChinaWorkersRedirect("/api/health"), true);
   assert.equal(shouldSkipChinaWorkersRedirect("/api/check"), true);
   assert.equal(shouldSkipChinaWorkersRedirect("/_next/static/x.js"), true);
@@ -39,21 +41,25 @@ test("API and static paths skip redirect", () => {
   assert.equal(shouldSkipChinaWorkersRedirect("/"), false);
 });
 
-test("middleware.ts wires CF country + stay param", () => {
+test("middleware.ts has no country 302", () => {
   const src = readFileSync("middleware.ts", "utf8");
-  assert.match(src, /countryFromWorkersRequest/);
   assert.match(src, /china_workers_stay/);
-  assert.match(src, /chinaPagesDestForWorkersPath/);
-  assert.match(src, /NextResponse\.redirect/);
+  assert.doesNotMatch(src, /NextResponse\.redirect/);
+  assert.doesNotMatch(src, /isChinaForceCountry/);
 });
 
-test("App Router enforces CN redirect (vinext may omit middleware)", () => {
+test("App Router enforce is no-op; SoftTip does not replace", () => {
   const page = readFileSync("app/[locale]/[[...slug]]/page.tsx", "utf8");
   const root = readFileSync("app/page.tsx", "utf8");
   const boot = readFileSync("components/ChinaMainlandForceRedirect.tsx", "utf8");
+  const soft = readFileSync("components/ChinaMainlandSoftTip.tsx", "utf8");
   assert.match(page, /enforceChinaMainlandForceRedirect/);
   assert.match(root, /enforceChinaMainlandForceRedirect/);
-  assert.match(boot, /cf-ipcountry/i);
-  assert.match(boot, /ChinaWorkersStayBoot/);
-  assert.match(readFileSync("app/layout.tsx", "utf8"), /ChinaWorkersStayBoot/);
+  assert.match(boot, /no-op|Product decision/i);
+  assert.doesNotMatch(boot, /redirect\(/);
+  assert.doesNotMatch(soft, /location\.replace\s*\(/);
+  assert.match(soft, /return null/);
+  const layout = readFileSync("app/layout.tsx", "utf8");
+  assert.match(layout, /ChinaWorkersStayBoot/);
+  assert.doesNotMatch(layout, /ChinaMainlandSoftTip/);
 });
