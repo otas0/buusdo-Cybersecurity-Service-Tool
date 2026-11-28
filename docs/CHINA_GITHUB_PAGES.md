@@ -65,11 +65,13 @@ Rules → Managed Transforms → **Add visitor location headers**，使 `CF-IPCo
 
 ### Logpush（有自定义域后）
 
-对齐过滤（与 stub path dump 同一工具链扩展）：
+对齐过滤（与 stub path dump 同一工具链扩展）——**仅描述「能连上 Workers 时」的 CN 302**：
 
 - `EdgeResponseStatus=302`（或 `301`）
 - `ClientCountry=CN`
 - `EdgeResponseHeaders` / Location 含 `otas0.github.io`
+
+**不要**把该计数当作「大陆用户触达率」：连不上 Workers 的访客根本不会进 Logpush。大陆触达请用告知书渠道（Pages 打开、QR、商店/社媒）另行估算。
 
 ubuntu CI **不能**伪造 `request.cf.country`；软探测见 `scripts/soft-china-redirect-probe.mjs`（断言 wrap 头 + 记录非 CN 样本）。真实 CN 302 样本出现后贴进 [CI.md](CI.md) scrapbook。
 
@@ -100,7 +102,21 @@ Workers 不可达时，产品站无法展示任何文案。只能走 **Workers �
 3. **扩展不可达文案**（指向告知书，写明勿等跳转）
 4. **商店 / 社媒 / 线下** 粘贴 [PUBLIC_PROMOTION.md](PUBLIC_PROMOTION.md)「面向大陆用户」块
 
-若 GitHub Pages 在部分网络也慢，再评估国内可访问的静态托管镜像（仍只放告知书，不放完整检查）。
+### 评估：Gitee / 国内 CDN 镜像（仅告知书）
+
+| 选项 | 利 | 弊 | 建议 |
+|------|----|----|------|
+| 继续仅 GitHub Pages | 与现有 Actions `pages-china` 同源；零额外账号 | 部分大陆网络访问 `github.io` 也慢 | **默认保留** |
+| Gitee Pages 镜像 | 国内解析可能更好 | 需人工/CI 双推；内容漂移风险；Gitee 审核与可用性不稳定 | 仅当抽测显示多数目标用户打不开 `otas0.github.io` 时再开 |
+| 国内对象存储 + CDN（COS/OSS） | 可控、快 | 成本、备案/合规、密钥运维 | 有备案与预算后再评估 |
+
+**约束（若上镜像）：**
+
+1. **只托管告知书同源文案**（`china-pages/` 同步），**禁止**放完整检查 UI 或 `/api/check` 代理。
+2. 镜像 URL 写入 `shared/china-pages.json` 的可选 `mirrorUrl`，推广大陆块可并列，仍以 GitHub Pages 为 canonical。
+3. CI：镜像部署失败不得阻塞 Workers 发布；文档写明「双入口、同文案」。
+
+**当前决策（2026-11-28）：** 暂不建 Gitee/CDN 镜像；先保证告知书文案清晰 + 大陆渠道只推 Pages。每季用大陆抽测复评本表。
 
 ## Region soft probe（本站）
 

@@ -11,6 +11,9 @@ void API_BASE_FALLBACK_NOTICE_KEY;
 
 const BRAND_ALT = "buusdo Cybersecurity Service Tool";
 
+const CHINA_NOTICE_URL = "https://otas0.github.io/buusdocst/";
+const HEALTH_PROBE_MS = 4500;
+
 const els = {
   readout: document.getElementById("readout"),
   statusWord: document.getElementById("statusWord"),
@@ -21,8 +24,10 @@ const els = {
   phishingValue: document.getElementById("phishingValue"),
   manageListsLink: document.getElementById("manageListsLink"),
   manageListsHint: document.getElementById("manageListsHint"),
-  wordmarkDark: document.querySelector(".brand-lockup img.brand-logo.brand-logo-on-dark"),
-  wordmarkLight: document.querySelector(".brand-lockup img.brand-logo.brand-logo-on-light")
+  apiUnreachable: document.getElementById("apiUnreachable"),
+  apiUnreachableText: document.getElementById("apiUnreachableText"),
+  chinaNoticeCta: document.getElementById("chinaNoticeCta"),
+  wordmark: document.querySelector(".brand-lockup img[data-brand-wordmark], .brand-lockup img.brand-logo")
 };
 
 function resolveSystemLang() {
@@ -36,25 +41,18 @@ function resolveSystemLang() {
   return normalizeUiLang(navigator.language || navigator.languages?.[0] || "en");
 }
 
-/** Apply OS color-scheme and expose only the visible wordmark to assistive tech. */
+/** Apply OS color-scheme and swap the single wordmark SVG src. */
 function applyThemeFromSystem() {
   const light = window.matchMedia("(prefers-color-scheme: light)").matches;
   document.documentElement.dataset.theme = light ? "light" : "dark";
   document.documentElement.style.colorScheme = light ? "light" : "dark";
-  const dark = els.wordmarkDark;
-  const lightImg = els.wordmarkLight;
-  if (!dark || !lightImg) return;
-  if (light) {
-    dark.setAttribute("alt", "");
-    dark.setAttribute("aria-hidden", "true");
-    lightImg.setAttribute("alt", BRAND_ALT);
-    lightImg.removeAttribute("aria-hidden");
-  } else {
-    lightImg.setAttribute("alt", "");
-    lightImg.setAttribute("aria-hidden", "true");
-    dark.setAttribute("alt", BRAND_ALT);
-    dark.removeAttribute("aria-hidden");
-  }
+  const img = els.wordmark;
+  if (!img) return;
+  const darkSrc = img.getAttribute("data-src-dark") || "../icons/buusdo-wordmark.svg";
+  const lightSrc = img.getAttribute("data-src-light") || "../icons/buusdo-wordmark-on-light.svg";
+  img.setAttribute("src", light ? lightSrc : darkSrc);
+  img.setAttribute("alt", BRAND_ALT);
+  img.removeAttribute("aria-hidden");
 }
 
 function levelWord(lang, level) {
@@ -135,6 +133,47 @@ async function syncPrefsFromSystem(lang) {
   }
 }
 
+function paintUnreachable(lang, unreachable) {
+  const box = els.apiUnreachable;
+  if (!box) return;
+  if (!unreachable) {
+    box.hidden = true;
+    return;
+  }
+  box.hidden = false;
+  if (els.apiUnreachableText) {
+    els.apiUnreachableText.textContent =
+      t(lang, "websiteApiCfUnreachable") ||
+      "Cannot reach workers.dev (timeout). Open the China notice — do not wait for a redirect.";
+  }
+  if (els.chinaNoticeCta) {
+    els.chinaNoticeCta.href = CHINA_NOTICE_URL;
+    els.chinaNoticeCta.textContent =
+      t(lang, "websiteApiChinaNoticeLink") || "Open China notice";
+  }
+}
+
+async function probeWorkersHealth() {
+  const base = String(DEFAULT_API_BASE || "https://buusdocst.mtsu.workers.dev").replace(/\/$/, "");
+  const ctrl = new AbortController();
+  const timer = setTimeout(() => ctrl.abort(), HEALTH_PROBE_MS);
+  try {
+    const res = await fetch(`${base}/api/health`, {
+      method: "GET",
+      credentials: "omit",
+      cache: "no-store",
+      signal: ctrl.signal
+    });
+    clearTimeout(timer);
+    if (!res.ok) return true;
+    const j = await res.json().catch(() => null);
+    return !(j && j.ok === true && j.service === "buusdocst");
+  } catch {
+    clearTimeout(timer);
+    return true;
+  }
+}
+
 async function refresh() {
   const lang = resolveSystemLang();
   document.documentElement.lang = lang === "pt-PT" ? "pt" : lang;
@@ -148,6 +187,8 @@ async function refresh() {
     state = null;
   }
   paint(lang, state);
+  const unreachable = await probeWorkersHealth();
+  paintUnreachable(lang, unreachable);
 }
 
 applyThemeFromSystem();

@@ -17,31 +17,33 @@ After a custom domain, `npm run production:origin -- https://YOUR_CANONICAL` rew
 
 **Print QA:** one physical A4 at **100%** / margins **None** / background graphics On ([promo/README.md](promo/README.md)).
 
-## Ready-to-paste (EN)
+## Ready-to-paste (EN · CF-reachable / global)
+
+Do **not** use this block for mainland-only WeChat / store China fields (use 中文 · 大陆 below).
 
 ```
 buusdo Cybersecurity Service Tool (Buusdo product line).
 Check a website before you trust it.
 Product (Workers): https://buusdocst.mtsu.workers.dev
-China notice (告知书; CN force-redirect from Workers): https://otas0.github.io/buusdocst/
+China notice (mainland service not offered; CN force-redirect when Workers is reachable): https://otas0.github.io/buusdocst/
 A4 poster: https://buusdocst.mtsu.workers.dev/promo/poster.html
 Privacy: https://buusdocst.mtsu.workers.dev/en/privacy
 ```
 
-## Ready-to-paste (alternate locale)
+## Ready-to-paste (pt-PT · CF-reachable / global)
 
 ```
 buusdo Cybersecurity Service Tool (linha Buusdo).
 Verifique um site antes de confiar.
 Produto (Workers): https://buusdocst.mtsu.workers.dev
-Aviso China (aviso + auto-guia): https://otas0.github.io/buusdocst/
+Aviso China (serviço não oferecido no continente; redirecionamento CN se Workers for alcançável): https://otas0.github.io/buusdocst/
 Cartaz A4: https://buusdocst.mtsu.workers.dev/promo/poster.html
 Privacidade: https://buusdocst.mtsu.workers.dev/en/privacy
 ```
 
-## Ready-to-paste (中文 · 面向大陆用户)
+## Ready-to-paste (中文 · 面向大陆用户) — **no Workers URL**
 
-大陆网络常无法打开 `workers.dev`，**也不会自动跳转**。面向大陆只发告知书链接 / 二维码：
+大陆网络常无法打开 `workers.dev`，**也不会自动跳转**。面向大陆只发告知书链接 / 二维码（禁止混发 Workers）：
 
 ```
 【重要】buusdo Cybersecurity Service Tool
@@ -51,6 +53,8 @@ https://otas0.github.io/buusdocst/
 ```
 
 ## Ready-to-paste (中文 · 全球 / 可访问 Cloudflare 时)
+
+Only when the audience can reach Cloudflare (not mainland-only channels):
 
 ```
 buusdo Cybersecurity Service Tool（Buusdo 产品线）。

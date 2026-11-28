@@ -48,6 +48,16 @@ See [LAUNCH_CHECKLIST.md](LAUNCH_CHECKLIST.md) § check:prod log.
 - Account sync → [ACCOUNT_SYNC_GATE.md](ACCOUNT_SYNC_GATE.md) (Turso + Resend first)
 - vinext 1.4 → only after 48h freeze → `chore/vinext-1-4-eval` ([VINEXT_UPGRADE_1_4.md](VINEXT_UPGRADE_1_4.md))
 
+## Weekly — mainland channels (告知书 only)
+
+Once per week (or before any China-facing post):
+
+1. Confirm public mainland copy uses **only** https://otas0.github.io/buusdocst/ ([PUBLIC_PROMOTION.md](PUBLIC_PROMOTION.md) 「面向大陆用户」— **no** Workers URL mixed in).
+2. Spot-check poster China QR label still reads「服务未开放 · 告知书」(`public/promo/poster.html`).
+3. Chrome listing Chinese field (if used) still pastes the mainland block from [CHROME_STORE_LISTING_DRAFT.md](CHROME_STORE_LISTING_DRAFT.md).
+4. Do **not** treat Logpush CN→302 counts as mainland reach rate ([CHINA_GITHUB_PAGES.md](CHINA_GITHUB_PAGES.md)).
+5. Optional: open the notice URL from a mainland-like network; if GitHub Pages is broadly unreachable, re-open the Gitee/CDN eval table in CHINA_GITHUB_PAGES.
+
 ## Baselines & connectivity
 
 - Workers metrics PNGs → [WORKERS_ERROR_BASELINE.md](WORKERS_ERROR_BASELINE.md)

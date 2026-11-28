@@ -10,23 +10,17 @@
   <body>
     <header class="top">
       <h1 id="appTitle" class="brand-lockup">
-        <!-- popup.js swaps alt / aria-hidden with OS theme so only the visible mark is named. -->
+        <!-- popup.js swaps src with OS theme (one SVG). -->
         <img
-          class="brand-logo brand-logo-on-dark"
+          class="brand-logo"
+          data-brand-wordmark="1"
+          data-src-dark="../icons/buusdo-wordmark.svg"
+          data-src-light="../icons/buusdo-wordmark-on-light.svg"
           src="../icons/buusdo-wordmark.svg"
           width="117"
           height="40"
           decoding="async"
           alt="buusdo Cybersecurity Service Tool"
-        />
-        <img
-          class="brand-logo brand-logo-on-light"
-          src="../icons/buusdo-wordmark-on-light.svg"
-          width="117"
-          height="40"
-          decoding="async"
-          alt=""
-          aria-hidden="true"
         />
       </h1>
     </header>
@@ -60,6 +54,24 @@
         >Manage block &amp; trust lists</a>
       </p>
       <p id="manageListsHint" class="hint">Lists open on the website — not in this popup.</p>
+
+      <div
+        id="apiUnreachable"
+        class="api-unreachable"
+        hidden
+        data-testid="extension-api-unreachable"
+        role="status"
+      >
+        <p id="apiUnreachableText" class="api-unreachable-text"></p>
+        <a
+          id="chinaNoticeCta"
+          class="primary-button china-notice-cta"
+          href="https://otas0.github.io/buusdocst/"
+          target="_blank"
+          rel="noreferrer"
+          data-testid="extension-china-notice-cta"
+        >Open China notice</a>
+      </div>
     </main>
 
     <script type="module" src="popup.js"></script>

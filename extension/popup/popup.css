@@ -3,7 +3,7 @@
 html, body {
   margin: 0;
   width: 300px;
-  max-height: 280px;
+  max-height: 360px;
   overflow: hidden;
   background: var(--bg);
   color: var(--text);
@@ -55,20 +55,7 @@ a { color: inherit; }
   image-rendering: auto;
 }
 
-/* Cream mark on dark field; charcoal-on-cream plate for light OS theme.
- * Same lockup selectors as app/shield.css — !important beats .brand-logo { display:block }.
- * popup.js swaps alt / aria-hidden so only the visible mark is announced. */
-.brand-lockup img.brand-logo.brand-logo-on-light {
-  display: none !important;
-}
-html[data-theme="light"] .brand-lockup img.brand-logo.brand-logo-on-dark,
-:root[data-theme="light"] .brand-lockup img.brand-logo.brand-logo-on-dark {
-  display: none !important;
-}
-html[data-theme="light"] .brand-lockup img.brand-logo.brand-logo-on-light,
-:root[data-theme="light"] .brand-lockup img.brand-logo.brand-logo-on-light {
-  display: block !important;
-}
+/* Single wordmark SVG — popup.js swaps src by OS theme. */
 
 .readout {
   display: flex;
@@ -156,4 +143,45 @@ html[data-theme="light"] .brand-lockup img.brand-logo.brand-logo-on-light,
   font-size: 11px;
   color: var(--muted);
   line-height: 1.35;
+}
+
+.api-unreachable {
+  margin: 12px 0 0;
+  padding: 10px 0 0;
+  border-top: 1px solid var(--halt);
+}
+
+.api-unreachable[hidden] {
+  display: none;
+}
+
+.api-unreachable-text {
+  margin: 0 0 10px;
+  font-size: 12px;
+  line-height: 1.4;
+  color: var(--text);
+}
+
+.china-notice-cta.primary-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 2.5rem;
+  padding: 0 12px;
+  background: var(--halt);
+  color: var(--bg);
+  border: 0;
+  border-radius: 0;
+  font-family: var(--mono, ui-monospace, Menlo, monospace);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.china-notice-cta.primary-button:focus-visible {
+  outline: 2px solid var(--text);
+  outline-offset: 2px;
 }

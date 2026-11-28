@@ -81,6 +81,18 @@ Rebuild FRAMEs after brand sync: `npm run sync:brand-web && npm run capture:stor
 
 `https://buusdocst.mtsu.workers.dev`
 
-## China notice (告知书; Workers CN force-redirect)
+## China notice (告知书; mainland service not offered)
 
 `https://otas0.github.io/buusdocst/`
+
+### Chrome Web Store — Chinese / regional description paste
+
+When the Dashboard offers a Chinese (or “China”) locale description field, paste:
+
+```
+【重要】中国大陆地区：完整网站检查服务未开放、不作可用性承诺。
+请阅读官方告知书（勿等待 workers.dev 跳转）：
+https://otas0.github.io/buusdocst/
+```
+
+Do **not** put `buusdocst.mtsu.workers.dev` as the only homepage for mainland-facing copy. Global EN short description may still use the Workers product URL; keep the China notice URL in the listing’s additional notes / China FRAME when the listing mentions mainland.

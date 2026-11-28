@@ -80,7 +80,7 @@ curl -sSI https://YOUR_CANONICAL/api/health | grep -i x-buusdocst-china-wrap
 node scripts/soft-china-redirect-probe.mjs   # PRODUCTION_HEALTH_URL=https://YOUR_CANONICAL
 ```
 
-Record the Version ID in [CI.md](CI.md) scrapbook. Mainland TCP to a custom domain may improve vs `*.workers.dev` — still keep [China Pages](https://otas0.github.io/buusdocst/) as the notice entry ([CHINA_GITHUB_PAGES.md](CHINA_GITHUB_PAGES.md)).
+Record the Version ID in [CI.md](CI.md) scrapbook. Mainland TCP to a custom domain may improve vs `*.workers.dev` — still keep [China Pages](https://otas0.github.io/buusdocst/) as the **sole mainland explanation entry** ([CHINA_GITHUB_PAGES.md](CHINA_GITHUB_PAGES.md)). Do **not** replace the notice URL with the custom domain in mainland-facing posts; the custom domain is for CF-reachable product traffic.
 
 ## 8. Checklist
 

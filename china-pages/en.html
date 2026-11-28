@@ -137,19 +137,21 @@
         </ul>
         <ol>
           <li>
-            <strong>Open Workers from mainland China</strong>
-            : force-redirect to this notice (ops opt-out:
+            <strong>Mainland readers</strong>
+            : this notice is the only official explanation entry; full checking is
+            <strong>not offered</strong>
+            — do not wait for
+            <code>workers.dev</code>
+            to redirect.
+          </li>
+          <li>
+            <strong>If Workers is reachable and Cloudflare marks CN</strong>
+            : HTML is force-sent back here (ops opt-out:
             <code>?china_workers_stay=1</code>).
           </li>
           <li>
-            <strong>Stay on this notice</strong>
-            : read-only health probe shows reachability only —
-            <strong>no auto-bounce back to Workers</strong>
-            (avoids a redirect loop). Open Workers manually when you need the full checker.
-          </li>
-          <li>
-            <strong>Workers unreachable</strong>
-            : stay on this notice; no availability promise for mainland access.
+            <strong>Only on non-mainland, Cloudflare-reachable networks</strong>
+            do the “Open full checker” buttons below matter; mainland readers can ignore them.
           </li>
         </ol>
 
@@ -234,7 +236,7 @@
             data-full-check
             href="https://buusdocst.mtsu.workers.dev/en"
             rel="noreferrer"
-            >Open full checker (/en)</a
+            >Non-mainland / CF-reachable only: open full checker (/en)</a
           >
           <a
             class="ghost-button"
@@ -248,8 +250,9 @@
           >
         </div>
         <p class="hint" data-testid="china-region-redirect-hint">
-          This page only shows Workers reachability — it no longer auto-redirects. Open the
-          checker with the buttons above when you need it.
+          This page only shows Workers reachability — no auto-redirect. Buttons above are
+          <strong>for non-mainland, Cloudflare-reachable networks</strong>
+          ; mainland readers should stay on this notice.
           <a href="./en.html?china_stay=1" data-testid="china-stay-link">Pause probe</a>
           ·
           <a href="./en.html?china_stay=0" data-testid="china-stay-clear">Resume probe</a>.

@@ -533,15 +533,18 @@ test.describe("China Pages notice (soft)", () => {
     });
   }
 
-  test("China Pages notice title (mainland force-redirect copy)", async ({ page }) => {
+  test("China Pages notice title + service-closed status", async ({ page }) => {
     await page.goto(`${chinaBase}/?china_stay=1`, {
       waitUntil: "domcontentloaded",
       timeout: 45_000
     });
     const title = page.getByTestId("china-notice-title");
     await expect(title).toBeVisible({ timeout: 10_000 });
-    await expect(title).toContainText(/强制引导|Workers 强制|force-redirect|China mainland entry/i);
-    console.info("[soft-live] China Pages notice title ok");
+    await expect(title).toContainText(/检查服务未开放|not offered on mainland/i);
+    const closed = page.getByTestId("china-notice-service-closed");
+    await expect(closed).toBeVisible({ timeout: 10_000 });
+    await expect(closed).toContainText(/不提供|不承诺|does not offer|no promise|未开放/i);
+    console.info("[soft-live] China Pages notice title + service-closed ok");
   });
 });
 

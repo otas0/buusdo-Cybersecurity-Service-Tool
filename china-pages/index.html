@@ -132,20 +132,22 @@
         </ul>
         <ol>
           <li>
-            <strong>访问 Workers 且检测为中国大陆</strong>
-            ：强制跳转至本告知书（可用
+            <strong>大陆用户</strong>
+            ：以本告知书为唯一说明入口；完整检查
+            <strong>未开放</strong>
+            ，请勿等待
+            <code>workers.dev</code>
+            跳转。
+          </li>
+          <li>
+            <strong>若偶然连上 Workers 且 Cloudflare 判定为 CN</strong>
+            ：HTML 会被强制引导回本告知书（运维自测可用
             <code>?china_workers_stay=1</code>
-            临时留在 Workers，供运维自测）。
+            ）。
           </li>
           <li>
-            <strong>停留在本告知书</strong>
-            ：本页仅做只读健康探测并显示可达性；
-            <strong>不再自动跳回 Workers</strong>
-            （避免与上一条形成循环）。需要完整检查时请手动打开下方链接。
-          </li>
-          <li>
-            <strong>当前网络无法到达 Workers</strong>
-            ：继续阅读本告知书；本项目不对中国大陆地区访问可用性作出承诺。
+            <strong>仅在非大陆、可稳定访问 Cloudflare 的网络</strong>
+            ：下方「打开完整检查站」链接才有意义；大陆读者可忽略这些按钮。
           </li>
         </ol>
 
@@ -230,7 +232,7 @@
             data-full-check
             href="https://buusdocst.mtsu.workers.dev/zh-Hans"
             rel="noreferrer"
-            >打开完整检查站（/zh-Hans）</a
+            >仅非大陆可达网络：打开完整检查站（/zh-Hans）</a
           >
           <a
             class="ghost-button"
@@ -247,7 +249,9 @@
           >
         </div>
         <p class="hint" data-testid="china-region-redirect-hint">
-          本页只显示 Workers 可达性，不再自动跳转。需要完整检查请手动打开上方按钮。
+          本页只显示 Workers 可达性，不再自动跳转。上方按钮
+          <strong>仅供非大陆、可访问 Cloudflare 的网络</strong>
+          ；大陆读者请只阅读本告知书。
           <a href="./index.html?china_stay=1" data-testid="china-stay-link">暂停探测</a>
           ·
           <a href="./index.html?china_stay=0" data-testid="china-stay-clear">恢复探测</a>。

@@ -1,8 +1,19 @@
 # buusdo Cybersecurity Service Tool
 
-**Product (Workers):** https://buusdocst.mtsu.workers.dev/ · **China notice (告知书; CN force-redirect from Workers):** https://otas0.github.io/buusdocst/
+**Product (Workers):** https://buusdocst.mtsu.workers.dev/  
+**China notice (告知书):** https://otas0.github.io/buusdocst/ — **中国大陆地区检查服务未开放**（勿等待 `workers.dev` 跳转；详见下方）
 
 Official product name: **buusdo Cybersecurity Service Tool**. Part of the **Buusdo** product **line**, but a **separate** product (own content and name — not “Buusdo” itself, not other Buusdo-line apps). Helps non-expert users check a website before they trust it.
+
+### 中国大陆读者 / Mainland China
+
+完整网站检查部署在 Cloudflare Workers。大陆网络常无法连接 `*.workers.dev`，**也不会自动跳转**到告知书。结论：
+
+- **大陆：检查服务未开放、不作可用性承诺**
+- **唯一官方说明入口：** https://otas0.github.io/buusdocst/
+- 面向大陆请只发上述链接或海报中国 QR，不要先发 Workers URL
+
+若网络可稳定访问 Cloudflare，且 `CF-IPCountry=CN`，打开 Workers HTML 会被强制引导至告知书（`/api/*` 不跳转）。
 
 **Detect → Explain → Prevent / Block → Act → Verify**
 
