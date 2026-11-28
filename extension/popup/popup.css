@@ -52,6 +52,7 @@ a { color: inherit; }
   object-position: left center;
   background: transparent;
   border: 0;
+  image-rendering: auto;
 }
 
 /* Cream mark on dark field; charcoal-on-cream plate for light OS theme.

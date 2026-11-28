@@ -65,8 +65,15 @@ test("china-pages dual wordmark hide rules match website lockup selectors", () =
     const html = readFileSync(file, "utf8");
     assert.match(html, /brand-logo-on-dark/);
     assert.match(html, /brand-logo-on-light/);
-    assert.match(html, /buusdo-wordmark-on-light\.png/);
+    assert.match(html, /buusdo-wordmark-on-light\.svg/);
   }
+});
+
+test("AppShell uses vector wordmarks (not PNG) for smooth scale", () => {
+  const src = readFileSync("components/AppShell.tsx", "utf8");
+  assert.match(src, /buusdo-wordmark\.svg/);
+  assert.match(src, /buusdo-wordmark-on-light\.svg/);
+  assert.doesNotMatch(src, /buusdo-wordmark\.png/);
 });
 
 test("popup + desktop use the same brand-lockup img hide selectors", () => {

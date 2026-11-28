@@ -11,6 +11,8 @@ import { fileURLToPath } from "node:url";
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 const pairs = [
   ["public/brand/buusdo-wordmark.png", "china-pages/assets/buusdo-wordmark.png"],
+  ["public/brand/buusdo-wordmark.svg", "china-pages/assets/buusdo-wordmark.svg"],
+  ["public/brand/buusdo-wordmark-on-light.svg", "china-pages/assets/buusdo-wordmark-on-light.svg"],
   ["public/brand/buusdo-logo.png", "china-pages/assets/buusdo-logo.png"]
 ];
 

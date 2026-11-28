@@ -60,6 +60,8 @@
   background: transparent;
   border: 0;
   flex-shrink: 1;
+  /* Vector / hi-DPI — never crisp-edges / pixelated (looks rough when scaled). */
+  image-rendering: auto;
 }
 
 /* 320/375: long wordmark + locale badge must not crush the top bar.

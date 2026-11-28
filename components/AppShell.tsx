@@ -139,7 +139,7 @@ function Header({
               light mark is decorative when shown (theme already announced elsewhere). */}
           <img
             className="brand-logo brand-logo-on-dark"
-            src="/brand/buusdo-wordmark.png"
+            src="/brand/buusdo-wordmark.svg"
             width={117}
             height={40}
             decoding="async"
@@ -147,7 +147,7 @@ function Header({
           />
           <img
             className="brand-logo brand-logo-on-light"
-            src="/brand/buusdo-wordmark-on-light.png"
+            src="/brand/buusdo-wordmark-on-light.svg"
             width={117}
             height={40}
             decoding="async"

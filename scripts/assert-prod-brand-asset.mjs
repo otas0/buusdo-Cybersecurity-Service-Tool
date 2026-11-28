@@ -10,12 +10,16 @@ const base = String(
     "https://buusdocst.mtsu.workers.dev"
 ).replace(/\/$/, "");
 
-const urls = [
+const pngUrls = [
   `${base}/brand/buusdo-wordmark.png`,
   `${base}/brand/buusdo-wordmark-on-light.png`
 ];
+const svgUrls = [
+  `${base}/brand/buusdo-wordmark.svg`,
+  `${base}/brand/buusdo-wordmark-on-light.svg`
+];
 
-for (const url of urls) {
+for (const url of pngUrls) {
   const res = await fetch(url, { redirect: "follow" });
   const buf = Buffer.from(await res.arrayBuffer());
   if (!res.ok) {
@@ -33,5 +37,23 @@ for (const url of urls) {
     process.exit(1);
   }
   console.log(`ok ${url} (${buf.length}b)`);
+}
+
+for (const url of svgUrls) {
+  const res = await fetch(url, { redirect: "follow" });
+  const text = await res.text();
+  if (!res.ok) {
+    console.error(`FAIL: ${url} → ${res.status}`);
+    process.exit(1);
+  }
+  if (text.length < 200 || !/<svg[\s>]/i.test(text)) {
+    console.error(`FAIL: ${url} missing SVG markup (${text.length}b)`);
+    process.exit(1);
+  }
+  if (/data:image\/png/i.test(text)) {
+    console.error(`FAIL: ${url} still embeds PNG — want true vector paths`);
+    process.exit(1);
+  }
+  console.log(`ok ${url} (${text.length}b vector)`);
 }
 console.log("assert-prod-brand-asset ok");

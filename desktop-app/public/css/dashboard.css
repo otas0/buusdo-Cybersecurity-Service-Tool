@@ -197,6 +197,7 @@ button:disabled.log-filter-reset {
   max-width: 220px;
   background: transparent;
   border: 0;
+  image-rendering: auto;
 }
 
 /* Cream mark on dark; on-light plate for OS / data-theme light (dashboard.js swaps alt).

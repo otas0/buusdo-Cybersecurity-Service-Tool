@@ -104,6 +104,7 @@ a {
   object-position: left center;
   background: transparent;
   border: 0;
+  image-rendering: auto;
 }
 
 /* Dual wordmark — same lockup hide rules as app/shield.css (dark default). */
