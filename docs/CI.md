@@ -13,15 +13,16 @@
   - **Flip checklist:** (1) open latest schedule Privacy prod Summary → confirm `streak=3/3`; (2) `gh variable set EXT_UI_UNPARK_HARD --body 1`; (3) record UTC date below; (4) dry-run refuse: `node scripts/assert-ext-ui-unpark-hard-ready.mjs` (exits 0 only when env/artifact streak≥3).
   - **Flip date:** _not yet_ — awaiting three consecutive greens after soft-live streak wiring (`621c606`, 2026-11-23). Record here when set: `EXT_UI_UNPARK_HARD flipped YYYY-MM-DD` (leave blank until then).
 - Soft-live chart history CSV: privacy-prod appends `ci/soft-live-chart-history.csv` (artifact `soft-live-chart-history`) across schedule runs — see `scripts/append-soft-live-chart-history.mjs`.
-- Soft CI step **`Soft /api/geo country field`**: ubuntu `GET /api/geo` asserts `cfCountry` exists (does **not** assert CN redirect). Also notes whether `x-buusdocst-china-wrap` is present.
-- Deploy must run `wrap-worker-china-cf-redirect.mjs` then `--check` (`main=china-cf-entry.js`) before `wrangler deploy`. Prefer **staging** (`deploy:cloudflare:staging`) before production when changing the wrap.
+- Soft CI step **`Soft China wrap + /api/geo`**: runs `scripts/soft-china-redirect-probe.mjs` (**staging then prod** via `STAGING_HEALTH_URL` / `PRODUCTION_HEALTH_URL`). Asserts wrap header + `cfCountry` + `wrapHints.runWorkerFirst`. Does **not** assert CN→Pages 302 (ubuntu is rarely `CF=CN`). Real CN sample / Logpush: `302` + `ClientCountry=CN` + Location→`otas0.github.io`.
+- Deploy must run `wrap-worker-china-cf-redirect.mjs` then `--check` (`main=china-cf-entry.js`, `assets.binding=ASSETS`, vinext `run_worker_first` pattern) before `wrangler deploy`. Prefer **staging** before production when changing the wrap.
 - **Workers version scrapbook (rollback):**
   - `65e336c7-39dd-4545-b165-e3e2cd9b219d` — 2026-11-25T03:56Z — first china-cf-entry wrap on prod (CN via `request.cf.country`)
   - `9afb5e10-3ba7-4cc5-902a-c8e2018f6cc0` — 2026-11-25T04:08Z — staging wrap harden (`x-buusdocst-china-wrap`, CN-only, `/api/geo` rateNote)
   - `9dc3ff3c-6338-49d3-9ba4-5a16f2503ccf` — 2026-11-25T04:10Z — prod promote of same wrap harden (`6236fcb`)
   - `0ed5b2b8-ff77-40bd-9adb-e59834f73f4d` — 2026-11-25T09:16Z — staging `run_worker_first=true` (`a2faadb`)
   - `39c96aca-aa53-46b5-806b-789b0868f14a` — 2026-11-25T09:17Z — prod `run_worker_first=true` + client hard fallback (`a2faadb`)
-  - Record newer IDs here after each China-redirect-related prod deploy.
+  - `b43e4a94-d04c-402a-96f0-b8ac3b23713b` — 2026-11-28T07:20Z — prod (pre client zh-CN harden; wrap live, JP sample)
+  - Record newer IDs here after each China-redirect-related prod / staging deploy.
 
 - Optional Playwright job also runs on **schedule** (nightly) and includes `test:playwright:extension-china-stay-clear`.
 - Nightly: `smoke:privacy-china` (zh-Hans · EN · pt-PT) via **Production health smoke** (05:20 UTC; Step Summary prints `smoke:privacy-china=<UTC>`) and **Health monitor** (checklist notes + `CHECKLIST_LOG_MAX_ROWS` cap, default 40 — see [CHECKLIST_CI_WRITE.md](CHECKLIST_CI_WRITE.md)); privacy-prod Playwright via **Privacy prod smoke** (05:45 UTC; failure uploads `privacy-prod-playwright-report`).

@@ -65,11 +65,31 @@ Rules → Managed Transforms → **Add visitor location headers**，使 `CF-IPCo
 
 ### Logpush（有自定义域后）
 
-按 `EdgeResponseStatus=302` + `ClientCountry=CN` 与 Location→`otas0.github.io` 对齐统计（可与 stub path dump 同一工具链扩展）。
+对齐过滤（与 stub path dump 同一工具链扩展）：
+
+- `EdgeResponseStatus=302`（或 `301`）
+- `ClientCountry=CN`
+- `EdgeResponseHeaders` / Location 含 `otas0.github.io`
+
+ubuntu CI **不能**伪造 `request.cf.country`；软探测见 `scripts/soft-china-redirect-probe.mjs`（断言 wrap 头 + 记录非 CN 样本）。真实 CN 302 样本出现后贴进 [CI.md](CI.md) scrapbook。
+
+### 自定义域上线后复测
+
+按 [CUSTOM_DOMAIN_REDEPLOY.md](CUSTOM_DOMAIN_REDEPLOY.md) 切域后：
+
+1. `wrangler versions view <id> --json` → `raw_run_worker_first` 仍为 vinext 排除列表（**不是** boolean `false` 且无整表 Assets-first）
+2. `GET /api/health` → `x-buusdocst-china-wrap: 1`
+3. 大陆可达网络：HTML 对 CN 仍 302 → 本告知书
+
+### 非 workers.dev 入口（评估）
+
+`*.workers.dev` 在部分大陆网络 TCP 超时。自定义域（橙云 CNAME 到同一 Worker）**可能**改善连通，但不能保证；告知书入口始终保留。评估顺序：DNS 自定义域 → 大陆抽测 `/api/health` → 再决定是否把推广链切到自定义域（[PUBLIC_PROMOTION.md](PUBLIC_PROMOTION.md)）。
 
 ### TCP 超时 ≠ 跳转失败
 
 大陆若 **连不上** `*.workers.dev`，请求到不了 Worker，**不会 302**。请直接打开本告知书。见 [LOCAL_CF_CONNECTIVITY.md](LOCAL_CF_CONNECTIVITY.md)。
+
+服务端仅在 `request.cf.country=CN` 时 302（伪造 `CF-IPCountry` 无效）。浏览器为 zh-CN / zh-Hans 时，客户端脚本会 `location.replace` 到本站作为兜底。
 
 ## Region soft probe（本站）
 

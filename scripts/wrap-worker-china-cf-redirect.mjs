@@ -159,13 +159,17 @@ export default {
 
 function ensureRunWorkerFirst(w) {
   const prev = w.assets;
-  if (prev && typeof prev === "object" && !Array.isArray(prev)) {
-    w.assets = { ...prev, run_worker_first: [...RUN_WORKER_FIRST] };
-  } else if (typeof prev === "string") {
-    w.assets = { directory: prev, run_worker_first: [...RUN_WORKER_FIRST] };
-  } else {
-    w.assets = { directory: "../client", run_worker_first: [...RUN_WORKER_FIRST] };
-  }
+  const base =
+    prev && typeof prev === "object" && !Array.isArray(prev)
+      ? { ...prev }
+      : typeof prev === "string"
+        ? { directory: prev }
+        : { directory: "../client" };
+  // Binding silences wrangler "run_worker_first without an assets binding" and
+  // keeps vinext ASSETS.fetch working when the Worker runs first.
+  if (!base.binding) base.binding = "ASSETS";
+  base.run_worker_first = [...RUN_WORKER_FIRST];
+  w.assets = base;
 }
 
 if (checkOnly) {
@@ -188,6 +192,12 @@ if (checkOnly) {
   if (!isValidRunWorkerFirst(assets.run_worker_first)) {
     console.error(
       `[wrap-china-cf] --check FAIL: assets.run_worker_first=${JSON.stringify(assets.run_worker_first)} (want ${JSON.stringify(RUN_WORKER_FIRST)} — boolean true 404s /_next/static)`
+    );
+    process.exit(1);
+  }
+  if (assets.binding !== "ASSETS") {
+    console.error(
+      `[wrap-china-cf] --check FAIL: assets.binding=${JSON.stringify(assets.binding)} (want "ASSETS")`
     );
     process.exit(1);
   }

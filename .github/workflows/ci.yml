@@ -76,13 +76,17 @@ jobs:
           npx tsx --test tests/optional-update-show-hint-must-stay-full.test.ts
           node scripts/assert-min-supported-floor-linked.mjs
 
-      - name: Soft /api/geo country field (ubuntu; no CN redirect assert)
+      - name: Soft China wrap + /api/geo (staging then prod; no CN 302 assert)
         id: soft_api_geo
         continue-on-error: true
         env:
           PRODUCTION_HEALTH_URL: ${{ vars.PRODUCTION_HEALTH_URL || 'https://buusdocst.mtsu.workers.dev' }}
+          STAGING_HEALTH_URL: ${{ vars.STAGING_HEALTH_URL || 'https://buusdocst-staging.mtsu.workers.dev' }}
         run: |
           set -euo pipefail
+          # Staging first (wrap / run_worker_first), then prod. Ubuntu is rarely CF=CN —
+          # assert wrap header + geo.cfCountry field; never require a 302 to Pages.
+          node scripts/soft-china-redirect-probe.mjs
           BASE="${PRODUCTION_HEALTH_URL%/}"
           CODE=$(curl -sS -m 20 -o /tmp/api-geo.json -w "%{http_code}" "$BASE/api/geo" || echo "000")
           if [ "$CODE" != "200" ]; then
@@ -94,17 +98,20 @@ jobs:
             const j = JSON.parse(require("fs").readFileSync("/tmp/api-geo.json","utf8"));
             if (!j || j.ok !== true) { console.error("geo ok!=true", j); process.exit(1); }
             if (!("cfCountry" in j)) { console.error("missing cfCountry", j); process.exit(1); }
-            console.log("geo ok cfCountry=", j.cfCountry, "country=", j.country);
-            // Non-CN runners must NOT assert a redirect — only that the field exists.
+            if (!j.wrapHints || !j.wrapHints.runWorkerFirst) {
+              console.error("missing wrapHints.runWorkerFirst", j);
+              process.exit(1);
+            }
+            console.log("geo ok cfCountry=", j.cfCountry, "wrapHints.runWorkerFirst=", j.wrapHints.runWorkerFirst);
           '
-          echo "::notice::soft /api/geo OK (cfCountry field present; no CN redirect assert on ubuntu)"
-          echo "- Soft \`/api/geo\`: **OK** (\`cfCountry\` present; wrap header check optional)" >> "$GITHUB_STEP_SUMMARY"
+          echo "::notice::soft /api/geo OK (cfCountry + wrapHints.runWorkerFirst; no CN redirect assert on ubuntu)"
+          echo "- Soft \`/api/geo\`: **OK** (\`cfCountry\` + \`wrapHints.runWorkerFirst\`)" >> "$GITHUB_STEP_SUMMARY"
           WRAP=$(curl -sS -m 15 -D - -o /dev/null "$BASE/api/health" 2>/dev/null | tr -d '\r' | grep -i '^x-buusdocst-china-wrap:' || true)
           if [ -n "$WRAP" ]; then
             echo "::notice::x-buusdocst-china-wrap present — china-cf-entry live"
             echo "- Worker wrap header \`x-buusdocst-china-wrap\`: **present**" >> "$GITHUB_STEP_SUMMARY"
           else
-            echo "::notice::x-buusdocst-china-wrap absent — redeploy with wrap:worker-china-cf if CN redirect expected"
+            echo "::warning::x-buusdocst-china-wrap absent — redeploy with wrap:worker-china-cf"
             echo "- Worker wrap header: **absent** (redeploy with wrap script)" >> "$GITHUB_STEP_SUMMARY"
           fi
 

@@ -33,6 +33,8 @@ test("wrap-worker-china-cf-redirect writes entry + sets wrangler main", () => {
   assert.match(src, /x-buusdocst-cf-country/);
   assert.match(src, /run_worker_first/);
   assert.match(src, /run-worker-first\.mjs/);
+  assert.match(src, /binding/);
+  assert.match(src, /ASSETS/);
   assert.match(src, /--check/);
   assert.doesNotMatch(src, /run_worker_first:\s*true/);
 
