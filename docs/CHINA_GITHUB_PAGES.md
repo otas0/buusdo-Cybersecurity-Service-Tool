@@ -87,9 +87,20 @@ ubuntu CI **不能**伪造 `request.cf.country`；软探测见 `scripts/soft-chi
 
 ### TCP 超时 ≠ 跳转失败
 
-大陆若 **连不上** `*.workers.dev`，请求到不了 Worker，**不会 302**。请直接打开本告知书。见 [LOCAL_CF_CONNECTIVITY.md](LOCAL_CF_CONNECTIVITY.md)。
+大陆若 **连不上** `*.workers.dev`，请求到不了 Worker，**不会 302**，`/api/geo` 也打不开。请直接打开本告知书。见 [LOCAL_CF_CONNECTIVITY.md](LOCAL_CF_CONNECTIVITY.md)。
 
-服务端仅在 `request.cf.country=CN` 时 302（伪造 `CF-IPCountry` 无效）。浏览器为 zh-CN / zh-Hans 时，客户端脚本会 `location.replace` 到本站作为兜底。
+服务端仅在 `request.cf.country=CN` 时 302（伪造 `CF-IPCountry` 无效）。浏览器为 zh-CN / zh-Hans 时，客户端脚本会 `location.replace` 到本站作为兜底——**同样要求 Workers HTML 已加载**。
+
+### 如何让大陆用户「知道服务未开放」（不依赖 Workers）
+
+Workers 不可达时，产品站无法展示任何文案。只能走 **Workers 之外** 的渠道：
+
+1. **本告知书 URL** `https://otas0.github.io/buusdocst/`（标题即为「中国大陆地区检查服务未开放」）
+2. **海报 / 中国 QR**（`public/promo/china-qr.svg` → 本告知书）
+3. **扩展不可达文案**（指向告知书，写明勿等跳转）
+4. **商店 / 社媒 / 线下** 粘贴 [PUBLIC_PROMOTION.md](PUBLIC_PROMOTION.md)「面向大陆用户」块
+
+若 GitHub Pages 在部分网络也慢，再评估国内可访问的静态托管镜像（仍只放告知书，不放完整检查）。
 
 ## Region soft probe（本站）
 

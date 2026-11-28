@@ -5,9 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta
       name="description"
-      content="关于中国大陆入口与 Workers 强制引导的告知书 — buusdo Cybersecurity Service Tool"
+      content="buusdo Cybersecurity Service Tool：中国大陆地区检查服务未开放。请阅读本告知书，勿等待 workers.dev 跳转。"
     />
-    <title>告知书 · buusdo Cybersecurity Service Tool</title>
+    <title>大陆服务未开放 · 告知书 · buusdo Cybersecurity Service Tool</title>
     <link rel="icon" href="./assets/favicon.svg" type="image/svg+xml" />
     <link rel="stylesheet" href="./styles.css" />
     <script src="./lang-persist.js"></script>
@@ -19,21 +19,15 @@
         <h1 class="brand-lockup">
           <a href="./index.html" aria-current="page">
             <img
-              class="brand-logo brand-logo-on-dark"
+              class="brand-logo"
+              data-brand-wordmark="1"
+              data-src-dark="./assets/buusdo-wordmark.svg"
+              data-src-light="./assets/buusdo-wordmark-on-light.svg"
               src="./assets/buusdo-wordmark.svg"
               width="117"
               height="40"
               decoding="async"
               alt="buusdo Cybersecurity Service Tool"
-            />
-            <img
-              class="brand-logo brand-logo-on-light"
-              src="./assets/buusdo-wordmark-on-light.svg"
-              width="117"
-              height="40"
-              decoding="async"
-              alt=""
-              aria-hidden="true"
             />
           </a>
         </h1>
@@ -48,41 +42,73 @@
 
       <article class="stage notice">
         <p class="kicker"><span class="mark" aria-hidden="true"></span>告知书</p>
-        <h2 data-testid="china-notice-title">关于中国大陆入口与 Workers 强制引导的告知书</h2>
+        <h2 data-testid="china-notice-title">中国大陆地区检查服务未开放</h2>
+
+        <p
+          class="lede notice-status"
+          data-testid="china-notice-service-closed"
+          role="status"
+        >
+          <strong>结论：</strong>
+          面向中国大陆网络环境，本项目
+          <strong>不提供、也不承诺</strong>
+          完整网站检查服务。请勿依赖
+          <code>https://buusdocst.mtsu.workers.dev</code>
+          ；该地址在大陆常无法连接，
+          <strong>也无法自动跳转到本页</strong>。
+        </p>
 
         <p class="lede notice-top-tip" data-testid="china-notice-workers-unreachable-ok">
           <strong>打不开 Workers（超时 / 一直转圈）属正常</strong>
-          ——请求到不了 Cloudflare 时无法自动跳转；请直接留在本页阅读，勿等待
-          <code>workers.dev</code> 跳转。
+          ——这不是「还没跳转」，而是请求根本到不了 Cloudflare。请直接通过本告知书链接或海报二维码阅读本文，
+          <strong>勿等待</strong>
+          <code>workers.dev</code>
+          跳转。
         </p>
 
         <p class="lede">尊敬的用户：</p>
         <p>
-          感谢您对 buusdo Cybersecurity Service Tool（以下简称「本项目」）的关注与支持。现就中国大陆网络环境下的入口安排，告知如下：
+          感谢您对 buusdo Cybersecurity Service Tool（以下简称「本项目」）的关注与支持。现就中国大陆网络环境下的服务安排，告知如下：
         </p>
 
         <h3>一、原因及范围</h3>
         <p>
-          本项目的完整检查能力运行在 Cloudflare Workers（
+          本项目的完整检查能力部署在 Cloudflare Workers（
           <code>https://buusdocst.mtsu.workers.dev</code>
-          ）。在部分中国大陆网络环境下，该域名可能出现延迟、超时或不可达，用户难以正常完成检查。
+          ）。该基础设施在部分中国大陆网络环境下会出现延迟、超时或不可达，用户无法稳定完成检查。因此：
         </p>
-        <p>
-          自
-          <strong>2026 年 11 月 22 日</strong>
-          起，中国大陆 GitHub Pages 入口（
-          <code>https://otas0.github.io/buusdocst/</code>
-          ）仅保留本告知书（产品说明 / 隐私摘要 / 安装指引已下线）。自
-          <strong>2026 年 11 月 23 日</strong>
-          起，当访客经 Cloudflare 判定来自中国大陆（
-          <code>CF-IPCountry=CN</code>
-          ）并打开 Workers 产品站时，
-          <strong>将强制跳转至本告知书</strong>
-          ，以免在不稳定网络下误以为完整检查可用。
-          <strong>完整检查界面仍位于 Workers；API（</strong>
-          <code>/api/*</code>
-          <strong>）不跳转，扩展与机器调用不受影响。</strong>
-        </p>
+        <ul>
+          <li>
+            <strong>大陆用户应以本告知书为唯一官方说明入口</strong>
+            （
+            <code>https://otas0.github.io/buusdocst/</code>
+            ）。
+          </li>
+          <li>
+            自
+            <strong>2026 年 11 月 22 日</strong>
+            起，上述入口仅保留本告知书（产品说明 / 隐私摘要 / 安装指引已下线）。
+          </li>
+          <li>
+            自
+            <strong>2026 年 11 月 23 日</strong>
+            起：若访客
+            <em>能够</em>
+            连上 Workers，且 Cloudflare 判定为大陆（
+            <code>CF-IPCountry=CN</code>
+            ），HTML 会被强制引导至本告知书，以免误以为完整检查可用。
+            <strong>API（</strong>
+            <code>/api/*</code>
+            <strong>）不跳转。</strong>
+          </li>
+          <li>
+            若大陆网络
+            <em>连不上</em>
+            Workers：不会发生任何跳转——这正是您需要收藏 / 扫码打开
+            <strong>本页 URL</strong>
+            的原因。
+          </li>
+        </ul>
         <p>
           说明：上述安排针对中国大陆网络环境；
           <strong>不表示</strong>

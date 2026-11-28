@@ -5,9 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta
       name="description"
-      content="Notice on the China mainland entry and Workers force-redirect — buusdo Cybersecurity Service Tool"
+      content="buusdo Cybersecurity Service Tool: full checking is not offered on mainland China networks. Read this notice; do not wait for workers.dev to redirect."
     />
-    <title>Notice · buusdo Cybersecurity Service Tool</title>
+    <title>Mainland service not offered · Notice · buusdo Cybersecurity Service Tool</title>
     <link rel="icon" href="./assets/favicon.svg" type="image/svg+xml" />
     <link rel="stylesheet" href="./styles.css" />
     <script src="./lang-persist.js"></script>
@@ -19,21 +19,15 @@
         <h1 class="brand-lockup">
           <a href="./en.html" aria-current="page">
             <img
-              class="brand-logo brand-logo-on-dark"
+              class="brand-logo"
+              data-brand-wordmark="1"
+              data-src-dark="./assets/buusdo-wordmark.svg"
+              data-src-light="./assets/buusdo-wordmark-on-light.svg"
               src="./assets/buusdo-wordmark.svg"
               width="117"
               height="40"
               decoding="async"
               alt="buusdo Cybersecurity Service Tool"
-            />
-            <img
-              class="brand-logo brand-logo-on-light"
-              src="./assets/buusdo-wordmark-on-light.svg"
-              width="117"
-              height="40"
-              decoding="async"
-              alt=""
-              aria-hidden="true"
             />
           </a>
         </h1>
@@ -49,45 +43,77 @@
       <article class="stage notice">
         <p class="kicker"><span class="mark" aria-hidden="true"></span>Notice</p>
         <h2 data-testid="china-notice-title">
-          Notice on the China mainland entry and Workers force-redirect
+          Full checking is not offered on mainland China networks
         </h2>
+
+        <p
+          class="lede notice-status"
+          data-testid="china-notice-service-closed"
+          role="status"
+        >
+          <strong>Bottom line:</strong>
+          For mainland China network conditions, this Project
+          <strong>does not offer or promise</strong>
+          full website checking. Do not rely on
+          <code>https://buusdocst.mtsu.workers.dev</code>
+          — that host often cannot connect from the mainland, and
+          <strong>cannot automatically send you here</strong>.
+        </p>
 
         <p class="lede notice-top-tip" data-testid="china-notice-workers-unreachable-ok">
           <strong>Cannot open Workers (timeout / endless spinner) is expected</strong>
-          on some mainland networks — if TCP never reaches Cloudflare, no automatic
-          redirect can run. Stay on this notice; do not wait for
-          <code>workers.dev</code> to bounce you here.
+          — that is not a “redirect still loading”; the request never reaches Cloudflare.
+          Open this notice via its own URL or the poster QR;
+          <strong>do not wait</strong> for
+          <code>workers.dev</code>
+          to bounce you here.
         </p>
 
         <p class="lede">Dear users,</p>
         <p>
           Thank you for your interest in buusdo Cybersecurity Service Tool (the “Project”). This
-          notice explains how mainland China networks are guided between Workers and this page.
+          notice explains the mainland China service arrangement.
         </p>
 
         <h3>1. Reason and scope</h3>
         <p>
           Full checking runs on Cloudflare Workers (
           <code>https://buusdocst.mtsu.workers.dev</code>
-          ). In some mainland China networks that host can be slow, time out, or unreachable, so
-          checks may fail.
+          ). On some mainland China networks that host is slow, times out, or unreachable.
+          Therefore:
         </p>
-        <p>
-          From
-          <strong>22 November 2026</strong>
-          the China mainland GitHub Pages entry (
-          <code>https://otas0.github.io/buusdocst/</code>
-          ) keeps only this notice (explainers / privacy summaries / install guides are offline).
-          From
-          <strong>23 November 2026</strong>,
-          when Cloudflare marks a visitor as mainland China (
-          <code>CF-IPCountry=CN</code>
-          ) on the Workers product site, the Project
-          <strong>force-redirects them to this notice</strong>
-          so an unstable network is not mistaken for a working full checker.
-          <strong>The full product UI still lives on Workers; <code>/api/*</code> is never
-          redirected (extensions and machine clients keep working).</strong>
-        </p>
+        <ul>
+          <li>
+            <strong>Mainland users should treat this notice as the only official explanation
+            entry</strong>
+            (
+            <code>https://otas0.github.io/buusdocst/</code>
+            ).
+          </li>
+          <li>
+            From
+            <strong>22 November 2026</strong>
+            that entry keeps only this notice (explainers / privacy summaries / install guides
+            offline).
+          </li>
+          <li>
+            From
+            <strong>23 November 2026</strong>:
+            if a visitor
+            <em>can</em>
+            reach Workers and Cloudflare marks them as mainland China (
+            <code>CF-IPCountry=CN</code>
+            ), HTML is force-redirected here so an unstable network is not mistaken for a working
+            checker.
+            <strong><code>/api/*</code> is never redirected.</strong>
+          </li>
+          <li>
+            If mainland TCP
+            <em>cannot</em>
+            reach Workers: no redirect runs — that is why you must bookmark or scan
+            <strong>this page’s URL</strong>.
+          </li>
+        </ul>
         <p>
           Scope targets mainland China network conditions; it does
           <strong>not</strong>

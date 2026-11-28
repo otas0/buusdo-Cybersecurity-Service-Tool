@@ -107,18 +107,7 @@ a {
   image-rendering: auto;
 }
 
-/* Dual wordmark — same lockup hide rules as app/shield.css (dark default). */
-.shell .brand-lockup img.brand-logo.brand-logo-on-light {
-  display: none !important;
-}
-html[data-theme="light"] .shell .brand-lockup img.brand-logo.brand-logo-on-dark,
-:root[data-theme="light"] .shell .brand-lockup img.brand-logo.brand-logo-on-dark {
-  display: none !important;
-}
-html[data-theme="light"] .shell .brand-lockup img.brand-logo.brand-logo-on-light,
-:root[data-theme="light"] .shell .brand-lockup img.brand-logo.brand-logo-on-light {
-  display: block !important;
-}
+/* Single wordmark SVG — no dual-img CSS hide. */
 
 .shell .lang-switch,
 .shell .nav-link,
@@ -183,6 +172,22 @@ html[data-theme="light"] .shell .brand-lockup img.brand-logo.brand-logo-on-light
   color: var(--muted);
   font-size: 15px;
   margin-bottom: 18px;
+}
+
+.shell .stage p.lede.notice-status {
+  color: var(--text);
+  border-left: 3px solid var(--halt, #ff4d00);
+  padding: 12px 14px;
+  margin: 0 0 20px;
+  background: rgba(255, 77, 0, 0.08);
+  max-width: 42rem;
+}
+
+.shell .stage p.lede.notice-top-tip {
+  border-left: 3px solid rgba(243, 241, 234, 0.28);
+  padding: 10px 14px;
+  margin: 0 0 20px;
+  max-width: 42rem;
 }
 
 .shell .halt-steps {
