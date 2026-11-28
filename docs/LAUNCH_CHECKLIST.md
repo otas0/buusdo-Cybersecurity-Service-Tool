@@ -15,7 +15,7 @@ Recorded via `npm run production:origin` → README + `shared/production-site.js
 - [ ] Promo mirror: `npm run build:promo-posters` then open `/promo/poster.html` (EN / pt-PT / 中文); Print A4 · 100% · Margins None fits one page; live + China QR scan OK
 - [ ] After deploy: `https://buusdocst.mtsu.workers.dev/promo/poster.html` 200 + cache-bust wordmark loads
 - [ ] **Hard refresh after wordmark / shield.css deploys:** Cmd/Ctrl+Shift+R on `/en` (and light theme once). Stale CSS can leave **both** wordmarks painted or a blue UA **Run** button — confirm cream-only mark on dark, Halt-orange `.primary-button`, and DevTools Network shows `/_next/static/css/*.css` **200** (not 404). Corrupt `localStorage.buusdocst-ui-theme` is cleared on boot (falls back to dark).
-- [ ] After every prod deploy: `npm run assert:prod-css-asset` (HTML-linked CSS must be 200 + Halt + wordmark hide). Boolean `assets.run_worker_first: true` 404s CSS — wrap must use the vinext exclusion pattern.
+- [ ] After every prod deploy: `npm run assert:prod-css-asset` + `npm run assert:prod-brand-asset` (CSS 200 + Halt; wordmark PNG non-empty). Boolean `run_worker_first: true` 404s CSS; routing `/brand/*` through the Worker can return `content-length: 0` — wrap must use the vinext exclusion pattern (includes `!/brand/*`).
 
 ## B. Cloudflare hosting
 

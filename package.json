@@ -40,6 +40,7 @@
     "assert:staging-wrangler-name": "node scripts/assert-staging-wrangler-name.mjs",
     "assert:prod-wrangler-name": "node scripts/assert-prod-wrangler-name.mjs",
     "assert:prod-css-asset": "node scripts/assert-prod-css-asset.mjs",
+    "assert:prod-brand-asset": "node scripts/assert-prod-brand-asset.mjs",
     "assert:prod-auth-gone": "node scripts/assert-prod-auth-gone.mjs",
     "start": "vinext start",
     "lint": "eslint . --ignore-pattern dist --ignore-pattern .next",
