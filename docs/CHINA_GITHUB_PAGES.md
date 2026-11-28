@@ -51,8 +51,8 @@ Actions **Pages China** 将 `china-pages/` 发布到 `otas0/buusdocst`（secret 
 2. `/api/health`、`/api/check`、`/api/geo` **永不** 跳转（扩展与机器调用不受影响）
 3. 调试：`GET /api/geo` → `{ country, cfCountry, headerCfIpCountry, forceRedirectCountries, rateNote }`；响应头应有 `x-buusdocst-china-wrap: 1`
 4. **先 staging 再 prod：** `npm run deploy:cloudflare:staging` → health → 再 `npm run deploy:cloudflare`
-5. Deploy 含 wrap + `--check`（`main=china-cf-entry.js`，`assets.run_worker_first=true`）
-6. 线上若仍见产品页：看响应头 `x-buusdocst-china-wrap` / `x-buusdocst-cf-country`。`run_worker_first` 未开时 Assets 可能绕过 wrap（历史故障）。
+5. Deploy 含 wrap + `--check`（`main=china-cf-entry.js`，`assets.run_worker_first=["/*","!/_next/static/*","!/*/_next/static/*"]` — **不要**用 boolean `true`，否则 CSS/JS 404）
+6. 线上若仍见产品页：看响应头 `x-buusdocst-china-wrap` / `x-buusdocst-cf-country`。`run_worker_first` 未开时 Assets 可能绕过 wrap（历史故障）。裸页 / 蓝 Run / 双 logo → 先查 `/_next/static/css/*.css` 是否 200（`npm run assert:prod-css-asset`）。
 7. TCP 超时到不了 Worker → **不会 302**；请直接打开本告知书。客户端兜底（zh-CN + Asia/Shanghai）仅在 Workers HTML 已加载时 `location.replace` 到本站。
 
 ### 产品决策：仅 CN（不含 HK/MO）

@@ -32,7 +32,13 @@ test("wrap-worker-china-cf-redirect writes entry + sets wrangler main", () => {
   assert.match(src, /x-buusdocst-china-wrap/);
   assert.match(src, /x-buusdocst-cf-country/);
   assert.match(src, /run_worker_first/);
+  assert.match(src, /run-worker-first\.mjs/);
   assert.match(src, /--check/);
+  assert.doesNotMatch(src, /run_worker_first:\s*true/);
+
+  const rwf = readFileSync("scripts/run-worker-first.mjs", "utf8");
+  assert.match(rwf, /!\/_next\/static\/\*/);
+  assert.match(rwf, /!\/\*\/_next\/static\/\*/);
 
   const pkg = JSON.parse(readFileSync("package.json", "utf8"));
   assert.match(pkg.scripts["deploy:cloudflare"], /wrap-worker-china-cf-redirect/);
@@ -40,6 +46,15 @@ test("wrap-worker-china-cf-redirect writes entry + sets wrangler main", () => {
   assert.match(pkg.scripts["deploy:cloudflare:staging"], /wrap-worker-china-cf-redirect/);
 
   rmSync(dir, { recursive: true, force: true });
+});
+
+test("run_worker_first pattern excludes /_next/static (boolean true 404s CSS)", async () => {
+  const { RUN_WORKER_FIRST, isValidRunWorkerFirst } = await import(
+    "../scripts/run-worker-first.mjs"
+  );
+  assert.equal(isValidRunWorkerFirst(true), false);
+  assert.equal(isValidRunWorkerFirst(["/*"]), false);
+  assert.ok(isValidRunWorkerFirst(RUN_WORKER_FIRST));
 });
 
 test("countryFromWorkersRequest prefers cf.country over header", async () => {

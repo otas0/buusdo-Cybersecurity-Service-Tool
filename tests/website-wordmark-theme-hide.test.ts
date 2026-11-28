@@ -93,3 +93,21 @@ test("ThemeSwitch syncs aria-hidden on wordmarks and clears corrupt theme storag
   assert.match(layout, /removeItem\(k\)/);
   assert.match(layout, /dataset\.theme='dark'/);
 });
+
+test("layout inlines critical CSS so CSS 404 cannot show dual logos or UA-blue Run", () => {
+  const layout = readFileSync("app/layout.tsx", "utf8");
+  assert.match(layout, /CRITICAL_CSS/);
+  assert.match(layout, /brand-logo-on-light\{display:none!important\}/);
+  assert.match(layout, /primary-button\{background:#ff4d00/);
+  assert.match(layout, /visually-hidden\{/);
+});
+
+test("deploy wrap never sets boolean run_worker_first true (404s /_next/static)", async () => {
+  const { isValidRunWorkerFirst, RUN_WORKER_FIRST } = await import(
+    "../scripts/run-worker-first.mjs"
+  );
+  assert.equal(isValidRunWorkerFirst(true), false);
+  assert.ok(isValidRunWorkerFirst(RUN_WORKER_FIRST));
+  const wrap = readFileSync("scripts/wrap-worker-china-cf-redirect.mjs", "utf8");
+  assert.doesNotMatch(wrap, /run_worker_first:\s*true/);
+});
