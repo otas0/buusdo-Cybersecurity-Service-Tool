@@ -45,6 +45,12 @@
    * (asserted by scripts/assert-desktop-download-messages.mjs) — never a bare rem string.
    */
   --shell-top-scroll-margin: 4.5rem;
+  /* Extension page toasts (content/toast.css) — dark field caution plate. */
+  --toast-caution-bg: #0e0e0e;
+  --toast-caution-fg: #f3f1ea;
+  --toast-caution-line: rgba(243, 241, 234, 0.16);
+  --toast-danger-bg: #ff4d00;
+  --toast-danger-fg: #0e0e0e;
   color-scheme: dark;
 }
 
@@ -66,5 +72,11 @@
   --accent: #ff4d00;
   --border: rgba(26, 25, 22, 0.16);
   --panel-edge: rgba(26, 25, 22, 0.36);
+  /* Extension page toasts — cream plate / charcoal type. */
+  --toast-caution-bg: #f3f1ea;
+  --toast-caution-fg: #1a1916;
+  --toast-caution-line: rgba(26, 25, 22, 0.16);
+  --toast-danger-bg: #ff4d00;
+  --toast-danger-fg: #0e0e0e;
   color-scheme: light;
 }

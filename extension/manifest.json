@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "buusdo Cybersecurity Service Tool",
   "short_name": "buusdo",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "buusdo Cybersecurity Service Tool. Block known trackers and flag phishing-like URLs. EN / pt-PT. Storage defaults to off.",
   "homepage_url": "https://buusdocst.mtsu.workers.dev",
   "permissions": [
@@ -55,6 +55,7 @@
         "content/content.js"
       ],
       "css": [
+        "shared/tokens.css",
         "content/toast.css"
       ],
       "run_at": "document_idle"
@@ -72,13 +73,23 @@
   "web_accessible_resources": [
     {
       "resources": [
-        "content/toast.css"
+        "content/toast.css",
+        "shared/tokens.css"
       ],
       "matches": [
         "<all_urls>"
       ]
     }
   ],
+  "externally_connectable": {
+    "matches": [
+      "https://buusdocst.mtsu.workers.dev/*",
+      "http://localhost:3000/*",
+      "http://127.0.0.1:3000/*",
+      "http://localhost:3001/*",
+      "http://127.0.0.1:3001/*"
+    ]
+  },
   "browser_specific_settings": {
     "safari": {
       "strict_min_version": "16.4"

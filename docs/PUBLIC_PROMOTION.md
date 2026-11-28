@@ -9,7 +9,7 @@ Until a custom domain replaces workers.dev, the **only** public links are:
 | Canonical product | `https://buusdocst.mtsu.workers.dev` |
 | Privacy (EN) | `https://buusdocst.mtsu.workers.dev/en/privacy` |
 | Privacy (optional locale) | `https://buusdocst.mtsu.workers.dev/pt-PT/privacy` |
-| China notice (GitHub Pages) | `https://otas0.github.io/buusdocst/` — 告知书; Workers CN force-redirect ([CHINA_GITHUB_PAGES.md](CHINA_GITHUB_PAGES.md)) |
+| China notice (GitHub Pages) | `https://otas0.github.io/buusdocst/` — **大陆检查服务未开放** 告知书（勿指望 Workers 跳转；[CHINA_GITHUB_PAGES.md](CHINA_GITHUB_PAGES.md)） |
 | A4 poster (print handoff only) | `https://buusdocst.mtsu.workers.dev/promo/poster.html` — EN / pt-PT / 中文. **Not** product chrome (nav / Settings / extension / desktop footer must not link this). |
 | A4 poster (legacy pt URL) | `…/promo/poster-pt.html` → meta-refresh redirect to `poster.html` (keep for old links; see [promo/README.md](promo/README.md)) |
 
@@ -17,35 +17,52 @@ After a custom domain, `npm run production:origin -- https://YOUR_CANONICAL` rew
 
 **Print QA:** one physical A4 at **100%** / margins **None** / background graphics On ([promo/README.md](promo/README.md)).
 
-## Ready-to-paste (EN)
+## Ready-to-paste (EN · CF-reachable / global)
+
+Do **not** use this block for mainland-only WeChat / store China fields (use 中文 · 大陆 below).
 
 ```
 buusdo Cybersecurity Service Tool (Buusdo product line).
 Check a website before you trust it.
 Product (Workers): https://buusdocst.mtsu.workers.dev
-China notice (告知书; CN force-redirect from Workers): https://otas0.github.io/buusdocst/
+China notice (mainland service not offered; CN force-redirect when Workers is reachable): https://otas0.github.io/buusdocst/
 A4 poster: https://buusdocst.mtsu.workers.dev/promo/poster.html
 Privacy: https://buusdocst.mtsu.workers.dev/en/privacy
 ```
 
-## Ready-to-paste (alternate locale)
+## Ready-to-paste (pt-PT · CF-reachable / global)
 
 ```
 buusdo Cybersecurity Service Tool (linha Buusdo).
 Verifique um site antes de confiar.
 Produto (Workers): https://buusdocst.mtsu.workers.dev
-Aviso China (aviso + auto-guia): https://otas0.github.io/buusdocst/
+Aviso China (serviço não oferecido no continente; redirecionamento CN se Workers for alcançável): https://otas0.github.io/buusdocst/
 Cartaz A4: https://buusdocst.mtsu.workers.dev/promo/poster.html
 Privacidade: https://buusdocst.mtsu.workers.dev/en/privacy
 ```
 
-## Ready-to-paste (中文)
+## Ready-to-paste (中文 · 面向大陆用户) — **no Workers URL**
+
+大陆网络常无法打开 `workers.dev`，**也不会自动跳转**。面向大陆只发告知书链接 / 二维码（禁止混发 Workers）：
+
+**Assert 白名单（`npm run assert:public-promotion`）：** 面向大陆 fenced 块允许警示词「勿等待 workers.dev 跳转」/ 纯文本 `workers.dev`；**禁止**任何 `https://…workers.dev` 或 `buusdocst.mtsu.workers.dev` 产品 URL。全球 / CF 可达块则必须含 Workers 产品 URL + A4 + Pages。
+
+```
+【重要】buusdo Cybersecurity Service Tool
+中国大陆地区：完整网站检查服务未开放、不作可用性承诺。
+请阅读官方告知书（勿等待 workers.dev 跳转）：
+https://otas0.github.io/buusdocst/
+```
+
+## Ready-to-paste (中文 · 全球 / 可访问 Cloudflare 时)
+
+Only when the audience can reach Cloudflare (not mainland-only channels):
 
 ```
 buusdo Cybersecurity Service Tool（Buusdo 产品线）。
 访问网站前先核查地址。
 产品（Workers）：https://buusdocst.mtsu.workers.dev
-中国告知书（Workers CN 强制引导至此）：https://otas0.github.io/buusdocst/
+中国告知书（大陆服务未开放说明；可达 Workers 且 CF=CN 时强制引导至此）：https://otas0.github.io/buusdocst/
 A4 海报：https://buusdocst.mtsu.workers.dev/promo/poster.html
 隐私：https://buusdocst.mtsu.workers.dev/en/privacy
 ```
@@ -53,8 +70,9 @@ A4 海报：https://buusdocst.mtsu.workers.dev/promo/poster.html
 ## Do
 
 - Name the **product** (`buusdo Cybersecurity Service Tool`) and, when useful, the **line** (`Buusdo`) — never imply they are the same product.
-- Always show **Workers product** and **China Pages notice** as two distinct surfaces (API vs 告知书; CN HTML force-redirect).
-- Link **only** the canonical origin + privacy page(s) + the single China notice URL above (no install/privacy subpaths).
+- Always show **Workers product** and **China Pages notice** as two distinct surfaces (API vs 告知书; CN HTML force-redirect when reachable).
+- **Mainland-facing posts / WeChat / store / QR:** lead with「大陆检查服务未开放」+ **only** `https://otas0.github.io/buusdocst/` — never tell users to open Workers first.
+- Link **only** the canonical origin + privacy page(s) + the single China notice URL above (no install/privacy subpaths) when addressing CF-reachable audiences.
 - Always include privacy before asking people to use the product.
 - Desktop downloads are **unsigned** GitHub Release builds — say Gatekeeper / SmartScreen warnings are expected; point to [DESKTOP_SETUP_GUIDE.md](DESKTOP_SETUP_GUIDE.md) (never imply Apple notarization or Authenticode).
 

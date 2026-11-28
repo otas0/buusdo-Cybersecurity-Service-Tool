@@ -1,5 +1,5 @@
 /**
- * Extension popup: selecting zh-Hant updates live DOM chrome to Traditional strings.
+ * Slim popup: no langSelect — status + manage-lists link mount; OS lang paints strings.
  *
  *   PLAYWRIGHT_SKIP_WEBSERVER=1 npx playwright test playwright/extension-popup-zh-hant-live.spec.ts
  */
@@ -18,7 +18,7 @@ function mime(p: string) {
   return "application/octet-stream";
 }
 
-test("popup langSelect zh-Hant paints langLabel + listsTitle in Traditional", async ({ page }) => {
+test("slim popup mounts status + manage lists (no langSelect)", async ({ page }) => {
   const server = createServer((req, res) => {
     const url = (req.url || "/").split("?")[0];
     let file = "";
@@ -46,18 +46,21 @@ test("popup langSelect zh-Hant paints langLabel + listsTitle in Traditional", as
   await new Promise<void>((resolve) => server.listen(0, "127.0.0.1", resolve));
   const { port } = server.address() as { port: number };
 
-  // Stub chrome APIs so popup.js can boot far enough to bind lang change.
   await page.addInitScript(() => {
     // @ts-expect-error test stub
     window.chrome = {
+      i18n: { getUILanguage: () => "zh-TW" },
       storage: {
         local: {
-          get: async () => ({ lang: "en" }),
+          get: async () => ({}),
           set: async () => {}
         }
       },
       runtime: {
-        sendMessage: async () => ({ ok: true, state: { lang: "en" } }),
+        sendMessage: async () => ({
+          ok: true,
+          state: { lang: "zh-Hant", lastScan: { level: "idle", trackersBlocked: 0, phishingHits: 0 } }
+        }),
         onMessage: { addListener() {} }
       },
       tabs: { query: async () => [] }
@@ -66,32 +69,13 @@ test("popup langSelect zh-Hant paints langLabel + listsTitle in Traditional", as
 
   try {
     await page.goto(`http://127.0.0.1:${port}/popup.html`, { waitUntil: "domcontentloaded" });
-    const select = page.locator("#langSelect");
-    await expect(select).toBeVisible();
-
-    // Drive applyStrings path if exposed; else set select + dispatch change after injecting t().
-    await page.evaluate(async () => {
-      const mod = await import("/shared/i18n.js");
-      const { t } = mod as { t: (l: string, k: string) => string };
-      const lang = "zh-Hant";
-      const map: Record<string, string> = {
-        langLabel: "langLabel",
-        listsTitle: "listsTitle",
-        scanLabel: "scan",
-        statusWord: "statusStandby"
-      };
-      for (const [id, key] of Object.entries(map)) {
-        const el = document.getElementById(id);
-        if (el) el.textContent = t(lang, key);
-      }
-      const sel = document.getElementById("langSelect") as HTMLSelectElement | null;
-      if (sel) sel.value = lang;
-    });
-
-    await expect(page.locator("#langLabel")).toHaveText("語言");
-    await expect(page.locator("#listsTitle")).toHaveText("個人清單");
-    await expect(page.locator("#scanLabel")).toHaveText("執行");
-    await expect(page.locator("#statusWord")).toHaveText("待命");
+    await expect(page.locator("#langSelect")).toHaveCount(0);
+    await expect(page.locator("#scanBtn")).toHaveCount(0);
+    await expect(page.getByTestId("extension-status")).toBeVisible();
+    await expect(page.getByTestId("extension-manage-lists")).toBeVisible();
+    await expect
+      .poll(async () => page.locator("#statusWord").textContent())
+      .toMatch(/待命|Standby|就绪|Pronto/);
   } finally {
     await new Promise<void>((resolve, reject) =>
       server.close((err) => (err ? reject(err) : resolve()))

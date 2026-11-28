@@ -4,6 +4,7 @@
  */
 import { readFileSync, existsSync } from "node:fs";
 import path from "node:path";
+import { isValidRunWorkerFirst, RUN_WORKER_FIRST } from "./run-worker-first.mjs";
 
 const out = path.join(process.cwd(), "dist/server/wrangler.json");
 if (!existsSync(out)) {
@@ -24,12 +25,18 @@ if (main !== "china-cf-entry.js") {
   process.exit(1);
 }
 const assets = cfg.assets && typeof cfg.assets === "object" ? cfg.assets : {};
-if (assets.run_worker_first !== true) {
+if (!isValidRunWorkerFirst(assets.run_worker_first)) {
   console.error(
-    `FAIL: assets.run_worker_first is ${JSON.stringify(assets.run_worker_first)} (want true — Assets must not skip CN wrap)`
+    `FAIL: assets.run_worker_first is ${JSON.stringify(assets.run_worker_first)} (want ${JSON.stringify(RUN_WORKER_FIRST)} — boolean true 404s CSS/JS)`
+  );
+  process.exit(1);
+}
+if (assets.binding !== "ASSETS") {
+  console.error(
+    `FAIL: assets.binding is ${JSON.stringify(assets.binding)} (want "ASSETS")`
   );
   process.exit(1);
 }
 console.log(
-  "assert-prod-wrangler-name ok — buusdocst (main=china-cf-entry.js, run_worker_first=true)"
+  "assert-prod-wrangler-name ok — buusdocst (main=china-cf-entry.js, binding=ASSETS, run_worker_first excludes /_next/static)"
 );

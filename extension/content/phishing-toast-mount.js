@@ -26,6 +26,16 @@
     "nextNoCreds": "Do not enter passwords, card numbers, codes from SMS/email, or other personal data on this site.",
     "nextVerify": "Verify independently: open the organisation’s official domain or app you already trust (bookmark, bank card, known app store). Do not use phone numbers or emails shown on the suspect page."
   },
+  "pt-PT": {
+    "phishing": "Padrão de phishing bloqueado",
+    "dismiss": "Dispensar aviso",
+    "dangerLevel": "Nível de perigo: Parar",
+    "ignoreRisk": "Pode entregar palavras-passe, dados de pagamento ou outra informação pessoal a quem controla este endereço. Feche o separador antes de escrever ou pagar o que quer que seja.",
+    "nextStepsTitle": "O que fazer a seguir — passo a passo",
+    "nextLeave": "Saia já desta página — não continue no endereço que verificou.",
+    "nextNoCreds": "Não introduza palavras-passe, números de cartão, códigos de SMS/email ou outros dados pessoais neste site.",
+    "nextVerify": "Verifique de forma independente: abra o domínio ou a app oficial da organização em que já confia (marcador, cartão do banco, loja de apps conhecida). Não use telefones nem emails mostrados na página suspeita."
+  },
   "zh-Hans": {
     "phishing": "已拦截钓鱼模式",
     "dismiss": "关闭提示",
@@ -56,15 +66,35 @@
     "nextNoCreds": "このサイトにパスワード、カード番号、SMS/メールのコード、その他の個人データを入力しないでください。",
     "nextVerify": "独立して確認してください：すでに信頼している公式ドメインやアプリを開く（ブックマーク、キャッシュカード、既知のアプリストア）。不審なページに表示された電話番号やメールは使わないでください。"
   },
-  "pt-PT": {
-    "phishing": "Padrão de phishing bloqueado",
-    "dismiss": "Dispensar aviso",
-    "dangerLevel": "Nível de perigo: Parar",
-    "ignoreRisk": "Pode entregar palavras-passe, dados de pagamento ou outra informação pessoal a quem controla este endereço. Feche o separador antes de escrever ou pagar o que quer que seja.",
-    "nextStepsTitle": "O que fazer a seguir — passo a passo",
-    "nextLeave": "Saia já desta página — não continue no endereço que verificou.",
-    "nextNoCreds": "Não introduza palavras-passe, números de cartão, códigos de SMS/email ou outros dados pessoais neste site.",
-    "nextVerify": "Verifique de forma independente: abra o domínio ou a app oficial da organização em que já confia (marcador, cartão do banco, loja de apps conhecida). Não use telefones nem emails mostrados na página suspeita."
+  "mi": {
+    "phishing": "Kua ārai te tauira tinihanga",
+    "dismiss": "Whakakorea te tohu",
+    "dangerLevel": "Taumata mōrearea: Tū",
+    "ignoreRisk": "Tērā pea ka hoatu e koe ngā kupu huna, ngā taipitopito utu, ētahi raraunga whaiaro rānei ki te hunga e whakahaere ana i tēnei wāhitau. Katia te ripa i mua i te patopato, i te utu rānei.",
+    "nextStepsTitle": "Me aha ināianei — hikoi ā-hikoi",
+    "nextLeave": "Wehe ināianei i tēnei whārangi — kaua e haere tonu i te wāhitau i tirohia e koe.",
+    "nextNoCreds": "Kaua e tāuru kupu huna, nama kāri, waehere nō SMS/īmēra, ētahi raraunga whaiaro rānei ki tēnei pae.",
+    "nextVerify": "Whakamana motuhake: whakatuwheratia te rohe, te taupānga rānei ōkawa o te whakahaere kua whakapono kē koe (tohuwhārangi, kāri pēke, toa taupānga e mōhiotia ana). Kaua e whakamahi waea, īmēra rānei i te whārangi whakapātaritari."
+  },
+  "th": {
+    "phishing": "บล็อกรูปแบบฟิชชิงแล้ว",
+    "dismiss": "ปิดคำใบ้",
+    "dangerLevel": "ระดับอันตราย: หยุด",
+    "ignoreRisk": "คุณอาจมอบรหัสผ่าน ข้อมูลชำระเงิน หรือข้อมูลส่วนตัวอื่นให้ผู้ควบคุมที่อยู่นี้ ปิดแท็บก่อนพิมพ์หรือจ่ายอะไร",
+    "nextStepsTitle": "สิ่งที่ควรทำต่อ — ทีละขั้น",
+    "nextLeave": "ออกจากหน้านี้ทันที — อย่าไปต่อที่อยู่ที่คุณเพิ่งตรวจ",
+    "nextNoCreds": "อย่าใส่รหัสผ่าน เลขบัตร รหัสจาก SMS/อีเมล หรือข้อมูลส่วนตัวอื่นบนเว็บนี้",
+    "nextVerify": "ตรวจอิสระ: เปิดโดเมนหรือแอปทางการขององค์กรที่คุณไว้ใจอยู่แล้ว (บุ๊กมาร์ก บัตรธนาคาร ร้านแอปที่รู้จัก) อย่าใช้โทรศัพท์หรืออีเมลบนหน้าต้องสงสัย"
+  },
+  "vi": {
+    "phishing": "Đã chặn mẫu lừa đảo",
+    "dismiss": "Đóng gợi ý",
+    "dangerLevel": "Mức nguy hiểm: Dừng",
+    "ignoreRisk": "Bạn có thể đưa mật khẩu, chi tiết thanh toán hoặc dữ liệu cá nhân khác cho người kiểm soát địa chỉ này. Đóng thẻ trước khi gõ hoặc thanh toán bất kỳ thứ gì.",
+    "nextStepsTitle": "Việc cần làm tiếp — từng bước",
+    "nextLeave": "Rời trang này ngay — đừng tiếp tục trên địa chỉ bạn vừa kiểm tra.",
+    "nextNoCreds": "Đừng nhập mật khẩu, số thẻ, mã từ SMS/email hay dữ liệu cá nhân khác trên trang này.",
+    "nextVerify": "Xác minh độc lập: mở tên miền hoặc ứng dụng chính thức của tổ chức bạn đã tin (dấu trang, thẻ ngân hàng, cửa hàng ứng dụng quen). Đừng dùng số điện thoại hay email hiện trên trang đáng ngờ."
   },
   "de": {
     "phishing": "Phishing-Muster blockiert",
@@ -115,36 +145,6 @@
     "nextLeave": "Verlaat deze pagina nu — ga niet verder op het adres dat u controleerde.",
     "nextNoCreds": "Voer op deze site geen wachtwoorden, kaartnummers, codes uit sms/e-mail of andere persoonsgegevens in.",
     "nextVerify": "Verifieer onafhankelijk: open het officiële domein of de app van de organisatie die u al vertrouwt (bladwijzer, bankpas, bekende app store). Gebruik geen telefoonnummers of e-mails op de verdachte pagina."
-  },
-  "mi": {
-    "phishing": "Kua ārai te tauira tinihanga",
-    "dismiss": "Whakakorea te tohu",
-    "dangerLevel": "Taumata mōrearea: Tū",
-    "ignoreRisk": "Tērā pea ka hoatu e koe ngā kupu huna, ngā taipitopito utu, ētahi raraunga whaiaro rānei ki te hunga e whakahaere ana i tēnei wāhitau. Katia te ripa i mua i te patopato, i te utu rānei.",
-    "nextStepsTitle": "Me aha ināianei — hikoi ā-hikoi",
-    "nextLeave": "Wehe ināianei i tēnei whārangi — kaua e haere tonu i te wāhitau i tirohia e koe.",
-    "nextNoCreds": "Kaua e tāuru kupu huna, nama kāri, waehere nō SMS/īmēra, ētahi raraunga whaiaro rānei ki tēnei pae.",
-    "nextVerify": "Whakamana motuhake: whakatuwheratia te rohe, te taupānga rānei ōkawa o te whakahaere kua whakapono kē koe (tohuwhārangi, kāri pēke, toa taupānga e mōhiotia ana). Kaua e whakamahi waea, īmēra rānei i te whārangi whakapātaritari."
-  },
-  "th": {
-    "phishing": "บล็อกรูปแบบฟิชชิงแล้ว",
-    "dismiss": "ปิดคำใบ้",
-    "dangerLevel": "ระดับอันตราย: หยุด",
-    "ignoreRisk": "คุณอาจมอบรหัสผ่าน ข้อมูลชำระเงิน หรือข้อมูลส่วนตัวอื่นให้ผู้ควบคุมที่อยู่นี้ ปิดแท็บก่อนพิมพ์หรือจ่ายอะไร",
-    "nextStepsTitle": "สิ่งที่ควรทำต่อ — ทีละขั้น",
-    "nextLeave": "ออกจากหน้านี้ทันที — อย่าไปต่อที่อยู่ที่คุณเพิ่งตรวจ",
-    "nextNoCreds": "อย่าใส่รหัสผ่าน เลขบัตร รหัสจาก SMS/อีเมล หรือข้อมูลส่วนตัวอื่นบนเว็บนี้",
-    "nextVerify": "ตรวจอิสระ: เปิดโดเมนหรือแอปทางการขององค์กรที่คุณไว้ใจอยู่แล้ว (บุ๊กมาร์ก บัตรธนาคาร ร้านแอปที่รู้จัก) อย่าใช้โทรศัพท์หรืออีเมลบนหน้าต้องสงสัย"
-  },
-  "vi": {
-    "phishing": "Đã chặn mẫu lừa đảo",
-    "dismiss": "Đóng gợi ý",
-    "dangerLevel": "Mức nguy hiểm: Dừng",
-    "ignoreRisk": "Bạn có thể đưa mật khẩu, chi tiết thanh toán hoặc dữ liệu cá nhân khác cho người kiểm soát địa chỉ này. Đóng thẻ trước khi gõ hoặc thanh toán bất kỳ thứ gì.",
-    "nextStepsTitle": "Việc cần làm tiếp — từng bước",
-    "nextLeave": "Rời trang này ngay — đừng tiếp tục trên địa chỉ bạn vừa kiểm tra.",
-    "nextNoCreds": "Đừng nhập mật khẩu, số thẻ, mã từ SMS/email hay dữ liệu cá nhân khác trên trang này.",
-    "nextVerify": "Xác minh độc lập: mở tên miền hoặc ứng dụng chính thức của tổ chức bạn đã tin (dấu trang, thẻ ngân hàng, cửa hàng ứng dụng quen). Đừng dùng số điện thoại hay email hiện trên trang đáng ngờ."
   },
   "af": {
     "phishing": "Phishing-patroon geblokkeer",

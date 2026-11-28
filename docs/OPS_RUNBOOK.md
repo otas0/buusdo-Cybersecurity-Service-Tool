@@ -48,6 +48,23 @@ See [LAUNCH_CHECKLIST.md](LAUNCH_CHECKLIST.md) § check:prod log.
 - Account sync → [ACCOUNT_SYNC_GATE.md](ACCOUNT_SYNC_GATE.md) (Turso + Resend first)
 - vinext 1.4 → only after 48h freeze → `chore/vinext-1-4-eval` ([VINEXT_UPGRADE_1_4.md](VINEXT_UPGRADE_1_4.md))
 
+## Weekly — mainland channels (告知书 only)
+
+Once per week (or before any China-facing post):
+
+1. Confirm public mainland copy uses **only** https://otas0.github.io/buusdocst/ ([PUBLIC_PROMOTION.md](PUBLIC_PROMOTION.md) 「面向大陆用户」— **no** Workers URL mixed in). `npm run assert:public-promotion` must stay green.
+2. Spot-check poster China QR label still reads「服务未开放 · 告知书」(`public/promo/poster.html`).
+3. Chrome listing Chinese field (if used) still pastes the mainland block; archive screenshot per [store-screenshots/ARCHIVE-china-listing-paste.md](store-screenshots/ARCHIVE-china-listing-paste.md).
+4. Do **not** treat Logpush CN→302 counts as mainland reach rate ([CHINA_GITHUB_PAGES.md](CHINA_GITHUB_PAGES.md) — dashboard annotation: **非触达率**).
+5. **github.io 抽测：** from one mainland-like path, `GET https://otas0.github.io/buusdocst/` (or browser). Log in the weekly note: `ok` / `slow` / `fail` + UTC date. If mostly `fail`, re-open the Gitee/CDN eval table in CHINA_GITHUB_PAGES. Optional automation: open issue from [`.github/ISSUE_TEMPLATE/weekly-ops-check.md`](../.github/ISSUE_TEMPLATE/weekly-ops-check.md) and tick the github.io box.
+6. After Chrome Web Store publish: `node scripts/set-chrome-webstore-url.mjs --url '<listing URL>'` (do not invent URLs).
+
+### Weekly log (append)
+
+| Week (UTC) | Mainland channels Pages-only? | github.io spot-check | Notes |
+|------------|-------------------------------|----------------------|-------|
+| _template_ | yes / no | ok / slow / fail | |
+
 ## Baselines & connectivity
 
 - Workers metrics PNGs → [WORKERS_ERROR_BASELINE.md](WORKERS_ERROR_BASELINE.md)

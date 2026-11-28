@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { getMessages, type Locale } from "../i18n/messages";
 
 export function ListsOfflinePanel({
@@ -12,12 +13,29 @@ export function ListsOfflinePanel({
   onOpenSettingsLists?: () => void;
 }) {
   const t = getMessages(locale);
+  const [justBlocked, setJustBlocked] = useState("");
+
+  useEffect(() => {
+    try {
+      setJustBlocked(String(new URLSearchParams(window.location.search).get("blocked") || "").trim());
+    } catch {
+      setJustBlocked("");
+    }
+  }, []);
 
   return (
     <main className="stage settings-stage" data-testid="lists-offline">
       <p className="kicker">{t.listsOfflineKicker}</p>
       <h2>{t.listsOfflineTitle}</h2>
       <p className="light-note">{t.listsOfflineIntro}</p>
+      {justBlocked ? (
+        <p className="scope-note" role="status" data-testid="lists-offline-just-blocked">
+          {(t.listsOfflineJustBlocked || "Just blocked from the extension: {domain}").replace(
+            "{domain}",
+            justBlocked
+          )}
+        </p>
+      ) : null}
 
       <section className="settings-block">
         <h3 className="settings-subhead">{t.listsOfflineStepsTitle}</h3>

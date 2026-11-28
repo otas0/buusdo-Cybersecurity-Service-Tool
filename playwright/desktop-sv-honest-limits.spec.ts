@@ -1,5 +1,5 @@
 /**
- * Desktop lang select → sv shows non-EN honestLimitsTitle on the gate.
+ * Desktop OS lang (sv) shows non-EN honestLimitsTitle on the gate.
  *
  *   PLAYWRIGHT_SKIP_WEBSERVER=1 npx playwright test playwright/desktop-sv-honest-limits.spec.ts
  */
@@ -31,7 +31,7 @@ async function waitForState(uiPort: number) {
   throw new Error("desktop dashboard did not start");
 }
 
-test("choosing sv shows non-EN honestLimitsTitle", async ({ page }) => {
+test("OS lang sv shows non-EN honestLimitsTitle", async ({ page }) => {
   const data = await mkdtemp(path.join(tmpdir(), "shield-pw-sv-data-"));
   const fixture = await mkdtemp(path.join(tmpdir(), "shield-pw-sv-fixture-"));
   const uiPort = 32211;
@@ -61,9 +61,13 @@ test("choosing sv shows non-EN honestLimitsTitle", async ({ page }) => {
     const state = await waitForState(uiPort);
     expect(state.honestLimitsPending).toBe(true);
 
+    await page.addInitScript(() => {
+      Object.defineProperty(navigator, "language", { get: () => "sv-SE", configurable: true });
+      Object.defineProperty(navigator, "languages", { get: () => ["sv-SE", "sv"], configurable: true });
+    });
     await page.goto(`http://localhost:${uiPort}/`, { waitUntil: "domcontentloaded" });
     await expect(page.getByTestId("honest-limits-gate")).toBeVisible();
-    await page.getByTestId("desktop-locale-select").selectOption("sv");
+    await expect(page.locator("#langSelect")).toHaveCount(0);
     await expect(page.locator("#honestLimitsTitle")).toHaveText(svTitle);
     await expect(page.locator("#honestLimitsTitle")).not.toHaveText(enTitle);
   } finally {

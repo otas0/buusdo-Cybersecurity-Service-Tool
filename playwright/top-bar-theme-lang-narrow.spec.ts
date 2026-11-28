@@ -22,6 +22,9 @@ const fixtureHtml = `<!doctype html>
       padding: 0 0 18px; border-bottom: 1px solid var(--line); flex-wrap: nowrap;
     }
     .shell .brand-logo { display: block; height: 32px; width: auto; max-width: min(160px, 48vw); background: #222; }
+    .shell .brand-lockup img.brand-logo.brand-logo-on-light { display: none !important; }
+    html[data-theme="light"] .shell .brand-lockup img.brand-logo.brand-logo-on-dark { display: none !important; }
+    html[data-theme="light"] .shell .brand-lockup img.brand-logo.brand-logo-on-light { display: block !important; }
     .shell .top-nav {
       display: flex; align-items: center; gap: 6px; flex-wrap: nowrap; min-width: 0;
     }
@@ -44,8 +47,12 @@ const fixtureHtml = `<!doctype html>
   <main class="shell">
     <header class="top" data-testid="top-bar">
       <div class="brand">
-        <img class="brand-logo" width="117" height="32" alt="buusdo Cybersecurity Service Tool"
-          src="data:image/svg+xml,${encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="117" height="32"><rect width="117" height="32" fill="#333"/><text x="6" y="22" fill="#f3f1ea" font-size="12" font-family="sans-serif">buusdo</text></svg>')}" />
+        <h1 class="brand-lockup">
+          <img class="brand-logo brand-logo-on-dark" width="117" height="32" alt="buusdo Cybersecurity Service Tool"
+            src="data:image/svg+xml,${encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="117" height="32"><rect width="117" height="32" fill="#333"/><text x="6" y="22" fill="#f3f1ea" font-size="12" font-family="sans-serif">buusdo</text></svg>')}" />
+          <img class="brand-logo brand-logo-on-light" width="117" height="32" alt="" aria-hidden="true"
+            src="data:image/svg+xml,${encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="117" height="32"><rect width="117" height="32" fill="#ebe8df"/><text x="6" y="22" fill="#1a1916" font-size="12" font-family="sans-serif">buusdo</text></svg>')}" />
+        </h1>
       </div>
       <nav class="top-nav" data-testid="top-nav-chrome">
         <button type="button" class="nav-link theme-toggle-btn" data-testid="theme-switch">Light</button>

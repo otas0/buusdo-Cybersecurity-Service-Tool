@@ -1,5 +1,5 @@
 /**
- * After choosing zh-Hant in the extension popup, core UI keys must be Traditional (not EN).
+ * zh-Hant system-lang bags stay Traditional for toast/list chrome (popup follows OS).
  *
  *   npx tsx --test tests/extension-popup-zh-hant-strings.test.ts
  */
@@ -7,15 +7,17 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { test } from "node:test";
 
-test("popup.html exposes zh-Hant under East Asia optgroup (no Frequent UI)", () => {
+test("slim popup has no manual langSelect; catalog still lists zh-Hant", () => {
   const html = readFileSync("extension/popup/popup.html", "utf8");
-  assert.match(html, /data-i18n-label="langRegionEastAsia"/);
-  assert.match(html, /<option value="zh-Hant">/);
-  assert.match(html, /<optgroup /);
+  assert.doesNotMatch(html, /id="langSelect"/);
   assert.doesNotMatch(html, /Frequent|locale-frequent|常用/);
+  const catalog = JSON.parse(
+    readFileSync("extension/shared/extension-ui-locales.json", "utf8")
+  ) as { order: string[] };
+  assert.ok(catalog.order.includes("zh-Hant"));
 });
 
-test("zh-Hant bag via normalizeUiLang + t() covers core popup chrome", async () => {
+test("zh-Hant bag via normalizeUiLang + t() covers core chrome", async () => {
   const mod = await import("../extension/shared/i18n.js");
   const { normalizeUiLang, t, STRINGS } = mod as {
     normalizeUiLang: (l: string) => string;
@@ -26,30 +28,22 @@ test("zh-Hant bag via normalizeUiLang + t() covers core popup chrome", async () 
   assert.equal(normalizeUiLang("zh-HK"), "zh-Hant");
   assert.ok(STRINGS["zh-Hant"]);
 
-  assert.equal(t("zh-Hant", "langLabel"), "語言");
-  assert.equal(t("zh-Hant", "listsTitle"), "個人清單");
   assert.match(t("zh-Hant", "appTitle"), /buusdo Cybersecurity Service Tool/);
+  assert.equal(t("zh-Hant", "listsTitle"), "個人清單");
 
   const mustDiffer = [
-    "scan",
     "statusStandby",
     "statusDanger",
     "listsTitle",
-    "listsExport",
-    "listsImport",
-    "listsHint",
-    "websiteApiLabel",
-    "langLabel",
     "listBlock",
-    "listTrust"
+    "listTrust",
+    "statusIdle"
   ] as const;
   for (const key of mustDiffer) {
     assert.notEqual(t("zh-Hant", key), t("en", key), `zh-Hant ${key} must differ from EN`);
   }
 
-  // Spot-check Traditional forms (not Simplified).
-  assert.match(t("zh-Hant", "langLabel"), /語/);
-  assert.doesNotMatch(t("zh-Hant", "langLabel"), /检查|语言/);
   assert.match(t("zh-Hant", "listsTitle"), /清單/);
   assert.doesNotMatch(t("zh-Hant", "listsTitle"), /个人列表/);
+  assert.match(t("zh-Hant", "listBlock"), /攔截|阻挡|封鎖/);
 });

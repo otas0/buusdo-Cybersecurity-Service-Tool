@@ -43,3 +43,9 @@ Until a URL is set, the website Downloads page shows “listing soon” and link
 | Privacy URL on listing | `/en/privacy` | `/en/privacy` |
 | One Run after install | yes | yes (extension enabled in Safari) |
 | Website Settings primary CTA | store URL | store URL |
+
+### Safari — storage + soft fetch
+
+- Popup listens to `chrome.storage.onChanged` for `shieldState` (Standby / Clear / Hold / Halt). Safari Web Extension 16.4+ supports this; if the popup stays open across a soft scan, the readout updates without reopening.
+- Soft `POST` to the production Workers `/api/check` uses an `AbortController` (~4.5s). Manifest `host_permissions` already include that origin — required for Safari as well as Chrome.
+- Soft-check failures return no risk level and **must not** rewrite `lastScan` to Halt (local signals only).

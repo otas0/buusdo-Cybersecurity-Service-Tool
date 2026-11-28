@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 /**
  * Rebuild extension toast COPY from website packs (toast-sized keys only).
- * Locales = every <option> in extension/popup/popup.html #langSelect, plus EXTRA_PACKS
- * (pt-BR). ja / af / zu / zh-Hant / de / fr / es / it / nl live in #langSelect — not EXTRA.
+ * Locales = extension/shared/extension-ui-locales.json order + extraToastPacks
+ * (popup no longer ships #langSelect — OS language maps into this catalog).
  * Patches only the TOAST_COPY_START/END block in phishing-toast-mount.js (never drops buildPhishingToast).
  *
  *   node scripts/sync-toast-i18n.mjs
@@ -38,21 +38,18 @@ function toastFromBag(bag, localeId) {
   };
 }
 
-function localesFromLangSelect() {
-  const html = fs.readFileSync(path.join(root, "extension/popup/popup.html"), "utf8");
-  const block = html.match(/id="langSelect"[\s\S]*?<\/select>/);
-  if (!block) return ["en", "pt-PT", "zh-Hans"];
-  return [...block[0].matchAll(/<option\s+value="([^"]+)"/g)].map((m) => m[1]);
+function localesFromCatalog() {
+  const catalogPath = path.join(root, "extension/shared/extension-ui-locales.json");
+  const catalog = JSON.parse(fs.readFileSync(catalogPath, "utf8"));
+  const order = Array.isArray(catalog.order) ? catalog.order : ["en", "pt-PT", "zh-Hans"];
+  const extra = Array.isArray(catalog.extraToastPacks) ? catalog.extraToastPacks : ["pt-BR"];
+  return { order, locales: [...new Set([...order, ...extra])] };
 }
 
-// Overlay Halt chips beyond the popup #langSelect set (af/zu + BR/ja extras).
-// Southern Africa nr/nso join EXTRA until they also land in #langSelect (popup optgroup).
-const EXTRA_PACKS = ["pt-BR", "nr", "nso"];
-const langSelectOrder = localesFromLangSelect();
-const locales = [...new Set([...langSelectOrder, ...EXTRA_PACKS])];
+const { order: langSelectOrder, locales } = localesFromCatalog();
 
 const COPY = {};
-// Emit in langSelect order first so option↔COPY key order stays aligned for parity tests.
+// Emit in catalog order first so toast↔locale parity tests stay aligned.
 for (const id of locales) {
   if (COPY[id]) continue;
   if (id === "en") {
@@ -122,7 +119,7 @@ if (checkOnly) {
     console.error("[sync-toast-i18n] mount COPY drifts from packs — run: npm run sync:toast-i18n");
     process.exit(1);
   }
-  console.info(`[sync-toast-i18n] OK (${Object.keys(COPY).length} locales from langSelect+packs)`);
+  console.info(`[sync-toast-i18n] OK (${Object.keys(COPY).length} locales from extension-ui-locales+packs)`);
   process.exit(0);
 }
 
@@ -133,5 +130,5 @@ mount = patchMountCopy(mount);
 assertMountApi(mount);
 fs.writeFileSync(mountPath, mount);
 console.log(
-  `Synced toast i18n (${Object.keys(COPY).length} locales; langSelect=${localesFromLangSelect().join(",")}) → ${path.relative(root, outJson)}`
+  `Synced toast i18n (${Object.keys(COPY).length} locales; catalog=${langSelectOrder.join(",")}) → ${path.relative(root, outJson)}`
 );

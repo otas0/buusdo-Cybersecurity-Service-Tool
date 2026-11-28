@@ -1,0 +1,25 @@
+{
+  "comment": "Extension toast/TRACKER locale order (OS lang maps into these). Replaces former popup #langSelect.",
+  "order": [
+    "en",
+    "pt-PT",
+    "zh-Hans",
+    "zh-Hant",
+    "ja",
+    "mi",
+    "th",
+    "vi",
+    "de",
+    "fr",
+    "es",
+    "it",
+    "nl",
+    "af",
+    "zu",
+    "xh",
+    "st",
+    "nr",
+    "nso"
+  ],
+  "extraToastPacks": ["pt-BR"]
+}

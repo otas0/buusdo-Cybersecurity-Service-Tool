@@ -279,40 +279,22 @@ let websiteCheckHost = "localhost:3000";
 /** @type {string} */
 let lang = "en";
 
-function fillLangSelect() {
-  const sel = els.langSelect;
-  if (!sel || !LOCALE_CATALOG_DATA?.catalog) return;
-  const { regionOrder, regionLabels, catalog, desktopFirstClassBags } = LOCALE_CATALOG_DATA;
-  const firstClass = new Set(desktopFirstClassBags || []);
-  const previous = sel.value || lang;
-  sel.innerHTML = "";
-  for (const region of regionOrder) {
-    const items = catalog.filter((c) => c.region === region);
-    if (!items.length) continue;
-    const group = document.createElement("optgroup");
-    group.label = regionLabels?.[region]?.en || region;
-    // First-class bags first within each region (badge in label); EN-fallback after.
-    const ranked = [
-      ...items.filter((c) => firstClass.has(c.id)),
-      ...items.filter((c) => !firstClass.has(c.id))
-    ];
-    for (const item of ranked) {
-      const opt = document.createElement("option");
-      opt.value = item.id;
-      if (firstClass.has(item.id)) {
-        opt.dataset.desktopBag = "first-class";
-        opt.title = "Native desktop UI";
-        opt.textContent = `● ${item.nativeName}`;
-      } else {
-        opt.dataset.desktopBag = "en-fallback";
-        opt.title = "English UI fallback";
-        opt.textContent = item.nativeName;
-      }
-      group.appendChild(opt);
-    }
-    sel.appendChild(group);
+/** OS / navigator language — no manual #langSelect (aligned with extension popup). */
+function resolveSystemLang() {
+  try {
+    let id = normalizeUiLang(navigator.language || navigator.languages?.[0] || "en");
+    // Regional tags → bag id (sv-SE→sv, it-IT→it). Keep zh-* / pt-* compounds.
+    if (id.startsWith("zh") || id.startsWith("pt")) return id;
+    if (id.includes("-")) id = normalizeUiLang(id.split("-")[0]);
+    return id;
+  } catch {
+    return "en";
   }
-  sel.value = previous;
+}
+
+function fillLangSelect() {
+  // Retained no-op for call sites; catalog still imported for region metadata elsewhere.
+  void LOCALE_CATALOG_DATA;
 }
 /** Desktop package version from /api/state (footer about line). */
 let desktopAppVersion = "";
@@ -782,8 +764,8 @@ async function fetchState() {
   const res = await fetch("/api/state");
   const data = await res.json();
   if (!data.ok) return;
-  lang = normalizeUiLang(data.state.lang);
-  els.langSelect.value = lang;
+  lang = resolveSystemLang();
+  if (els.langSelect) els.langSelect.value = lang;
   if (els.privacySelect) {
     els.privacySelect.value = normalizePrivacyMode(data.state.privacyMode);
   }
@@ -1138,8 +1120,8 @@ function connectSSE() {
     try {
       const data = JSON.parse(ev.data);
       if (data.state) {
-        lang = normalizeUiLang(data.state.lang);
-        els.langSelect.value = lang;
+        lang = resolveSystemLang();
+        if (els.langSelect) els.langSelect.value = lang;
         if (els.privacySelect) {
           els.privacySelect.value = normalizePrivacyMode(data.state.privacyMode);
         }
@@ -1274,8 +1256,17 @@ els.websiteCheckBtn?.addEventListener("click", () => {
 });
 
 fillLangSelect();
+lang = resolveSystemLang();
+document.documentElement.lang = lang === "pt-PT" ? "pt" : lang;
+void fetch("/api/prefs", {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({ lang })
+}).catch(() => {});
 
-els.langSelect.addEventListener("change", async () => {
+els.langSelect?.addEventListener("change", async () => {
+  // Legacy path if a select is reintroduced in a fork.
+  if (!els.langSelect) return;
   lang = normalizeUiLang(els.langSelect.value);
   document.documentElement.lang = lang;
   applyI18n();
@@ -2747,6 +2738,34 @@ function consumeDeepLinkBlockHost() {
     /* ignore */
   }
 }
+
+const BRAND_ALT = "buusdo Cybersecurity Service Tool";
+
+/** OS color-scheme → data-theme + dual wordmark alt (same contract as extension popup). */
+function applyThemeFromSystem() {
+  const light = window.matchMedia("(prefers-color-scheme: light)").matches;
+  document.documentElement.dataset.theme = light ? "light" : "dark";
+  document.documentElement.style.colorScheme = light ? "light" : "dark";
+  const dark = document.querySelector(".brand-lockup img.brand-logo.brand-logo-on-dark");
+  const lightImg = document.querySelector(".brand-lockup img.brand-logo.brand-logo-on-light");
+  if (!dark || !lightImg) return;
+  if (light) {
+    dark.setAttribute("alt", "");
+    dark.setAttribute("aria-hidden", "true");
+    lightImg.setAttribute("alt", BRAND_ALT);
+    lightImg.removeAttribute("aria-hidden");
+  } else {
+    lightImg.setAttribute("alt", "");
+    lightImg.setAttribute("aria-hidden", "true");
+    dark.setAttribute("alt", BRAND_ALT);
+    dark.removeAttribute("aria-hidden");
+  }
+}
+
+applyThemeFromSystem();
+window.matchMedia("(prefers-color-scheme: light)").addEventListener?.("change", () => {
+  applyThemeFromSystem();
+});
 
 fetchState()
   .then(() => {

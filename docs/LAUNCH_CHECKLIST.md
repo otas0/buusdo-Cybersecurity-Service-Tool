@@ -10,10 +10,12 @@ Recorded via `npm run production:origin` → README + `shared/production-site.js
 - [x] Node ≥ 22.13; `npm ci`
 - [x] `npm run check` (2026-11-01 — tests + typecheck + lint + threat:check + build)
 - [ ] `npm run openapi:check` (run before OpenAPI-touching commits)
-- [x] OpenAPI / health **1.5.3** — `localeCount` + `regionCount` + `localesByRegion` on `GET /api/health`; `health-smoke` asserts `localeCount ≥ 40`, full region keys, and `localesByRegion.europe ≥ 20` (2026-11-08). Schema: [`docs/openapi-check-timing.yaml`](./openapi-check-timing.yaml) → property [`localeCount`](./openapi-check-timing.yaml#L345)
+- [x] OpenAPI / health **1.5.3** — `localeCount` + `regionCount` + `localesByRegion` on `GET /api/health`; `health-smoke` asserts `localeCount ≥ 40`, full region keys, and `localesByRegion.europe ≥ 20` (2026-11-08). Schema: [`docs/openapi-check-timing.yaml`](./openapi-check-timing.yaml#L345)
 - [ ] Manual: `/en`, `/pt-PT`, Settings, privacy, one check via `npm run dev`
 - [ ] Promo mirror: `npm run build:promo-posters` then open `/promo/poster.html` (EN / pt-PT / 中文); Print A4 · 100% · Margins None fits one page; live + China QR scan OK
 - [ ] After deploy: `https://buusdocst.mtsu.workers.dev/promo/poster.html` 200 + cache-bust wordmark loads
+- [ ] **Hard refresh after wordmark / shield.css deploys:** Cmd/Ctrl+Shift+R on `/en` (and light theme once). Stale CSS can leave **both** wordmarks painted or a blue UA **Run** button — confirm cream-only mark on dark, Halt-orange `.primary-button`, and DevTools Network shows `/_next/static/css/*.css` **200** (not 404). Corrupt `localStorage.buusdocst-ui-theme` is cleared on boot (falls back to dark).
+- [ ] After every prod deploy: `npm run assert:prod-css-asset` + `npm run assert:prod-brand-asset` (CSS 200 + Halt; wordmark PNG non-empty). Boolean `run_worker_first: true` 404s CSS; routing `/brand/*` through the Worker can return `content-length: 0` — wrap must use the vinext exclusion pattern (includes `!/brand/*`).
 
 ## B. Cloudflare hosting
 

@@ -79,9 +79,27 @@ const DEFAULT_STATE = {
     phishingHits: 0,
     url: null
   },
+  /** Last domain the user Blocked from a page toast (website deep-link hint). */
+  lastBlockedDomain: null,
   /** tabId -> { trackers, phishing, lastToastAt } */
   tabs: {}
 };
+
+/** Soft website check — same production origin as extension/shared/api-base-migrate.mjs. */
+const SOFT_API_BASE = "https://buusdocst.mtsu.workers.dev";
+/** True when Chromium exposes DNR matched-rule debug (unpacked / feedback permission). */
+const DNR_FEEDBACK_LIVE = Boolean(api.declarativeNetRequest?.onRuleMatchedDebug);
+/** Soft /api/check: one POST per registrable host within this window (SW memory; resets on worker restart). */
+const SOFT_CHECK_TTL_MS = 15 * 60 * 1000;
+/** @type {Map<string, number>} */
+const softCheckAtByHost = new Map();
+
+/**
+ * Safari Web Extension notes (MV3):
+ * - chrome.storage.onChanged is supported; popup refresh relies on it (popup.js).
+ * - Soft fetch needs host_permissions for SOFT_API_BASE (already listed in manifest).
+ * - Prefer AbortController timeouts; Safari may reject long hung fetches without abort.
+ */
 
 // ---------------------------------------------------------------------------
 // Storage helpers
@@ -244,14 +262,98 @@ async function isToastDismissEnabled() {
   }
 }
 
+/** Map browser UI language → extension toast / prefs id. */
+function normalizeSystemLang(raw) {
+  const id = String(raw || "").trim();
+  if (!id) return "en";
+  if (id === "pt-PT" || id === "pt" || id.startsWith("pt-PT")) return "pt-PT";
+  if (id.startsWith("pt")) return "pt-PT";
+  if (id === "zh-Hans" || id === "zh" || id === "zh-CN" || id === "zh-SG") return "zh-Hans";
+  if (id === "zh-Hant" || id === "zh-TW" || id === "zh-HK" || id === "zh-MO") return "zh-Hant";
+  if (id === "jp") return "ja";
+  const short = id.split("-")[0];
+  const known = new Set([
+    "en",
+    "pt-PT",
+    "zh-Hans",
+    "zh-Hant",
+    "ja",
+    "mi",
+    "th",
+    "vi",
+    "de",
+    "fr",
+    "es",
+    "it",
+    "nl",
+    "af",
+    "zu",
+    "xh",
+    "st",
+    "nr",
+    "nso",
+    "pt-BR"
+  ]);
+  if (known.has(id)) return id;
+  if (known.has(short)) return short;
+  return "en";
+}
+
+async function resolveSystemLang() {
+  try {
+    if (api.i18n?.getUILanguage) {
+      return normalizeSystemLang(api.i18n.getUILanguage());
+    }
+  } catch {
+    /* fall through */
+  }
+  const state = await getState();
+  return normalizeSystemLang(state.lang || "en");
+}
+
+function hostFromUrl(url) {
+  if (!url || !/^https?:/i.test(url)) return "";
+  try {
+    if (ShieldLists?.normalizeListHost) return ShieldLists.normalizeListHost(url);
+  } catch {
+    /* fall through */
+  }
+  try {
+    return new URL(url).hostname.replace(/^www\./i, "").toLowerCase();
+  } catch {
+    return "";
+  }
+}
+
 /**
  * Ask the content script in `tabId` to show a toast.
  * Falls back to scripting.executeScript if the content script is not ready.
  * Always sets `dismiss` from storage (default false) — content script trusts this boolean.
+ * Threat toasts include `blockHost` + `showBlock` so the page can Block without opening the popup.
  */
 async function showToast(tabId, payload) {
   const dismiss = await isToastDismissEnabled();
-  const message = { type: "SHIELD_TOAST", ...payload, dismiss };
+  const lang = payload.lang || (await resolveSystemLang());
+  let blockHost = payload.blockHost || "";
+  if (!blockHost && payload.url) blockHost = hostFromUrl(payload.url);
+  if (!blockHost) {
+    try {
+      const tab = await api.tabs.get(tabId);
+      blockHost = hostFromUrl(tab?.url || "");
+    } catch {
+      /* ignore */
+    }
+  }
+  const showBlock =
+    typeof payload.showBlock === "boolean" ? payload.showBlock : Boolean(blockHost);
+  const message = {
+    type: "SHIELD_TOAST",
+    ...payload,
+    lang,
+    dismiss,
+    blockHost: blockHost || undefined,
+    showBlock: showBlock && Boolean(blockHost)
+  };
   try {
     await api.tabs.sendMessage(tabId, message);
   } catch {
@@ -259,7 +361,7 @@ async function showToast(tabId, payload) {
     try {
       await api.scripting.executeScript({
         target: { tabId },
-        files: ["content/content.js"]
+        files: ["content/phishing-toast-mount.js", "content/content.js"]
       });
       await api.scripting.insertCSS({
         target: { tabId },
@@ -299,7 +401,8 @@ if (api.declarativeNetRequest?.onRuleMatchedDebug) {
       await showToast(tabId, {
         kind: "tracker",
         count: 1,
-        lang: state.lang || "en"
+        lang: state.lang || (await resolveSystemLang()),
+        showBlock: true
       });
       await maybeShare("tracker");
     }
@@ -322,31 +425,116 @@ api.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
   if (!url) return;
   await resetTabIfHostChanged(tabId, url);
 
+  // Keep prefs.lang aligned with the browser UI language when tabs navigate.
+  const systemLang = await resolveSystemLang();
+  const prefState = await getState();
+  if (prefState.lang !== systemLang) {
+    await setState({ lang: systemLang });
+  }
+
   const result = detectPhishingPatterns(url);
-  if (!result.matched) return;
-  const lists = await getPersonalLists();
-  if (ShieldLists.isDomainTrustedInLists(lists, url)) return;
+  if (result.matched) {
+    const lists = await getPersonalLists();
+    if (!ShieldLists.isDomainTrustedInLists(lists, url)) {
+      const entry = await bumpTab(tabId, "phishing");
+      const now = Date.now();
+      // Throttle: url change + status:complete both hit this path for the same host.
+      if (now - (entry.lastToastAt || 0) > 4000) {
+        entry.lastToastAt = now;
+        const tabs = { ...((await getState()).tabs || {}) };
+        tabs[String(tabId)] = entry;
+        await setState({ tabs });
+        await showToast(tabId, {
+          kind: "phishing",
+          count: 1,
+          lang: systemLang,
+          url,
+          showBlock: true
+        });
+        await maybeShare("phishing");
+      }
 
-  const entry = await bumpTab(tabId, "phishing");
-  const state = await getState();
-  await showToast(tabId, {
-    kind: "phishing",
-    count: 1,
-    lang: state.lang || "en"
-  });
-  await maybeShare("phishing");
-
-  const privacyMode = (await getState()).privacyMode;
-  // Keep lastScan roughly in sync if the user has the popup closed.
-  await setState({
-    lastScan: {
-      level: "danger",
-      trackersBlocked: entry.trackers || 0,
-      phishingHits: entry.phishing || 0,
-      url: privacyMode === "off" ? null : url,
-      reasons: privacyMode === "off" ? [] : result.reasons
+      const privacyMode = (await getState()).privacyMode;
+      // Keep lastScan roughly in sync if the user has the popup closed.
+      await setState({
+        lastScan: {
+          level: "danger",
+          trackersBlocked: entry.trackers || 0,
+          phishingHits: entry.phishing || 0,
+          url: privacyMode === "off" ? null : url,
+          reasons: privacyMode === "off" ? [] : result.reasons
+        }
+      });
     }
-  });
+  }
+
+  // Auto-scan when the page finishes loading (popup can stay closed).
+  if (changeInfo.status === "complete" && /^https?:/i.test(url)) {
+    const lastScan = await runScan(tabId, url, { fromAuto: true });
+    // Page-resource trackers: always toast when DNR feedback is unavailable;
+    // otherwise only if no recent DNR/phishing toast (avoid double fire).
+    if (
+      lastScan.level === "caution" &&
+      (lastScan.trackersBlocked || 0) > 0 &&
+      !result.matched
+    ) {
+      const entry = (await getState()).tabs?.[String(tabId)] || {};
+      const now = Date.now();
+      const gap = DNR_FEEDBACK_LIVE ? 2500 : 0;
+      if (!DNR_FEEDBACK_LIVE || now - (entry.lastToastAt || 0) > gap) {
+        await showToast(tabId, {
+          kind: "tracker",
+          count: lastScan.trackersBlocked,
+          lang: systemLang,
+          url,
+          showBlock: true
+        });
+        const tabs = { ...((await getState()).tabs || {}) };
+        const next = { ...(tabs[String(tabId)] || {}), lastToastAt: now };
+        tabs[String(tabId)] = next;
+        await setState({ tabs });
+      }
+    }
+
+    // Soft website /api/check — toast only on caution/danger.
+    // Failures return null and must not rewrite lastScan (popup must not flash Halt).
+    if (!result.matched) {
+      const apiRisk = await softWebsiteCheck(url);
+      if (apiRisk === "danger" || apiRisk === "caution") {
+        const entry = (await getState()).tabs?.[String(tabId)] || {};
+        const now = Date.now();
+        if (now - (entry.lastToastAt || 0) > 4000) {
+          await showToast(tabId, {
+            kind: apiRisk === "danger" ? "phishing" : "tracker",
+            count: 1,
+            lang: systemLang,
+            url,
+            showBlock: true
+          });
+          const st = await getState();
+          const privacyMode = normalizePrivacyMode(st.privacyMode);
+          const tabs = { ...(st.tabs || {}) };
+          tabs[String(tabId)] = { ...(tabs[String(tabId)] || {}), lastToastAt: now };
+          const domainOnly = hostFromUrl(url) || null;
+          await setState({
+            tabs,
+            lastScan: {
+              level: apiRisk,
+              trackersBlocked: lastScan?.trackersBlocked || 0,
+              phishingHits:
+                apiRisk === "danger"
+                  ? Math.max(1, lastScan?.phishingHits || 0)
+                  : lastScan?.phishingHits || 0,
+              url: privacyMode === "off" ? null : domainOnly,
+              reasons: privacyMode === "off" ? [] : [`api:${apiRisk}`],
+              source: "website-api"
+            },
+            lastScanAt: new Date().toISOString()
+          });
+        }
+      }
+    }
+  }
 });
 
 api.tabs.onRemoved.addListener(async (tabId) => {
@@ -374,7 +562,59 @@ function levelFromCounts(trackers, phishing) {
   return "safe";
 }
 
-async function runScan(tabId, url) {
+/**
+ * Soft POST /api/check — never throws; returns traffic level or null.
+ * Network / parse failures → null (caller must not set lastScan.level to danger).
+ * Throttled to one POST per host per SOFT_CHECK_TTL_MS.
+ * @param {string} url
+ * @returns {Promise<'danger'|'caution'|null>}
+ */
+async function softWebsiteCheck(url) {
+  if (!url || !/^https?:/i.test(url)) return null;
+  let hostKey = "";
+  try {
+    const host = new URL(url).hostname.toLowerCase();
+    const apiHost = new URL(SOFT_API_BASE).hostname.toLowerCase();
+    if (host === apiHost || host === "localhost" || host === "127.0.0.1") return null;
+    hostKey = registrableHint(url) || host;
+  } catch {
+    return null;
+  }
+  const now = Date.now();
+  const prev = softCheckAtByHost.get(hostKey) || 0;
+  if (now - prev < SOFT_CHECK_TTL_MS) return null;
+  softCheckAtByHost.set(hostKey, now);
+
+  const controller = typeof AbortController !== "undefined" ? new AbortController() : null;
+  const timer = controller ? setTimeout(() => controller.abort(), 4500) : 0;
+  try {
+    const res = await fetch(`${SOFT_API_BASE}/api/check`, {
+      method: "POST",
+      headers: { "content-type": "application/json", accept: "application/json" },
+      body: JSON.stringify({ url }),
+      signal: controller?.signal
+    });
+    if (!res.ok) return null;
+    const data = await res.json();
+    const riskLevel = String(data?.analysis?.risk?.level || data?.risk?.level || "").toUpperCase();
+    if (riskLevel === "CRITICAL" || riskLevel === "HIGH") return "danger";
+    if (riskLevel === "CAUTION" || riskLevel === "UNKNOWN") return "caution";
+    // Clear / LOW_EVIDENCE — no toast, no lastScan rewrite.
+    return null;
+  } catch {
+    // Soft fail: leave throttle stamp so we do not hammer; never escalate UI.
+    return null;
+  } finally {
+    if (timer) clearTimeout(timer);
+  }
+}
+
+/**
+ * @param {number} tabId
+ * @param {string} url
+ * @param {{ fromAuto?: boolean }} [opts] fromAuto skips phishing toast (onUpdated already toasted)
+ */
+async function runScan(tabId, url, opts = {}) {
   const phishing = detectPhishingPatterns(url || "");
   await resetTabIfHostChanged(tabId, url || "");
   const state = await getState();
@@ -382,17 +622,22 @@ async function runScan(tabId, url) {
   const trusted = ShieldLists.isDomainTrustedInLists(lists, url || "");
   const entry = state.tabs?.[String(tabId)] || { trackers: 0, phishing: 0 };
   const seenTrackers = await countPageTrackers(tabId, url || "");
+  const lang = await resolveSystemLang();
 
   // If the current URL matches phishing patterns, ensure the counter reflects it.
   let phishingHits = entry.phishing || 0;
   if (phishing.matched && !trusted && phishingHits === 0) {
     const bumped = await bumpTab(tabId, "phishing");
     phishingHits = bumped.phishing;
-    await showToast(tabId, {
-      kind: "phishing",
-      count: 1,
-      lang: state.lang || "en"
-    });
+    if (!opts.fromAuto) {
+      await showToast(tabId, {
+        kind: "phishing",
+        count: 1,
+        lang,
+        url,
+        showBlock: true
+      });
+    }
   }
   if (trusted) phishingHits = 0;
 
@@ -454,17 +699,8 @@ api.runtime.onMessage.addListener((message, sender, sendResponse) => {
 
     if (message?.type === "SHIELD_SET_PREFS") {
       const patch = {};
-      if (
-        message.lang === "en" ||
-        message.lang === "pt-PT" ||
-        message.lang === "zh-Hans" ||
-        message.lang === "mi" ||
-        message.lang === "th" ||
-        message.lang === "vi"
-      ) {
-        patch.lang = message.lang;
-      } else if (message.lang === "zh" || message.lang === "zh-CN") {
-        patch.lang = "zh-Hans";
+      if (message.lang != null && message.lang !== "") {
+        patch.lang = normalizeSystemLang(message.lang);
       }
       if (message.privacyMode != null) patch.privacyMode = normalizePrivacyMode(message.privacyMode);
       const state = await setState(patch);
@@ -531,11 +767,23 @@ api.runtime.onMessage.addListener((message, sender, sendResponse) => {
     }
 
     if (message?.type === "SHIELD_LISTS_ADD_BLOCK") {
+      // Explicit Block (toast / tab) implies device-local list storage.
+      const st = await getState();
+      if (st.privacyMode === "off") {
+        await setState({ privacyMode: "local" });
+      }
+      let domain = message.domain;
+      try {
+        domain = ShieldLists.normalizeListHost(message.domain || "");
+      } catch {
+        /* keep raw */
+      }
       const cur = await getPersonalLists();
       const { lists, dnr } = await setPersonalLists(
-        ShieldLists.addBlocked(cur, message.domain, message.reason || "user")
+        ShieldLists.addBlocked(cur, domain, message.reason || "user")
       );
-      sendResponse({ ok: true, lists, dnr });
+      await setState({ lastBlockedDomain: domain || null });
+      sendResponse({ ok: true, lists, dnr, domain });
       return;
     }
 
@@ -656,5 +904,27 @@ api.runtime.onMessage.addListener((message, sender, sendResponse) => {
   // Keep the message channel open for async sendResponse.
   return true;
 });
+
+/**
+ * Website backup bridge when content script is not injected (externally_connectable).
+ * Read-only: PING + LISTS_GET only.
+ */
+if (api.runtime.onMessageExternal) {
+  api.runtime.onMessageExternal.addListener((message, _sender, sendResponse) => {
+    (async () => {
+      if (message?.type === "SHIELD_EXT_PING" || message?.type === "BUUSDO_EXT_PING") {
+        sendResponse({ ok: true, present: true, extensionId: api.runtime.id || null });
+        return;
+      }
+      if (message?.type === "SHIELD_LISTS_GET" || message?.type === "BUUSDO_EXT_LISTS_GET") {
+        const lists = await getPersonalLists();
+        sendResponse({ ok: true, lists });
+        return;
+      }
+      sendResponse({ ok: false, error: "unknown-external-message" });
+    })();
+    return true;
+  });
+}
 
 console.info("[shield] service worker ready");

@@ -51,8 +51,8 @@ Actions **Pages China** 将 `china-pages/` 发布到 `otas0/buusdocst`（secret 
 2. `/api/health`、`/api/check`、`/api/geo` **永不** 跳转（扩展与机器调用不受影响）
 3. 调试：`GET /api/geo` → `{ country, cfCountry, headerCfIpCountry, forceRedirectCountries, rateNote }`；响应头应有 `x-buusdocst-china-wrap: 1`
 4. **先 staging 再 prod：** `npm run deploy:cloudflare:staging` → health → 再 `npm run deploy:cloudflare`
-5. Deploy 含 wrap + `--check`（`main=china-cf-entry.js`，`assets.run_worker_first=true`）
-6. 线上若仍见产品页：看响应头 `x-buusdocst-china-wrap` / `x-buusdocst-cf-country`。`run_worker_first` 未开时 Assets 可能绕过 wrap（历史故障）。
+5. Deploy 含 wrap + `--check`（`main=china-cf-entry.js`，`assets.run_worker_first=["/*","!/_next/static/*","!/*/_next/static/*"]` — **不要**用 boolean `true`，否则 CSS/JS 404）
+6. 线上若仍见产品页：看响应头 `x-buusdocst-china-wrap` / `x-buusdocst-cf-country`。`run_worker_first` 未开时 Assets 可能绕过 wrap（历史故障）。裸页 / 蓝 Run / 双 logo → 先查 `/_next/static/css/*.css` 是否 200（`npm run assert:prod-css-asset`）。
 7. TCP 超时到不了 Worker → **不会 302**；请直接打开本告知书。客户端兜底（zh-CN + Asia/Shanghai）仅在 Workers HTML 已加载时 `location.replace` 到本站。
 
 ### 产品决策：仅 CN（不含 HK/MO）
@@ -65,11 +65,66 @@ Rules → Managed Transforms → **Add visitor location headers**，使 `CF-IPCo
 
 ### Logpush（有自定义域后）
 
-按 `EdgeResponseStatus=302` + `ClientCountry=CN` 与 Location→`otas0.github.io` 对齐统计（可与 stub path dump 同一工具链扩展）。
+对齐过滤（与 stub path dump 同一工具链扩展）——**仅描述「能连上 Workers 时」的 CN 302**：
+
+- `EdgeResponseStatus=302`（或 `301`）
+- `ClientCountry=CN`
+- `EdgeResponseHeaders` / Location 含 `otas0.github.io`
+
+**不要**把该计数当作「大陆用户触达率」：连不上 Workers 的访客根本不会进 Logpush。大陆触达请用告知书渠道（Pages 打开、QR、商店/社媒）另行估算。
+
+**仪表盘注释（必加）：** 在任何 Cloudflare / Logpush 图表标题或说明中写明 **「非触达率 / not mainland reach rate」** — 仅表示「已连上 Workers 且 CF=CN 时的 302 样本」。
+
+ubuntu CI **不能**伪造 `request.cf.country`；软探测见 `scripts/soft-china-redirect-probe.mjs`（断言 wrap 头 + 记录非 CN 样本）。真实 CN 302 样本出现后贴进 [CI.md](CI.md) scrapbook。
+
+### 自定义域上线后复测
+
+按 [CUSTOM_DOMAIN_REDEPLOY.md](CUSTOM_DOMAIN_REDEPLOY.md) 切域后：
+
+1. `wrangler versions view <id> --json` → `raw_run_worker_first` 仍为 vinext 排除列表（**不是** boolean `false` 且无整表 Assets-first）
+2. `GET /api/health` → `x-buusdocst-china-wrap: 1`
+3. 大陆可达网络：HTML 对 CN 仍 302 → 本告知书
+
+### 非 workers.dev 入口（评估）
+
+`*.workers.dev` 在部分大陆网络 TCP 超时。自定义域（橙云 CNAME 到同一 Worker）**可能**改善连通，但不能保证；告知书入口始终保留。评估顺序：DNS 自定义域 → 大陆抽测 `/api/health` → 再决定是否把推广链切到自定义域（[PUBLIC_PROMOTION.md](PUBLIC_PROMOTION.md)）。
 
 ### TCP 超时 ≠ 跳转失败
 
-大陆若 **连不上** `*.workers.dev`，请求到不了 Worker，**不会 302**。请直接打开本告知书。见 [LOCAL_CF_CONNECTIVITY.md](LOCAL_CF_CONNECTIVITY.md)。
+大陆若 **连不上** `*.workers.dev`，请求到不了 Worker，**不会 302**，`/api/geo` 也打不开。请直接打开本告知书。见 [LOCAL_CF_CONNECTIVITY.md](LOCAL_CF_CONNECTIVITY.md)。
+
+服务端仅在 `request.cf.country=CN` 时 302（伪造 `CF-IPCountry` 无效）。浏览器为 zh-CN / zh-Hans 时，客户端脚本会 `location.replace` 到本站作为兜底——**同样要求 Workers HTML 已加载**。
+
+### 如何让大陆用户「知道服务未开放」（不依赖 Workers）
+
+Workers 不可达时，产品站无法展示任何文案。只能走 **Workers 之外** 的渠道：
+
+1. **本告知书 URL** `https://otas0.github.io/buusdocst/`（标题即为「中国大陆地区检查服务未开放」）
+2. **海报 / 中国 QR**（`public/promo/china-qr.svg` → 本告知书）
+3. **扩展不可达文案**（指向告知书，写明勿等跳转）
+4. **商店 / 社媒 / 线下** 粘贴 [PUBLIC_PROMOTION.md](PUBLIC_PROMOTION.md)「面向大陆用户」块
+
+### 评估：Gitee / 国内 CDN 镜像（仅告知书）
+
+| 选项 | 利 | 弊 | 建议 |
+|------|----|----|------|
+| 继续仅 GitHub Pages | 与现有 Actions `pages-china` 同源；零额外账号 | 部分大陆网络访问 `github.io` 也慢 | **默认保留** |
+| Gitee Pages 镜像 | 国内解析可能更好 | 需人工/CI 双推；内容漂移风险；Gitee 审核与可用性不稳定 | 仅当抽测显示多数目标用户打不开 `otas0.github.io` 时再开 |
+| 国内对象存储 + CDN（COS/OSS） | 可控、快 | 成本、备案/合规、密钥运维 | 有备案与预算后再评估 |
+
+**约束（若上镜像）：**
+
+1. **只托管告知书同源文案**（`china-pages/` 同步），**禁止**放完整检查 UI 或 `/api/check` 代理。
+2. 镜像 URL 写入 `shared/china-pages.json` 的可选 `mirrorUrl`，推广大陆块可并列，仍以 GitHub Pages 为 canonical。
+3. CI：镜像部署失败不得阻塞 Workers 发布；文档写明「双入口、同文案」。`mirrorUrl` 非空时跑 `node scripts/soft-china-mirror-probe.mjs`（与 canonical 告知书 title / service-closed 标记一致；空则跳过）。
+
+**当前决策（2026-11-28）：** 暂不建 Gitee/CDN 镜像；先保证告知书文案清晰 + 大陆渠道只推 Pages。每季用大陆抽测复评本表。`shared/china-pages.json` 已预留 `"mirrorUrl": ""`（空 = 未启用）。
+
+### popup CTA `utm_source=extension`
+
+扩展不可达大按钮打开 `https://otas0.github.io/buusdocst/?utm_source=extension`（仍只开 Pages，不经 Workers）。用于日后若启用 Pages 分析时区分扩展来源；可去掉参数，不影响产品行为。
+
+**若启用 GitHub Pages / 站点分析：** 建筛选（或 segment）`utm_source=extension`，与直接打开告知书的流量分开看。不要用该参数推断 Workers 触达率。
 
 ## Region soft probe（本站）
 

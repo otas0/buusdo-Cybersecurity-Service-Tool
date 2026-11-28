@@ -8,89 +8,33 @@
     <link rel="stylesheet" href="popup.css" />
   </head>
   <body>
-    <div id="toastHost" class="toast-host" aria-live="polite"></div>
     <header class="top">
-      <h1 id="appTitle" class="brand-lockup">
+      <h1 id="appTitle" class="brand-lockup" aria-label="buusdo Cybersecurity Service Tool">
+        <!-- popup.js swaps src only when theme path changes (avoids alt-text flash). -->
         <img
           class="brand-logo"
-          src="../icons/buusdo-wordmark.png"
+          data-brand-wordmark="1"
+          data-src-dark="../icons/buusdo-wordmark.svg"
+          data-src-light="../icons/buusdo-wordmark-on-light.svg"
+          src="../icons/buusdo-wordmark.svg"
           width="117"
           height="40"
-          decoding="async"
-          alt="buusdo Cybersecurity Service Tool"
+          decoding="sync"
+          alt=""
+          aria-hidden="true"
         />
-        <span class="visually-hidden">buusdo Cybersecurity Service Tool</span>
       </h1>
-      <label class="lang">
-        <span class="visually-hidden" id="langLabel">Language</span>
-          <select id="langSelect" aria-label="Language" data-testid="extension-locale-select">
-            <optgroup label="Global" data-i18n-label="langRegionGlobal">
-              <option value="en">English</option>
-            </optgroup>
-            <optgroup label="East Asia" data-i18n-label="langRegionEastAsia">
-              <option value="zh-Hans">简体中文</option>
-              <option value="zh-Hant">繁體中文</option>
-              <option value="ja">日本語</option>
-            </optgroup>
-            <optgroup label="Europe" data-i18n-label="langRegionEurope">
-              <option value="pt-PT">Português (Portugal)</option>
-              <option value="de">Deutsch</option>
-              <option value="fr">Français</option>
-              <option value="es">Español</option>
-              <option value="it">Italiano</option>
-              <option value="nl">Nederlands</option>
-            </optgroup>
-            <optgroup label="Pacific" data-i18n-label="langRegionPacific">
-              <option value="mi">Te reo Māori</option>
-            </optgroup>
-            <optgroup label="Southeast Asia" data-i18n-label="langRegionSoutheastAsia">
-              <option value="th">ไทย</option>
-              <option value="vi">Tiếng Việt</option>
-            </optgroup>
-            <optgroup label="Southern Africa" data-i18n-label="langRegionSouthernAfrica">
-              <option value="af">Afrikaans</option>
-              <option value="zu">isiZulu</option>
-              <option value="xh">isiXhosa</option>
-              <option value="st">Sesotho</option>
-              <option value="nr">isiNdebele</option>
-              <option value="nso">Sesotho sa Leboa</option>
-            </optgroup>
-          </select>
-      </label>
     </header>
 
     <main>
-      <p class="readout" id="readout" data-level="idle" role="status">
+      <p class="readout" id="readout" data-level="idle" role="status" data-testid="extension-status">
         <span class="mark" aria-hidden="true"></span>
         <span id="statusWord">Standby</span>
       </p>
-      <p id="statusDetail" class="detail">Open a page, then run.</p>
+      <p id="statusDetail" class="detail">Watching this tab — alerts appear on the page.</p>
 
-      <button type="button" id="scanBtn" aria-describedby="statusDetail">
-        <span id="scanLabel">Run</span>
-      </button>
-
-      <label class="api-toggle">
-        <input type="checkbox" id="websiteApiToggle" />
-        <span id="websiteApiLabel">Website check API</span>
-      </label>
-      <input
-        type="url"
-        id="websiteApiBase"
-        class="api-base"
-        value="http://localhost:3000"
-        autocomplete="off"
-        spellcheck="false"
-        aria-label="Website API base URL"
-      />
-      <p id="websiteApiHint" class="hint">Off — local signals only. On: POST /api/check to this base (first-party only, no third-party reputation).</p>
-      <p id="websiteApiFallback" class="api-fallback" hidden role="status"></p>
-      <div class="api-check-actions" data-testid="result-action-row">
-        <p id="websiteApiStatus" class="hint api-status" hidden></p>
-      </div>
-
-      <dl class="counts">
-        <div id="trackersCount" class="count-cell">
+      <dl class="counts" aria-label="This tab">
+        <div>
           <dt id="trackersLabel">Trackers</dt>
           <dd id="trackersValue">0</dd>
         </div>
@@ -99,81 +43,38 @@
           <dd id="phishingValue">0</dd>
         </div>
       </dl>
-      <p id="trackersApiAnnounce" class="visually-hidden" role="status" aria-live="polite" aria-atomic="true"></p>
-      <p id="trackersMuteWindowChip" class="mute-window-chip" data-testid="trackers-mute-window-chip" hidden></p>
 
-      <p class="last">
-        <span id="lastScanLabel">Last</span>
-        <time id="lastScanValue">—</time>
+      <p class="manage">
+        <a
+          id="manageListsLink"
+          class="text-button"
+          href="https://buusdocst.mtsu.workers.dev/en/settings#settings-block-lists"
+          target="_blank"
+          rel="noreferrer"
+          data-testid="extension-manage-lists"
+        >Manage block &amp; trust lists</a>
       </p>
+      <p id="manageListsHint" class="hint">Lists open on the website — not in this popup.</p>
 
-      <!-- Account sync product cancelled — UI removed; offline lists/export remain below. -->
-
-      <section class="lists" id="listsSection" aria-labelledby="listsTitle">
-        <h2 id="listsTitle">Personal lists</h2>
-        <p id="listsHint" class="hint">Block/trust on this device. Export JSON to move lists for free.</p>
-        <form id="listAddForm" class="list-add">
-          <label class="visually-hidden" id="listDomainLabel" for="listDomain">Domain</label>
-          <input id="listDomain" class="field-input" type="text" inputmode="url" placeholder="example.com" autocomplete="off" spellcheck="false" />
-          <button type="submit" id="listBlockBtn">Block</button>
-          <button type="button" id="listTrustBtn" class="text-button">Trust</button>
-          <button type="button" id="listBlockTabBtn" class="text-button">Block this tab</button>
-        </form>
-        <p id="listsStatus" class="hint" role="status" aria-live="polite" aria-atomic="true" hidden></p>
-        <p id="listsPasteDiag" class="hint lists-paste-diag" hidden></p>
-        <div class="list-cols">
-          <div>
-            <h3 id="blockedTitle">Blocked</h3>
-            <ul id="blockedList" class="mini-log"></ul>
-          </div>
-          <div>
-            <h3 id="trustedTitle">Trusted</h3>
-            <ul id="trustedList" class="mini-log"></ul>
-          </div>
-        </div>
-        <div class="list-actions">
-          <button type="button" id="listsExportBtn" class="text-button">Export JSON</button>
-          <button type="button" id="listsSupportBlobBtn" class="text-button diag-gated">Support diagnostics JSON</button>
-          <button type="button" id="listsImportBtn" class="text-button">Import JSON</button>
-          <button type="button" id="listsPasteQrBtn" class="text-button">Paste QR / dense JSON</button>
-          <button type="button" id="listsQrBtn" class="text-button">Show QR</button>
-          <input type="file" id="listsImportFile" accept="application/json,.json" hidden />
-        </div>
-        <p id="listsOfflineBackup" class="hint">Offline backup: export JSON or QR (no account required).</p>
-        <div id="listsPasteFallback" class="lists-paste-fallback" hidden>
-          <label class="visually-hidden" id="listsPasteFallbackLabel" for="listsPasteFallbackArea">Paste dense JSON</label>
-          <textarea id="listsPasteFallbackArea" rows="3" spellcheck="false" placeholder='{"b":["bad.example"],"t":[]}'></textarea>
-          <button type="button" id="listsPasteFallbackApply" class="text-button">Import pasted text</button>
-        </div>
-        <div id="listsQrWrap" class="lists-qr" hidden>
-          <canvas id="listsQrCanvas" width="160" height="160" aria-label="QR of compact list backup"></canvas>
-          <p id="listsQrHint" class="hint"></p>
-          <button type="button" id="listsQrCopyBtn" class="text-button">Copy QR payload</button>
-        </div>
-        <p id="listsUndo" class="hint lists-undo" role="status" hidden></p>
-      </section>
+      <div
+        id="apiUnreachable"
+        class="api-unreachable"
+        hidden
+        data-testid="extension-api-unreachable"
+        role="status"
+      >
+        <p id="apiUnreachableText" class="api-unreachable-text"></p>
+        <a
+          id="chinaNoticeCta"
+          class="primary-button china-notice-cta"
+          href="https://otas0.github.io/buusdocst/?utm_source=extension"
+          target="_blank"
+          rel="noreferrer"
+          data-testid="extension-china-notice-cta"
+        >Open China notice</a>
+      </div>
     </main>
 
-    <footer class="foot">
-      <label class="privacy">
-        <span id="privacyLabel">Data</span>
-        <select id="privacySelect" aria-describedby="privacyHint">
-          <option value="off">Never store</option>
-          <option value="local">This device only</option>
-          <option value="share">Diagnostics for support</option>
-        </select>
-      </label>
-      <p id="privacyHint" class="hint">Default: nothing is stored. Diagnostics only help fix technical problems — never the address, and never for public release.</p>
-      <label class="api-toggle toast-dismiss-toggle">
-        <input type="checkbox" id="toastDismissToggle" aria-describedby="toastDismissHint toastDismissStatus" />
-        <span id="toastDismissLabel">Toast dismiss button</span>
-      </label>
-      <p id="toastDismissHint" class="hint">Off by default. When on, block toasts show Dismiss (stored as shieldToastDismiss).</p>
-      <p id="toastDismissStatus" class="hint" role="status" aria-live="polite" aria-atomic="true" hidden></p>
-    </footer>
-
-    <script src="../shared/qrcode-browser.js"></script>
-    <script src="../shared/qr-draw.classic.js"></script>
     <script type="module" src="popup.js"></script>
   </body>
 </html>

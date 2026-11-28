@@ -15,20 +15,26 @@
         <div class="brand">
           <h1 id="appTitle" class="brand-lockup">
             <img
-              class="brand-logo"
-              src="/brand/buusdo-wordmark.png"
+              class="brand-logo brand-logo-on-dark"
+              src="/brand/buusdo-wordmark.svg"
               width="117"
               height="40"
               decoding="async"
               alt="buusdo Cybersecurity Service Tool"
             />
-            <span class="visually-hidden">buusdo Cybersecurity Service Tool</span>
+            <img
+              class="brand-logo brand-logo-on-light"
+              src="/brand/buusdo-wordmark-on-light.svg"
+              width="117"
+              height="40"
+              decoding="async"
+              alt=""
+              aria-hidden="true"
+            />
           </h1>
         </div>
-        <label class="lang">
-          <span class="visually-hidden" id="langLabel">Language</span>
-          <select id="langSelect" class="lang-select" aria-label="Language" data-testid="desktop-locale-select"></select>
-        </label>
+        <!-- Language follows OS (same contract as extension popup). Tests stub navigator.language. -->
+        <span class="visually-hidden" id="langLabel">Language</span>
       </header>
 
       <main class="board">

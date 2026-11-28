@@ -104,7 +104,10 @@ a {
   object-position: left center;
   background: transparent;
   border: 0;
+  image-rendering: auto;
 }
+
+/* Single wordmark SVG — no dual-img CSS hide. */
 
 .shell .lang-switch,
 .shell .nav-link,
@@ -169,6 +172,22 @@ a {
   color: var(--muted);
   font-size: 15px;
   margin-bottom: 18px;
+}
+
+.shell .stage p.lede.notice-status {
+  color: var(--text);
+  border-left: 3px solid var(--halt, #ff4d00);
+  padding: 12px 14px;
+  margin: 0 0 20px;
+  background: rgba(255, 77, 0, 0.08);
+  max-width: 42rem;
+}
+
+.shell .stage p.lede.notice-top-tip {
+  border-left: 3px solid rgba(243, 241, 234, 0.28);
+  padding: 10px 14px;
+  margin: 0 0 20px;
+  max-width: 42rem;
 }
 
 .shell .halt-steps {

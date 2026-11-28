@@ -1,6 +1,6 @@
 /**
- * Extension popup #langSelect optgroups must be MessageBag / pack keyed
- * (data-i18n-label → langRegion*).
+ * Extension locale region keys stay in MessageBag / packs (website + sync scripts).
+ * Popup no longer renders #langSelect optgroups — OS language drives UI.
  *
  *   npx tsx --test tests/popup-optgroup-i18n.test.ts
  */
@@ -19,14 +19,11 @@ const REQUIRED = [
   "langRegionSouthernAfrica"
 ] as const;
 
-test("popup optgroups carry data-i18n-label MessageBag keys", () => {
+test("slim popup has no langSelect optgroups", () => {
   const html = readFileSync(join(root, "extension/popup/popup.html"), "utf8");
-  const labels = [...html.matchAll(/data-i18n-label="([^"]+)"/g)].map((m) => m[1]);
-  for (const key of REQUIRED) {
-    assert.ok(labels.includes(key), `popup missing data-i18n-label=${key}`);
-  }
-  const popupJs = readFileSync(join(root, "extension/popup/popup.js"), "utf8");
-  assert.match(popupJs, /data-i18n-label/, "popup.js must apply optgroup labels from i18n");
+  assert.doesNotMatch(html, /id="langSelect"/);
+  assert.doesNotMatch(html, /data-i18n-label=/);
+  assert.match(html, /id="manageListsLink"/);
 });
 
 test("EN MessageBag and packs include langRegion* keys", () => {
@@ -40,7 +37,7 @@ test("EN MessageBag and packs include langRegion* keys", () => {
   }
 });
 
-test("it / zh-Hans packs flip Europe and East Asia optgroup labels", () => {
+test("it / zh-Hans packs flip Europe and East Asia region labels", () => {
   const it = JSON.parse(readFileSync(join(root, "i18n/packs/it.json"), "utf8")) as Record<
     string,
     string
@@ -57,7 +54,6 @@ test("it / zh-Hans packs flip Europe and East Asia optgroup labels", () => {
   assert.notEqual(it.langRegionEurope, en.langRegionEurope);
   assert.notEqual(zh.langRegionEastAsia, en.langRegionEastAsia);
   assert.notEqual(it.langRegionEurope, zh.langRegionEurope);
-  // Shared bags must expose the keys popup.js applies via t(lang, key).
   const shared = readFileSync(join(root, "extension/shared/i18n.js"), "utf8");
   assert.match(shared, /langRegionEurope":?\s*"Europa"/);
   assert.match(shared, /langRegionEastAsia:\s*"东亚"/);

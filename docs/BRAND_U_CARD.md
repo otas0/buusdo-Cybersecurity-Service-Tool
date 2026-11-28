@@ -21,8 +21,8 @@ Wrong:
 |------|------|
 | `shared/brand/source/designer/buusdo-cst-wordmark-reference.png` | Designer still (white plate, CST tagline) |
 | `shared/brand/source/buusdo-wordmark-light-plate.png` | Cropped light-plate master for sync |
-| `shared/brand/source/buusdo-wordmark-paths.svg` | Preferred source — embeds plate + locks `#545454` swatch/`u-card`; sync rasterizes this when present |
-| `scripts/sync-brand-web-assets.mjs` | Builds on-light + dark-field + china / extension / desktop copies |
+| `shared/brand/source/buusdo-wordmark-paths.svg` | Preferred source — path vectors + `#545454` u-card; sync emits **true SVG** + **3× PNG** (1215×414) for smooth retina/zoom |
+| `scripts/sync-brand-web-assets.mjs` | Builds vector SVG + hi-DPI PNG for site / china / extension / desktop |
 | `npm run assert:brand-web-alpha` | Asserts charcoal `#545454` @ alpha 255 on-light; muted on dark |
 
 ## Graphics Enhancement Tool

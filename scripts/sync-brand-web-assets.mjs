@@ -124,6 +124,71 @@ function svgWrap(pngBuf, w, h) {
 `;
 }
 
+/** Drop paper / fringe paths from the traced path SVG (keep ink + u-card). */
+function stripPaperPaths(svg) {
+  return svg.replace(/<path\b[^>]*>/gi, (tag) => {
+    const fill = (tag.match(/\bfill="([^"]+)"/i) || [])[1] || "";
+    const f = fill.toLowerCase().replace(/\s+/g, "");
+    if (
+      f === "#ffffff" ||
+      f === "#fff" ||
+      f === "#00000000" ||
+      /^rgb\(25[0-5],/.test(f) ||
+      /^rgb\(22[0-9],/.test(f) ||
+      /^rgb\(23[0-9],/.test(f) ||
+      /^rgb\(24[0-9],/.test(f)
+    ) {
+      return "";
+    }
+    // Full-bleed plate (any fill) covering the viewBox — remove.
+    if (/d="M\s*0\s+0\s+L\s*405/i.test(tag) && /L\s*0\s+138/i.test(tag)) return "";
+    return tag;
+  });
+}
+
+/**
+ * True vector wordmarks (not PNG-in-SVG). Dark field uses cream ink + muted u-card;
+ * on-light keeps charcoal u-card + near-black ink.
+ */
+function vectorWordmarksFromPaths(pathSvg) {
+  const cleaned = stripPaperPaths(pathSvg)
+    .replace(/\swidth="405"/, "")
+    .replace(/\sheight="138"/, "");
+  const header = `<?xml version="1.0" encoding="UTF-8"?>\n`;
+  const withLabel = cleaned.replace(
+    /\baria-label="[^"]*"/i,
+    `aria-label="${label}"`
+  );
+  const darkBody = withLabel
+    .replace(/\bfill="#000000"/gi, `fill="${TEXT}"`)
+    .replace(/\bfill="#000"/gi, `fill="${TEXT}"`)
+    .replace(/\bfill="rgb\(0,0,0\)"/gi, `fill="${TEXT}"`)
+    .replace(/\bfill="#545454"/gi, `fill="${MUTED}"`);
+  const lightBody = withLabel
+    .replace(/\bfill="#000000"/gi, 'fill="#1a1916"')
+    .replace(/\bfill="#000"/gi, 'fill="#1a1916"')
+    .replace(/\bfill="rgb\(0,0,0\)"/gi, 'fill="#1a1916"');
+  return {
+    darkSvg: header + darkBody,
+    lightSvg: header + lightBody
+  };
+}
+
+/** Hi-DPI raster from vector — 3× master so retina / zoom stay smooth. */
+const WORDMARK_SCALE = 3;
+const WORDMARK_W = 405;
+const WORDMARK_H = 138;
+
+async function pngFromWordmarkSvg(svg) {
+  return sharp(Buffer.from(svg))
+    .resize(WORDMARK_W * WORDMARK_SCALE, WORDMARK_H * WORDMARK_SCALE, {
+      fit: "fill",
+      kernel: sharp.kernel.lanczos3
+    })
+    .png()
+    .toBuffer();
+}
+
 const markDark = `<?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="buusdo">
   <title>buusdo</title>
@@ -194,42 +259,59 @@ async function pngFromSvg(svg, size) {
 }
 
 const designerPath = path.join(sourceDir, "buusdo-wordmark-paths.svg");
-let wordSrc;
+let wordDark;
+let wordLight;
+let wordDarkSvg;
+let wordLightSvg;
 if (fs.existsSync(designerPath)) {
-  // Prefer path SVG (frozen charcoal #545454 u-card) over light-plate raster.
-  wordSrc = await sharp(designerPath).png().toBuffer();
-  console.info("[sync:brand-web] Using designer path wordmark:", path.relative(root, designerPath));
+  // Prefer path SVG (frozen charcoal #545454 u-card) — true vectors + 3× PNG.
+  const pathSvg = fs.readFileSync(designerPath, "utf8");
+  const vectors = vectorWordmarksFromPaths(pathSvg);
+  wordDarkSvg = vectors.darkSvg;
+  wordLightSvg = vectors.lightSvg;
+  wordDark = await pngFromWordmarkSvg(wordDarkSvg);
+  wordLight = await pngFromWordmarkSvg(wordLightSvg);
+  console.info(
+    "[sync:brand-web] Using designer path wordmark (vector + 3× PNG):",
+    path.relative(root, designerPath),
+  );
 } else {
-  wordSrc = fs.readFileSync(path.join(sourceDir, "buusdo-wordmark-light-plate.png"));
+  const wordSrc = fs.readFileSync(path.join(sourceDir, "buusdo-wordmark-light-plate.png"));
   console.info(
     "[sync:brand-web] No designer path wordmark yet — place shared/brand/source/buusdo-wordmark-paths.svg when available.",
   );
+  const hi = await sharp(wordSrc)
+    .resize(WORDMARK_W * WORDMARK_SCALE, WORDMARK_H * WORDMARK_SCALE, {
+      kernel: sharp.kernel.lanczos3
+    })
+    .png()
+    .toBuffer();
+  wordDark = await toDarkTransparent(hi);
+  wordLight = await toLightTransparent(hi);
+  const wordMeta = await sharp(wordDark).metadata();
+  wordDarkSvg = svgWrap(wordDark, wordMeta.width, wordMeta.height);
+  wordLightSvg = svgWrap(wordLight, wordMeta.width, wordMeta.height);
 }
 const logoSrc = fs.readFileSync(
   path.join(sourceDir, "buusdo-logo-light-plate.png"),
 );
 
-const wordDark = await toDarkTransparent(wordSrc);
-const wordLight = await toLightTransparent(wordSrc);
 const logoDark = await toDarkTransparent(logoSrc);
 const logoLight = await toLightTransparent(logoSrc);
-const wordMeta = await sharp(wordDark).metadata();
 const logoMeta = await sharp(logoDark).metadata();
 
 for (const rel of targets) {
   const dir = path.join(root, rel);
   fs.mkdirSync(dir, { recursive: true });
   fs.writeFileSync(path.join(dir, "buusdo-wordmark.png"), wordDark);
-  fs.writeFileSync(
-    path.join(dir, "buusdo-wordmark.svg"),
-    svgWrap(wordDark, wordMeta.width, wordMeta.height),
-  );
+  fs.writeFileSync(path.join(dir, "buusdo-wordmark.svg"), wordDarkSvg);
   fs.writeFileSync(path.join(dir, "buusdo-logo.png"), logoDark);
   fs.writeFileSync(
     path.join(dir, "buusdo-logo.svg"),
     svgWrap(logoDark, logoMeta.width, logoMeta.height),
   );
   fs.writeFileSync(path.join(dir, "buusdo-wordmark-on-light.png"), wordLight);
+  fs.writeFileSync(path.join(dir, "buusdo-wordmark-on-light.svg"), wordLightSvg);
   fs.writeFileSync(path.join(dir, "buusdo-logo-on-light.png"), logoLight);
   fs.writeFileSync(path.join(dir, "buusdo-mark.svg"), markDark);
   fs.writeFileSync(path.join(dir, "buusdo-mark-halt.svg"), markHalt);

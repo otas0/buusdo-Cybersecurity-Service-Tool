@@ -225,6 +225,12 @@ export const messages = {
     blockListsSafariListingSoon: "Mac App Store (listing soon)",
     blockListsSettingsLink: "Install docs in Settings",
     blockListsLiveDeepLink: "Block & trust live in the extension / desktop — open install docs",
+    extensionListsReadonlyTitle: "On this browser (extension, read-only)",
+    extensionListsBlockedEmpty: "No blocked domains on this device yet.",
+    extensionListsTrustedEmpty: "No trusted domains on this device yet.",
+    extensionListsUnavailable:
+      "Extension not detected on this page — install or open Settings from a tab where the extension can run.",
+    listsOfflineJustBlocked: "Just blocked from the extension: {domain}",
     leaveAndBlockSettingsCta: "Open Settings — block lists live in the extension / desktop",
     ambiguousProbeNotPhishing:
       "Bot block / throttle on the probe is not phishing proof — open the site in a normal browser if you still need it.",
@@ -741,6 +747,12 @@ export const messages = {
     blockListsSafariListingSoon: "Mac App Store (em breve)",
     blockListsSettingsLink: "Documentação de instalação nas Definições",
     blockListsLiveDeepLink: "Bloqueio e confiança na extensão / app — abrir documentação",
+    extensionListsReadonlyTitle: "Neste navegador (extensão, só leitura)",
+    extensionListsBlockedEmpty: "Ainda sem domínios bloqueados neste dispositivo.",
+    extensionListsTrustedEmpty: "Ainda sem domínios de confiança neste dispositivo.",
+    extensionListsUnavailable:
+      "Extensão não detetada nesta página — instale ou abra Definições num separador onde a extensão possa correr.",
+    listsOfflineJustBlocked: "Acabou de bloquear na extensão: {domain}",
     leaveAndBlockSettingsCta: "Abrir Definições — o bloqueio está na extensão / app",
     ambiguousProbeNotPhishing:
       "Bloqueio ou limite da sonda automática não prova phishing — abra o site num browser normal se ainda precisar.",

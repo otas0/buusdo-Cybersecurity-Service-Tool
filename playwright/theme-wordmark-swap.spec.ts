@@ -1,5 +1,6 @@
 /**
  * Light theme shows on-light wordmark; dark shows on-dark (cream) wordmark.
+ * CI theme-chrome commits dark/light screenshots under playwright/__screenshots__/.
  *
  *   PLAYWRIGHT_SKIP_WEBSERVER=1 npx playwright test playwright/theme-wordmark-swap.spec.ts
  */
@@ -15,18 +16,24 @@ const fixtureHtml = `<!doctype html>
     :root[data-theme="light"] { --bg:#f3f1ea; --text:#1a1916; --muted:#5c584f; }
     body { margin:0; background:var(--bg); color:var(--text); }
     .brand-logo { display:block; height:40px; }
-    .brand-logo-on-light { display: none; }
-    :root[data-theme="light"] .brand-logo-on-dark { display: none; }
-    :root[data-theme="light"] .brand-logo-on-light { display: block; }
+    /* Mirror app/shield.css — beat .brand-logo { display:block } so both never paint. */
+    .brand-lockup img.brand-logo.brand-logo-on-light { display: none !important; }
+    html[data-theme="light"] .brand-lockup img.brand-logo.brand-logo-on-dark,
+    :root[data-theme="light"] .brand-lockup img.brand-logo.brand-logo-on-dark { display: none !important; }
+    html[data-theme="light"] .brand-lockup img.brand-logo.brand-logo-on-light,
+    :root[data-theme="light"] .brand-lockup img.brand-logo.brand-logo-on-light { display: block !important; }
     .nav-link { font: 11px monospace; color: var(--muted); background:transparent; border:0; cursor:pointer; }
+    header { padding: 16px; }
   </style>
 </head>
 <body class="shell">
-  <header>
+  <header data-testid="wordmark-chrome">
+    <h1 class="brand-lockup">
     <img class="brand-logo brand-logo-on-dark" data-testid="wordmark-dark" alt="dark" width="117" height="40"
       src="data:image/svg+xml,${encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="117" height="40"><rect fill="#333" width="117" height="40"/><text x="8" y="26" fill="#f3f1ea" font-size="14">dark</text></svg>')}" />
     <img class="brand-logo brand-logo-on-light" data-testid="wordmark-light" alt="" aria-hidden="true" width="117" height="40"
       src="data:image/svg+xml,${encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="117" height="40"><rect fill="#ebe8df" width="117" height="40"/><text x="8" y="26" fill="#1a1916" font-size="14">light</text></svg>')}" />
+    </h1>
     <button type="button" class="nav-link" data-testid="theme-switch">Light</button>
   </header>
   <script>
@@ -36,6 +43,19 @@ const fixtureHtml = `<!doctype html>
       const next = root.dataset.theme === 'light' ? 'dark' : 'light';
       root.dataset.theme = next;
       btn.textContent = next === 'dark' ? 'Light' : 'Dark';
+      const dark = document.querySelector('[data-testid="wordmark-dark"]');
+      const light = document.querySelector('[data-testid="wordmark-light"]');
+      if (next === 'light') {
+        dark.setAttribute('alt', '');
+        dark.setAttribute('aria-hidden', 'true');
+        light.setAttribute('alt', 'light');
+        light.removeAttribute('aria-hidden');
+      } else {
+        light.setAttribute('alt', '');
+        light.setAttribute('aria-hidden', 'true');
+        dark.setAttribute('alt', 'dark');
+        dark.removeAttribute('aria-hidden');
+      }
     });
   </script>
 </body>
@@ -49,15 +69,23 @@ test("wordmark swaps on-dark ↔ on-light with theme toggle", async ({ page }) =
   await new Promise<void>((resolve) => server.listen(0, "127.0.0.1", resolve));
   const { port } = server.address() as { port: number };
   try {
+    await page.setViewportSize({ width: 480, height: 200 });
     await page.goto(`http://127.0.0.1:${port}/`);
     const dark = page.getByTestId("wordmark-dark");
     const light = page.getByTestId("wordmark-light");
+    const chrome = page.getByTestId("wordmark-chrome");
     await expect(dark).toBeVisible();
     await expect(light).toBeHidden();
+    await expect(chrome).toHaveScreenshot("theme-wordmark-swap-dark.png", {
+      animations: "disabled"
+    });
 
     await page.getByTestId("theme-switch").click();
     await expect(light).toBeVisible();
     await expect(dark).toBeHidden();
+    await expect(chrome).toHaveScreenshot("theme-wordmark-swap-light.png", {
+      animations: "disabled"
+    });
 
     await page.getByTestId("theme-switch").click();
     await expect(dark).toBeVisible();

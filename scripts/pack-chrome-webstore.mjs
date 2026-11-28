@@ -72,6 +72,25 @@ if (!manifest.host_permissions.some((h) => /buusdocst\.mtsu\.workers\.dev/i.test
 
 writeFileSync(manifestPath, `${JSON.stringify(manifest, null, 2)}\n`, "utf8");
 
+// Store package must include mainland notice CTA (Workers timeout path).
+{
+  const popupHtml = readFileSync(join(stage, "popup", "popup.html"), "utf8");
+  const popupJs = readFileSync(join(stage, "popup", "popup.js"), "utf8");
+  if (!/extension-china-notice-cta/.test(popupHtml)) {
+    console.error("[pack:chrome-store] popup.html missing extension-china-notice-cta");
+    process.exit(1);
+  }
+  if (!/utm_source=extension/.test(popupJs) || !/otas0\.github\.io\/buusdocst/.test(popupJs)) {
+    console.error("[pack:chrome-store] popup.js missing China notice CTA + utm_source=extension");
+    process.exit(1);
+  }
+  if (!existsSync(join(stage, "popup", "workers-reach.mjs"))) {
+    console.error("[pack:chrome-store] popup/workers-reach.mjs missing from stage");
+    process.exit(1);
+  }
+  console.info("[pack:chrome-store] popup China notice CTA present (utm_source=extension)");
+}
+
 const version = String(manifest.version || "0.0.0");
 const zipName = `buusdo-cybersecurity-service-tool-${version}.zip`;
 const zipPath = join(outDir, zipName);
@@ -145,6 +164,14 @@ for (const name of frames) {
     );
   }
   writeFileSync(join(shotDir, "CAPTIONS.txt"), `${chunk}\n`, "utf8");
+  const archiveMd = join(root, "docs", "store-screenshots", "ARCHIVE-china-listing-paste.md");
+  if (existsSync(archiveMd)) {
+    cpSync(archiveMd, join(shotDir, "ARCHIVE-china-listing-paste.md"));
+    console.info("[pack:chrome-store] packed ARCHIVE-china-listing-paste.md into listing shots");
+  } else {
+    console.error("[pack:chrome-store] missing docs/store-screenshots/ARCHIVE-china-listing-paste.md");
+    process.exit(1);
+  }
   writeFileSync(
     join(shotDir, "README.txt"),
     [
@@ -159,6 +186,7 @@ for (const name of frames) {
           ]
         : []),
       "Captions: CAPTIONS.txt (from docs/CHROME_STORE_LISTING_DRAFT.md)",
+      "China listing paste checklist: ARCHIVE-china-listing-paste.md",
       "Rebuild: npm run capture:store-halt-frame && npm run capture:desktop-about-frame && npm run pack:chrome-store",
       "",
     ].join("\n"),
@@ -181,5 +209,5 @@ console.info(
   "[pack:chrome-store] Upload in Chrome Web Store Developer Dashboard → new item / package"
 );
 console.info(
-  `[pack:chrome-store] After publish, set chromeWebStoreUrl in shared/extension-stores.json`
+  "[pack:chrome-store] After publish: node scripts/set-chrome-webstore-url.mjs --url '<chromewebstore…>'"
 );

@@ -4,8 +4,9 @@
  * CF-IPCountry is often missing as a header on workers.dev unless Managed Transforms
  * add visitor location headers. request.cf.country is always set on Workers.
  *
- * Also sets assets.run_worker_first=true so static Assets cannot skip this wrap
- * (CF default serve_directly / asset-first would bypass CN 302).
+ * Also sets assets.run_worker_first to the vinext-recommended pattern list so:
+ *   - HTML / public paths run the Worker first (CN wrap cannot be skipped by Assets)
+ *   - /_next/static/* is served by Assets directly (boolean `true` 404s CSS/JS — vinext docs)
  *
  *   node scripts/wrap-worker-china-cf-redirect.mjs
  *   node scripts/wrap-worker-china-cf-redirect.mjs --check
@@ -19,6 +20,7 @@
 import { readFileSync, writeFileSync, existsSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { RUN_WORKER_FIRST, isValidRunWorkerFirst } from "./run-worker-first.mjs";
 
 const root = path.join(path.dirname(fileURLToPath(import.meta.url)), "..");
 const serverDir = path.join(root, "dist/server");
@@ -157,13 +159,17 @@ export default {
 
 function ensureRunWorkerFirst(w) {
   const prev = w.assets;
-  if (prev && typeof prev === "object" && !Array.isArray(prev)) {
-    w.assets = { ...prev, run_worker_first: true };
-  } else if (typeof prev === "string") {
-    w.assets = { directory: prev, run_worker_first: true };
-  } else {
-    w.assets = { directory: "../client", run_worker_first: true };
-  }
+  const base =
+    prev && typeof prev === "object" && !Array.isArray(prev)
+      ? { ...prev }
+      : typeof prev === "string"
+        ? { directory: prev }
+        : { directory: "../client" };
+  // Binding silences wrangler "run_worker_first without an assets binding" and
+  // keeps vinext ASSETS.fetch working when the Worker runs first.
+  if (!base.binding) base.binding = "ASSETS";
+  base.run_worker_first = [...RUN_WORKER_FIRST];
+  w.assets = base;
 }
 
 if (checkOnly) {
@@ -183,9 +189,15 @@ if (checkOnly) {
     process.exit(1);
   }
   const assets = w.assets && typeof w.assets === "object" ? w.assets : {};
-  if (assets.run_worker_first !== true) {
+  if (!isValidRunWorkerFirst(assets.run_worker_first)) {
     console.error(
-      `[wrap-china-cf] --check FAIL: assets.run_worker_first=${JSON.stringify(assets.run_worker_first)} (want true — otherwise Assets can skip CN redirect)`
+      `[wrap-china-cf] --check FAIL: assets.run_worker_first=${JSON.stringify(assets.run_worker_first)} (want ${JSON.stringify(RUN_WORKER_FIRST)} — boolean true 404s /_next/static)`
+    );
+    process.exit(1);
+  }
+  if (assets.binding !== "ASSETS") {
+    console.error(
+      `[wrap-china-cf] --check FAIL: assets.binding=${JSON.stringify(assets.binding)} (want "ASSETS")`
     );
     process.exit(1);
   }
@@ -198,7 +210,9 @@ if (checkOnly) {
     console.error("[wrap-china-cf] --check FAIL: china-cf-entry.js missing country debug header");
     process.exit(1);
   }
-  console.log("[wrap-china-cf] --check OK (main=china-cf-entry.js, run_worker_first=true)");
+  console.log(
+    "[wrap-china-cf] --check OK (main=china-cf-entry.js, run_worker_first excludes /_next/static)"
+  );
   process.exit(0);
 }
 
@@ -215,7 +229,10 @@ if (existsSync(wranglerPath)) {
   w.main = "china-cf-entry.js";
   ensureRunWorkerFirst(w);
   writeFileSync(wranglerPath, `${JSON.stringify(w)}\n`);
-  console.log("[wrap-china-cf] wrangler.json main → china-cf-entry.js; assets.run_worker_first=true");
+  console.log(
+    "[wrap-china-cf] wrangler.json main → china-cf-entry.js; assets.run_worker_first=",
+    JSON.stringify(RUN_WORKER_FIRST)
+  );
 } else {
   console.warn("[wrap-china-cf] dist/server/wrangler.json missing — deploy may still use index.js");
 }

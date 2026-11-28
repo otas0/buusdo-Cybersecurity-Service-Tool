@@ -42,10 +42,11 @@ test("xh/st/nr/nso China notice/clear links differ from EN", () => {
   }
 });
 
-test("popup.html Southern Africa optgroup lists xh/st/nr/nso", () => {
-  const html = readFileSync("extension/popup/popup.html", "utf8");
-  assert.match(html, /<option value="xh">/);
-  assert.match(html, /<option value="st">/);
-  assert.match(html, /<option value="nr">/);
-  assert.match(html, /<option value="nso">/);
+test("extension-ui-locales catalog lists xh/st/nr/nso", () => {
+  const catalog = JSON.parse(readFileSync("extension/shared/extension-ui-locales.json", "utf8")) as {
+    order: string[];
+  };
+  for (const id of ["xh", "st", "nr", "nso"]) {
+    assert.ok(catalog.order.includes(id), `missing ${id} in extension-ui-locales`);
+  }
 });

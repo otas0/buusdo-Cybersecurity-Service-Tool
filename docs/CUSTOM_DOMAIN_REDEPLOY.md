@@ -68,7 +68,21 @@ After DNS + second deploy:
 
 `npm run production:origin` prints the same reminder.
 
-## 7. Checklist
+## 7. Re-check China wrap (`run_worker_first`)
+
+After the custom-domain deploy:
+
+```bash
+npx wrangler deployments list --name buusdocst   # note Version ID
+npx wrangler versions view <VERSION_ID> --name buusdocst --json | jq '.resources.script_runtime.assets'
+# expect raw_run_worker_first = ["/*","!/_next/static/*",…] (not boolean false / empty)
+curl -sSI https://YOUR_CANONICAL/api/health | grep -i x-buusdocst-china-wrap
+node scripts/soft-china-redirect-probe.mjs   # PRODUCTION_HEALTH_URL=https://YOUR_CANONICAL
+```
+
+Record the Version ID in [CI.md](CI.md) scrapbook. Mainland TCP to a custom domain may improve vs `*.workers.dev` — still keep [China Pages](https://otas0.github.io/buusdocst/) as the **sole mainland explanation entry** ([CHINA_GITHUB_PAGES.md](CHINA_GITHUB_PAGES.md)). Do **not** replace the notice URL with the custom domain in mainland-facing posts; the custom domain is for CF-reachable product traffic.
+
+## 8. Checklist
 
 Mark the custom-domain rows in [LAUNCH_CHECKLIST.md](LAUNCH_CHECKLIST.md) § B.  
 Ops overview: [OPS_RUNBOOK.md](OPS_RUNBOOK.md).
