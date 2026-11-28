@@ -135,6 +135,8 @@ function Header({
     <header className="top">
       <div className="brand">
         <h1 className="brand-lockup">
+          {/* Only one mark is painted; CSS hides the other. Alt stays on the dark mark;
+              light mark is decorative when shown (theme already announced elsewhere). */}
           <img
             className="brand-logo brand-logo-on-dark"
             src="/brand/buusdo-wordmark.png"
@@ -152,7 +154,6 @@ function Header({
             alt=""
             aria-hidden="true"
           />
-          <span className="visually-hidden">{t.prototype}</span>
         </h1>
       </div>
       <nav className="top-nav" aria-label={t.navAriaLabel || "Navigation"}>

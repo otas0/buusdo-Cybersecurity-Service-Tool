@@ -199,10 +199,19 @@ button:disabled.log-filter-reset {
   border: 0;
 }
 
-/* Cream mark on dark; on-light plate for OS / data-theme light (dashboard.js swaps alt). */
-.brand-logo-on-light { display: none; }
-:root[data-theme="light"] .brand-logo-on-dark { display: none; }
-:root[data-theme="light"] .brand-logo-on-light { display: block; }
+/* Cream mark on dark; on-light plate for OS / data-theme light (dashboard.js swaps alt).
+ * !important beats `.brand-logo { display: block }` so both marks never paint together. */
+.brand-lockup img.brand-logo.brand-logo-on-light {
+  display: none !important;
+}
+html[data-theme="light"] .brand-lockup img.brand-logo.brand-logo-on-dark,
+:root[data-theme="light"] .brand-lockup img.brand-logo.brand-logo-on-dark {
+  display: none !important;
+}
+html[data-theme="light"] .brand-lockup img.brand-logo.brand-logo-on-light,
+:root[data-theme="light"] .brand-lockup img.brand-logo.brand-logo-on-light {
+  display: block !important;
+}
 
 .about-mark {
   margin: 0 0 14px;

@@ -1232,7 +1232,15 @@
 
 
 /* Light theme uses on-light wordmark plate; dark field keeps transparent cream mark.
- * Specificity must beat `.shell .brand-logo { display: block }` or both marks show. */
-.shell .brand-logo-on-light { display: none; }
-:root[data-theme="light"] .shell .brand-logo-on-dark { display: none; }
-:root[data-theme="light"] .shell .brand-logo-on-light { display: block; }
+ * Must beat `.shell .brand-logo { display: block }` (same specificity otherwise → both marks show). */
+.shell .brand-lockup img.brand-logo.brand-logo-on-light {
+  display: none !important;
+}
+html[data-theme="light"] .shell .brand-lockup img.brand-logo.brand-logo-on-dark,
+:root[data-theme="light"] .shell .brand-lockup img.brand-logo.brand-logo-on-dark {
+  display: none !important;
+}
+html[data-theme="light"] .shell .brand-lockup img.brand-logo.brand-logo-on-light,
+:root[data-theme="light"] .shell .brand-lockup img.brand-logo.brand-logo-on-light {
+  display: block !important;
+}
