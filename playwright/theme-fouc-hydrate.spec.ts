@@ -7,10 +7,10 @@ import { createServer } from "node:http";
 import { expect, test } from "@playwright/test";
 
 const boot =
-  "(function(){try{var t=localStorage.getItem('buusdocst-ui-theme');if(t==='light'||t==='dark'){document.documentElement.dataset.theme=t;document.documentElement.style.colorScheme=t;}}catch(e){}})();";
+  "(function(){try{var k='buusdocst-ui-theme';var t=localStorage.getItem(k);if(t==='light'||t==='dark'){document.documentElement.dataset.theme=t;document.documentElement.style.colorScheme=t;}else{if(t!=null){try{localStorage.removeItem(k);}catch(_){}}document.documentElement.dataset.theme='dark';document.documentElement.style.colorScheme='dark';}}catch(e){document.documentElement.dataset.theme='dark';document.documentElement.style.colorScheme='dark';}})();";
 
 const hydrate =
-  "(function(){try{var t=localStorage.getItem('buusdocst-ui-theme');if(t==='light'||t==='dark'){document.documentElement.dataset.theme=t;document.documentElement.style.colorScheme=t;}else{document.documentElement.dataset.theme='dark';document.documentElement.style.colorScheme='dark';}}catch(e){document.documentElement.dataset.theme='dark';}})();";
+  "(function(){try{var k='buusdocst-ui-theme';var t=localStorage.getItem(k);if(t==='light'||t==='dark'){document.documentElement.dataset.theme=t;document.documentElement.style.colorScheme=t;}else{if(t!=null){try{localStorage.removeItem(k);}catch(_){}}document.documentElement.dataset.theme='dark';document.documentElement.style.colorScheme='dark';}}catch(e){document.documentElement.dataset.theme='dark';}})();";
 
 const fixtureHtml = `<!doctype html>
 <html lang="en">

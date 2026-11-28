@@ -2746,8 +2746,8 @@ function applyThemeFromSystem() {
   const light = window.matchMedia("(prefers-color-scheme: light)").matches;
   document.documentElement.dataset.theme = light ? "light" : "dark";
   document.documentElement.style.colorScheme = light ? "light" : "dark";
-  const dark = document.querySelector(".brand-logo-on-dark");
-  const lightImg = document.querySelector(".brand-logo-on-light");
+  const dark = document.querySelector(".brand-lockup img.brand-logo.brand-logo-on-dark");
+  const lightImg = document.querySelector(".brand-lockup img.brand-logo.brand-logo-on-light");
   if (!dark || !lightImg) return;
   if (light) {
     dark.setAttribute("alt", "");

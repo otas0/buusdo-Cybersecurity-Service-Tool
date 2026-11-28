@@ -21,8 +21,8 @@ const els = {
   phishingValue: document.getElementById("phishingValue"),
   manageListsLink: document.getElementById("manageListsLink"),
   manageListsHint: document.getElementById("manageListsHint"),
-  wordmarkDark: document.querySelector(".brand-logo-on-dark"),
-  wordmarkLight: document.querySelector(".brand-logo-on-light")
+  wordmarkDark: document.querySelector(".brand-lockup img.brand-logo.brand-logo-on-dark"),
+  wordmarkLight: document.querySelector(".brand-lockup img.brand-logo.brand-logo-on-light")
 };
 
 function resolveSystemLang() {

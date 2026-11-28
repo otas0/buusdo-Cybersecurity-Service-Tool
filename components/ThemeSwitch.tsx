@@ -7,22 +7,58 @@ import { getMessages } from "../i18n/messages";
 export type UiTheme = "dark" | "light";
 
 const STORAGE_KEY = "buusdocst-ui-theme";
+const BRAND_ALT_FALLBACK = "buusdo Cybersecurity Service Tool";
 
 export function readStoredTheme(): UiTheme {
   if (typeof window === "undefined") return "dark";
   try {
     const v = window.localStorage.getItem(STORAGE_KEY);
     if (v === "light" || v === "dark") return v;
+    // Corrupt / unknown value → clear and fall back to dark.
+    if (v != null) window.localStorage.removeItem(STORAGE_KEY);
   } catch {
     /* ignore */
   }
   return "dark";
 }
 
+/** Only the painted wordmark stays in the accessibility tree. */
+export function syncWordmarkA11y(theme: UiTheme) {
+  if (typeof document === "undefined") return;
+  const dark = document.querySelector<HTMLImageElement>(
+    ".brand-lockup img.brand-logo.brand-logo-on-dark"
+  );
+  const light = document.querySelector<HTMLImageElement>(
+    ".brand-lockup img.brand-logo.brand-logo-on-light"
+  );
+  if (!dark || !light) return;
+  const brandAlt =
+    dark.getAttribute("data-brand-alt") ||
+    light.getAttribute("data-brand-alt") ||
+    (dark.getAttribute("alt") || "").trim() ||
+    (light.getAttribute("alt") || "").trim() ||
+    BRAND_ALT_FALLBACK;
+  if (!dark.getAttribute("data-brand-alt")) {
+    dark.setAttribute("data-brand-alt", brandAlt);
+  }
+  if (theme === "light") {
+    dark.setAttribute("alt", "");
+    dark.setAttribute("aria-hidden", "true");
+    light.setAttribute("alt", brandAlt);
+    light.removeAttribute("aria-hidden");
+  } else {
+    light.setAttribute("alt", "");
+    light.setAttribute("aria-hidden", "true");
+    dark.setAttribute("alt", brandAlt);
+    dark.removeAttribute("aria-hidden");
+  }
+}
+
 export function applyTheme(theme: UiTheme) {
   if (typeof document === "undefined") return;
   document.documentElement.dataset.theme = theme;
   document.documentElement.style.colorScheme = theme;
+  syncWordmarkA11y(theme);
 }
 
 /** Apply stored theme as early as possible (call from AppShell mount). */

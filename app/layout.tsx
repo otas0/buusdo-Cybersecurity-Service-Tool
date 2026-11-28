@@ -42,8 +42,9 @@ export const metadata: Metadata = {
   },
 };
 
+/** Valid light|dark only; corrupt keys are removed and dark is forced. */
 const THEME_BOOT =
-  "(function(){try{var t=localStorage.getItem('buusdocst-ui-theme');if(t==='light'||t==='dark'){document.documentElement.dataset.theme=t;document.documentElement.style.colorScheme=t;}}catch(e){}})();";
+  "(function(){try{var k='buusdocst-ui-theme';var t=localStorage.getItem(k);if(t==='light'||t==='dark'){document.documentElement.dataset.theme=t;document.documentElement.style.colorScheme=t;}else{if(t!=null){try{localStorage.removeItem(k);}catch(_){}}document.documentElement.dataset.theme='dark';document.documentElement.style.colorScheme='dark';}}catch(e){document.documentElement.dataset.theme='dark';document.documentElement.style.colorScheme='dark';}})();";
 
 export default function RootLayout({
   children,
