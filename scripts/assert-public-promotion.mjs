@@ -2,6 +2,8 @@
  * Assert docs/PUBLIC_PROMOTION.md paste-ready fenced blocks:
  * - No legacy / local hosts
  * - Mainland-only block (heading contains 面向大陆): China Pages only (no Workers URL)
+ *   Whitelist: warning words like「勿等待 workers.dev 跳转」/ bare `workers.dev` are OK;
+ *   ban `buusdocst.mtsu.workers.dev` and any `https://…workers.dev` product URL.
  * - Global / CF-reachable blocks: Workers + China Pages + A4 poster
  */
 import { readFileSync } from "node:fs";

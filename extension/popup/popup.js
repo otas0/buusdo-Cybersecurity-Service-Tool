@@ -7,13 +7,14 @@ import { api } from "../shared/browser-api.js";
 import { DEFAULT_API_BASE } from "../shared/api-base-migrate.mjs";
 /** CI: popup must import this key (Website API chrome moved off popup). */
 import { API_BASE_FALLBACK_NOTICE_KEY } from "../shared/api-base-fallback.mjs";
+import {
+  CHINA_NOTICE_URL,
+  probeWorkersHealth,
+  applyUnreachableUi
+} from "./workers-reach.mjs";
 void API_BASE_FALLBACK_NOTICE_KEY;
 
 const BRAND_ALT = "buusdo Cybersecurity Service Tool";
-
-/** Pages-only CTA; utm marks extension opens (not a Workers hop). */
-const CHINA_NOTICE_URL = "https://otas0.github.io/buusdocst/?utm_source=extension";
-const HEALTH_PROBE_MS = 4500;
 
 const els = {
   readout: document.getElementById("readout"),
@@ -150,64 +151,32 @@ async function syncPrefsFromSystem(lang) {
 }
 
 function paintUnreachable(lang, unreachable) {
-  const box = els.apiUnreachable;
   const manage = els.manageListsLink;
   const manageWrap = manage?.closest?.("p.manage") || manage?.parentElement;
-  if (!unreachable) {
-    if (box) box.hidden = true;
-    if (manageWrap) manageWrap.hidden = false;
-    if (manage) manage.hidden = false;
-    if (els.manageListsHint) els.manageListsHint.hidden = false;
-    return;
-  }
-  if (box) box.hidden = false;
-  // Workers lists URL is useless when health probe failed — hide / degrade.
-  if (manageWrap) manageWrap.hidden = true;
-  if (manage) {
-    manage.hidden = true;
-    manage.removeAttribute("href");
-  }
-  if (els.manageListsHint) {
-    els.manageListsHint.hidden = false;
-    els.manageListsHint.textContent =
-      lang === "zh-Hans"
-        ? "网站名单需 Workers；当前不可达 — 请先打开告知书。"
-        : lang === "zh-Hant"
-          ? "網站名單需 Workers；目前不可達 — 請先開啟告知書。"
-          : lang === "pt-PT"
-            ? "Listas no site precisam do Workers; inacessível — abra o aviso China."
-            : "Website lists need Workers; unreachable — open the China notice first.";
-  }
-  if (els.apiUnreachableText) {
+  const hintWhenDown =
+    lang === "zh-Hans"
+      ? "网站名单需 Workers；当前不可达 — 请先打开告知书。"
+      : lang === "zh-Hant"
+        ? "網站名單需 Workers；目前不可達 — 請先開啟告知書。"
+        : lang === "pt-PT"
+          ? "Listas no site precisam do Workers; inacessível — abra o aviso China."
+          : "Website lists need Workers; unreachable — open the China notice first.";
+  const ctaLabel = t(lang, "websiteApiChinaNoticeLink") || "Open China notice";
+  applyUnreachableUi(
+    {
+      box: els.apiUnreachable,
+      manage,
+      manageWrap,
+      manageHint: els.manageListsHint,
+      cta: els.chinaNoticeCta
+    },
+    unreachable,
+    { hintWhenDown, ctaLabel, noticeHref: CHINA_NOTICE_URL }
+  );
+  if (unreachable && els.apiUnreachableText) {
     els.apiUnreachableText.textContent =
       t(lang, "websiteApiCfUnreachable") ||
       "Cannot reach workers.dev (timeout). Open the China notice — do not wait for a redirect.";
-  }
-  if (els.chinaNoticeCta) {
-    els.chinaNoticeCta.href = CHINA_NOTICE_URL;
-    els.chinaNoticeCta.textContent =
-      t(lang, "websiteApiChinaNoticeLink") || "Open China notice";
-  }
-}
-
-async function probeWorkersHealth() {
-  const base = String(DEFAULT_API_BASE || "https://buusdocst.mtsu.workers.dev").replace(/\/$/, "");
-  const ctrl = new AbortController();
-  const timer = setTimeout(() => ctrl.abort(), HEALTH_PROBE_MS);
-  try {
-    const res = await fetch(`${base}/api/health`, {
-      method: "GET",
-      credentials: "omit",
-      cache: "no-store",
-      signal: ctrl.signal
-    });
-    clearTimeout(timer);
-    if (!res.ok) return true;
-    const j = await res.json().catch(() => null);
-    return !(j && j.ok === true && j.service === "buusdocst");
-  } catch {
-    clearTimeout(timer);
-    return true;
   }
 }
 
@@ -224,7 +193,11 @@ async function refresh() {
     state = null;
   }
   paint(lang, state);
-  const unreachable = await probeWorkersHealth();
+  const base = String(DEFAULT_API_BASE || "https://buusdocst.mtsu.workers.dev").replace(
+    /\/$/,
+    ""
+  );
+  const unreachable = await probeWorkersHealth({ base });
   paintUnreachable(lang, unreachable);
 }
 

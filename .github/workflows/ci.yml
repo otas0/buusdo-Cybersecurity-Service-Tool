@@ -106,6 +106,8 @@ jobs:
           '
           echo "::notice::soft /api/geo OK (cfCountry + wrapHints.runWorkerFirst; no CN redirect assert on ubuntu)"
           echo "- Soft \`/api/geo\`: **OK** (\`cfCountry\` + \`wrapHints.runWorkerFirst\`)" >> "$GITHUB_STEP_SUMMARY"
+          # When shared/china-pages.json mirrorUrl is set, soft-compare notice markers.
+          node scripts/soft-china-mirror-probe.mjs || true
           WRAP=$(curl -sS -m 15 -D - -o /dev/null "$BASE/api/health" 2>/dev/null | tr -d '\r' | grep -i '^x-buusdocst-china-wrap:' || true)
           if [ -n "$WRAP" ]; then
             echo "::notice::x-buusdocst-china-wrap present — china-cf-entry live"

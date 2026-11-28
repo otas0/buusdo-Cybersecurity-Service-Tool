@@ -166,6 +166,23 @@ jobs:
           if [ "${{ steps.soft_live_streak.outputs.streak }}" -ge 3 ] 2>/dev/null; then
             echo "::notice::streak≥3 — ready to flip repo var EXT_UI_UNPARK_HARD=1 (document date in docs/CI.md)"
           fi
+      - name: Soft China mirrorUrl probe (skip when empty)
+        id: soft_china_mirror
+        if: always() && steps.pw_privacy.outcome != 'cancelled'
+        continue-on-error: true
+        run: node scripts/soft-china-mirror-probe.mjs
+      - name: Job Summary — soft-live fail → ARCHIVE listing checklist
+        if: failure() || steps.pw_privacy.outcome == 'failure'
+        run: |
+          {
+            echo "### soft-live failure triage"
+            echo ""
+            echo "- Playwright privacy soft-live failed (or suite hard-failed)."
+            echo "- China listing paste + screenshot archive checklist:"
+            echo "  [\`docs/store-screenshots/ARCHIVE-china-listing-paste.md\`](https://github.com/${{ github.repository }}/blob/${{ github.sha }}/docs/store-screenshots/ARCHIVE-china-listing-paste.md)"
+            echo "- Report artifact (if uploaded): \`privacy-prod-playwright-report\`"
+            echo "- Mainland promo assert / copy: [\`docs/PUBLIC_PROMOTION.md\`](https://github.com/${{ github.repository }}/blob/${{ github.sha }}/docs/PUBLIC_PROMOTION.md) 「面向大陆」"
+          } >> "$GITHUB_STEP_SUMMARY"
       - name: Upload Playwright HTML report (on failure)
         if: failure()
         uses: actions/upload-artifact@v4

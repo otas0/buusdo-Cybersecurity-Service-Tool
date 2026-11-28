@@ -116,13 +116,15 @@ Workers 不可达时，产品站无法展示任何文案。只能走 **Workers �
 
 1. **只托管告知书同源文案**（`china-pages/` 同步），**禁止**放完整检查 UI 或 `/api/check` 代理。
 2. 镜像 URL 写入 `shared/china-pages.json` 的可选 `mirrorUrl`，推广大陆块可并列，仍以 GitHub Pages 为 canonical。
-3. CI：镜像部署失败不得阻塞 Workers 发布；文档写明「双入口、同文案」。
+3. CI：镜像部署失败不得阻塞 Workers 发布；文档写明「双入口、同文案」。`mirrorUrl` 非空时跑 `node scripts/soft-china-mirror-probe.mjs`（与 canonical 告知书 title / service-closed 标记一致；空则跳过）。
 
 **当前决策（2026-11-28）：** 暂不建 Gitee/CDN 镜像；先保证告知书文案清晰 + 大陆渠道只推 Pages。每季用大陆抽测复评本表。`shared/china-pages.json` 已预留 `"mirrorUrl": ""`（空 = 未启用）。
 
 ### popup CTA `utm_source=extension`
 
 扩展不可达大按钮打开 `https://otas0.github.io/buusdocst/?utm_source=extension`（仍只开 Pages，不经 Workers）。用于日后若启用 Pages 分析时区分扩展来源；可去掉参数，不影响产品行为。
+
+**若启用 GitHub Pages / 站点分析：** 建筛选（或 segment）`utm_source=extension`，与直接打开告知书的流量分开看。不要用该参数推断 Workers 触达率。
 
 ## Region soft probe（本站）
 

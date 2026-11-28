@@ -45,6 +45,8 @@ Privacidade: https://buusdocst.mtsu.workers.dev/en/privacy
 
 大陆网络常无法打开 `workers.dev`，**也不会自动跳转**。面向大陆只发告知书链接 / 二维码（禁止混发 Workers）：
 
+**Assert 白名单（`npm run assert:public-promotion`）：** 面向大陆 fenced 块允许警示词「勿等待 workers.dev 跳转」/ 纯文本 `workers.dev`；**禁止**任何 `https://…workers.dev` 或 `buusdocst.mtsu.workers.dev` 产品 URL。全球 / CF 可达块则必须含 Workers 产品 URL + A4 + Pages。
+
 ```
 【重要】buusdo Cybersecurity Service Tool
 中国大陆地区：完整网站检查服务未开放、不作可用性承诺。

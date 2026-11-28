@@ -560,5 +560,23 @@ test.describe("China Pages notice (soft)", () => {
     await expect(closed).toContainText(/does not offer|no promise|不提供|未开放/i);
     console.info("[soft-live] China Pages en.html service-closed ok");
   });
+
+  for (const pagePath of ["/", "/en.html"] as const) {
+    test(`${pagePath} privacy footnote has rel + data-testid`, async ({ page }) => {
+      await page.goto(`${chinaBase}${pagePath}?china_stay=1`, {
+        waitUntil: "domcontentloaded",
+        timeout: 45_000
+      });
+      const foot = page.getByTestId("china-notice-privacy-footer");
+      await expect(foot).toBeVisible({ timeout: 10_000 });
+      await expect(foot).toHaveAttribute("href", /\/privacy/);
+      await expect(foot).toHaveAttribute("rel", /noreferrer/);
+      const bodyLink = page.getByTestId("china-notice-privacy-link");
+      if ((await bodyLink.count()) > 0) {
+        await expect(bodyLink.first()).toHaveAttribute("rel", /noreferrer/);
+      }
+      console.info(`[soft-live] China Pages ${pagePath} privacy footer testid + rel ok`);
+    });
+  }
 });
 

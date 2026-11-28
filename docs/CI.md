@@ -24,8 +24,10 @@
   - `b43e4a94-d04c-402a-96f0-b8ac3b23713b` — 2026-11-28T07:20Z — prod (pre client zh-CN harden; wrap live, JP sample)
   - `f95a3438-3269-4b16-b0ce-a32423b91ca5` — 2026-11-28T07:25Z — staging ASSETS binding + zh-CN client harden (`e255f7e`)
   - `8f9221c9-10b1-41dc-a59d-2be320551daf` — 2026-11-28T07:26Z — prod ASSETS binding + zh-CN/`/api/geo` client fallback (`e255f7e`)
-  - _2026-11-28 notice/popup/promo batch — **no new Worker Version** (Pages + extension pack only; keep `8f9221c9…` until next wrap deploy)_
+  - _2026-11-28 notice/popup/promo + stores/ARCHIVE soft batch — **no new Worker Version** (Pages + extension pack only; keep `8f9221c9…` until next wrap deploy)_
+  - **Next wrap deploy:** after `wrap-worker-china-cf-redirect.mjs` + `wrangler deploy`, paste the new staging/prod **Version ID** here (replace the “no new Worker Version” note). Do not leave scrapbook stale past the deploy PR.
   - Record newer IDs here after each China-redirect-related prod / staging deploy.
+- Soft CI: when `shared/china-pages.json` `mirrorUrl` is non-empty, `scripts/soft-china-mirror-probe.mjs` compares notice markers to canonical Pages (empty → skip). Privacy-prod Job Summary on soft-live failure links [`ARCHIVE-china-listing-paste.md`](store-screenshots/ARCHIVE-china-listing-paste.md).
 
 - Optional Playwright job also runs on **schedule** (nightly) and includes `test:playwright:extension-china-stay-clear`.
 - Nightly: `smoke:privacy-china` (zh-Hans · EN · pt-PT) via **Production health smoke** (05:20 UTC; Step Summary prints `smoke:privacy-china=<UTC>`) and **Health monitor** (checklist notes + `CHECKLIST_LOG_MAX_ROWS` cap, default 40 — see [CHECKLIST_CI_WRITE.md](CHECKLIST_CI_WRITE.md)); privacy-prod Playwright via **Privacy prod smoke** (05:45 UTC; failure uploads `privacy-prod-playwright-report`).
